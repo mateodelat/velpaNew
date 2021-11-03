@@ -1,0 +1,14 @@
+{
+    "CreateAPIKey": 1,
+    "AppSyncApiName": "VelpaNewVersion",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authvelpanewversion",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "S3DeploymentBucket": "amplify-velpanewversion-staging-193449-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/a06bad17377ad3a02509728ca1da9f38e34ea3aa"
+}

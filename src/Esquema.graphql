@@ -1,0 +1,70 @@
+type Usuario @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nombre: String
+  apellido: String
+  foto: String
+  comentarios: [String]!
+  calificacion: Float
+  nickname: String!
+  fechas: [FechaUsuario] @connection(keyName: "byUsuario", fields: ["id"])
+}
+
+type Reservaciones @model @auth(rules: [{allow: public}]) @key(name: "byFecha", fields: ["fechaID"]) {
+  id: ID!
+  idPago: String!
+  total: String!
+  personas: Int!
+  fechaID: ID
+  Usuarios: Usuario @connection
+}
+
+type Fecha @model @auth(rules: [{allow: public}]) @key(name: "byAventura", fields: ["aventuraID"]) {
+  id: ID!
+  personasTotales: Int!
+  fechaInicial: String!
+  fechaFinal: String!
+  precio: Int!
+  aventuraID: ID
+  Reservaciones: [Reservaciones] @connection(keyName: "byFecha", fields: ["id"])
+  Guias: [FechaUsuario] @connection(keyName: "byFecha", fields: ["id"])
+}
+
+type Aventura @model @auth(rules: [{allow: public}]) @key(name: "byCategoria", fields: ["categoriaID"]) {
+  id: ID!
+  titulo: String!
+  guiasAutorizados: [String]
+  imagenFondo: String!
+  imagenDetalle: [String!]!
+  precioMin: Int!
+  precioMax: Int!
+  duracion: String!
+  descripcionCorta: String!
+  descripcionLarga: String!
+  materialObligatorio: [String!]!
+  materialOpcional: [String!]!
+  materialAcampada: [String]
+  alimentacion: [String!]!
+  dificultad: Float!
+  precioVIP: Int
+  descripcionVIP: String
+  fechaInicialDisponible: String
+  fechaFinalDisponible: String
+  categoriaID: ID
+  Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
+}
+
+type Categoria @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  titulo: String!
+  foto: String!
+  Aventuras: [Aventura] @connection(keyName: "byCategoria", fields: ["id"])
+}
+
+type FechaUsuario @model(queries: null) @key(name: "byFecha", fields: ["fechaID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "fechaID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+  id: ID!
+  fechaID: ID!
+  usuarioID: ID!
+  fecha: Fecha! @connection(fields: ["fechaID"])
+  usuario: Usuario! @connection(fields: ["usuarioID"])
+}
+ 

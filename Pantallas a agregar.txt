@@ -1,0 +1,68 @@
+Detalles de fecha:{
+    Fecha inicial,
+    fecha final,
+
+    titulo fecha
+    descripcion fecha
+    itinerario fecha
+
+    personas reservadas
+
+    precio individual
+    precio acomulado
+    
+    ruta
+    ?duracion de fecha
+    
+    ?nombre de aventura
+    ?imagen fondo de aventura
+
+},
+
+
+perfil:{
+
+    No es guia:{
+    nombre,
+    foto de perfil,
+    nickname,
+
+    },
+
+
+
+    Si es guia:{
+    nombre,
+    foto de perfil,
+    nickname,
+
+    aventuras realizadas,
+    calificacion,
+
+    ?tiempo de antiguedad como guia,
+    ?superguia,
+    ?ubicacion,
+    ?aventuras autorizadas,
+
+    ?aventuras proximas y pasadas
+
+    }
+},
+
+
+detalles participantes de chat:{
+    numero personas
+    nombre personas
+    ?imagen personas
+
+    personas reservadas por persona
+
+    ver detalles de la fecha
+    participante que es guia con distincion
+
+    ?titulo aventura
+    ?fecha
+
+    ?imagenFondoAventura
+
+}

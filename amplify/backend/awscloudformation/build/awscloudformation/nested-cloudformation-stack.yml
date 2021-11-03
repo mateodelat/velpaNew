@@ -1,0 +1,261 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Root Stack for AWS Amplify Console",
+  "Parameters": {
+    "DeploymentBucketName": {
+      "Description": "Name of the common deployment bucket provided by the parent stack",
+      "Type": "String",
+      "Default": "DeploymentBucket"
+    },
+    "AuthRoleName": {
+      "Type": "String",
+      "Default": "AuthRoleName"
+    },
+    "UnauthRoleName": {
+      "Type": "String",
+      "Default": "UnauthRoleName"
+    }
+  },
+  "Resources": {
+    "DeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": {
+          "Ref": "DeploymentBucketName"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "AuthRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": {
+          "Ref": "AuthRoleName"
+        },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Deny",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity"
+            }
+          ]
+        }
+      }
+    },
+    "UnauthRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": {
+          "Ref": "UnauthRoleName"
+        },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Deny",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity"
+            }
+          ]
+        }
+      }
+    },
+    "apiVelpaNewVersion": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "Parameters": {
+          "CreateAPIKey": 1,
+          "AppSyncApiName": "VelpaNewVersion",
+          "DynamoDBBillingMode": "PAY_PER_REQUEST",
+          "DynamoDBEnableServerSideEncryption": false,
+          "AuthCognitoUserPoolId": "us-east-1_MLaD0VGx7",
+          "S3DeploymentBucket": "amplify-velpanewversion-staging-193449-deployment",
+          "S3DeploymentRootKey": "amplify-appsync-files/a06bad17377ad3a02509728ca1da9f38e34ea3aa",
+          "env": "staging"
+        }
+      }
+    },
+    "storagestorage": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+        "Parameters": {
+          "bucketName": "velpanewversion3d014069f75d4be1bc2875498e9be3dc",
+          "authPolicyName": "s3_amplify_33126779",
+          "unauthPolicyName": "s3_amplify_33126779",
+          "authRoleName": "amplify-velpa-dev-172310-authRole",
+          "unauthRoleName": "amplify-velpa-dev-172310-unauthRole",
+          "selectedGuestPermissions": "s3:GetObject,s3:ListBucket",
+          "selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket,s3:DeleteObject",
+          "s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PublicPolicy": "Public_policy_7e080b45",
+          "s3PermissionsAuthenticatedUploads": "s3:PutObject",
+          "s3UploadsPolicy": "Uploads_policy_7e080b45",
+          "s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3ProtectedPolicy": "Protected_policy_540022fd",
+          "s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PrivatePolicy": "Private_policy_540022fd",
+          "AuthenticatedAllowList": "ALLOW",
+          "s3ReadPolicy": "read_policy_7e080b45",
+          "s3PermissionsGuestPublic": "s3:GetObject",
+          "s3PermissionsGuestUploads": "DISALLOW",
+          "GuestAllowList": "ALLOW",
+          "triggerFunction": "NONE",
+          "env": "staging"
+        }
+      }
+    },
+    "functionCreatePaymentIntent": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/CreatePaymentIntent-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/CreatePaymentIntent-62542b394f7958627867-build.zip",
+          "env": "staging"
+        }
+      }
+    },
+    "functionCreateStripeAcount": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/CreateStripeAcount-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/CreateStripeAcount-4c306b47764244596476-build.zip",
+          "apiVelpaNewVersionGraphQLAPIIdOutput": {
+            "Fn::GetAtt": [
+              "apiVelpaNewVersion",
+              "Outputs.GraphQLAPIIdOutput"
+            ]
+          },
+          "apiVelpaNewVersionGraphQLAPIEndpointOutput": {
+            "Fn::GetAtt": [
+              "apiVelpaNewVersion",
+              "Outputs.GraphQLAPIEndpointOutput"
+            ]
+          },
+          "apiVelpaNewVersionGraphQLAPIKeyOutput": {
+            "Fn::GetAtt": [
+              "apiVelpaNewVersion",
+              "Outputs.GraphQLAPIKeyOutput"
+            ]
+          },
+          "env": "staging"
+        }
+      }
+    },
+    "functionloginLinkStripe": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/loginLinkStripe-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/loginLinkStripe-74786c6b38777a595455-build.zip",
+          "env": "staging"
+        }
+      }
+    },
+    "functionRetrieveBalanceStripe": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/RetrieveBalanceStripe-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/RetrieveBalanceStripe-5a7767724f425173636e-build.zip",
+          "env": "staging"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "Region": {
+      "Description": "CloudFormation provider root stack Region",
+      "Value": {
+        "Ref": "AWS::Region"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-Region"
+        }
+      }
+    },
+    "StackName": {
+      "Description": "CloudFormation provider root stack ID",
+      "Value": {
+        "Ref": "AWS::StackName"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-StackName"
+        }
+      }
+    },
+    "StackId": {
+      "Description": "CloudFormation provider root stack name",
+      "Value": {
+        "Ref": "AWS::StackId"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-StackId"
+        }
+      }
+    },
+    "DeploymentBucketName": {
+      "Description": "CloudFormation provider root stack deployment bucket name",
+      "Value": {
+        "Ref": "DeploymentBucketName"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-DeploymentBucketName"
+        }
+      }
+    },
+    "AuthRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "AuthRole",
+          "Arn"
+        ]
+      }
+    },
+    "UnauthRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "UnauthRole",
+          "Arn"
+        ]
+      }
+    },
+    "AuthRoleName": {
+      "Value": {
+        "Ref": "AuthRole"
+      }
+    },
+    "UnauthRoleName": {
+      "Value": {
+        "Ref": "UnauthRole"
+      }
+    }
+  }
+}

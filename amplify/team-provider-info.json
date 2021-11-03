@@ -1,0 +1,51 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-velpanewversion-staging-193449-authRole",
+      "UnauthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpanewversion-staging-193449-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpanewversion-staging-193449-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+      "UnauthRoleName": "amplify-velpanewversion-staging-193449-unauthRole",
+      "StackName": "amplify-velpanewversion-staging-193449",
+      "StackId": "arn:aws:cloudformation:us-east-1:832832547198:stack/amplify-velpanewversion-staging-193449/8a9775d0-ee48-11eb-a6fc-0e35b405c3d1",
+      "AmplifyAppId": "d1jnstrngrhc0b"
+    },
+    "categories": {
+      "auth": {
+        "velpanewversion": {
+          "userPoolId": "us-east-1_MLaD0VGx7",
+          "userPoolName": "velpaf3732cb1_userpool_f3732cb1-dev",
+          "webClientId": "6kanfftqjuu7pgv7415or1hkl9",
+          "nativeClientId": "7inpbf9u3oqq978pt01d1ieu91",
+          "identityPoolId": "us-east-1:27777e6d-857e-4187-84b6-85a17891d320",
+          "identityPoolName": "velpaf3732cb1_identitypool_f3732cb1__dev",
+          "allowUnauthenticatedIdentities": true,
+          "authRoleArn": "arn:aws:iam::832832547198:role/amplify-velpa-dev-172310-authRole",
+          "authRoleName": "amplify-velpa-dev-172310-authRole",
+          "unauthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpa-dev-172310-unauthRole",
+          "unauthRoleName": "amplify-velpa-dev-172310-unauthRole",
+          "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com"
+        }
+      },
+      "function": {
+        "CreatePaymentIntent": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/CreatePaymentIntent-62542b394f7958627867-build.zip"
+        },
+        "CreateStripeAcount": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/CreateStripeAcount-4c306b47764244596476-build.zip"
+        },
+        "loginLinkStripe": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/loginLinkStripe-74786c6b38777a595455-build.zip"
+        },
+        "RetrieveBalanceStripe": {
+          "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
+          "s3Key": "amplify-builds/RetrieveBalanceStripe-5a7767724f425173636e-build.zip"
+        }
+      }
+    }
+  }
+}
