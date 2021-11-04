@@ -28,11 +28,11 @@ export default ({ route, navigation }) => {
     }, []);
 
     function handleSolicitudes() {
-        navigation.navigate("Solicitudes")
+        navigation.navigate("MisSolicitudes")
     }
 
     function handleViajes() {
-        navigation.navigate("Reservaciones")
+        navigation.navigate("MisReservas")
     }
 
 
@@ -228,7 +228,7 @@ export default ({ route, navigation }) => {
                 {/* Controles de la app */}
                 <View style={styles.body}>
                     <Elemento
-                        texto={"Aventuras proximas"}
+                        texto={"Mis aventuras"}
                         onPress={handleViajes}
                         icono={
                             <AntDesign name="calendar" size={30} color="black" />}

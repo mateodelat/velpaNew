@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, Keyboard, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, Image, Keyboard, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-import { moradoOscuro } from '../../assets/constants';
+import { colorFondo, moradoOscuro } from '../../assets/constants';
 import Inicio from '../screens/Inicio';
 import HeaderNav from './components/HeaderNav';
 
@@ -18,6 +18,7 @@ import NotificationsTab from './NotificationsTab';
 import ComponentePrueba from '../components/ComponentePrueba';
 import ModalAgregar from './components/ModalAgregar';
 import { useNavigation } from '@react-navigation/native';
+import MapaAventuras from '../screens/MapaAventuras';
 
 
 const Tab = createBottomTabNavigator()
@@ -61,10 +62,20 @@ const CustomPlus = ({ setModalVisible, esGuia }) => {
 
 
 	return <View style={{ justifyContent: 'center', alignItems: 'center', }}>
+
+		<View style={{
+			position: 'absolute',
+			backgroundColor: '#F4F6F6',
+			height: 90,
+			width: 90,
+			borderRadius: 100,
+			bottom: 0,
+			alignSelf: 'center',
+		}} />
 		<Pressable
 			style={{
 				top: -10,
-				padding: 10,
+				padding: 5,
 				backgroundColor: '#fff',
 				borderRadius: 70,
 
@@ -76,8 +87,8 @@ const CustomPlus = ({ setModalVisible, esGuia }) => {
 
 			<View
 				style={{
-					width: 60,
-					height: 60,
+					width: 55,
+					height: 55,
 					borderRadius: 35,
 					backgroundColor: moradoOscuro,
 					alignItems: 'center', justifyContent: 'center',
@@ -99,33 +110,16 @@ const Plus = () => {
 	return null
 }
 
+const { width, height } = Dimensions.get("window")
 
 export default () => {
-	const [keyboardVisible, setKeyboardVisible] = useState(false);
-
 	const [modalVisible, setModalVisible] = useState(false);
 	const [esGuia, setEsGuia] = useState(null);
 
 	useEffect(() => {
 		verificarGuia()
 
-		const keyboardDidShowListener = Keyboard.addListener(
-			'keyboardDidShow',
-			() => {
-				setKeyboardVisible(true); // or some other action
-			}
-		);
-		const keyboardDidHideListener = Keyboard.addListener(
-			'keyboardDidHide',
-			() => {
-				setKeyboardVisible(false); // or some other action
-			}
-		);
 
-		return () => {
-			keyboardDidHideListener.remove();
-			keyboardDidShowListener.remove();
-		};
 	}, []);
 
 	function verificarGuia() {
@@ -136,26 +130,25 @@ export default () => {
 	}
 
 	return (
-		<View style={{ flex: 1, }}>
+		<View style={{
+			width,
+			height,
+		}}>
 
 			<Tab.Navigator
 				screenOptions={{
 					headerShown: false,
 					tabBarShowLabel: false,
 
-					tabBarHideOnKeyboard: true,
-
 					tabBarActiveTintColor: moradoOscuro,
 					tabBarInactiveTintColor: "black",
 
 					tabBarStyle: {
-						bottom: keyboardVisible ? -10 : 0,
 						paddingLeft: 10,
 						paddingBottom: 10,
 						elevation: 0,
 						backgroundColor: '#F4F6F6',
-						height: 90,
-						borderRadius: 15,
+						height: 80,
 					},
 				}}
 			>
@@ -185,7 +178,7 @@ export default () => {
 
 				<Tab.Screen
 					name="Explorar"
-					component={ComponentePrueba}
+					component={MapaAventuras}
 
 					options={{
 						tabBarIcon: ({ color }) => (
@@ -283,6 +276,7 @@ export default () => {
 					setModalVisible={setModalVisible}
 				/>
 			</Modal>
+
 		</View>
 	)
 }

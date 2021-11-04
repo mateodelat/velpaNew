@@ -39,7 +39,7 @@ export default ({ navigation }) => {
 
 
         timer = setTimeout(() => {
-            flatList.current.scrollToIndex({
+            flatList?.current?.scrollToIndex({
                 index: actualIdx
             })
             setActualIdx(actualIdx < (lenghtPublicidad - 1) ? actualIdx + 1 : 0)
@@ -60,7 +60,9 @@ export default ({ navigation }) => {
 
 
     return (
-        <View
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+
             onPress={() => Keyboard.dismiss()}
 
             style={styles.container}>
@@ -238,7 +240,7 @@ export default ({ navigation }) => {
 
                 </ScrollView>
                 <Pressable
-                    onPress={() => navigation.navigate("Reservaciones")}
+                    onPress={() => navigation.navigate("MisReservas")}
                     style={{
                         backgroundColor: moradoOscuro,
                         padding: 10,
@@ -256,7 +258,7 @@ export default ({ navigation }) => {
                         }}>Mis aventuras</Text>
                 </Pressable>
             </View>
-        </View >
+        </ScrollView >
     )
 }
 

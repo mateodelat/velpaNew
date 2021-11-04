@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-import { Linking, View, LogBox } from 'react-native';
+import { Linking, View, LogBox, StyleSheet } from 'react-native';
 
 import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
@@ -124,7 +124,7 @@ const App = () => {
   // }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff', }}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       < StripeProvider
         publishableKey="pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd"
         // urlScheme={localRedirectSignIn} // required for 3D Secure and bank redirects

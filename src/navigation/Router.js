@@ -7,7 +7,6 @@ import NavBar from './NavBar';
 import Header from '../components/header';
 import ChatRoomHeader from '../components/ChatRoomHeader';
 
-// import Solicitudes from '../screens/Solicitudes';
 import SolicitudStack from './SolicitudStack';
 import AdminStack from './AdminStack';
 
@@ -26,6 +25,8 @@ import AgregarFecha from '../screens/AgregarFecha';
 import SeleccionaAventura from '../screens/SeleccionaAventura';
 import SolicitudAventura from '../screens/SolicitudAventura';
 import Agregar2 from '../screens/AgregarFecha/Agregar2';
+import MisReservas from '../screens/MisReservas';
+import MisSolicitudes from '../screens/MisSolicitudes';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export default () => (
 
         <Stack.Navigator
             screenOptions={{
+
                 header: ({ scene, previous, navigation }) => {
                     const { options } = scene.descriptor;
                     const title =
@@ -200,6 +202,22 @@ export default () => (
                 component={AdminStack}
                 options={{
                     headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="MisReservas"
+                component={MisReservas}
+                options={{
+                    // headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name="MisSolicitudes"
+                component={MisSolicitudes}
+                options={{
+                    // headerShown: false
                 }}
             />
 

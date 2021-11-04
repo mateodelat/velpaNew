@@ -527,6 +527,19 @@ export function validURL(str) {
   return !!pattern.test(str);
 }
 
+export function isUrl(string) {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+
 export const fetchAventura = (aventuraID) => {
   return API.graphql({ query: getAventura, variables: { id: aventuraID } })
     .then(async d => {

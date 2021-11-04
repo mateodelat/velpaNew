@@ -198,6 +198,7 @@ export default function () {
                         setModalVisible={setModalVisible}
                     /> :
                     <ModalRuta
+                        img={"https://i.ibb.co/dcXDs4G/Ruta-Nevado-Garmin.png"}
                         setModalVisible={setModalVisible}
                     />}
             </Modal>

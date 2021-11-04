@@ -6,11 +6,9 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { moradoOscuro } from '../../../assets/constants';
 
-export default ({ title, navigation }) => {
+export default ({ title }) => {
 
-    const handlePress = () => {
-        navigation.navigate("Notificaciones")
-    }
+    const navigation = useNavigation()
 
     return (
         <SafeAreaView style={styles.header}>
