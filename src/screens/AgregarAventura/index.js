@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     Animated,
     Dimensions,
@@ -14,19 +14,22 @@ import {
 } from 'react-native'
 
 import ImageFullScreen from '../../components/ImageFullScreen';
+import MapView from 'react-native-maps';
 
 import Carrousel from './components/Carrousel';
 
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 
 
 import Boton from '../../components/Boton';
-import { colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { colorFondo, moradoClaro, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
 import dificultad from '../../../assets/dificultad';
 
+const { height } = Dimensions.get("screen")
 
 export default ({ navigation }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
@@ -66,6 +69,18 @@ export default ({ navigation }) => {
 
     const [buttonLoading, setButtonLoading] = useState(false);
 
+    // Variables del mapa
+    const [region, setRegion] = useState({
+        latitude: 21.76227198730249,
+        latitudeDelta: 32.71611359157346,
+        longitude: -104.03593288734555,
+        longitudeDelta: 60.73143247514963,
+    });
+
+    // Checar si la ubicacion esta activada
+    useEffect(() => {
+        verificarUbicacion()
+    }, []);
 
     function handleContinuar() {
         const precioMin = isNaN(parseFloat(aventura.precioMin, 10)) ? null : parseFloat(aventura.precioMin, 10)
@@ -85,7 +100,8 @@ export default ({ navigation }) => {
             altitud,
             ascenso,
 
-            dificultad
+            dificultad,
+            region
         }
 
         // Existencia de parametros
@@ -112,6 +128,8 @@ export default ({ navigation }) => {
             Alert.alert("Error", "El precio maximo debe ser mayor que el precio minimo")
             return
         }
+
+
         setButtonLoading(true)
 
         setTimeout(() => {
@@ -128,6 +146,14 @@ export default ({ navigation }) => {
         setDificultad(index)
     }
 
+    const handleRegionMap = (e) => {
+        const { latitude, longitude } = e
+
+        console.log(e)
+
+        setRegion(e)
+
+    }
 
     return (
         <View style={{ flex: 1, }}>
@@ -457,6 +483,39 @@ export default ({ navigation }) => {
                         </View>
                     </View>
 
+                    <Text style={{
+                        ...styles.captionTxt,
+                        marginTop: 20,
+                    }}>Ubicacion aproximada aventura*</Text>
+                    <View style={styles.mapContainer}>
+
+                        <MapView
+                            provider={"google"}
+                            mapType={"standard"}
+
+                            showsUserLocation={true}
+                            loadingEnabled={true}
+
+                            initialRegion={region}
+
+                            style={{
+                                ...StyleSheet.absoluteFillObject,
+
+                            }}
+
+                            onRegionChangeComplete={handleRegionMap}
+
+                        />
+                        <Entypo
+                            style={{
+                                bottom: 16,
+                            }}
+                            name="location-pin"
+                            size={40}
+                            color={moradoOscuro}
+                        />
+
+                    </View>
 
 
                     <View style={styles.line} />
@@ -584,5 +643,11 @@ const styles = StyleSheet.create({
 
     dificultadIconContainer: {
         padding: 6,
+    },
+
+    mapContainer: {
+        width: '100%',
+        height: height * 0.3,
+        alignItems: 'center', justifyContent: 'center',
     }
 })

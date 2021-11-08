@@ -44,7 +44,7 @@ export default function ({
             />
             <Feather
                 name="search"
-                size={25}
+                size={24}
                 color="#7E7F84"
                 style={{ position: 'absolute', left: 20, }}
             />
@@ -63,7 +63,7 @@ export default function ({
 
 
         {/* Barra de sugerencias */}
-        {buscar.length > 2 && <View style={styles.sugerenciasContainer}>
+        {buscar.length > 0 && <View style={styles.sugerenciasContainer}>
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -72,6 +72,7 @@ export default function ({
                     sugested.length !== 0 ?
                         sugested.map((e, i) => (
                             <Pressable
+                                key={e.key}
                                 onPress={() => onPress(e.index)}
                                 style={styles.sugerenciaItem}>
                                 <Entypo

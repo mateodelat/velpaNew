@@ -2,6 +2,7 @@ import { API, Auth, Storage } from "aws-amplify";
 import { Alert, Linking, Platform } from "react-native";
 import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
 
 export function isAlphaNumeric(str) {
   var code, i, len;
@@ -1291,6 +1292,18 @@ export const shadowMarcada = {
   elevation: 23,
 
 }
+
+export const verificarUbicacion = async () => {
+  let { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+    console.log("Permisos no obtenidos para la ubicacion")
+
+    return false;
+  } else {
+    return true
+  }
+}
+
 
 export const shadowMedia = {
   shadowColor: "#000",

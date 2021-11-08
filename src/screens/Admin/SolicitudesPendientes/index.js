@@ -13,7 +13,7 @@ import {
 
 import { API, Auth } from 'aws-amplify';
 
-import { formatAMPM, listSolicitudGuiasPendientes, meses, updateSolicitudGuia, createUsuarioAventura, updateUsuario, abrirStripeAccount } from '../../../../assets/constants';
+import { formatAMPM, listSolicitudGuiasPendientes, meses, updateSolicitudGuia, createUsuarioAventura, updateUsuario, abrirStripeAccount, moradoClaro } from '../../../../assets/constants';
 
 import { Loading } from '../../../components/Loading';
 import Boton from '../../../components/Boton';
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     elemento: {
         marginVertical: 10,
         padding: 10,
-        backgroundColor: '#80A3FF',
+        backgroundColor: moradoClaro,
 
         shadowColor: "#000",
         shadowOffset: {

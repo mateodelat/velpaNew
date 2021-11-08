@@ -5,11 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { container, moradoClaro, moradoOscuro } from '../../../assets/constants';
 
 
 export default ({ navigation }) => {
     return (
-        <View style={styles.container}>
+        <View style={container}>
 
             {/* Solicitudes de guia */}
             <Text style={{ ...styles.texto, marginTop: 0, }}>Solicitudes</Text>
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginVertical: 10,
         padding: 10,
-        backgroundColor: '#80A3FF',
+        backgroundColor: moradoClaro,
 
         shadowColor: "#000",
         shadowOffset: {
@@ -110,7 +111,6 @@ const styles = StyleSheet.create({
     texto: {
         fontSize: 18,
         marginTop: 20,
-        paddingLeft: 20,
         fontWeight: 'bold',
     }
 })

@@ -1,12 +1,11 @@
 import React, { PureComponent, useEffect, useRef, useState } from 'react'
-import { FlatList, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, Image, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Marker } from 'react-native-maps';
 
-import * as Location from 'expo-location';
 import MapView from "react-native-map-clustering";
 
 import { FontAwesome5 } from '@expo/vector-icons';
-import { moradoOscuro } from '../../../assets/constants';
+import { moradoOscuro, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
@@ -16,28 +15,16 @@ import Header from './components/Header';
 export default function ({ navigation }) {
 
     useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                console.log("Permisos no obtenidos para la ubicacion")
-
-                return;
-            }
-        })()
+        verificarUbicacion()
     }, []);
 
     const [selectedMarkerIdx, setSelectedMarkerIdx] = useState(null);
     const [buscar, setBuscar] = useState("");
 
     // Variables para cambiar uno a otro
-    const flatlist = useRef();
-    const map = useRef();
+    const flatlist = useRef(null);
+    const map = useRef(null);
 
-    const categorias = [
-
-
-        "Otros"
-    ]
 
     const listaAventuras = [
         {
@@ -114,13 +101,12 @@ export default function ({ navigation }) {
         },
     ]
 
-
-    const handleVerElemento = (index) => {
+    const handleVerElemento = (idx) => {
         setBuscar("")
 
-        setSelectedMarkerIdx(index)
+        setSelectedMarkerIdx(idx)
 
-        const selectedPlace = listaAventuras[index];
+        const selectedPlace = listaAventuras[idx];
 
         const region = {
             latitude: selectedPlace.coordinates.latitude,
@@ -128,17 +114,18 @@ export default function ({ navigation }) {
             latitudeDelta: 0.8,
             longitudeDelta: 0.8,
         }
+        flatlist.current.scrollToIndex({ index: idx })
         map.current.animateToRegion(region);
-        flatlist.current.scrollToIndex({ index })
 
 
     }
 
     // Variables del flatlist
-    const viewConfig = useRef({ itemVisiblePercentThreshold: 70 })
+    const viewConfig = useRef({ itemVisiblePercentThreshold: 100 })
     const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
             const index = viewableItems[0].index;
+            console.log(index)
             handleVerElemento(index)
         }
     })
@@ -194,6 +181,8 @@ export default function ({ navigation }) {
                 style={styles.flatList}
                 horizontal
                 pagingEnabled
+                scrollEventThrottle={1}
+
                 showsHorizontalScrollIndicator={false}
 
                 initialNumToRender={2}
@@ -201,7 +190,7 @@ export default function ({ navigation }) {
                 viewabilityConfig={viewConfig.current}
                 onViewableItemsChanged={onViewChanged.current}
 
-                keyExtractor={(e, i) => i.toString()}
+                keyExtractor={(e, i) => ("ItemAventura-", i)}
                 renderItem={({ item, index }) => {
                     return <AdventureItem
                         item={item}

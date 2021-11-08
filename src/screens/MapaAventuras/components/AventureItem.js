@@ -16,7 +16,9 @@ export default class AdventureItem extends PureComponent {
             <View style={{
                 width: this.dimensions.width,
             }}>
-                <View style={styles.elementContainer}>
+                <Pressable
+                    onPress={() => this.props.navigation.navigate("DetalleAventura")}
+                    style={styles.elementContainer}>
                     {/* Imagen de aventura */}
                     <View style={{
                         flex: 1,
@@ -28,8 +30,7 @@ export default class AdventureItem extends PureComponent {
                     </View>
 
                     {/* Texto de descripcion */}
-                    <Pressable
-                        onPress={() => this.props.navigation.navigate("DetalleAventura")}
+                    <View
                         style={styles.textoDescrpicion}>
                         <View style={{ flex: 1, }}>
 
@@ -45,8 +46,8 @@ export default class AdventureItem extends PureComponent {
                             color={"gray"}
                         />
 
-                    </Pressable>
-                </View>
+                    </View>
+                </Pressable>
             </View>)
     }
 }

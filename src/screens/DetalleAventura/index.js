@@ -9,7 +9,8 @@ import {
     View,
     ScrollView,
     Alert,
-    Pressable
+    Pressable,
+    Linking
 } from 'react-native'
 
 import dificultad from '../../../assets/dificultad';
@@ -36,6 +37,9 @@ export default ({ navigation }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
 
+    const linkNevado = "https://www.google.com.mx/maps/place/Nevado+de+Colima/"
+
+
 
     const scrollX = useRef(new Animated.Value(0)).current
     const scrollY = useRef(new Animated.Value(0)).current
@@ -55,6 +59,11 @@ export default ({ navigation }) => {
 
     function handleContinuar() {
         navigation.navigate("FechasAventura")
+    }
+
+
+    function verEnGoogleMaps() {
+        Linking.openURL(linkNevado)
     }
 
     function handleNavegarSugerido() {
@@ -194,7 +203,7 @@ export default ({ navigation }) => {
                         }}>
                             {/* Ubicacion aventura */}
                             <Pressable
-                                onPress={() => Alert.alert("Ir a google maps")}
+                                onPress={verEnGoogleMaps}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
@@ -205,7 +214,7 @@ export default ({ navigation }) => {
                                 <Text style={{
                                     fontSize: 16,
                                     color: "#0000009E",
-                                }}>Africa</Text>
+                                }}>Mexico</Text>
                             </Pressable>
 
                             {/* Distancia */}
