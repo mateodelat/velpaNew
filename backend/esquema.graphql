@@ -1,7 +1,7 @@
 type Aventura @model @auth(rules: [{allow: public}]) {
   id: ID!
   titulo: String!
-  imagenFondo: String!
+  imagenFondoIdx: Int!
   imagenDetalle: [String]!
   precioMin: Int!
   precioMax: Int!

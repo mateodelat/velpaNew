@@ -106,7 +106,7 @@ const App = () => {
 
 
 
-  if (animacion) return (<Loading valor={0} />)
+  // if (animacion) return (<Loading valor={0} />)
 
 
   if (loading) return (

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
+    ActivityIndicator,
     Alert,
     Dimensions,
     Image,
@@ -20,10 +21,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { colorFondo, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from '../../components/CuadradoImagen';
+import { Loading } from '../../components/Loading';
 
 export default ({ navigation }) => {
 
@@ -36,8 +38,16 @@ export default ({ navigation }) => {
     const [dificultad, setDificultad] = useState([true, true, true]);
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
+    const [aventuras, setAventuras] = useState(null);
+
     const { height, width } = Dimensions.get("window")
 
+
+    useEffect(() => {
+        listAventurasAutorizadas(8).then(r => {
+            setAventuras(r)
+        })
+    }, []);
 
     const categorias = [
         {
@@ -60,8 +70,9 @@ export default ({ navigation }) => {
 
 
     const handleNavigateAventura = (id) => {
-        Alert.alert("Navegar a aventura", id)
-        navigation.navigate("DetalleAventura")
+        navigation.navigate("DetalleAventura", {
+            id
+        })
     }
 
 
@@ -257,26 +268,45 @@ export default ({ navigation }) => {
                     {/* $$$$$$$$$$$$$*/}
                     {/* Mapear todas las aventuras */}
                     {
-                        [...Array(4).keys()].map((_, row) => (
-                            <View
-                                key={"row", row}
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    marginBottom: 15,
-                                }}>
-                                {[...Array(2).keys()].map((e, idxAve) => (
+                        aventuras === null ?
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: height - 55 * 3 - 20 * 2,
+                            }}>
+                                <ActivityIndicator
+                                    size={"large"}
+                                    color={"black"}
+                                />
+                            </View> :
+                            aventuras.length === 0 ?
+                                <Text style={styles.noAventuras}>No hay aventuras</Text>
+                                :
+                                [...Array(Math.round(aventuras.length / 2)).keys()].map((_, row) => (
+                                    <View
+                                        key={"row", row}
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 15,
+                                        }}>
+                                        {[aventuras[row * 2], row * 2 + 1 < aventuras.length && aventuras[row * 2 + 1]].map((e, idxAve) => {
 
-                                    <CuadradoImagen
-                                        tamañoCuadrado={(width / 2 - 30)}
-                                        titulo={"El nevado de colima"}
-                                        key={"Ave", idxAve}
-                                        onPress={() => handleNavigateAventura("Idave")}
-                                    />
-                                ))}
+                                            if (!e) return
+                                            return (
 
-                            </View>
-                        ))
+                                                <CuadradoImagen
+                                                    tamañoCuadrado={(width / 2 - 30)}
+                                                    item={e}
+                                                    key={"Ave", idxAve}
+                                                    onPress={() => handleNavigateAventura(e.id)}
+                                                />
+                                            )
+                                        })}
+
+                                    </View>
+                                ))
                     }
                 </View>
             </ScrollView>
@@ -299,5 +329,13 @@ const styles = StyleSheet.create({
         // top: 50,
         // backgroundColor: '#fff',
         borderRadius: 20,
+    },
+
+    noAventuras: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: moradoOscuro,
+        marginTop: 20,
     }
 })

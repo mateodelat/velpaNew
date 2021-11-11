@@ -3,6 +3,8 @@ import { Alert, Linking, Platform } from "react-native";
 import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import { Aventura } from "../../src/models";
+import { DataStore } from '@aws-amplify/datastore';
 
 export function isAlphaNumeric(str) {
   var code, i, len;
@@ -561,6 +563,22 @@ export const fetchAventura = (aventuraID) => {
       }
       return d
     })
+}
+
+export const listAventurasAutorizadas = async (maxItems) => {
+  const ave = await DataStore.query(Aventura,
+    // Pedir solo las aventuras ya verificadas
+    c => c.estadoAventura("eq", "AUTORIZADO"),
+    {
+      limit: maxItems
+    })
+    .catch(e => {
+      Alert.alert("Error", "Error obteniendo aventuras")
+      console.log(e)
+    })
+
+  return ave
+
 }
 
 export const getMaterialAventura = /* GraphQL */ `

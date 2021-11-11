@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
+    ActivityIndicator,
     Animated,
     Dimensions,
     FlatList,
@@ -12,9 +13,7 @@ import {
     View
 } from 'react-native'
 
-
-
-import { moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import ComponentePublicidad from './components/ComponentePublicidad';
 import Indicador from './components/Indicador';
@@ -26,6 +25,8 @@ export default ({ navigation }) => {
     const flatList = useRef(null)
 
     const [actualIdx, setActualIdx] = useState(null);
+    const [aventuras, setAventuras] = useState([]);
+    const [loadingAventuras, setLoadingAventuras] = useState(true);
 
     const lenghtPublicidad = 3
 
@@ -47,6 +48,8 @@ export default ({ navigation }) => {
     }
 
     useEffect(() => {
+
+        // Timer de publicidad
         if (actualIdx === null) {
             empezarTimer()
         }
@@ -54,9 +57,23 @@ export default ({ navigation }) => {
     }, [actualIdx]);
 
 
+    useEffect(() => {
+        // Pedir 5 aventuras autorizadas
+        listAventurasAutorizadas(5)
+            .then(r => {
+                setAventuras(r)
+            })
+
+    }, []);
+
+
+
     const scrollX = useRef(new Animated.Value(0)).current
 
-
+    // calcular el promedio de dos precios
+    const promedioPrecios = (inicial, final) => {
+        return Math.round((inicial + final) / 2)
+    }
 
 
     return (
@@ -156,86 +173,100 @@ export default ({ navigation }) => {
                     style={{
                         marginTop: 20,
                         flexDirection: 'row',
-                        marginBottom: 35,
+                        marginBottom: 20,
 
                     }}>
 
                     {/* Mapear todas las aventuras */}
                     {
-                        [...Array(4).keys()].map((e, idxAve) => (
+                        aventuras.length !== 0 ?
+                            aventuras.map((e, idxAve) => (
 
-                            <Pressable
-                                key={"idxAve", idxAve}
-                                onPress={() => navigation.navigate("DetalleAventura")}
-                                style={{
-                                    overflow: "hidden",
-                                    marginRight: idxAve === 4 - 1 ? 0 : 30,
-                                    borderRadius: 7,
-                                    width: width * 0.6,
-
-                                }}>
-                                {/* Imagenes */}
-                                <Image
-                                    source={require("../../../assets/IMG/Montana.jpg")}
+                                <Pressable
+                                    key={"idxAve", idxAve}
+                                    onPress={() => navigation.navigate("DetalleAventura", {
+                                        id: e.id
+                                    })}
                                     style={{
+                                        overflow: "hidden",
+                                        marginRight: idxAve === 4 - 1 ? 0 : 30,
+                                        borderRadius: 7,
                                         width: width * 0.6,
-                                        height: height * 0.2,
 
-                                        resizeMode: 'cover',
-                                    }} />
-
-
-
-                                {/* Footer */}
-                                <View style={{
-                                    flexDirection: 'row',
-                                    backgroundColor: '#F4F6F6',
-                                    padding: 5,
-                                    paddingTop: 7,
-                                    // width: '100%',
-                                }}>
-                                    {/* Titulo y desc */}
-                                    <View style={{
-                                        flex: 1,
                                     }}>
-                                        <Text
-                                            style={{
-                                                fontSize: 16,
-                                                fontWeight: 'bold',
-                                            }}
-                                        >El nevado de colima</Text>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{
-                                                fontSize: 14,
-                                                marginTop: 5,
-                                            }}
-                                        >Esta es la descripcion corta de el nevado de colima</Text>
-                                    </View>
+                                    {/* Imagenes */}
+                                    <Image
+                                        source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
+                                        style={{
+                                            width: width * 0.6,
+                                            height: height * 0.2,
+
+                                            resizeMode: 'cover',
+                                        }} />
 
 
-                                    {/* Precio y flecha de continuar */}
+
+                                    {/* Footer */}
                                     <View style={{
-                                        width: 50,
-                                        height: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                        backgroundColor: '#F4F6F6',
+                                        padding: 5,
+                                        paddingTop: 7,
+                                        // width: '100%',
                                     }}>
-                                        <Text
-                                            style={{
-                                                color: '#000',
-                                                fontWeight: 'bold',
-                                                fontSize: 14,
-                                                marginBottom: 5,
-                                            }}
-                                        >18000$</Text>
+                                        {/* Titulo y desc */}
+                                        <View style={{
+                                            flex: 1,
+                                        }}>
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: 'bold',
+                                                }}
+                                            >{e.titulo}</Text>
+                                            <Text
+                                                numberOfLines={1}
+                                                style={{
+                                                    fontSize: 14,
+                                                    marginTop: 5,
+                                                }}
+                                            >{e.descripcion}</Text>
+                                        </View>
 
 
-                                        <Flecha />
+                                        {/* Precio y flecha de continuar */}
+                                        <View style={{
+                                            width: 50,
+                                            height: 50,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
+                                            <Text
+                                                style={{
+                                                    color: '#000',
+                                                    fontWeight: 'bold',
+                                                    fontSize: 14,
+                                                    marginBottom: 5,
+                                                }}
+                                            >$ {promedioPrecios(e.precioMin, e.precioMax)}</Text>
+
+
+                                            <Flecha />
+                                        </View>
                                     </View>
-                                </View>
-                            </Pressable>
-                        ))
+                                </Pressable>
+                            )) :
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: 198.6,
+                                width: width - 40,
+                            }}>
+                                <ActivityIndicator
+                                    size={"large"}
+                                    color={"black"}
+                                />
+                            </View>
                     }
 
                 </ScrollView>

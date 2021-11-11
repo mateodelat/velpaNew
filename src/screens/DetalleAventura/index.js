@@ -66,9 +66,11 @@ export default ({ navigation }) => {
         Linking.openURL(linkNevado)
     }
 
-    function handleNavegarSugerido() {
+    function handleNavegarSugerido(id) {
         navigation.pop()
-        navigation.navigate("DetalleAventura")
+        navigation.navigate("DetalleAventura", {
+            id
+        })
     }
 
     return (
@@ -258,7 +260,7 @@ export default ({ navigation }) => {
                     >
 
 
-                        <CuadradoImagen
+                        {/* <CuadradoImagen
                             onPress={handleNavegarSugerido}
                             tamañoCuadrado={180}
                             titulo={"Iztacihuatl"}
@@ -278,7 +280,7 @@ export default ({ navigation }) => {
                             onPress={handleNavegarSugerido}
                             titulo={"Kilimanjaro"}
                             tamañoCuadrado={180}
-                        />
+                        /> */}
 
                     </ScrollView>
 

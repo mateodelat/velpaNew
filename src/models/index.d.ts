@@ -1,7 +1,6 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
 export enum EstadoAventura {
-  CREADO = "CREADO",
   AUTORIZADO = "AUTORIZADO",
   PENDIENTE = "PENDIENTE",
   RECHAZADO = "RECHAZADO"
@@ -69,7 +68,7 @@ type ReservaMetaData = {
 export declare class Aventura {
   readonly id: string;
   readonly titulo: string;
-  readonly imagenFondo: string;
+  readonly imagenFondoIdx: number;
   readonly imagenDetalle: (string | null)[];
   readonly precioMin: number;
   readonly precioMax: number;
@@ -96,8 +95,8 @@ export declare class Aventura {
 
 export declare class AventuraSolicitudGuia {
   readonly id: string;
-  readonly solicitudguia: SolicitudGuia;
   readonly aventura: Aventura;
+  readonly solicitudguia: SolicitudGuia;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<AventuraSolicitudGuia, AventuraSolicitudGuiaMetaData>);
@@ -109,7 +108,7 @@ export declare class SolicitudGuia {
   readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
   readonly comentarios?: string;
   readonly Aventuras?: (AventuraSolicitudGuia | null)[];
-  readonly evaluadorID: string;
+  readonly evaluadorID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<SolicitudGuia, SolicitudGuiaMetaData>);
@@ -118,8 +117,8 @@ export declare class SolicitudGuia {
 
 export declare class AventuraUsuario {
   readonly id: string;
-  readonly usuario: Usuario;
   readonly aventura: Aventura;
+  readonly usuario: Usuario;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<AventuraUsuario, AventuraUsuarioMetaData>);
@@ -160,8 +159,8 @@ export declare class Usuario {
 export declare class Mensaje {
   readonly id: string;
   readonly content: string;
-  readonly usuarioID: string;
-  readonly chatroomID: string;
+  readonly usuarioID?: string;
+  readonly chatroomID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Mensaje, MensajeMetaData>);
@@ -207,9 +206,9 @@ export declare class Fecha {
   readonly allowNinos: boolean;
   readonly material?: string;
   readonly incluido: string;
-  readonly aventuraID: string;
+  readonly aventuraID?: string;
   readonly Reservas?: (Reserva | null)[];
-  readonly usuarioID: string;
+  readonly usuarioID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Fecha, FechaMetaData>);
@@ -224,8 +223,8 @@ export declare class Reserva {
   readonly ninos: number;
   readonly adultos: number;
   readonly pagoID: string;
-  readonly fechaID: string;
-  readonly usuarioID: string;
+  readonly fechaID?: string;
+  readonly usuarioID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);

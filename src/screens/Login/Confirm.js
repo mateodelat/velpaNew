@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Pressable, TextInput, Alert, Keyboard } from 'react-native';
+import { Text, View, StyleSheet, Pressable, TextInput, Alert, Keyboard, Dimensions } from 'react-native';
 import { Auth } from 'aws-amplify';
 import { colorFondo, moradoOscuro } from '../../../assets/constants';
 
-
+const { width } = Dimensions.get("screen")
 
 export default function ({ navigation, route }) {
     // Variables del texto
@@ -176,13 +176,13 @@ export default function ({ navigation, route }) {
                     <Text style={{ color: '#689ADA', fontSize: 18, }}>Reenviar correo de confirmacion</Text>
                 </Pressable>
 
-                {
-                    message !== "" ?
-                        <View style={styles.message}>
-                            <Text style={{ fontSize: 18, color: '#fff', textAlign: 'center', }}>{message}</Text>
-                        </View> : null
-                }
             </View>
+            {
+                message !== "" ?
+                    <View style={styles.message}>
+                        <Text style={{ fontSize: 18, color: '#fff', textAlign: 'center', }}>{message}</Text>
+                    </View> : null
+            }
         </Pressable >
     )
 }
@@ -224,11 +224,7 @@ const styles = StyleSheet.create({
     message: {
         backgroundColor: '#53A548',
         position: 'absolute',
-        alignSelf: 'center',
-        flex: 1,
-        width: '100%',
-        borderBottomLeftRadius: 7,
-        borderBottomRightRadius: 7,
+        width,
         padding: 15,
         paddingHorizontal: 5
     },

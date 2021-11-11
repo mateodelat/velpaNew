@@ -1,5 +1,5 @@
-import React, { PureComponent, useEffect, useRef, useState } from 'react'
-import { FlatList, Image, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { FlatList, Image, Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native'
 import { Marker } from 'react-native-maps';
 
 import MapView from "react-native-map-clustering";
