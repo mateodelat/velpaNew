@@ -1,203 +1,94 @@
 {
   "providers": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-velpanewversion-staging-193449-authRole",
-      "UnauthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpanewversion-staging-193449-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpanewversion-staging-193449-authRole",
+      "AuthRoleName": "amplify-velpatest-staging-02546-authRole",
+      "UnauthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpatest-staging-02546-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpatest-staging-02546-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
-      "UnauthRoleName": "amplify-velpanewversion-staging-193449-unauthRole",
-      "StackName": "amplify-velpanewversion-staging-193449",
-      "StackId": "arn:aws:cloudformation:us-east-1:832832547198:stack/amplify-velpanewversion-staging-193449/8a9775d0-ee48-11eb-a6fc-0e35b405c3d1",
-      "AmplifyAppId": "d1jnstrngrhc0b"
+      "DeploymentBucketName": "amplify-velpatest-staging-02546-deployment",
+      "UnauthRoleName": "amplify-velpatest-staging-02546-unauthRole",
+      "StackName": "amplify-velpatest-staging-02546",
+      "StackId": "arn:aws:cloudformation:us-east-1:832832547198:stack/amplify-velpatest-staging-02546/95459a40-40f3-11ec-9a9c-12168e5fe2df",
+      "AmplifyAppId": "d17orri9ngjhmq"
     }
   },
   "auth": {
-    "velpanewversion": {
+    "velpatestb8082e16": {
       "service": "Cognito",
-      "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
-      "output": {
-        "UserPoolId": "us-east-1_MLaD0VGx7",
-        "UserPoolName": "velpaf3732cb1_userpool_f3732cb1-dev",
-        "AppClientID": "7inpbf9u3oqq978pt01d1ieu91",
-        "AppClientIDWeb": "6kanfftqjuu7pgv7415or1hkl9",
-        "HostedUIDomain": "velpaf3732cb1-f3732cb1-dev",
-        "IdentityPoolId": "us-east-1:27777e6d-857e-4187-84b6-85a17891d320",
-        "IdentityPoolName": "velpaf3732cb1_identitypool_f3732cb1__dev",
-        "GoogleWebClient": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
-        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"implicit\"],\"AllowedOAuthScopes\":[\"aws.cognito.signin.user.admin\",\"email\",\"openid\",\"phone\",\"profile\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"]}"
+      "frontendAuthConfig": {
+        "loginMechanisms": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
       },
-      "lastPushTimeStamp": "2021-07-26T19:37:00.753Z"
+      "output": {
+        "UserPoolId": "us-east-1_74cawTLuP",
+        "AppClientIDWeb": "5ls3gj88nnleeeliq15ggjc7ep",
+        "AppClientID": "4o5p9elcfggilb80hvi8lmpuct",
+        "HostedUIDomain": "velpaauth-staging",
+        "IdentityPoolId": "us-east-1:47f30848-c1e5-4574-bf06-e10d683abc3d",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:832832547198:userpool/us-east-1_74cawTLuP",
+        "IdentityPoolName": "velpatestb8082e16_identitypool_b8082e16__staging",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"]}",
+        "UserPoolName": "velpatestb8082e16_userpool_b8082e16"
+      },
+      "lastPushTimeStamp": "2021-11-11T12:26:02.138Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpatest-staging-02546-deployment/amplify-cfn-templates/auth/velpatestb8082e16-cloudformation-template.yml",
+        "logicalId": "authvelpatestb8082e16"
+      }
     }
   },
   "api": {
-    "VelpaNewVersion": {
+    "VelpaTest": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authvelpatestb8082e16"
             }
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 30,
+                "description": "api key description"
+              }
             },
             {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authvelpanewversion"
-              }
+              "authenticationType": "AWS_IAM"
             }
           ]
         },
-        "GraphQLAPIIdOutput": "hsczuaxa2zak7laopf4layi2su",
-        "GraphQLAPIEndpointOutput": "https://tlpmf7idfvextlpbc4qrrmwgfy.appsync-api.us-east-1.amazonaws.com/graphql",
-        "GraphQLAPIKeyOutput": "da2-3tpwvu3nobf35bk4mmx3m3gfnq"
+        "GraphQLAPIIdOutput": "zzf5c7dwm5fnnjndyiwnty4xme",
+        "GraphQLAPIEndpointOutput": "https://dkw4y37lebcl5ipwdh3zmbl2c4.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-swcawfepxnfn5bhbinnq3qylui"
       },
+      "lastPushTimeStamp": "2021-11-11T12:26:02.142Z",
       "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-        "logicalId": "apiVelpaNewVersion"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:13:01.863Z",
-      "lastPushDirHash": "TErX5HYdDZHn2o6KKygseJ+fieU="
-    }
-  },
-  "storage": {
-    "storage": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "BucketName": "velpanewversion3d014069f75d4be1bc2875498e9be3dc193449-staging",
-        "Region": "us-east-1"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:12:59.216Z",
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
-        "logicalId": "storagestorage"
-      },
-      "lastPushDirHash": "ZkzZVo8fb9XLkHSzDSIq1NEsEz0="
-    }
-  },
-  "function": {
-    "CreatePaymentIntent": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "lastBuildTimeStamp": "2021-09-07T14:19:24.119Z",
-      "lastBuildType": "PROD",
-      "lastPackageTimeStamp": "2021-09-07T14:19:25.042Z",
-      "distZipFilename": "CreatePaymentIntent-62542b394f7958627867-build.zip",
-      "s3Bucket": {
-        "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
-        "s3Key": "amplify-builds/CreatePaymentIntent-62542b394f7958627867-build.zip"
-      },
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/CreatePaymentIntent-cloudformation-template.json",
-        "logicalId": "functionCreatePaymentIntent"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:12:59.220Z",
-      "output": {
-        "Region": "us-east-1",
-        "Arn": "arn:aws:lambda:us-east-1:832832547198:function:CreatePaymentIntent-staging",
-        "Name": "CreatePaymentIntent-staging",
-        "LambdaExecutionRole": "velpanewversionLambdaRole6b4339ff-staging"
-      },
-      "lastPushDirHash": "94njWw085RW83HuCy8CUdUUR80Y="
-    },
-    "CreateStripeAcount": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "lastBuildTimeStamp": "2021-09-06T01:22:05.296Z",
-      "lastBuildType": "PROD",
-      "lastPackageTimeStamp": "2021-09-06T01:22:11.751Z",
-      "distZipFilename": "CreateStripeAcount-4c306b47764244596476-build.zip",
-      "s3Bucket": {
-        "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
-        "s3Key": "amplify-builds/CreateStripeAcount-4c306b47764244596476-build.zip"
-      },
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/CreateStripeAcount-cloudformation-template.json",
-        "logicalId": "functionCreateStripeAcount"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:12:59.223Z",
-      "output": {
-        "Region": "us-east-1",
-        "Arn": "arn:aws:lambda:us-east-1:832832547198:function:CreateStripeAcount-staging",
-        "Name": "CreateStripeAcount-staging",
-        "LambdaExecutionRole": "velpanewversionLambdaRole20505993-staging"
-      },
-      "lastPushDirHash": "Z+gxWRsoavpYgXr4XEr5EJUAxw8=",
-      "lastDevBuildTimeStamp": "2021-09-05T16:25:36.288Z",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "VelpaNewVersion",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "loginLinkStripe": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "lastBuildTimeStamp": "2021-09-06T02:52:43.574Z",
-      "lastBuildType": "PROD",
-      "lastPackageTimeStamp": "2021-09-06T02:52:44.887Z",
-      "distZipFilename": "loginLinkStripe-74786c6b38777a595455-build.zip",
-      "s3Bucket": {
-        "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
-        "s3Key": "amplify-builds/loginLinkStripe-74786c6b38777a595455-build.zip"
-      },
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/loginLinkStripe-cloudformation-template.json",
-        "logicalId": "functionloginLinkStripe"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:12:59.230Z",
-      "output": {
-        "Region": "us-east-1",
-        "Arn": "arn:aws:lambda:us-east-1:832832547198:function:loginLinkStripe-staging",
-        "Name": "loginLinkStripe-staging",
-        "LambdaExecutionRole": "velpanewversionLambdaRolea0a39ce2-staging"
-      },
-      "lastPushDirHash": "r68/XTwHwBawaBD5fbP7+yTbl98="
-    },
-    "RetrieveBalanceStripe": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "lastBuildTimeStamp": "2021-09-07T14:36:45.374Z",
-      "lastBuildType": "PROD",
-      "lastPackageTimeStamp": "2021-09-07T14:36:49.525Z",
-      "distZipFilename": "RetrieveBalanceStripe-5a7767724f425173636e-build.zip",
-      "s3Bucket": {
-        "deploymentBucketName": "amplify-velpanewversion-staging-193449-deployment",
-        "s3Key": "amplify-builds/RetrieveBalanceStripe-5a7767724f425173636e-build.zip"
-      },
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpanewversion-staging-193449-deployment/amplify-cfn-templates/function/RetrieveBalanceStripe-cloudformation-template.json",
-        "logicalId": "functionRetrieveBalanceStripe"
-      },
-      "lastPushTimeStamp": "2021-09-13T16:12:59.235Z",
-      "output": {
-        "Region": "us-east-1",
-        "Arn": "arn:aws:lambda:us-east-1:832832547198:function:RetrieveBalanceStripe-staging",
-        "Name": "RetrieveBalanceStripe-staging",
-        "LambdaExecutionRole": "velpanewversionLambdaRole3cf728b8-staging"
-      },
-      "lastPushDirHash": "6PzHXv/ceonRmRUvAfG+J0J1dRk="
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-velpatest-staging-02546-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apiVelpaTest"
+      }
     }
   }
 }

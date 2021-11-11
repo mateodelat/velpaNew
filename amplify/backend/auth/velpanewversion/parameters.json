@@ -1,6 +1,0 @@
-{
-  "authSelections": "identityPoolAndUserPool",
-  "resourceName": "velpanewversion",
-  "serviceType": "imported",
-  "region": "us-east-1"
-}
