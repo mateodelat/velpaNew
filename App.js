@@ -106,22 +106,22 @@ const App = () => {
 
 
 
-  // if (animacion) return (<Loading valor={0} />)
+  if (animacion) return (<Loading valor={0} />)
 
 
-  // if (loading) return (
-  //   <Loading valor={0} />
-  // )
+  if (loading) return (
+    <Loading valor={0} />
+  )
 
-  // if (!authenticated) {
-  //   return (
-  //     <View style={{ flex: 1, backgroundColor: '#fff', }}>
+  if (!authenticated) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#fff', }}>
 
-  //       <StatusBar hidden={true}></StatusBar>
-  //       <LoginStack />
-  //     </View>
-  //   )
-  // }
+        <StatusBar hidden={true}></StatusBar>
+        <LoginStack />
+      </View>
+    )
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>

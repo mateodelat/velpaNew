@@ -1,3 +1,21 @@
+# type Task
+#   @model
+#   @auth(
+#     rules: [
+#       { allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete] }
+#       { allow: groups, groups: ["Employees"], queries: [get, list], mutations: null }
+#     ]
+#   ) {
+#   id: ID!
+#   title: String!
+#   description: String
+#   status: String
+# }
+# type PrivateNote @model @auth(rules: [{ allow: owner }]) {
+#   id: ID!
+#   content: String!
+# }
+
 type Aventura @model @auth(rules: [{allow: public}]) {
   id: ID!
   titulo: String!
@@ -155,21 +173,21 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
 }
 
 
-type Mutation{
-  createPaymentIntent(amount:Int!,comision:Float!,destinationStripeID:String!):PaymentIntent!@function(
-    name:"CreatePaymentIntent-${env}"
-    )
-  CreateStripeAcount(email:String,sub:ID!,url:String!):AcountResult!@function(
-    name:"CreateStripeAcount-${env}"
-    )
-}
+# type Mutation{
+#   createPaymentIntent(amount:Int!,comision:Float!,destinationStripeID:String!):PaymentIntent!@function(
+#     name:"CreatePaymentIntent-${env}"
+#     )
+#   CreateStripeAcount(email:String,sub:ID!,url:String!):AcountResult!@function(
+#     name:"CreateStripeAcount-${env}"
+#     )
+# }
 
-# Tipos de respuesta mutaciones
-type PaymentIntent{
-  clientSecret:String!
-  id:String!
-}
+# # Tipos de respuesta mutaciones
+# type PaymentIntent{
+#   clientSecret:String!
+#   id:String!
+# }
 
-type AcountResult{
-  url:String!
-}
+# type AcountResult{
+#   url:String!
+# }

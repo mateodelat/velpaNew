@@ -1,0 +1,175 @@
+type Aventura @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  titulo: String!
+  imagenFondo: String!
+  imagenDetalle: [String]!
+  precioMin: Int!
+  precioMax: Int!
+  duracion: String
+  descripcion: String
+  dificultad: Float!
+  ubicacionNombre: String
+  ubicacionLink: String!
+  comision: Float!
+  estadoAventura: EstadoAventura!
+  coordenadas: AWSJSON!
+  altitud: Float
+  distanciaRecorrida: Float
+  altimetriaRecorrida: Float
+  categoria: Categorias
+  SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
+  UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
+  Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
+}
+
+type Reserva @model @auth(rules: [{allow: public}]) @key(name: "byFecha", fields: ["fechaID"]) @key(name: "byUsuario", fields: ["usuarioID"]) {
+  id: ID!
+  total: Float!
+  comisionPorPersona: Float!
+  tercera: Int!
+  ninos: Int!
+  adultos: Int!
+  pagoID: String!
+  fechaID: ID!
+  usuarioID: ID!
+}
+
+type Fecha @model @auth(rules: [{allow: public}]) @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "byUsuario", fields: ["usuarioID"]) {
+  id: ID!
+  personasTotales: Int!
+  fechaInicial: AWSTimestamp!
+  fechaFinal: AWSTimestamp!
+  precio: Float!
+  comision: Float!
+  itinerario: AWSJSON!
+  ubicacionNombre: String!
+  ubicacionLink: String!
+  allowTercera: Boolean!
+  allowNinos: Boolean!
+  material: String
+  incluido: AWSJSON!
+  aventuraID: ID!
+  Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
+  usuarioID: ID!
+}
+
+type Usuario @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nombre: String
+  apellido: String
+  foto: String
+  nickname: String
+  calificacion: Float
+  tipo: TipoUsuario
+  selfie: String
+  INE: [String]!
+  licencia: [String]!
+  comentariosAdicionales: String
+  telefono: AWSPhone
+  capacidadMaxima: Int
+  tarjetaCirculacion: String
+  certificaciones: [String]!
+  sitioWeb: AWSURL
+  usuarioRedSocial: String
+  stripeID: String
+  AventurasAutorizadas: [AventuraUsuario] @connection(keyName: "byUsuario", fields: ["id"])
+  Mensajes: [Mensaje] @connection(keyName: "byUsuario", fields: ["id"])
+  ChatRooms: [ChatRoomUsuario] @connection(keyName: "byUsuario", fields: ["id"])
+  Reservas: [Reserva] @connection(keyName: "byUsuario", fields: ["id"])
+  Fechas: [Fecha] @connection(keyName: "byUsuario", fields: ["id"])
+  SolicitudesEvaluadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
+}
+
+type ChatRoom @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  picture: String
+  newMessages: Int!
+  lastMessage: String
+  Mensajes: [Mensaje] @connection(keyName: "byChatRoom", fields: ["id"])
+  Participantes: [ChatRoomUsuario] @connection(keyName: "byChatRoom", fields: ["id"])
+  Fecha: Fecha @connection
+}
+
+type Mensaje @model @auth(rules: [{allow: public}]) @key(name: "byUsuario", fields: ["usuarioID"]) @key(name: "byChatRoom", fields: ["chatroomID"]) {
+  id: ID!
+  content: String!
+  usuarioID: ID!
+  chatroomID: ID!
+}
+
+type SolicitudGuia @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) @key(name: "byUsuario", fields: ["evaluadorID"]) {
+  id: ID!
+  status: StatusSolicitud!
+  comentarios: String
+  Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
+  evaluadorID: ID!
+}
+
+enum EstadoAventura {
+  CREADO
+  AUTORIZADO
+  PENDIENTE
+  RECHAZADO
+}
+
+enum Categorias {
+  APLINISMO
+  MTB
+  OTROS
+}
+
+enum StatusSolicitud {
+  APROVADA
+  PENDIENTE
+  RECHAZADA
+}
+
+enum TipoUsuario {
+  AGENCIA
+  GUIAINDIVIDUAL
+}
+
+type AventuraSolicitudGuia @model(queries: null) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: public}]) {
+  id: ID!
+  solicitudguiaID: ID!
+  aventuraID: ID!
+  solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
+  aventura: Aventura! @connection(fields: ["aventuraID"])
+}
+
+type AventuraUsuario @model(queries: null) @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) @key(name: "byAventura", fields: ["aventuraID", "usuarioID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+  id: ID!
+  usuarioID: ID!
+  aventuraID: ID!
+  usuario: Usuario! @connection(fields: ["usuarioID"])
+  aventura: Aventura! @connection(fields: ["aventuraID"])
+}
+
+type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+  id: ID!
+  chatroomID: ID!
+  usuarioID: ID!
+  chatroom: ChatRoom! @connection(fields: ["chatroomID"])
+  usuario: Usuario! @connection(fields: ["usuarioID"])
+}
+
+
+# type Mutation{
+#   createPaymentIntent(amount:Int!,comision:Float!,destinationStripeID:String!):PaymentIntent!@function(
+#     name:"CreatePaymentIntent-${env}"
+#     )
+#   CreateStripeAcount(email:String,sub:ID!,url:String!):AcountResult!@function(
+#     name:"CreateStripeAcount-${env}"
+#     )
+# }
+
+# # Tipos de respuesta mutaciones
+# type PaymentIntent{
+#   clientSecret:String!
+#   id:String!
+# }
+
+# type AcountResult{
+#   url:String!
+# }

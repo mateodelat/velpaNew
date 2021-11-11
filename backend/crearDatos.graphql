@@ -1,40 +1,10 @@
 #############################################################################
-#################################CATEGORIAS##################################
-#############################################################################
-mutation crearCategorias {
-    cat1: createCategoria(input: {
-        foto: "https://velpanewversion3d014069f75d4be1bc2875498e9be3dc193449-staging.s3.amazonaws.com/hombreEnPiedra.jpg",
-        titulo: "Alpinismo"
-        id:"37ef03ad-8e92-4fdb-84f4-371fcd3824af"
-        guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-    }) {
-        id
-    }
-    cat2: createCategoria(input: {
-        foto: "https://velpanewversion3d014069f75d4be1bc2875498e9be3dc193449-staging.s3.amazonaws.com/MTB.jpg",
-        titulo: "MTB"
-        guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-    }) {
-        id
-    }
-    cat3: createCategoria(input: {
-        foto: "https://velpanewversion3d014069f75d4be1bc2875498e9be3dc193449-staging.s3.amazonaws.com/trekking-bosque.jpg",
-        titulo: "Senderismo"
-        guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-    }) {
-        id
-    }
-}
-
-
-#############################################################################
 ##################################AVENTURAS##################################
 #############################################################################
 mutation createAventura {
     ####################Nevado De Colima####################
     NevadoDeColima : createAventura(input: {
         titulo: "El nevado de colima",
-        id:"221f0c54-fa47-49d9-abae-261544a58db3",
         imagenFondo: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Nevado_de_Colima.JPG",
         imagenDetalle: [
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
@@ -45,50 +15,27 @@ mutation createAventura {
         precioMin: 500,
         precioMax: 1000,
         duracion: "1-2 dias",
-        descripcionCorta: "Esta es una aventura que puede durar de 1 a 2 dias dependiendo de la fecha. El guia lleva su carro con sus respectivos espacios. \nAltitud cima 4500\nTemperatura de 5°-15° en el dia y bajo 0° en la noche dependiendo la epoca.",
-        descripcionLarga: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-        materialObligatorio: [
-            "Botas o tenis",
-            "Pantalon deportivo",
-            "Impermeable",
-            "Chamarra",
-            "Camisa deportiva",
-            "Mochila",
-        ],
-        materialOpcional: [
-            "Guantes",
-            "Trekking poles",
-            "Protector solar",
-            "Buff",
-            "Higiene personal",
-        ],
-        alimentacion: [
-            "Comida practica",
-            "Bote con agua",
-            "Barras o snacks",
-
-        ],
-        materialAcampada: [
-            "Casa de campaña",
-            "Colchoneta para dormir",
-            "Casa de campaña",
-        ],
-
+        descripcion: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
         dificultad: 3,
-        precioVIP: 300,
-        descripcionVIP: "La experiencia vip incluye:\n_Comida gourmet\n_Chef personal\n_Campamento montado\n_Alimento y abastecimiento durante la subida",
-        categoriaID: "37ef03ad-8e92-4fdb-84f4-371fcd3824af"
-    }){
+        ubicacionNombre: "Colima"
+        ubicacionLink: "https://www.google.com/maps/place/Nevado+de+Colima/"
+        comision: 0.2
+        estadoAventura: EstadoAventura!
+        coordenadas: AWSJSON!
+        altitud: Float
+        distanciaRecorrida: Float
+        altimetriaRecorrida: Float
+        categoria: Categorias   
+        }){
     id
   }
 
     ####################Nevado De Toluca####################
     NevadoDeToluca : createAventura(input:{
             titulo: "El nevado de toluca",
-            id:"5ea1a317-1522-43de-a1cb-f430a602d7aa"
             imagenFondo: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Nevado_de_Colima.JPG",
             imagenDetalle: [
-                "https://velpanewversion3d014069f75d4be1bc2875498e9be3dc193449-staging.s3.amazonaws.com/volcan-nevado-de-toluca-hd-mexico-drone-gopro.mp4",
+                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
                 "https://picsum.photos/400?random=102.jpg",
                 "https://picsum.photos/400?random=103.jpg",
                 "https://picsum.photos/400?random=107.jpg",
