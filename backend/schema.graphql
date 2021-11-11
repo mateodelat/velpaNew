@@ -153,4 +153,23 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
- 
+
+
+type Mutation{
+  createPaymentIntent(amount:Int!,comision:Float!,destinationStripeID:String!):PaymentIntent!@function(
+    name:"CreatePaymentIntent-${env}"
+    )
+  CreateStripeAcount(email:String,sub:ID!,url:String!):AcountResult!@function(
+    name:"CreateStripeAcount-${env}"
+    )
+}
+
+# Tipos de respuesta mutaciones
+type PaymentIntent{
+  clientSecret:String!
+  id:String!
+}
+
+type AcountResult{
+  url:String!
+}
