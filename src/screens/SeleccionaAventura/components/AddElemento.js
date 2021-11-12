@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { Feather } from '@expo/vector-icons';
 
-import { colorFondo, moradoClaro, moradoOscuro } from '../../../../assets/constants';
+import { colorFondo, moradoOscuro } from '../../../../assets/constants';
 
 
 export default ({
@@ -27,6 +27,7 @@ export default ({
                 backgroundColor: colorFondo,
                 flex: 1,
                 alignItems: 'center', justifyContent: 'center',
+
             }}>
                 <Feather name="plus" size={50} color={moradoOscuro} />
             </View>

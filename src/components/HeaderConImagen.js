@@ -51,7 +51,7 @@ export default index = ({
 
                 {/* Filtro negro */}
                 <View style={{
-                    backgroundColor: moradoOscuro + "20",
+                    backgroundColor: moradoOscuro + "30",
                     position: 'absolute',
                     height: '100%',
                     width: '100%',

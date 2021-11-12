@@ -77,8 +77,8 @@ export const schema = {
                 "ubicacionLink": {
                     "name": "ubicacionLink",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
+                    "type": "AWSURL",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "comision": {
@@ -175,6 +175,20 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "aventuraID"
                     }
+                },
+                "puntoReunionNombre": {
+                    "name": "puntoReunionNombre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -727,7 +741,7 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": false
+                    "isArrayNullable": true
                 },
                 "licencia": {
                     "name": "licencia",
@@ -735,7 +749,7 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": false
+                    "isArrayNullable": true
                 },
                 "comentariosAdicionales": {
                     "name": "comentariosAdicionales",
@@ -771,7 +785,7 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": false
+                    "isArrayNullable": true
                 },
                 "sitioWeb": {
                     "name": "sitioWeb",
@@ -789,6 +803,13 @@ export const schema = {
                 },
                 "stripeID": {
                     "name": "stripeID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -906,6 +927,12 @@ export const schema = {
                     "type": "auth",
                     "properties": {
                         "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create"
+                                ]
+                            },
                             {
                                 "allow": "private",
                                 "operations": [
@@ -1437,6 +1464,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "titulo": {
+                    "name": "titulo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1704,5 +1745,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "ea0f3f7e9120b3b4f0b7b5bf734ba7f9"
+    "version": "81085ff34b7f1c6ba4b55614d5c784cb"
 };

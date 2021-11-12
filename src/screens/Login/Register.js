@@ -66,18 +66,19 @@ export default function Register({ navigation }) {
                 nickname: nombre
             }
         }).then((user) => {
-            //Una vez le damos a registrar, se crea el nuevo perfil
+            //Una vez le damos a registrar, se crea el nuevo perfil con la api key
             createUsuario({
                 nickname: nombre,
                 sub: user.userSub
+            }, true).then(r => {
+                navigation.navigate("Confirm", { email })
+                clearError()
+
+                setNombre("")
+                setEmail("")
+                setPassword("")
             })
 
-            navigation.navigate("Confirm", { email })
-            clearError()
-
-            setNombre("")
-            setEmail("")
-            setPassword("")
 
         }).catch((error) => {
             switch (error.message) {

@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default ({ scrollY, height, titulo }) => {
+export default ({ scrollY, height, titulo, modalActive }) => {
     const navigation = useNavigation()
 
     const inputRange = [
@@ -26,6 +26,12 @@ export default ({ scrollY, height, titulo }) => {
         inputRange,
         outputRange: [0, 1]
     })
+
+    if (modalActive) return <View style={{
+        ...styles.container,
+        backgroundColor: "#000",
+        height: 30,
+    }} />
 
     return (
         <View style={styles.container}>

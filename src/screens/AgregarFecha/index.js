@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Animated, Dimensions, Image, ImageBackground, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { abrirEnGoogleMaps, colorFondo, formatAMPM, moradoClaro, moradoOscuro, msInMinute, shadowMedia } from '../../../assets/constants'
 
@@ -17,16 +17,23 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const { height } = Dimensions.get("screen")
 
-export default function ({ navigation }) {
+export default function ({ navigation, route }) {
+    const { aventura } = route?.params
+    const { titulo: tituloAventura } = aventura
+
+
     const scrollY = React.useRef(new Animated.Value(0)).current
 
     const ubicacionNombre = "Deporte hábitat GDL"
     const ubicacionLink = "https://g.page/DeporteHabitat?share"
     const maxPersonas = 10
-    const precioMinAventura = 400
-    const precioMaxAventura = 1000
+    const precioMinAventura = aventura.precioMin
+    const precioMaxAventura = aventura.precioMax
 
-    const tituloAventura = "Nevado de colima"
+    // Obtener el limite de personas para el usuario
+    useEffect(() => {
+
+    }, []);
 
     // Fechas del calendario
     const [fechaInicial, setFechaInicial] = useState(null);
@@ -57,11 +64,11 @@ export default function ({ navigation }) {
 
 
     const handleInfoPersonas = () => {
-        Alert.alert("", "Solo has sido autorizado a llevar a ", maxPersonas, " personas")
+        Alert.alert("Informacion", "Solo has sido autorizado a llevar a " + maxPersonas + " personas")
 
     }
     const handleInfoPrecio = () => {
-        Alert.alert("", "El precio por persona puede subir hasta el doble dependiendo de la cantidad de gente en la reserva")
+        Alert.alert("Informacion", "El precio por persona puede subir hasta el doble dependiendo de la cantidad de gente en la reserva")
 
     }
 
@@ -392,7 +399,7 @@ export default function ({ navigation }) {
             </Animated.ScrollView >
 
             <HeaderConImagen
-                titulo={"Nueva fecha"}
+                titulo={tituloAventura}
                 imagen={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}

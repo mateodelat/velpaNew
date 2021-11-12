@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
+    ActivityIndicator,
     Alert,
     Dimensions,
     Image,
     Keyboard,
     Pressable,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
@@ -13,26 +15,32 @@ import {
 } from 'react-native'
 
 
-import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { categorias, colorFondo, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from '../../components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import Boton from '../../components/Boton';
 import AddElemento from './components/AddElemento';
+import { Categorias } from '../../models';
+import { DataStore } from '@aws-amplify/datastore';
+import { AventuraUsuario } from '../../models';
+import Auth from '@aws-amplify/auth';
 
 
 
 export default ({
     route,
 }) => {
+
+    // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
+
+    // Variables iniciales
     const { esSelector } = route.params
 
     let titulo
@@ -52,17 +60,62 @@ export default ({
     }
     const navigation = useNavigation()
 
-    // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
+    // Obtener aventuras
+    const [aventuras, setAventuras] = useState(null);
+    const [aventurasAMostrar, setAventurasAMostrar] = useState(null);
+
+    useEffect(() => {
+        fetchAventuras().then(r => {
+            setAventuras(r)
+            setAventurasAMostrar(r)
+        })
+    }, []);
+
+
+    const fetchAventuras = async () => {
+        return await listAventurasAutorizadas(100)
+            // Obtener aventuras ya perimitidas
+            .then(async r => {
+
+                const { attributes: { sub } } = await Auth.currentUserInfo().catch(e => {
+                    console.log(e)
+                })
+
+                // Obtener relaciones con usuario
+                let aventurasAutorizadasAlUsr = await DataStore
+                    .query(AventuraUsuario, c => c.usuario("eq", sub))
+                    .catch(e => {
+                        console.log(e)
+                        Alert.alert("Error", "Error obteniendo aventuras autorizadas")
+                    })
+
+                console.log(sub)
+                console.log(aventurasAutorizadasAlUsr)
+
+                r = r.map((ave, idx) => {
+                    console.log()
+
+                    return {
+                        ...ave,
+                        notAllowed: true
+                    }
+                })
+                return r
+            })
+
+    }
 
 
     const [buscar, setBuscar] = useState("");
 
+    // Variables del filtro
     const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, false, false]);
     const [dificultad, setDificultad] = useState([true, true, true]);
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
     // UI boton
     const [buttonLoading, setButtonLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const rowsAventura = 2
     const [selectedItems, setSelectedItems] = useState([...Array(rowsAventura + 1).keys()].map((_, row) => {
@@ -86,23 +139,14 @@ export default ({
     const { height, width } = Dimensions.get("window")
 
 
-    const categorias = [
-        {
-            titulo: "Alpinismo",
-            icono: (color) => <FontAwesome5 name="hiking" size={25} color={color} />
-        },
-        {
-            titulo: "MTB",
-            icono: (color) => <Ionicons name="bicycle" size={25} color={color} />
-        },
-        {
-            titulo: "Otros",
-            icono: (color) => <Ionicons name="md-reorder-three" size={25} color={color} />
-        },
-    ]
-
     const handleBorrarBusqueda = () => {
+
+        const nuevasAve = aplicarTodosLosFiltros(aventuras, false)
         setBuscar("")
+
+        setAventurasAMostrar(nuevasAve)
+
+
     }
 
 
@@ -138,8 +182,7 @@ export default ({
 
 
 
-    const handlePressAventura = (id, row, column) => {
-
+    const handlePressAventura = (aventura, row, column) => {
         if (esSelector) {
             let newSelectedItems = [...selectedItems]
 
@@ -149,7 +192,7 @@ export default ({
             setSelectedItems(newSelectedItems)
         } else {
             navigation.navigate("AgregarFecha", {
-                id
+                aventura
             })
         }
     }
@@ -178,6 +221,42 @@ export default ({
         newCategoriasSelect[index] = !newCategoriasSelect[index]
 
         setCategoriasSeleccionadas(newCategoriasSelect)
+
+
+        // Filtrar por categoria y por dificultad
+        const nuevasAve = aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                &&
+
+                (// ALPINISMO
+                    (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // Dificultad media
+                    (newCategoriasSelect[1] && e.categoria === Categorias.MTB) ||
+
+                    // Dificultad dificil
+                    (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
+                ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+
+
+                )
+            )
+        })
+        setAventurasAMostrar(nuevasAve)
     }
 
     const handleClickDificultad = (index) => {
@@ -185,6 +264,94 @@ export default ({
         newDificultades[index] = !newDificultades[index]
 
         setDificultad(newDificultades)
+
+        const nuevasAve = aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                &&
+                ( // Dificultad facil
+                    (newDificultades[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (newDificultades[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (newDificultades[2] && e.dificultad > 3)) &&
+                (// ALPINISMO
+                    (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // Dificultad media
+                    (categoriasSeleccionadas[1] && e.categoria === Categorias.MTB) ||
+
+                    // Dificultad dificil
+                    (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
+                )
+
+            )
+        })
+        setAventurasAMostrar(nuevasAve)
+
+    }
+
+    const handleChangeText = (text) => {
+        setBuscar(text)
+        const nuevasAve = aplicarTodosLosFiltros(aventuras)
+
+        setAventurasAMostrar(nuevasAve)
+    }
+
+    const aplicarTodosLosFiltros = (aventuras, denyBusqueda) => {
+        return aventuras.filter(e => {
+            return (
+                !denyBusqueda ? (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(buscar.toLowerCase())) : true
+                    &&
+                    (// ALPINISMO
+                        (categorias[0] && e.categoria === Categorias.APLINISMO) ||
+
+                        // Dificultad media
+                        (categorias[1] && e.categoria === Categorias.MTB) ||
+
+                        // Dificultad dificil
+                        (categorias[2] && e.categoria === Categorias.OTROS)
+                    ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+                )
+
+            )
+        })
+    }
+
+    const onRefresh = () => {
+        setRefreshing(true)
+
+        fetchAventuras().then(r => {
+            setAventuras(r)
+
+            // Aplicar filtros a nuevas aventuras
+            const nuevasAve = aplicarTodosLosFiltros(r)
+            setAventurasAMostrar(nuevasAve)
+
+        })
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 300);
     }
 
     const handleAddAventura = () => {
@@ -200,8 +367,6 @@ export default ({
         ])
     }
 
-    const tamañoCuadrado = width * 0.5 - 25
-
     return (
         <View
             style={styles.container}>
@@ -209,7 +374,15 @@ export default ({
             <Header navigation={navigation} titulo={titulo} />
 
             <ScrollView
-                showsVerticalScrollIndicator={false}>
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+
+            >
                 <View style={{
                     flex: 1,
                 }}>
@@ -227,11 +400,10 @@ export default ({
 
                         <TextInput
                             style={{ padding: 0, flex: 1, padding: 10, paddingLeft: 40, }}
-                            onSubmitEditing={() => Alert.alert("Buscar", "Se busca la aventura que tenga \"" + buscar + "\" en su titulo o descripcion")}
                             value={buscar}
                             placeholder="Buscar aventuras"
                             placeholderTextColor={"#7E7F84"}
-                            onChangeText={(value) => setBuscar(value)}
+                            onChangeText={handleChangeText}
                         />
                         <Feather
                             name="search"
@@ -258,16 +430,18 @@ export default ({
                     {/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/}
                     {/* $$$$$$$$$$    FILTRAR   $$$$$$$$$$$*/}
                     {/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/}
-                    <Pressable
-                        onPress={() => setFiltrarAbierto(!filtrarAbierto)}
+                    <View
                         style={styles.filtrar}>
 
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 10,
-                        }}>
+                        <Pressable
+                            onPress={() => setFiltrarAbierto(!filtrarAbierto)}
+
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: 10,
+                            }}>
                             <Text
                                 style={{
                                     fontSize: 18,
@@ -276,7 +450,7 @@ export default ({
                                 }}>Filtrar</Text>
 
                             <MaterialIcons name={filtrarAbierto ? "keyboard-arrow-up" : "keyboard-arrow-down"} size={35} color={moradoOscuro} />
-                        </View>
+                        </Pressable>
 
 
                         {
@@ -292,9 +466,10 @@ export default ({
                                 }}>
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(0)}
-                                        texto={"Dificil"}
+                                        texto={"Facil"}
                                         selected={dificultad[0]}
                                     />
+
 
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(1)}
@@ -304,7 +479,7 @@ export default ({
 
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(2)}
-                                        texto={"Facil"}
+                                        texto={"Dificil"}
                                         selected={dificultad[2]}
                                     />
                                 </View>
@@ -359,60 +534,93 @@ export default ({
                                 </View>
                             </View> : null
                         }
-                    </Pressable>
+                    </View>
 
                     {/* $$$$$$$$$$$$$*/}
                     {/* Lista lugares*/}
                     {/* $$$$$$$$$$$$$*/}
                     {/* Mapear todas las aventuras */}
                     {
-                        [...Array(rowsAventura).keys()].map((_, row) => (
-                            <View
-                                key={"row", row}
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    marginBottom: 15,
-                                }}>
-                                {[...Array(2).keys()].map((e, column) => {
+                        aventurasAMostrar === null ?
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: height / 2,
+                            }}>
+                                <ActivityIndicator
+                                    size={"large"}
+                                    color={"black"}
+                                />
+                            </View> :
+                            aventuras?.length === 0 ?
+                                <Text style={styles.noAventuras}>No hay aventuras</Text>
 
-                                    return (
+                                :
+                                [...Array(Math.round(aventurasAMostrar.length / 2))].map((_, row) => (
+                                    <View
+                                        key={"row", row}
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginBottom: 15,
+                                        }}>
+                                        {[aventurasAMostrar[row * 2], row * 2 + 1 < aventurasAMostrar.length && aventurasAMostrar[row * 2 + 1]].map((e, column) => {
 
-                                        <CuadradoImagen
-                                            selected={esSelector ? selectedItems[row][column].selected : undefined}
-                                            tamañoCuadrado={(width / 2 - 30)}
-                                            titulo={"El nevado de colima"}
-                                            key={"Ave", column}
-                                            onPress={() => handlePressAventura("Idave", row, column)}
-                                        />
-                                    )
-                                })
-                                }
+                                            if (!e) {
+                                                return (
+                                                    // Si es el ultimo item y es impar agregar plus button
 
-                            </View>
-                        ))
+                                                    <View
+                                                        style={{
+                                                            marginBottom: 15,
+                                                        }}>
+                                                        <AddElemento
+                                                            tamañoCuadrado={(width / 2 - 30)}
+                                                            onPress={() => handleAddAventura()}
+                                                        />
+                                                    </View>
+
+                                                )
+
+                                            }
+
+
+
+
+
+                                            return (
+
+                                                <CuadradoImagen
+                                                    notAllowed={e.notAllowed}
+                                                    selected={esSelector ? selectedItems[row][column].selected : undefined}
+                                                    tamañoCuadrado={(width / 2 - 30)}
+                                                    item={e}
+                                                    key={"Ave", column}
+                                                    onPress={() => e.notAllowed ? handleAventuraNoAutorizado() : handlePressAventura(e, row, column)}
+                                                />
+                                            )
+                                        })
+                                        }
+
+                                    </View>
+                                ))
                     }
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginBottom: 15,
-                        }}>
-                        <CuadradoImagen
-                            notAllowed={true}
-                            selected={esSelector ? selectedItems[rowsAventura][0].selected : undefined}
-                            tamañoCuadrado={(width / 2 - 30)}
-                            titulo={"El nevado de colima"}
-                            onPress={handleAventuraNoAutorizado}
-                        />
-                        <AddElemento
-                            tamañoCuadrado={(width / 2 - 30)}
-                            onPress={() => handleAddAventura()}
-                        />
+                    {
+                        // Si el numero de aventuras es par y hay aventuras
+                        (aventurasAMostrar !== null && aventuras?.length !== 0) &&
+                        (aventurasAMostrar.length % 2 === 0) &&
+                        <View
+                            style={{
+                                marginBottom: 15,
+                            }}>
+                            <AddElemento
+                                tamañoCuadrado={(width / 2 - 30)}
+                                onPress={() => handleAddAventura()}
+                            />
+                        </View>
 
-                    </View>
-
-
+                    }
                 </View>
 
             </ScrollView>
@@ -481,5 +689,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
 
+    },
+    noAventuras: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: moradoOscuro,
+        marginTop: 20,
     }
+
 })

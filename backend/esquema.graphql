@@ -1,4 +1,4 @@
-type Aventura @model @auth(rules: [{allow: public}]) {
+type Aventura @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   titulo: String!
   imagenFondoIdx: Int!
@@ -9,7 +9,7 @@ type Aventura @model @auth(rules: [{allow: public}]) {
   descripcion: String
   dificultad: Float!
   ubicacionNombre: String
-  ubicacionLink: String!
+  ubicacionLink: AWSURL
   comision: Float!
   estadoAventura: EstadoAventura!
   coordenadas: AWSJSON!
@@ -20,9 +20,11 @@ type Aventura @model @auth(rules: [{allow: public}]) {
   SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
   UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
   Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
+  puntoReunionNombre: String
+  puntoReunionLink: AWSURL
 }
 
-type Reserva @model @auth(rules: [{allow: public}]) @key(name: "byFecha", fields: ["fechaID"]) @key(name: "byUsuario", fields: ["usuarioID"]) {
+type Reserva @model @key(name: "byFecha", fields: ["fechaID"]) @key(name: "byUsuario", fields: ["usuarioID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   total: Float!
   comisionPorPersona: Float!
@@ -30,11 +32,11 @@ type Reserva @model @auth(rules: [{allow: public}]) @key(name: "byFecha", fields
   ninos: Int!
   adultos: Int!
   pagoID: String!
-  fechaID: ID!
-  usuarioID: ID!
+  fechaID: ID
+  usuarioID: ID
 }
 
-type Fecha @model @auth(rules: [{allow: public}]) @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "byUsuario", fields: ["usuarioID"]) {
+type Fecha @model @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "byUsuario", fields: ["usuarioID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   personasTotales: Int!
   fechaInicial: AWSTimestamp!
@@ -48,12 +50,14 @@ type Fecha @model @auth(rules: [{allow: public}]) @key(name: "byAventura", field
   allowNinos: Boolean!
   material: String
   incluido: AWSJSON!
-  aventuraID: ID!
+  aventuraID: ID
   Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
-  usuarioID: ID!
+  usuarioID: ID
+  titulo: String
+  descripcion: String
 }
 
-type Usuario @model @auth(rules: [{allow: public}]) {
+type Usuario @model @auth(rules: [{ allow: public, operations: [create] },{allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner, ownerField: "owner", }]) {
   id: ID!
   nombre: String
   apellido: String
@@ -62,16 +66,17 @@ type Usuario @model @auth(rules: [{allow: public}]) {
   calificacion: Float
   tipo: TipoUsuario
   selfie: String
-  INE: [String]!
-  licencia: [String]!
+  INE: [String]
+  licencia: [String]
   comentariosAdicionales: String
   telefono: AWSPhone
   capacidadMaxima: Int
   tarjetaCirculacion: String
-  certificaciones: [String]!
+  certificaciones: [String]
   sitioWeb: AWSURL
   usuarioRedSocial: String
   stripeID: String
+  owner: String
   AventurasAutorizadas: [AventuraUsuario] @connection(keyName: "byUsuario", fields: ["id"])
   Mensajes: [Mensaje] @connection(keyName: "byUsuario", fields: ["id"])
   ChatRooms: [ChatRoomUsuario] @connection(keyName: "byUsuario", fields: ["id"])
@@ -80,7 +85,7 @@ type Usuario @model @auth(rules: [{allow: public}]) {
   SolicitudesEvaluadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
 }
 
-type ChatRoom @model @auth(rules: [{allow: public}]) {
+type ChatRoom @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
   name: String!
   picture: String
@@ -91,11 +96,11 @@ type ChatRoom @model @auth(rules: [{allow: public}]) {
   Fecha: Fecha @connection
 }
 
-type Mensaje @model @auth(rules: [{allow: public}]) @key(name: "byUsuario", fields: ["usuarioID"]) @key(name: "byChatRoom", fields: ["chatroomID"]) {
+type Mensaje @model @key(name: "byUsuario", fields: ["usuarioID"]) @key(name: "byChatRoom", fields: ["chatroomID"]) @auth(rules: [{allow: owner, operations: [create, update, delete]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
   content: String!
-  usuarioID: ID!
-  chatroomID: ID!
+  usuarioID: ID
+  chatroomID: ID
 }
 
 type SolicitudGuia @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) @key(name: "byUsuario", fields: ["evaluadorID"]) {
@@ -103,11 +108,10 @@ type SolicitudGuia @model @auth(rules: [{allow: owner}, {allow: groups, groups: 
   status: StatusSolicitud!
   comentarios: String
   Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
-  evaluadorID: ID!
+  evaluadorID: ID
 }
 
 enum EstadoAventura {
-  CREADO
   AUTORIZADO
   PENDIENTE
   RECHAZADO
@@ -130,46 +134,27 @@ enum TipoUsuario {
   GUIAINDIVIDUAL
 }
 
-type AventuraSolicitudGuia @model(queries: null) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: public}]) {
+type AventuraSolicitudGuia @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
   id: ID!
+  aventuraID: ID!
   solicitudguiaID: ID!
-  aventuraID: ID!
+  aventura: Aventura! @connection(fields: ["aventuraID"])
   solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
-  aventura: Aventura! @connection(fields: ["aventuraID"])
 }
 
-type AventuraUsuario @model(queries: null) @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) @key(name: "byAventura", fields: ["aventuraID", "usuarioID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+type AventuraUsuario @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}]) {
   id: ID!
-  usuarioID: ID!
   aventuraID: ID!
-  usuario: Usuario! @connection(fields: ["usuarioID"])
+  usuarioID: ID!
   aventura: Aventura! @connection(fields: ["aventuraID"])
+  usuario: Usuario! @connection(fields: ["usuarioID"])
 }
 
-type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"]) @auth(rules: [{allow: public, operations: [read]}, {allow: private}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}]) {
   id: ID!
   chatroomID: ID!
   usuarioID: ID!
   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
-
-
-# type Mutation{
-#   createPaymentIntent(amount:Int!,comision:Float!,destinationStripeID:String!):PaymentIntent!@function(
-#     name:"CreatePaymentIntent-${env}"
-#     )
-#   CreateStripeAcount(email:String,sub:ID!,url:String!):AcountResult!@function(
-#     name:"CreateStripeAcount-${env}"
-#     )
-# }
-
-# # Tipos de respuesta mutaciones
-# type PaymentIntent{
-#   clientSecret:String!
-#   id:String!
-# }
-
-# type AcountResult{
-#   url:String!
-# }
+ 

@@ -80,17 +80,20 @@ const App = () => {
           break;
         case "cognitoHostedUI":
           setLoading(false)
-          setAuthenticated(true)
 
-          // Tras iniciar sesion con Google se intenta crear el usr
-          Auth.currentUserInfo()
-            .then(r => {
-              createUsuario(r.attributes)
-            })
-            .catch(e => {
-
-            })
+          // Tras iniciar sesion con Google se intenta crear el usr y solo se corre una vez
+          if (!authenticated) {
+            setAuthenticated(true)
+            console.log("crearUsuario")
+            Auth.currentUserInfo()
+              .then(r => {
+                createUsuario(r.attributes)
+              })
+              .catch(e => {
+              })
+          }
           break;
+
         default:
           break;
       }

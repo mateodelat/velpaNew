@@ -1,6 +1,6 @@
 {
     "identityPoolName": "velpa98b1c29b_identitypool_98b1c29b",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "velpa98b1c29b",
     "userPoolName": "velpa98b1c29b_userpool_98b1c29b",
     "autoVerifiedAttributes": [

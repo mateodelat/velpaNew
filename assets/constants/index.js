@@ -5,6 +5,12 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { Aventura } from "../../src/models";
 import { DataStore } from '@aws-amplify/datastore';
+import React from "react";
+
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
+
 
 export function isAlphaNumeric(str) {
   var code, i, len;
@@ -273,26 +279,48 @@ export const mayusFirstLetter = (string) => {
 }
 
 
-export const createUsuario = (attributes) => {
+export const createUsuario = async (attributes, unathenticated) => {
   var u
-  API.graphql({
+
+  // Si no esta autenticado se crea con api key y el ownerfield se asigna para poder modificar
+  if (unathenticated) {
+    return await API.graphql({
+      query: crearUsr, variables: {
+        input: {
+          nombre: attributes.name ? attributes.name : attributes.nickname,
+          apellido: attributes.family_name ? attributes.family_name : null,
+          id: attributes.sub,
+          foto: attributes.picture ? attributes.picture : null,
+          nickname: attributes.nickname,
+          owner: attributes.sub
+        }
+      }
+      , authMode: 'API_KEY'
+    }).then(r => {
+      console.log("Usuario creado con API key")
+      u = r.data.createUsuario
+      return u
+    })
+      .catch(e => {
+        Alert.alert("Error", "Error creando el usuario, avisa a los desarrolladores")
+        console.log(e)
+      })
+  }
+
+  return await API.graphql({
     query: crearUsr, variables: {
       input: {
         nombre: attributes.name ? attributes.name : attributes.nickname,
         apellido: attributes.family_name ? attributes.family_name : null,
         id: attributes.sub,
         foto: attributes.picture ? attributes.picture : null,
-        nickname: "@" + attributes.nickname,
-        comentarios: []
+        nickname: attributes.nickname,
       }
     }
   }).then(r => {
-    console.log(r)
     u = r.data.createUsuario
     return u
   })
-    .catch(e => e)
-
 }
 
 export async function handleGoogle() {
@@ -417,40 +445,6 @@ export const getBlob = async (uri) => {
     })
 }
 
-export const getAventura = /* GraphQL */ `
-    query GetAventura($id: ID!) {
-    getAventura(id: $id) {
-      id
-      titulo
-      imagenFondo
-      imagenDetalle
-      precioMin
-      precioMax
-      duracion
-      descripcionCorta
-      descripcionLarga
-      
-      materialObligatorio
-      materialOpcional
-      materialAcampada
-      materialIncluido
-
-      alimentacion
-      dificultad
-      precioVIP
-      descripcionVIP
-      
-      fechaInicialDisponible
-      fechaFinalDisponible
-
-      categoriaID
-      ubicacionNombre
-      ubicacionLink
-      comision
-    }
-  }
-`;
-
 export const createAventura = /* GraphQL */ `
   mutation CreateAventura(
     $input: CreateAventuraInput!
@@ -574,6 +568,18 @@ export const listAventurasAutorizadas = async (maxItems) => {
     })
     .catch(e => {
       Alert.alert("Error", "Error obteniendo aventuras")
+      console.log(e)
+    })
+
+  return ave
+
+}
+
+export const getAventura = async (id) => {
+
+  const ave = await DataStore.query(Aventura, id)
+    .catch(e => {
+      Alert.alert("Error", "Error obteniendo aventura")
       console.log(e)
     })
 
@@ -1284,12 +1290,26 @@ export async function obtenerUriImagenesGuia(data) {
 }
 
 
+export const categorias = [
+  {
+    titulo: "Alpinismo",
+    icono: (color) => <FontAwesome5 name="hiking" size={25} color={color} />
+  },
+  {
+    titulo: "MTB",
+    icono: (color) => <Ionicons name="bicycle" size={25} color={color} />
+  },
+  {
+    titulo: "Otros",
+    icono: (color) => <Ionicons name="md-reorder-three" size={25} color={color} />
+  },
+]
+
 
 export const abrirStripeAccount = async (stripeID) => {
   const url = "https://dashboard.stripe.com/connect/accounts/" + stripeID
   return await WebBrowser.openBrowserAsync(url)
 }
-
 
 // Colores
 export const colorFondo = "#E5E5E5"

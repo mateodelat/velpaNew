@@ -170,15 +170,6 @@ export default ({
                             height,
                         }}
                     >
-                        <Image
-                            style={{
-                                flex: 1,
-                                width,
-                                aspectRatio: 3 / 2,
-                                resizeMode: "contain"
-                            }}
-                            source={require("../../../../assets/IMG/ImageExample.png")}
-                        />
                     </View> : null
             }
             <Animated.FlatList

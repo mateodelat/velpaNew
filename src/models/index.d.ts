@@ -76,7 +76,7 @@ export declare class Aventura {
   readonly descripcion?: string;
   readonly dificultad: number;
   readonly ubicacionNombre?: string;
-  readonly ubicacionLink: string;
+  readonly ubicacionLink?: string;
   readonly comision: number;
   readonly estadoAventura: EstadoAventura | keyof typeof EstadoAventura;
   readonly coordenadas: string;
@@ -87,6 +87,8 @@ export declare class Aventura {
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
   readonly Fechas?: (Fecha | null)[];
+  readonly puntoReunionNombre?: string;
+  readonly puntoReunionLink?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Aventura, AventuraMetaData>);
@@ -134,16 +136,17 @@ export declare class Usuario {
   readonly calificacion?: number;
   readonly tipo?: TipoUsuario | keyof typeof TipoUsuario;
   readonly selfie?: string;
-  readonly INE: (string | null)[];
-  readonly licencia: (string | null)[];
+  readonly INE?: (string | null)[];
+  readonly licencia?: (string | null)[];
   readonly comentariosAdicionales?: string;
   readonly telefono?: string;
   readonly capacidadMaxima?: number;
   readonly tarjetaCirculacion?: string;
-  readonly certificaciones: (string | null)[];
+  readonly certificaciones?: (string | null)[];
   readonly sitioWeb?: string;
   readonly usuarioRedSocial?: string;
   readonly stripeID?: string;
+  readonly owner?: string;
   readonly AventurasAutorizadas?: (AventuraUsuario | null)[];
   readonly Mensajes?: (Mensaje | null)[];
   readonly ChatRooms?: (ChatRoomUsuario | null)[];
@@ -209,6 +212,8 @@ export declare class Fecha {
   readonly aventuraID?: string;
   readonly Reservas?: (Reserva | null)[];
   readonly usuarioID?: string;
+  readonly titulo?: string;
+  readonly descripcion?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Fecha, FechaMetaData>);

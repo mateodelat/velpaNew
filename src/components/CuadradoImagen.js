@@ -28,7 +28,7 @@ const CuadradoImagen = ({
             }}>
             {/* Imagenes */}
             <Image
-                source={{ uri: item.imagenDetalle[item.imagenFondoIdx] }}
+                source={{ uri: item?.imagenDetalle[item?.imagenFondoIdx] }}
                 style={{
                     flex: 1,
                     width: '100%',
@@ -53,7 +53,7 @@ const CuadradoImagen = ({
                             flex: 1,
                             color: '#000',
                             fontSize: 16,
-                        }}>{item.titulo}</Text>
+                        }}>{item?.titulo}</Text>
 
                     {!showSelected && !notAllowed && <Flecha />}
                 </View>
@@ -70,7 +70,7 @@ const CuadradoImagen = ({
                             style={{
                                 color: 'gray',
                                 fontSize: 12,
-                            }}> {item.duracion}</Text>
+                            }}> {item?.duracion}</Text>
 
                     </View>
 
@@ -88,7 +88,7 @@ const CuadradoImagen = ({
                             style={{
                                 color: 'gray',
                                 fontSize: 12,
-                            }}> {item.altimetriaRecorrida}m</Text>
+                            }}> {item?.altimetriaRecorrida}m</Text>
 
                     </View>
 

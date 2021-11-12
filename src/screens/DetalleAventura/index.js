@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     Animated,
     Dimensions,
@@ -10,7 +10,8 @@ import {
     ScrollView,
     Alert,
     Pressable,
-    Linking
+    Linking,
+    ActivityIndicator
 } from 'react-native'
 
 import dificultad from '../../../assets/dificultad';
@@ -21,26 +22,30 @@ import Carrousel from './components/Carrousel';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 
 
 
 import Descripcion from './components/Descripcion';
 import CuadradoImagen from '../../components/CuadradoImagen';
 import Boton from '../../components/Boton';
-import { moradoOscuro } from '../../../assets/constants';
+import { getAventura, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
+import { Loading } from '../../components/Loading';
+import Header from '../../components/header';
 
 
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
 
-    const linkNevado = "https://www.google.com.mx/maps/place/Nevado+de+Colima/"
+    const [loading, setLoading] = useState(true);
 
+    // Variables del visor imagenes
+    const [modalVisible, setModalVisible] = useState(false);
+    const [images, setImages] = useState([]);
 
-
+    // Variables para animaciones (Carrousel fotos y header transparencia)
     const scrollX = useRef(new Animated.Value(0)).current
     const scrollY = useRef(new Animated.Value(0)).current
 
@@ -49,21 +54,66 @@ export default ({ navigation }) => {
     height = height * 0.35
 
 
-    // Variables del visor imagenes
-    const [modalVisible, setModalVisible] = useState(false);
-    const [images, setImages] = useState([
-        { url: "https://images.unsplash.com/photo-1445363692815-ebcd599f7621?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=cagatay-orhan-PYh4QCX_fmE-unsplash.jpg" },
-        { url: "https://images.unsplash.com/photo-1445363692815-ebcd599f7621?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=cagatay-orhan-PYh4QCX_fmE-unsplash.jpg" }
-    ]);
     const [initialImageIdx, setInitialImageIdx] = useState(0);
 
+
+    // Obtener aventura
+    const [aventura, setAventura] = useState({});
+    const [aventurasSugeridas, setAventurasSugeridas] = useState([]);
+    useEffect(() => {
+        const id = route.params?.id
+
+        if (id) {
+            getAventura(id)
+                .then(r => {
+
+                    // Formatear las imagen detalle
+                    r = {
+                        ...r,
+                        imagenDetalle: r.imagenDetalle.map(e => {
+                            return {
+                                uri: e,
+                                // Verificar si es video
+                                video: e.endsWith(".mp4")
+                            }
+                        })
+                    }
+                    setAventura(r)
+
+
+                    // Formatear con url antes del link y quitar todos los videos
+                    const imagenesVisor = r.imagenDetalle.filter(img => !img.video)
+                        .map(img => ({
+                            url: img.uri
+                        }))
+
+                    // Imagenes del visor
+                    setImages(imagenesVisor)
+
+                })
+        }
+
+        // Obtener aventuras sugeridas
+        listAventurasAutorizadas(3).then(r => {
+            setAventurasSugeridas(r)
+            setLoading(false)
+
+        })
+    }, []);
+
+
+
     function handleContinuar() {
-        navigation.navigate("FechasAventura")
+        navigation.navigate("FechasAventura", {
+            aventuraID: aventura.id,
+            imagenFondo: aventura.imagenDetalle[aventura.imagenFondoIdx].uri,
+            titulo: aventura.titulo
+        })
     }
 
 
     function verEnGoogleMaps() {
-        Linking.openURL(linkNevado)
+        Linking.openURL(aventura.ubicacionLink)
     }
 
     function handleNavegarSugerido(id) {
@@ -73,9 +123,16 @@ export default ({ navigation }) => {
         })
     }
 
-    return (
-        <View style={{ flex: 1, }}>
+    if (loading) return <View style={{ flex: 1, }}>
+        <Loading />
 
+    </View>
+
+
+    return (
+        <View style={{
+            flex: 1,
+        }}>
             <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
                 onScroll={Animated.event(
@@ -92,11 +149,7 @@ export default ({ navigation }) => {
                     height={height}
                     width={width}
 
-                    images={[
-                        { uri: "https://images.unsplash.com/photo-1445363692815-ebcd599f7621?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=cagatay-orhan-PYh4QCX_fmE-unsplash.jpg" },
-                        { uri: "https://images.unsplash.com/photo-1445363692815-ebcd599f7621?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=cagatay-orhan-PYh4QCX_fmE-unsplash.jpg" },
-                        { uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4", video: true },
-                    ]}
+                    images={aventura.imagenDetalle}
                     scrollX={scrollX}
                 />
                 {/* <Pressable
@@ -130,18 +183,24 @@ export default ({ navigation }) => {
                                 fontSize: 18,
                                 flex: 1,
 
-                            }}>Nevado de Colima{"\n"}(4700m)</Text>
+                            }}>{aventura.titulo}  {aventura.altitud && <Text
+                                style={{
+                                    fontSize: 18,
+
+                                }}>({aventura.altitud}m)</Text>}</Text>
+
                         <Text style={{
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
-                        }}>$ 1800-35000
+                        }}>$ {aventura.precioMin} - {aventura.precioMax}
                         </Text>
                     </View>
 
                     {/* Dificultad */}
                     <View style={{
-                        marginTop: 10,
+                        marginTop: 20,
+                        marginBottom: 10,
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
@@ -150,7 +209,7 @@ export default ({ navigation }) => {
                             <Text style={{
                                 fontSize: 16,
                             }}>Dificultad   </Text>
-                            <Image source={dificultad[3]} />
+                            <Image source={dificultad[aventura.dificultad]} />
                         </View>
                     </View>
 
@@ -177,11 +236,11 @@ export default ({ navigation }) => {
                                 <Text style={{
                                     fontSize: 16,
                                     color: 'gray',
-                                }}>1 a 2 dias</Text>
+                                }}>{aventura.duracion}</Text>
                             </View>
 
                             {/* Distancia */}
-                            <View style={{
+                            {aventura.distanciaRecorrida && <View style={{
                                 flexDirection: 'row',
                             }}>
                                 <View style={{ width: 35, }}>
@@ -190,8 +249,8 @@ export default ({ navigation }) => {
                                 <Text style={{
                                     fontSize: 16,
                                     color: 'gray',
-                                }}>5 KM</Text>
-                            </View>
+                                }}>{aventura.distanciaRecorrida} KM</Text>
+                            </View>}
                         </View>
 
 
@@ -216,22 +275,23 @@ export default ({ navigation }) => {
                                 <Text style={{
                                     fontSize: 16,
                                     color: "#0000009E",
-                                }}>Mexico</Text>
+                                }}>{aventura.ubicacionNombre}</Text>
                             </Pressable>
 
                             {/* Distancia */}
-                            <View style={{
-                                flexDirection: 'row',
-                            }}>
-                                <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', }}>
-                                    <Image source={require("../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
-                                </View>
-                                <Text style={{
-                                    marginLeft: 5,
-                                    fontSize: 16,
-                                    color: 'gray',
-                                }}>850m</Text>
-                            </View>
+                            {
+                                aventura.altimetriaRecorrida && <View style={{
+                                    flexDirection: 'row',
+                                }}>
+                                    <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', }}>
+                                        <Image source={require("../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
+                                    </View>
+                                    <Text style={{
+                                        marginLeft: 5,
+                                        fontSize: 16,
+                                        color: 'gray',
+                                    }}>{aventura.altimetriaRecorrida} m</Text>
+                                </View>}
                         </View>
                     </View>
 
@@ -241,48 +301,52 @@ export default ({ navigation }) => {
 
                     {/* Descripcion */}
                     <Descripcion
-                        aventura={{
-                            descripcion: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-                        }}
+                        descripcion={aventura.descripcion}
                     />
 
                     {/* Lugares recomendados */}
-                    <Text style={{
-                        fontWeight: 'bold',
-                        fontSize: 20,
-                        marginTop: 30,
-                        marginBottom: 20,
-                    }}>Lugares similares</Text>
+                    {
+                        aventurasSugeridas.length !== 0 && <View>
 
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    >
+                            <Text style={{
+                                fontWeight: 'bold',
+                                fontSize: 20,
+                                marginTop: 30,
+                                marginBottom: 20,
+                            }}>Lugares similares</Text>
 
+                            {
+                                aventurasSugeridas === null ?
+                                    <View style={{
+                                        height: 190,
+                                        alignItems: 'center', justifyContent: 'center',
+                                    }}>
+                                        <ActivityIndicator
+                                            color={"black"}
+                                            size={"large"}
+                                        />
+                                    </View> :
+                                    <ScrollView
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                    >
+                                        {
+                                            aventurasSugeridas.map((ave, i) => {
+                                                return <CuadradoImagen
+                                                    key={ave.id}
+                                                    onPress={() => handleNavegarSugerido(ave.id)}
+                                                    tamañoCuadrado={180}
+                                                    item={ave}
+                                                    style={{
+                                                        marginRight: i === aventurasSugeridas.length - 1 ? 0 : 20,
+                                                    }}
+                                                />
+                                            })
+                                        }
+                                    </ScrollView>
+                            }
+                        </View>}
 
-                        {/* <CuadradoImagen
-                            onPress={handleNavegarSugerido}
-                            tamañoCuadrado={180}
-                            titulo={"Iztacihuatl"}
-                            style={{
-                                marginRight: 20,
-                            }}
-                        />
-                        <CuadradoImagen
-                            onPress={handleNavegarSugerido}
-                            titulo={"Nevado de toluca"}
-                            tamañoCuadrado={180}
-                            style={{
-                                marginRight: 20,
-                            }}
-                        />
-                        <CuadradoImagen
-                            onPress={handleNavegarSugerido}
-                            titulo={"Kilimanjaro"}
-                            tamañoCuadrado={180}
-                        /> */}
-
-                    </ScrollView>
 
                     <Boton
                         onPress={handleContinuar}
@@ -291,33 +355,34 @@ export default ({ navigation }) => {
                     />
                 </View>
 
-
-                {/* Mostrar imagenes */}
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <ImageFullScreen
-                        initialImageIdx={initialImageIdx}
-                        setModalVisible={setModalVisible}
-                        images={images}
-                        titulo={"El nevado de colima"}
-                    />
-                </Modal>
-
-            </Animated.ScrollView>
+            </Animated.ScrollView >
             <HeaderDetalleAventura
                 scrollY={scrollY}
                 height={height * 1.4}
-                titulo={"Nevado de Colima"}
+                titulo={aventura.titulo}
+                modalActive={modalVisible}
             />
 
 
-        </View>
+            {/* Mostrar imagenes */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <ImageFullScreen
+                    initialImageIdx={initialImageIdx}
+                    setModalVisible={setModalVisible}
+                    images={images}
+                    titulo={"El nevado de colima"}
+                />
+            </Modal>
+
+
+        </View >
     )
 }
 

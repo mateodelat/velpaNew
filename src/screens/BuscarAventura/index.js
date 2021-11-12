@@ -21,11 +21,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { colorFondo, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { categorias, colorFondo, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from '../../components/CuadradoImagen';
-import { Loading } from '../../components/Loading';
+
+import { Categorias } from '../../models';
 
 export default ({ navigation }) => {
 
@@ -39,6 +40,7 @@ export default ({ navigation }) => {
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
     const [aventuras, setAventuras] = useState(null);
+    const [aventurasAMostrar, setAventurasAMostrar] = useState(null);
 
     const { height, width } = Dimensions.get("window")
 
@@ -46,26 +48,14 @@ export default ({ navigation }) => {
     useEffect(() => {
         listAventurasAutorizadas(8).then(r => {
             setAventuras(r)
+            setAventurasAMostrar(r)
         })
     }, []);
 
-    const categorias = [
-        {
-            titulo: "Alpinismo",
-            icono: (color) => <FontAwesome5 name="hiking" size={25} color={color} />
-        },
-        {
-            titulo: "MTB",
-            icono: (color) => <Ionicons name="bicycle" size={25} color={color} />
-        },
-        {
-            titulo: "Otros",
-            icono: (color) => <Ionicons name="md-reorder-three" size={25} color={color} />
-        },
-    ]
 
     const handleBorrarBusqueda = () => {
         setBuscar("")
+        setAventurasAMostrar(aventuras)
     }
 
 
@@ -81,6 +71,43 @@ export default ({ navigation }) => {
         newCategoriasSelect[index] = !newCategoriasSelect[index]
 
         setCategoriasSeleccionadas(newCategoriasSelect)
+
+
+        // Filtrar por categoria y por dificultad
+        const nuevasAve = aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                &&
+
+                (// ALPINISMO
+                    (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // Dificultad media
+                    (newCategoriasSelect[1] && e.categoria === Categorias.MTB) ||
+
+                    // Dificultad dificil
+                    (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
+                ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+
+
+                )
+            )
+        })
+        setAventurasAMostrar(nuevasAve)
+
     }
 
     const handleClickDificultad = (index) => {
@@ -88,9 +115,77 @@ export default ({ navigation }) => {
         newDificultades[index] = !newDificultades[index]
 
         setDificultad(newDificultades)
+
+        const nuevasAve = aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                &&
+                ( // Dificultad facil
+                    (newDificultades[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (newDificultades[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (newDificultades[2] && e.dificultad > 3)) &&
+                (// ALPINISMO
+                    (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // Dificultad media
+                    (categoriasSeleccionadas[1] && e.categoria === Categorias.MTB) ||
+
+                    // Dificultad dificil
+                    (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
+                )
+
+            )
+        })
+        setAventurasAMostrar(nuevasAve)
+
     }
 
-    const tamañoCuadrado = width * 0.5 - 25
+    const handleChangeText = (text) => {
+        setBuscar(text)
+        const nuevasAve = aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(text.toLowerCase())
+                    ||
+
+                    // Es igual a la descripcion
+                    e.descripcion.toLowerCase().includes(text.toLowerCase()))
+                &&
+                (// ALPINISMO
+                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // Dificultad media
+                    (categorias[1] && e.categoria === Categorias.MTB) ||
+
+                    // Dificultad dificil
+                    (categorias[2] && e.categoria === Categorias.OTROS)
+                ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+
+
+                )
+
+            )
+        })
+
+        setAventurasAMostrar(nuevasAve)
+    }
 
     return (
         <View
@@ -123,11 +218,10 @@ export default ({ navigation }) => {
 
                     <TextInput
                         style={{ padding: 0, flex: 1, padding: 10, paddingLeft: 40, }}
-                        onSubmitEditing={() => Alert.alert("Buscar", "Se busca la aventura que tenga \"" + buscar + "\" en su titulo o descripcion")}
                         value={buscar}
                         placeholder="Buscar aventuras"
                         placeholderTextColor={"#7E7F84"}
-                        onChangeText={(value) => setBuscar(value)}
+                        onChangeText={handleChangeText}
                     />
                     <Feather
                         name="search"
@@ -194,9 +288,10 @@ export default ({ navigation }) => {
                                 }}>
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(0)}
-                                        texto={"Dificil"}
+                                        texto={"Facil"}
                                         selected={dificultad[0]}
                                     />
+
 
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(1)}
@@ -206,7 +301,7 @@ export default ({ navigation }) => {
 
                                     <BotonDificultad
                                         onPress={() => handleClickDificultad(2)}
-                                        texto={"Facil"}
+                                        texto={"Dificil"}
                                         selected={dificultad[2]}
                                     />
                                 </View>
@@ -268,7 +363,7 @@ export default ({ navigation }) => {
                     {/* $$$$$$$$$$$$$*/}
                     {/* Mapear todas las aventuras */}
                     {
-                        aventuras === null ?
+                        aventurasAMostrar === null ?
                             <View style={{
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -282,31 +377,36 @@ export default ({ navigation }) => {
                             </View> :
                             aventuras.length === 0 ?
                                 <Text style={styles.noAventuras}>No hay aventuras</Text>
+
                                 :
-                                [...Array(Math.round(aventuras.length / 2)).keys()].map((_, row) => (
-                                    <View
-                                        key={"row", row}
-                                        style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            marginBottom: 15,
-                                        }}>
-                                        {[aventuras[row * 2], row * 2 + 1 < aventuras.length && aventuras[row * 2 + 1]].map((e, idxAve) => {
+                                aventurasAMostrar.length === 0 ?
+                                    <Text style={styles.noAventuras}>No se encontraron aventuras</Text>
 
-                                            if (!e) return
-                                            return (
+                                    :
+                                    [...Array(Math.round(aventurasAMostrar.length / 2)).keys()].map((_, row) => (
+                                        <View
+                                            key={"row", row}
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between',
+                                                marginBottom: 15,
+                                            }}>
+                                            {[aventurasAMostrar[row * 2], row * 2 + 1 < aventurasAMostrar.length && aventurasAMostrar[row * 2 + 1]].map((e, idxAve) => {
 
-                                                <CuadradoImagen
-                                                    tamañoCuadrado={(width / 2 - 30)}
-                                                    item={e}
-                                                    key={"Ave", idxAve}
-                                                    onPress={() => handleNavigateAventura(e.id)}
-                                                />
-                                            )
-                                        })}
+                                                if (!e) return
+                                                return (
 
-                                    </View>
-                                ))
+                                                    <CuadradoImagen
+                                                        tamañoCuadrado={(width / 2 - 30)}
+                                                        item={e}
+                                                        key={"Ave", idxAve}
+                                                        onPress={() => handleNavigateAventura(e.id)}
+                                                    />
+                                                )
+                                            })}
+
+                                        </View>
+                                    ))
                     }
                 </View>
             </ScrollView>

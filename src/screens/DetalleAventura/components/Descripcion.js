@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 
-const Descripcion = ({ aventura }) => {
-    const { descripcion } = aventura
+const Descripcion = ({ descripcion }) => {
 
     const [detallesAbierto, setDetallesAbierto] = useState(false);
 
