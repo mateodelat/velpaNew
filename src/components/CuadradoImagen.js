@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { Feather } from '@expo/vector-icons';
 import Flecha from './Flecha';
-import { colorFondo, moradoClaro } from '../../assets/constants';
+import { colorFondo, moradoOscuro } from '../../assets/constants';
 
 
 const CuadradoImagen = ({
@@ -102,7 +102,7 @@ const CuadradoImagen = ({
             }}>
                 <View style={{
                     ...styles.puntitoInterior,
-                    backgroundColor: selected ? moradoClaro : "transparent",
+                    backgroundColor: selected ? moradoOscuro : "transparent",
                 }}>
 
                 </View>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 10,
         top: 10,
-        opacity: 0.8,
+        opacity: 1,
         padding: 5,
     },
 

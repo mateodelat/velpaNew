@@ -40,22 +40,27 @@ export default ({
             {vacio && !modify ? <Text style={styles.text}>Nada incluido</Text>
                 :
                 <>
-                    <Text style={styles.title}>De parte de Velpa:</Text>
-                    {/* Render de incluido por velpa */}
-                    {datos?.default?.map((item, i) => {
-                        return <View
-                            key={i.toString()}
-                            style={styles.container}>
-                            <View style={styles.containerItem}
-                                key={"mo-" + index}
-                            >
-                                <Text
-                                    style={styles.text}>{item}</Text>
-                            </View>
-                        </View>
-                    })}
+                    {
+                        datos?.default && datos?.default?.length !== 0 ?
+                            <>
+                                <Text style={styles.title}>De parte de Velpa:</Text>
+                                {/* Render de incluido por velpa */}
+                                {datos?.default?.map((item, i) => {
+                                    return <View
+                                        key={i.toString()}
+                                        style={styles.container}>
+                                        <View style={styles.containerItem}
+                                            key={"mo-" + index}
+                                        >
+                                            <Text
+                                                style={styles.text}>{item}</Text>
+                                        </View>
+                                    </View>
+                                })}
+                                <View style={{ marginTop: 20, }} />
+                            </> : null
+                    }
 
-                    <View style={{ marginTop: 20, }} />
 
                     <Text style={styles.title}>Por tu cuenta:</Text>
                     {datos.agregado?.length === 0 && !modify && <Text style={{

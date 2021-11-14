@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, Pressable, TextInput, Alert, Keyboard } from 'react-native';
 import { Auth } from 'aws-amplify';
 import { Ionicons } from '@expo/vector-icons';
+import { moradoOscuro } from '../../../assets/constants';
 
 
 
@@ -45,6 +46,12 @@ export default function ({ navigation, route }) {
 
 
     const handleContinuar = () => {
+        if (!new_password) {
+            setError("La contraseña puede estar vacia")
+            setErrorPassword(true)
+            setErrorCode(false)
+            return
+        }
         Auth.forgotPasswordSubmit(username, code, new_password)
             .then(() => {
                 Alert.alert("Contraseña actualizada correctamente")
@@ -166,6 +173,7 @@ const styles = StyleSheet.create({
     cuadro: {
         backgroundColor: 'white',
         padding: 20,
+        paddingTop: 10,
         flex: 1,
     },
 
@@ -190,7 +198,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 7,
         overflow: 'hidden',
-        backgroundColor: '#000',
+        backgroundColor: moradoOscuro,
     },
 
     message: {

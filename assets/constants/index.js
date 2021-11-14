@@ -280,8 +280,6 @@ export const mayusFirstLetter = (string) => {
 
 
 export const createUsuario = async (attributes, unathenticated) => {
-  var u
-
   // Si no esta autenticado se crea con api key y el ownerfield se asigna para poder modificar
   if (unathenticated) {
     return await API.graphql({
@@ -297,9 +295,7 @@ export const createUsuario = async (attributes, unathenticated) => {
       }
       , authMode: 'API_KEY'
     }).then(r => {
-      console.log("Usuario creado con API key")
-      u = r.data.createUsuario
-      return u
+      return r.data.createUsuario
     })
       .catch(e => {
         Alert.alert("Error", "Error creando el usuario, avisa a los desarrolladores")
@@ -307,7 +303,7 @@ export const createUsuario = async (attributes, unathenticated) => {
       })
   }
 
-  return await API.graphql({
+  API.graphql({
     query: crearUsr, variables: {
       input: {
         nombre: attributes.name ? attributes.name : attributes.nickname,
@@ -317,10 +313,9 @@ export const createUsuario = async (attributes, unathenticated) => {
         nickname: attributes.nickname,
       }
     }
-  }).then(r => {
-    u = r.data.createUsuario
-    return u
   })
+    .catch(e => {
+    })
 }
 
 export async function handleGoogle() {
@@ -834,6 +829,13 @@ export const listFechasConReservacionPorUsuario = /* GraphQL */ `
   }
 `;
 
+export const getCapacidadUsuario = /* GraphQL */ `
+  query GetUsuario($id: ID!) {
+    getUsuario(id: $id) {
+      capacidadMaxima
+    }
+  }
+`;
 export const getNicknameUsuario = /* GraphQL */ `
   query GetUsuario($id: ID!) {
     getUsuario(id: $id) {
@@ -1389,6 +1391,34 @@ export const openImagePickerAsync = async (denyVideos) => {
 
 }
 
+export const getUserSub = async () => {
+  return await Auth.currentAuthenticatedUser()
+    .then(user => user.attributes.sub)
+    .catch(e => console.log(e))
+}
+
+
+export const makeUsrGuide = async () => {
+  const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
+
+  await Auth.updateUserAttributes(user, {
+    'custom:guia': "1"
+  })
+
+}
+
+export const userEsGuia = async () => {
+
+  const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
+
+  if (!!Number(user.attributes["custom:guia"])) {
+    console.log("Usuario es guia")
+    return true
+  } else {
+    return false
+  }
+
+}
 
 export const msInHour = 3600000
 export const msInMinute = 60000

@@ -107,7 +107,6 @@ export default ({ navigation }) => {
             )
         })
         setAventurasAMostrar(nuevasAve)
-
     }
 
     const handleClickDificultad = (index) => {
@@ -151,14 +150,53 @@ export default ({ navigation }) => {
 
     const handleChangeText = (text) => {
         setBuscar(text)
-        const nuevasAve = aventuras.filter(e => {
+
+        let nuevasAve
+
+
+        // Si no hay texto solo aplicar filtros de categoria/dificultad
+        if (text === "") {
+            nuevasAve = filtroSinBusqueda()
+        } else {
+            nuevasAve = aplicarTodosLosFiltros(text)
+        }
+
+        setAventurasAMostrar(nuevasAve)
+    }
+
+    const filtroSinBusqueda = () => {
+        return aventuras.filter(e => {
+            return (
+                (// ALPINISMO
+                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // MOUNTAIN BIKE
+                    (categorias[1] && e.categoria === Categorias.MTB) ||
+
+                    // OTROS
+                    (categorias[2] && e.categoria === Categorias.OTROS)
+                ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+                ))
+        })
+    }
+
+    const aplicarTodosLosFiltros = (newText) => {
+        return aventuras.filter(e => {
             return (
                 (// Es igual al titulo en minusculas
-                    e.titulo.toLowerCase().includes(text.toLowerCase())
+                    e.titulo.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase())
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(text.toLowerCase()))
+                    e.descripcion.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
                 &&
                 (// ALPINISMO
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
@@ -177,14 +215,10 @@ export default ({ navigation }) => {
 
                     // Dificultad dificil
                     (dificultad[2] && e.dificultad > 3)
-
-
                 )
 
             )
         })
-
-        setAventurasAMostrar(nuevasAve)
     }
 
     return (

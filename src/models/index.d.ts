@@ -89,6 +89,8 @@ export declare class Aventura {
   readonly Fechas?: (Fecha | null)[];
   readonly puntoReunionNombre?: string;
   readonly puntoReunionLink?: string;
+  readonly materialDefault?: string;
+  readonly incluidoDefault?: (string | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Aventura, AventuraMetaData>);
@@ -203,8 +205,8 @@ export declare class Fecha {
   readonly precio: number;
   readonly comision: number;
   readonly itinerario: string;
-  readonly ubicacionNombre: string;
-  readonly ubicacionLink: string;
+  readonly puntoReunionNombre: string;
+  readonly puntoReunionLink: string;
   readonly allowTercera: boolean;
   readonly allowNinos: boolean;
   readonly material?: string;
@@ -214,6 +216,7 @@ export declare class Fecha {
   readonly usuarioID?: string;
   readonly titulo?: string;
   readonly descripcion?: string;
+  readonly imagenRuta?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Fecha, FechaMetaData>);

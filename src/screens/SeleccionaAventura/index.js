@@ -27,7 +27,7 @@ import CuadradoImagen from '../../components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import Boton from '../../components/Boton';
 import AddElemento from './components/AddElemento';
-import { Categorias } from '../../models';
+import { Categorias, Usuario } from '../../models';
 import { DataStore } from '@aws-amplify/datastore';
 import { AventuraUsuario } from '../../models';
 import Auth from '@aws-amplify/auth';
@@ -76,30 +76,31 @@ export default ({
         return await listAventurasAutorizadas(100)
             // Obtener aventuras ya perimitidas
             .then(async r => {
-
                 const { attributes: { sub } } = await Auth.currentUserInfo().catch(e => {
                     console.log(e)
                 })
 
                 // Obtener relaciones con usuario
-                let aventurasAutorizadasAlUsr = await DataStore
-                    .query(AventuraUsuario, c => c.usuario("eq", sub))
+                let aventurasAutorizadasAlUsr = (await DataStore
+                    .query(AventuraUsuario)
                     .catch(e => {
                         console.log(e)
                         Alert.alert("Error", "Error obteniendo aventuras autorizadas")
-                    })
-
-                console.log(sub)
-                console.log(aventurasAutorizadasAlUsr)
+                    })).filter(c => c.usuario.id === sub).map(c => c.aventura.id)
 
                 r = r.map((ave, idx) => {
-                    console.log()
-
                     return {
                         ...ave,
-                        notAllowed: true
+                        // Si es selector significa que queremos mostrar las aventuras no autorizadas
+                        notAllowed: esSelector ? aventurasAutorizadasAlUsr.includes(ave.id) : !aventurasAutorizadasAlUsr.includes(ave.id)
                     }
                 })
+
+                if (esSelector) {
+                    // Filtrar solo mostrando las allowed
+                    r = r.filter(ave => !ave.notAllowed)
+                }
+
                 return r
             })
 
@@ -141,7 +142,7 @@ export default ({
 
     const handleBorrarBusqueda = () => {
 
-        const nuevasAve = aplicarTodosLosFiltros(aventuras, false)
+        const nuevasAve = filtroSinBusqueda()
         setBuscar("")
 
         setAventurasAMostrar(nuevasAve)
@@ -151,7 +152,7 @@ export default ({
 
 
     // Funcion continuar solo en caso que sea selector
-    const handleContinuar = () => {
+    const handleContinuar = async () => {
         // Extraer solos los id's de aventuras seleccionadas
         let listaIDs = []
 
@@ -300,30 +301,63 @@ export default ({
 
     const handleChangeText = (text) => {
         setBuscar(text)
-        const nuevasAve = aplicarTodosLosFiltros(aventuras)
+
+        let nuevasAve
+
+
+        // Si no hay texto solo aplicar filtros de categoria/dificultad
+        if (text === "") {
+            nuevasAve = filtroSinBusqueda()
+        } else {
+            nuevasAve = aplicarTodosLosFiltros(text)
+        }
 
         setAventurasAMostrar(nuevasAve)
     }
 
-    const aplicarTodosLosFiltros = (aventuras, denyBusqueda) => {
+    const filtroSinBusqueda = () => {
         return aventuras.filter(e => {
             return (
-                !denyBusqueda ? (// Es igual al titulo en minusculas
-                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
+                (// ALPINISMO
+                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
+
+                    // MOUNTAIN BIKE
+                    (categorias[1] && e.categoria === Categorias.MTB) ||
+
+                    // OTROS
+                    (categorias[2] && e.categoria === Categorias.OTROS)
+                ) && (
+                    // Dificultad facil
+                    (dificultad[0] && e.dificultad < 3) ||
+
+                    // Dificultad media
+                    (dificultad[1] && e.dificultad === 3) ||
+
+                    // Dificultad dificil
+                    (dificultad[2] && e.dificultad > 3)
+                ))
+        })
+    }
+
+    const aplicarTodosLosFiltros = (newText) => {
+        return aventuras.filter(e => {
+            return (
+                (// Es igual al titulo en minusculas
+                    e.titulo.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase())
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(buscar.toLowerCase())) : true
-                    &&
-                    (// ALPINISMO
-                        (categorias[0] && e.categoria === Categorias.APLINISMO) ||
+                    e.descripcion.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
+                &&
+                (// ALPINISMO
+                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
 
-                        // Dificultad media
-                        (categorias[1] && e.categoria === Categorias.MTB) ||
+                    // Dificultad media
+                    (categorias[1] && e.categoria === Categorias.MTB) ||
 
-                        // Dificultad dificil
-                        (categorias[2] && e.categoria === Categorias.OTROS)
-                    ) && (
+                    // Dificultad dificil
+                    (categorias[2] && e.categoria === Categorias.OTROS)
+                ) && (
                     // Dificultad facil
                     (dificultad[0] && e.dificultad < 3) ||
 
@@ -345,7 +379,7 @@ export default ({
             setAventuras(r)
 
             // Aplicar filtros a nuevas aventuras
-            const nuevasAve = aplicarTodosLosFiltros(r)
+            const nuevasAve = aplicarTodosLosFiltros()
             setAventurasAMostrar(nuevasAve)
 
         })
@@ -570,8 +604,8 @@ export default ({
                                             if (!e) {
                                                 return (
                                                     // Si es el ultimo item y es impar agregar plus button
-
                                                     <View
+                                                        key={"plusButton"}
                                                         style={{
                                                             marginBottom: 15,
                                                         }}>

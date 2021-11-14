@@ -61,7 +61,8 @@ export default function LoginStack() {
                     name={"NewPassword"}
                     component={NewPassword}
                     options={{
-                        headerShown: false
+                        title: "Cambiar contraseña",
+                        headerTitleAlign: "center"
                     }}
                 />
             </Stack.Navigator>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, formatDateShort, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getUserSub, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
 
 
 import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -11,65 +11,42 @@ import ModalItinerario from './components/ModalItinerario';
 import ModalRuta from '../FechasAventura/components/ModalRuta';
 import QueLlevar from './components/QueLlevar';
 import Incluido from './components/Incluido';
+import { DataStore } from '@aws-amplify/datastore';
+import { Fecha } from '../../models';
+import { Mensaje } from '../../models';
 
 const { height } = Dimensions.get("screen")
 
 export default function ({ navigation, route }) {
+    const {
+        fechaInicial,
+        fechaFinal,
+        puntoReunionNombre: ubicacionNombre,
+        puntoReunionLink: ubicacionLink,
+        tituloAventura,
+
+        incluidoDefault,
+        materialDefault
+    } = route.params
+
     const scrollY = React.useRef(new Animated.Value(0)).current
 
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("");
 
     const [incluido, setIncluido] = useState({
-        default: [
-            "Electrolit",
-            "Barras de proteina",
-        ],
+        default: incluidoDefault,
         agregado: []
     })
 
 
-    const [queLlevar, setQueLlevar] = useState([
-        [
-            "Obligatorio", [
-                "Botas o tenis",
-                "Impermeable",
-                "Chamarra",
-                "Camisa deportiva",
-                "Mochila",
-            ],
-
-        ],
-        [
-            "Alimentacion", [
-                "Bote con agua",
-                "Barras o snacks",
-
-            ],
-        ], [
-            "Acampada", [
-                "Casa de campaña",
-                "Colchoneta para dormir",
-                "Casa de campaña",
-            ]
-        ]
-    ]);
-
-    const {
-        fechaInicial,
-        fechaFinal,
-        ubicacionNombre,
-        ubicacionLink,
-        tituloAventura
-    } = route.params
+    const [queLlevar, setQueLlevar] = useState(JSON.parse(materialDefault));
 
 
     const [buttonLoading, setButtonLoading] = useState(false);
     const [modificarQueLlevar, setModificarQueLlevar] = useState(false);
     const [modificarIncluido, setModificarIncluido] = useState(false);
 
-
-    const [itinerarioAgregado, setItinerarioAgregado] = useState(false);
 
     const [imagenRuta, setImagenRuta] = useState("");
 
@@ -116,38 +93,73 @@ export default function ({ navigation, route }) {
         setModalVisible(true)
     }
 
-    const guardarItinerario = (tipo) => {
-        if (tipo === "borrar") {
-            Alert.alert("Exito", "Itinerario retirado con exito")
-            setItinerarioAgregado(false)
-
-        } else {
-            Alert.alert("Exito", "Itinerario agregado con exito")
-            setItinerarioAgregado(true)
-
-        }
-        setModalVisible(false)
-    }
-
-    const handleContinuar = () => {
-        setButtonLoading(true)
+    const handleContinuar = async () => {
         // Subir la imagen de la ruta a S3
         // Subir todos los datos a la database 
-        console.log({
-            ...route.params,
-            itinerario,
-            incluido,
+
+
+        setButtonLoading(true)
+        const sub = await getUserSub()
+
+        const {
+            personasTotales,
+            fechaInicial,
+            fechaFinal,
+            precio,
+
+            puntoReunionNombre,
+            puntoReunionLink,
+            allowTercera,
+            allowNinos,
+
+            titulo,
+            descripcion,
+
+            aventuraID,
+            comision
+        } = route.params
+
+        const fecha = {
+            personasTotales,
+
+            fechaInicial,
+            fechaFinal,
+
+            precio,
+            comision,
+
+            itinerario: JSON.stringify(itinerario),
+            puntoReunionNombre,
+            puntoReunionLink,
+            allowTercera,
+            allowNinos,
+            material: JSON.stringify(queLlevar),
+            incluido: JSON.stringify(incluido),
+            aventuraID,
+
+            usuarioID: sub,
+
+            titulo,
+            descripcion,
             imagenRuta,
-            queLlevar
-        })
+        }
 
-
-        setTimeout(() => {
-            setButtonLoading(false)
-            navigation.navigate("ExitoScreen", {
-                txtExito: "Fecha agregada con exito!!"
+        await DataStore.save(
+            new Mensaje({
+                "content": "Lorem ipsum dolor sit amet",
+                "chatroomID": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d"
             })
-        }, 500);
+        ).then(r => {
+            console.log(r)
+        })
+            .catch(e => {
+                console.log(e)
+                setButtonLoading(false)
+            })
+
+        navigation.navigate("ExitoScreen", {
+            txtExito: "Fecha agregada con exito!!"
+        })
     }
 
     return (
@@ -281,7 +293,7 @@ export default function ({ navigation, route }) {
                     }}
                     titulo={"Continuar"}
                     onPress={handleContinuar}
-                    loading={buttonLoading}
+                    loading={false}
                 />
 
             </Animated.ScrollView >
@@ -310,10 +322,6 @@ export default function ({ navigation, route }) {
 
                         itinerario={itinerario}
                         setItinerario={setItinerario}
-
-                        guardarItinerario={guardarItinerario}
-
-                        agregado={itinerarioAgregado}
                     /> :
                     <ModalRuta
                         modify={true}

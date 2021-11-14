@@ -7,12 +7,15 @@ import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
 
 import Amplify, { Auth, Hub, } from "aws-amplify";
+
+import { DataStore } from '@aws-amplify/datastore';
+
+
 import awsconfig from "./src/aws-exports";
 import * as WebBrowser from 'expo-web-browser';
 import { createUsuario } from './assets/constants';
 import { Loading } from './src/components/Loading';
 import { StripeProvider } from '@stripe/stripe-react-native';
-
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
 async function urlOpener(url, redirectUrl) {
@@ -56,6 +59,7 @@ const App = () => {
   const [animacion, setAnimacion] = useState(true);
 
   useEffect(() => {
+    DataStore.start()
 
     Auth.currentUserCredentials()
       .then(user => {
@@ -80,14 +84,13 @@ const App = () => {
           break;
         case "cognitoHostedUI":
           setLoading(false)
-
           // Tras iniciar sesion con Google se intenta crear el usr y solo se corre una vez
-          if (!authenticated) {
-            setAuthenticated(true)
+          if (message.startsWith("A user google")) {
             console.log("crearUsuario")
             Auth.currentUserInfo()
               .then(r => {
                 createUsuario(r.attributes)
+                setAuthenticated(true)
               })
               .catch(e => {
               })
@@ -102,9 +105,7 @@ const App = () => {
     setTimeout(() => {
       setAnimacion(false)
     }, 5500)
-    return () => {
-      Hub.remove("auth", () => console.log("fin del hub"))
-    }
+    return () => Hub.remove("auth", () => console.log("fin del hub"))
   }, []);
 
 

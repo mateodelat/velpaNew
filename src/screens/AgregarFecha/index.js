@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Animated, Dimensions, Image, ImageBackground, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { abrirEnGoogleMaps, colorFondo, formatAMPM, moradoClaro, moradoOscuro, msInMinute, shadowMedia } from '../../../assets/constants'
+import { abrirEnGoogleMaps, colorFondo, formatAMPM, getCapacidadUsuario, getUserSub, moradoClaro, moradoOscuro, msInMinute, shadowMedia } from '../../../assets/constants'
 
 
 import SelectorInput from '../../components/SelectorInput'
@@ -12,6 +12,9 @@ import HeaderConImagen from '../../components/HeaderConImagen';
 import Boton from '../../components/Boton';
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import API from '@aws-amplify/api';
+import { DataStore } from '@aws-amplify/datastore';
+import RadioButton from '../../components/RadioButton';
 
 
 
@@ -19,21 +22,41 @@ const { height } = Dimensions.get("screen")
 
 export default function ({ navigation, route }) {
     const { aventura } = route?.params
-    const { titulo: tituloAventura } = aventura
-
+    const {
+        puntoReunionNombre,
+        puntoReunionLink,
+        precioMin,
+        precioMax,
+        titulo: tituloAventura } = aventura
 
     const scrollY = React.useRef(new Animated.Value(0)).current
 
-    const ubicacionNombre = "Deporte hábitat GDL"
-    const ubicacionLink = "https://g.page/DeporteHabitat?share"
-    const maxPersonas = 10
-    const precioMinAventura = aventura.precioMin
-    const precioMaxAventura = aventura.precioMax
+
 
     // Obtener el limite de personas para el usuario
     useEffect(() => {
-
+        obtenerPersonasMaxUsuario()
     }, []);
+
+    const obtenerPersonasMaxUsuario = async () => {
+        const sub = await getUserSub()
+        const personasMax = await API.graphql({ query: getCapacidadUsuario, variables: { id: sub } })
+            .then(r => r.data.getUsuario?.capacidadMaxima)
+
+        if (!personasMax) {
+            Alert.alert("Error", "Ocurrio un error, no estas autorizado a llevar gente, contactanos para mas informacion", [
+                {
+                    text: "OK",
+                    onPress: () => navigation.pop()
+                }
+            ])
+        } else {
+            setError(false)
+            setMaxPersonas(personasMax)
+            setPersonas(personasMax)
+        }
+
+    }
 
     // Fechas del calendario
     const [fechaInicial, setFechaInicial] = useState(null);
@@ -46,6 +69,8 @@ export default function ({ navigation, route }) {
     const [errorHoraFinal, setErrorHoraFinal] = useState(false);
     const [errorHoraInicial, setErrorHoraInicial] = useState(false);
 
+    const [error, setError] = useState(false);
+
     const bloquearADia = fechaInicial ? (horaInicial ? new Date(fechaInicial) : fechaFinal ? new Date(fechaFinal) : new Date(fechaInicial)) : new Date()
 
 
@@ -55,9 +80,16 @@ export default function ({ navigation, route }) {
 
     const [descripcion, setDescripcion] = useState();
 
-    // Selectores personas/precio
-    const [precio, setPrecio] = useState(precioMinAventura);
-    const [personas, setPersonas] = useState(maxPersonas);
+    // Selectores personasTotales/precio
+    const [precio, setPrecio] = useState(precioMin);
+
+
+    const [personasTotales, setPersonas] = useState(1);
+    const [maxPersonas, setMaxPersonas] = useState(0);
+
+    // Permitir tercera edad / niños
+    const [allowNinos, setAllowNinos] = useState(true);
+    const [allowTercera, setAllowTercera] = useState(true);
 
 
 
@@ -73,7 +105,7 @@ export default function ({ navigation, route }) {
     }
 
     const handlePuntoDeReunion = () => {
-        abrirEnGoogleMaps(ubicacionLink)
+        abrirEnGoogleMaps(puntoReunionLink)
     }
 
 
@@ -127,20 +159,36 @@ export default function ({ navigation, route }) {
 
 
     const handleContinuar = () => {
+        const { incluidoDefault, materialDefault } = aventura
+
         const navigate = () => navigation.navigate("AgregarFecha2", {
+            personasTotales,
             fechaInicial,
             fechaFinal,
-            titulo,
-            tituloAventura,
-            descripcion,
             precio,
-            personas,
 
-            ubicacionLink,
-            ubicacionNombre
+            puntoReunionNombre,
+            puntoReunionLink,
+            allowTercera,
+            allowNinos,
+
+            incluidoDefault,
+            materialDefault,
+
+            titulo,
+            descripcion,
+
+            tituloAventura,
+            aventuraID: aventura.id,
+            comision: aventura.comision
         })
 
         // Verificaciones
+
+        if (error) {
+            Alert.alert("Error")
+            return
+        }
 
         if (!fechaInicial) {
             Alert.alert("Error", "Por favor selecciona una fecha")
@@ -282,7 +330,7 @@ export default function ({ navigation, route }) {
                             color={moradoOscuro}
                         />
 
-                        <Text style={styles.txtLocation}>{ubicacionNombre}</Text>
+                        <Text style={styles.txtLocation}>{puntoReunionNombre}</Text>
 
                     </View>
 
@@ -322,6 +370,12 @@ export default function ({ navigation, route }) {
 
                 <View style={styles.linea} />
 
+                {/* <Pressable
+                        onPress={handleInfoPrecio}
+                        style={styles.question}>
+                        <Text style={styles.questionTxt}>?</Text>
+                    </Pressable> */}
+
                 {/* Cantidad de personas */}
                 <View style={{
                     ...styles.item,
@@ -331,7 +385,7 @@ export default function ({ navigation, route }) {
                 }}>
                     <View style={styles.contenedorSelector}>
                         <SelectorInput
-                            cantidad={personas}
+                            cantidad={personasTotales}
                             setCantidad={setPersonas}
                             minValue={1}
                             maxValue={maxPersonas}
@@ -344,11 +398,11 @@ export default function ({ navigation, route }) {
 
                     </View>
 
-                    <Pressable
+                    {/* <Pressable
                         onPress={handleInfoPersonas}
                         style={styles.question}>
                         <Text style={styles.questionTxt}>?</Text>
-                    </Pressable>
+                    </Pressable> */}
 
                 </View>
 
@@ -367,8 +421,8 @@ export default function ({ navigation, route }) {
                         <SelectorInput
                             cantidad={precio}
                             setCantidad={setPrecio}
-                            minValue={precioMinAventura}
-                            maxValue={precioMaxAventura}
+                            minValue={precioMin}
+                            maxValue={precioMax}
 
                             titulo={"Precio min /persona"}
 
@@ -377,14 +431,44 @@ export default function ({ navigation, route }) {
                         />
 
                     </View>
+                </View>
 
+                {/* Permitir/negar tercera edad y niños */}
+                <View style={styles.allowContainer}>
+                    {/* Tercera edad */}
                     <Pressable
-                        onPress={handleInfoPrecio}
-                        style={styles.question}>
-                        <Text style={styles.questionTxt}>?</Text>
+                        onPress={() => setAllowTercera(!allowTercera)}
+                        style={styles.allowInnerContainer}>
+                        <Text style={styles.textAllow}>Permitir tercera edad</Text>
+                        <RadioButton
+                            checked={allowTercera}
+                            setChecked={setAllowTercera}
+                        />
+
+                    </Pressable>
+                    <View style={{
+                        ...styles.linea,
+                        marginBottom: 5,
+                        marginTop: 5,
+                    }}>
+
+                    </View>
+
+                    {/* Niños */}
+                    <Pressable
+                        onPress={() => setAllowNinos(!allowNinos)}
+                        style={styles.allowInnerContainer}>
+                        <Text style={styles.textAllow}>Permitir niños</Text>
+                        <RadioButton
+                            checked={allowNinos}
+                            setChecked={setAllowNinos}
+                        />
+
                     </Pressable>
 
                 </View>
+
+
 
 
                 <Boton
@@ -449,9 +533,8 @@ const styles = StyleSheet.create({
     },
 
     question: {
-        marginHorizontal: 10,
-
-        backgroundColor: moradoClaro + "99",
+        position: 'absolute',
+        backgroundColor: moradoClaro,
         borderRadius: 100,
 
         width: 25,
@@ -524,5 +607,22 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: 'center',
         marginLeft: 10,
+    },
+
+    allowContainer: {
+        backgroundColor: '#fff',
+        padding: 10,
+        marginBottom: 10,
+    },
+
+    allowInnerContainer: {
+        flexDirection: 'row',
+        marginVertical: 15,
+        paddingRight: 2.5,
+    },
+
+    textAllow: {
+        fontSize: 16,
+        flex: 1,
     }
 })

@@ -190,6 +190,21 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "materialDefault": {
+                    "name": "materialDefault",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "incluidoDefault": {
+                    "name": "incluidoDefault",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1390,19 +1405,19 @@ export const schema = {
                 "itinerario": {
                     "name": "itinerario",
                     "isArray": false,
-                    "type": "AWSJSON",
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "ubicacionNombre": {
-                    "name": "ubicacionNombre",
+                "puntoReunionNombre": {
+                    "name": "puntoReunionNombre",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "ubicacionLink": {
-                    "name": "ubicacionLink",
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -1432,7 +1447,7 @@ export const schema = {
                 "incluido": {
                     "name": "incluido",
                     "isArray": false,
-                    "type": "AWSJSON",
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -1473,6 +1488,13 @@ export const schema = {
                 },
                 "descripcion": {
                     "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "imagenRuta": {
+                    "name": "imagenRuta",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1745,5 +1767,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "81085ff34b7f1c6ba4b55614d5c784cb"
+    "version": "8b8c1f2515ff28ec90f9739c8d7c06cb"
 };

@@ -195,7 +195,7 @@ export default function Register({ navigation }) {
 
                     />
 
-                    <Text style={{ fontSize: 18, marginVertical: 5, }}>Constraseña</Text>
+                    <Text style={{ fontSize: 18, marginVertical: 5, }}>Contraseña</Text>
                     <View style={{ ...styles.textInput, borderWidth: errorPassword ? 1 : 0, marginTop: 0, }}>
                         <TextInput
                             style={{ flex: 1, }}

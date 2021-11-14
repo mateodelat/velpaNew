@@ -313,7 +313,6 @@ const ModalItinerario = ({
 
     const handleAdd = (idx) => {
         clearErrors()
-
         let newItinerario = [...itinerario]
         if (itinerario.find((i, idx) => {
             if (i.titulo === "") {
@@ -326,7 +325,7 @@ const ModalItinerario = ({
         }
 
         newItinerario.splice(idx, 0, {
-            hora: itinerario[idx].hora - msInMinute,
+            hora: itinerario[idx - 1].hora + msInMinute,
             titulo: ""
         })
 

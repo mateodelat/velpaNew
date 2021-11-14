@@ -2,29 +2,45 @@ import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView } from 'react-native'
-import { colorFondo, getStripeIDUsuario, queryUsuario } from '../../../assets/constants'
+import { colorFondo, getStripeIDUsuario, queryUsuario, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 import { loginLinkStripe, retrieveBalanceStripe } from '../../graphql/mutations'
 import Elemento from './components/Elemento'
+import { DataStore } from '@aws-amplify/datastore';
+import { Usuario } from '../../models'
 
 
+const getUsuario = /* GraphQL */ `
+query GetUsuario($id: ID!) {
+    getUsuario(id: $id) {
+        id
+        nombre
+        apellido
+        foto
+        nickname
+    }
+    }
+`
 
 export default ({ route, navigation }) => {
+
     const [loaded, setLoaded] = useState(false);
     const [data, setData] = useState({});
-    const [admin, setAdmin] = useState(true);
+
+    const [guia, setGuia] = useState(false);
+    const [admin, setAdmin] = useState(false);
 
     const [buttonLoading, setButtonLoading] = useState(false);
 
     useEffect(() => {
-        // setCurrentUserData()
-        setLoaded(true)
+        setCurrentUserData()
     }, []);
 
     function handleSolicitudes() {
@@ -125,16 +141,28 @@ export default ({ route, navigation }) => {
     }
 
     async function setCurrentUserData() {
+
+        // Verificar si el usuario es admin para mostrar adminUI
         const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
         if (!!user.signInUserSession.accessToken.payload['cognito:groups']?.find(e => e === "Admin")) {
             setAdmin(true)
+            console.log("Usuario es admin")
         }
 
+        // Evaluar si el usuario es guia
+        setGuia(await userEsGuia())
+
+
         fetchUsuario(user)
-            .then(() => {
+            .then((r) => {
+                setData(r)
                 setLoaded(true)
             })
-            .catch(e => console.log("Error fetcheando el usuario", e))
+            .catch(e => {
+                console.log("Error fetcheando el usuario", e)
+                Alert.alert("Error", "Error obteniendo el usuario")
+
+            })
     }
 
 
@@ -145,26 +173,15 @@ export default ({ route, navigation }) => {
     async function fetchUsuario(user) {
         // Pedir el usuario
         const sub = user.attributes.sub
-        await API.graphql({ query: queryUsuario, variables: { id: sub } })
-            .then(r => {
-                r = r.data.getUsuario
-                if (!r) {
-                    // Si no hay usuario mensaje error
-                    Alert.alert("Error", "No hay usuario favor de notificar al desarrollador")
-                }
-
-                else {
-                    setData({
-                        user,
-                        ...r
-                    })
-                }
-            })
-            .catch(e => console.log(e))
+        return await API.graphql({ query: getUsuario, variables: { id: sub } }).then(r => r.data.getUsuario)
     }
 
     function handleAdmin() {
         navigation.navigate("Admin")
+    }
+
+    function handleConfig() {
+        Alert.alert("Ir a configuracion", "Cambiar contraseña, modificar tema de la app, metodos de pago, privacidad etc..")
     }
 
 
@@ -199,18 +216,18 @@ export default ({ route, navigation }) => {
                     onPress={handlePerfil}
                     style={styles.header}>
                     <View >
-                        {data.foto ?
-                            <Image source={{ uri: data.foto }} style={styles.image} /> :
+                        {data?.foto ?
+                            <Image source={{ uri: data?.foto }} style={styles.image} /> :
                             <Image source={require("../../../assets/user.png")} style={styles.image} />
                         }
                     </View>
                     <View style={styles.headerText}>
                         <Text numberOfLines={1} style={styles.title}
-                        >{data.nombre ? data.nombre : data.nickname}
-                            {!data.apellido && <Text numberOfLines={1} style={styles.title}> {data.apellido}</Text>}
+                        >{data?.nombre ? data?.nombre : data?.nickname}
+                            {data?.apellido && <Text numberOfLines={1} style={styles.title}> {data?.apellido}</Text>}
 
                         </Text>
-                        <Text style={styles.nickname}>{data.nickname}</Text>
+                        <Text style={styles.nickname}>@{data?.nickname}</Text>
                     </View>
 
                     <MaterialIcons
@@ -234,29 +251,29 @@ export default ({ route, navigation }) => {
                             <AntDesign name="calendar" size={30} color="black" />}
                     />
 
-                    <Elemento
+                    {guia && <Elemento
                         texto={"Solicitudes a aventuras"}
                         onPress={handleSolicitudes}
                         icono={<Feather name="user-check" size={30} color="black" />
                         }
-                    />
+                    />}
 
-                    <Elemento
+                    {!guia && <Elemento
                         texto={"Ser guia"}
                         onPress={handleGuia}
                         icono={<Image source={require("../../../assets/icons/guia.png")} style={{ width: 30, height: 30, }} />
                         }
-                    />
+                    />}
 
 
 
-                    <Elemento
+                    {guia && <Elemento
                         loading={buttonLoading === "saldo"}
                         texto={"Saldo"}
                         onPress={miSaldo}
                         icono={<MaterialIcons name="account-balance-wallet" size={30} color="black" />
                         }
-                    />
+                    />}
 
                     {admin &&
                         <Elemento
@@ -267,6 +284,12 @@ export default ({ route, navigation }) => {
                         />
                     }
 
+                    <Elemento
+                        texto={"Configuracion"}
+                        onPress={handleConfig}
+                        icono={<FontAwesome name="gear" size={30} color="black" />
+                        }
+                    />
                     <Elemento
                         texto={"Cerrar sesion"}
                         onPress={cerrarSesion}

@@ -1,17 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, Pressable } from 'react-native'
+import { StyleSheet, Text, Pressable, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import { moradoOscuro } from '../../assets/constants';
 
 
-const RadioButton = ({ checked, setChecked, color }) => {
+const RadioButton = ({ checked, color }) => {
     color = color ? color : moradoOscuro
     return (
-        <Pressable
-            onPress={() => setChecked(!checked)}
+        <View
             style={{ ...styles.container, borderColor: color, backgroundColor: checked ? moradoOscuro : null }}>
             {checked && <Entypo name="check" size={20} color={"#fff"} />}
-        </Pressable>
+        </View>
     )
 }
 
