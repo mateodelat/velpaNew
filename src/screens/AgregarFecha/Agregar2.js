@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, formatDateShort, getUserSub, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import { colorFondo, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
 
 
 import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -38,6 +38,41 @@ export default function ({ navigation, route }) {
         default: incluidoDefault,
         agregado: []
     })
+
+    const formatDateShortLogistica = (msInicial, msFinal) => {
+        const dateInicial = new Date(msInicial)
+
+        var ddInicial = String(dateInicial.getUTCDate())
+        var mmInicial = String(dateInicial.getUTCMonth())
+
+        if (msFinal) {
+            const dateFinal = new Date(msFinal)
+
+            var ddFinal = String(dateFinal.getUTCDate())
+            var mmFinal = String(dateFinal.getUTCMonth())
+
+            // Si es de un solo dia se regresa un numero
+            if (ddFinal === ddInicial && mmInicial === mmFinal) {
+                return ("Logistica " + ddInicial + " " + meses[mmInicial]);
+
+            }
+
+            // Si los meses son iguales se pone sin 2 veces un mes
+            if (mmInicial === mmInicial) {
+                return ("Logistica " + ddInicial + " - " + ddFinal + " " + meses[mmInicial]);
+
+            } else {
+                return (ddInicial + " " + meses[mmInicial] + " - " + ddFinal + " " + meses[mmFinal]);
+
+            }
+
+        } else {
+            return (ddInicial + " " + meses[mmInicial]);
+        }
+
+
+    }
+
 
 
     const [queLlevar, setQueLlevar] = useState(JSON.parse(materialDefault));
@@ -145,21 +180,17 @@ export default function ({ navigation, route }) {
         }
 
         await DataStore.save(
-            new Mensaje({
-                "content": "Lorem ipsum dolor sit amet",
-                "chatroomID": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d"
+            new Fecha(fecha)
+        )
+            .then(r => {
+                navigation.navigate("ExitoScreen", {
+                    txtExito: "Fecha agregada con exito!!"
+                })
             })
-        ).then(r => {
-            console.log(r)
-        })
             .catch(e => {
+                Alert.alert("Error", "Error agregando la fecha")
                 console.log(e)
-                setButtonLoading(false)
             })
-
-        navigation.navigate("ExitoScreen", {
-            txtExito: "Fecha agregada con exito!!"
-        })
     }
 
     return (
@@ -299,7 +330,7 @@ export default function ({ navigation, route }) {
             </Animated.ScrollView >
 
             <HeaderConImagen
-                titulo={`${formatDateShort(fechaInicial, fechaFinal)}`}
+                titulo={`${formatDateShortLogistica(fechaInicial, fechaFinal)}`}
                 imagen={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
@@ -322,6 +353,8 @@ export default function ({ navigation, route }) {
 
                         itinerario={itinerario}
                         setItinerario={setItinerario}
+
+                        modifiable={true}
                     /> :
                     <ModalRuta
                         modify={true}

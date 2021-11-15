@@ -5,10 +5,15 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default ({ personasReservadas, personasTotales }) => {
     const tamañoFotos = 15
-    const lenght = 3
 
     const [verTodo, setVerTodo] = useState(false);
 
+    const length = personasReservadas.length > 3 ? 3 : personasReservadas.length
+
+    let totalPersonas = 0
+    personasReservadas.map(e => {
+        totalPersonas += (e.personasReservadas)
+    })
 
     return (
         <View style={styles.listaPersonasContainer}>
@@ -23,11 +28,13 @@ export default ({ personasReservadas, personasTotales }) => {
 
                 {
                     !verTodo &&
-                    [...Array(lenght).keys()].map((foto, idx) => {
+                    personasReservadas?.map((persona, idx) => {
+                        // Solo renderizar 3 primeras imagenes
+                        if (idx > 2) return
                         return (
                             <Image
                                 key={idx.toString()}
-                                source={{ uri: "https://thispersondoesnotexist.com/image" }}
+                                source={{ uri: persona.foto }}
                                 style={{
                                     ...styles.imagenPersonas,
                                     left: tamañoFotos * idx,
@@ -40,22 +47,25 @@ export default ({ personasReservadas, personasTotales }) => {
 
 
                 <View style={{
-                    marginLeft: (30 + (tamañoFotos * (lenght - 1))) + 5,
+                    marginLeft:
+                        !verTodo ? length && ((30 + (tamañoFotos * (length - 1))) + 5) : 5,
+
                     flexDirection: 'row',
                     flex: 1,
                 }}>
                     <Text style={{
                         letterSpacing: 3,
                         fontWeight: 'bold',
-                    }}>{personasReservadas}/{personasTotales}</Text>
+                    }}>{totalPersonas}/{personasTotales}</Text>
                     <Text style={{
                         marginLeft: 4,
                         letterSpacing: 0,
                         fontWeight: 'normal',
                         color: '#00000060',
-                    }}>Personas</Text>
+                    }}>Personas {!length && "reservadas"}</Text>
                 </View>
-                <Pressable
+
+                {!!length && <Pressable
                     onPress={() => setVerTodo(!verTodo)}
                 >
                     <Text
@@ -67,13 +77,13 @@ export default ({ personasReservadas, personasTotales }) => {
                             padding: 5,
                         }}>{verTodo ? "Ocultar" : "Ver"}</Text>
 
-                </Pressable>
+                </Pressable>}
             </View>
 
 
             {verTodo && <View style={{ marginTop: 10, }}>
                 {
-                    [...Array(lenght).keys()].map((foto, idx) => {
+                    personasReservadas.map((persona, idx) => {
                         return (
                             <View
                                 key={idx.toString()}
@@ -83,7 +93,7 @@ export default ({ personasReservadas, personasTotales }) => {
                                     flexDirection: 'row',
                                 }}>
                                 <Image
-                                    source={{ uri: "https://thispersondoesnotexist.com/image" }}
+                                    source={{ uri: persona.foto }}
                                     style={{
                                         ...styles.imagenPersonas,
                                         position: 'relative',
@@ -93,10 +103,10 @@ export default ({ personasReservadas, personasTotales }) => {
                                 <Text style={{
                                     flex: 1,
                                     color: "gray",
-                                }}>@elfnd</Text>
+                                }}>@{persona.nickname}</Text>
                                 <Text style={{
                                     color: "gray",
-                                }}>1 </Text>
+                                }}>{persona.personasReservadas} </Text>
                                 <Ionicons name="ios-person" size={20} color={"lightgray"} />
                             </View>
 

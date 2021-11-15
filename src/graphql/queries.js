@@ -24,6 +24,8 @@ export const getAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionLink
+      materialDefault
+      incluidoDefault
       _version
       _deleted
       _lastChangedAt
@@ -39,8 +41,8 @@ export const getAventura = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -49,6 +51,7 @@ export const getAventura = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -120,6 +123,8 @@ export const listAventuras = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -178,6 +183,8 @@ export const syncAventuras = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -297,8 +304,8 @@ export const getFecha = /* GraphQL */ `
       precio
       comision
       itinerario
-      ubicacionNombre
-      ubicacionLink
+      puntoReunionNombre
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -307,6 +314,7 @@ export const getFecha = /* GraphQL */ `
       usuarioID
       titulo
       descripcion
+      imagenRuta
       _version
       _deleted
       _lastChangedAt
@@ -352,8 +360,8 @@ export const listFechas = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -362,6 +370,7 @@ export const listFechas = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -399,8 +408,8 @@ export const syncFechas = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -409,6 +418,7 @@ export const syncFechas = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -482,8 +492,8 @@ export const getUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -492,6 +502,7 @@ export const getUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -718,8 +729,8 @@ export const getChatRoom = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -728,6 +739,7 @@ export const getChatRoom = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -799,8 +811,8 @@ export const listChatRooms = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -809,6 +821,7 @@ export const listChatRooms = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -862,8 +875,8 @@ export const syncChatRooms = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -872,6 +885,7 @@ export const syncChatRooms = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -1099,6 +1113,8 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           categoria
           puntoReunionNombre
           puntoReunionLink
+          materialDefault
+          incluidoDefault
           _version
           _deleted
           _lastChangedAt
@@ -1168,6 +1184,8 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           categoria
           puntoReunionNombre
           puntoReunionLink
+          materialDefault
+          incluidoDefault
           _version
           _deleted
           _lastChangedAt

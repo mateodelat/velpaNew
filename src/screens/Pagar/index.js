@@ -11,10 +11,9 @@ import {
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, moradoClaro, moradoOscuro, shadowMediaa } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getUserSub, isFechaFull, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
-import { createPaymentIntent } from '../../graphql/mutations';
 import {
     confirmPaymentSheetPayment,
     useStripe
@@ -22,6 +21,10 @@ import {
 
 import API from '@aws-amplify/api';
 import ElementoPersonas from './components/ElementoPersonas';
+import { createPaymentIntent } from '../../graphql/mutations';
+import { DataStore } from '@aws-amplify/datastore';
+import { Reserva } from '../../models';
+
 
 export default function ({ route, navigation }) {
 
@@ -30,15 +33,27 @@ export default function ({ route, navigation }) {
         ninos,
         tercera,
         precioIndividualSinComision,
-        comisionVelpa: comision
-    } = route.params
+        comisionVelpa: comision,
 
+        nicknameGuia,
+        tituloAventura,
+        fechaFinal,
+        fechaInicial,
+        descripcion,
+        imagenFondo,
+        calificacionGuia,
+        stripeID,
+
+        fechaID,
+    } = route.params
     // Variables de stripe
     const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(false);
     const [paymentLoaded, setPaymentLoaded] = useState(false);
+
+    // Id de transaccion
     const [idPago, setIdPago] = useState("");
 
     const [paymentOption, setPaymentOption] = useState({});
@@ -63,12 +78,6 @@ export default function ({ route, navigation }) {
                 console.log(e)
 
             })
-            .then(async r => {
-                // obtener uri de imagen de fondo
-                // Obtener la imagen de fondo
-                // setImagenFondo(imgKey?.startsWith("ave-") ? await Storage.get(imgKey) : imgKey)
-
-            })
     }, []);
 
 
@@ -91,13 +100,24 @@ export default function ({ route, navigation }) {
     ///////////////////////////////////////////////////////////////////
     /////////////////////////////FUNCIONES/////////////////////////////
     ///////////////////////////////////////////////////////////////////
+    function verOpciones() {
+        navigation.pop(3)
+    }
 
     // Obtener el clientSecret del backend
     const fetchPaymentIntent = async () => {
 
-        const stripeID = "acct_1JWXsT2YEdZJT2E7"
         if (!stripeID) {
-            Alert.alert("Error", "Lo sentimos, guia no ha registrado sus datos bancarios")
+            Alert.alert("Error",
+                "Lo sentimos, el guia no ha registrado sus datos bancarios pero puedes ver mas opciones",
+                [
+                    {
+                        text: "OK",
+                        onPress: verOpciones
+                    },
+                ],
+                { cancelable: false }
+            )
             setError(true)
             return
         }
@@ -105,7 +125,7 @@ export default function ({ route, navigation }) {
         const response = await API.graphql({
             query: createPaymentIntent, variables:
             {
-                amount: Math.floor(precioIndividualSinComision * personasTotales * comision),
+                amount: Math.round(precioTotal),
                 destinationStripeID: stripeID,
                 comision
             }
@@ -122,37 +142,7 @@ export default function ({ route, navigation }) {
         setClientSecret(response.data.createPaymentIntent.clientSecret)
 
         return response
-        // Obtener cuenta del guia
-        // API.graphql({
-        //     query: getStripeIDGuia,
-        //     variables: {
-        //         id: fechaID
-        //     }
-        // })
-        //     .then(async r => {
-        // todo lo de arriba
-        // })
-        // .catch(e => {
-        //     console.log(e)
-        //     setError(true)
-        // })
     }
-
-    const address = {
-        city: 'San Francisco',
-        country: 'AT',
-        line1: '510 Townsend St.',
-        line2: '123 Street',
-        postalCode: '94102',
-        state: 'California',
-    };
-    const billingDetails = {
-        name: 'Jane Doe',
-        email: 'foo@bar.com',
-        phone: '555-555-555',
-        address: address,
-    };
-
 
     //Empezar a cargar el modal de pago
     const initializePaymentSheet = async () => {
@@ -160,13 +150,7 @@ export default function ({ route, navigation }) {
         const { error } = await initPaymentSheet({
             paymentIntentClientSecret: clientSecret,
             merchantDisplayName: 'Velpa adventures',
-            primaryButtonColor: moradoOscuro,
-
             customFlow: true,
-
-            defaultBillingDetails: billingDetails,
-
-
         });
 
         if (error) {
@@ -175,102 +159,6 @@ export default function ({ route, navigation }) {
             return
         }
     }
-
-    // Crear en la base de datos la reserva
-    // const handleCreateReservacion = async () => {
-    //     function OK() {
-    //         navigation.navigate("PagoExitoso", {
-    //             personasTotales: personasTotales,
-    //             imagenFondo,
-    //             guia,
-    //             titulo,
-    //             fecha,
-    //             precio: precioTotalConComision,
-    //             personasTotales,
-    //             chatroomID
-    //         })
-    //     }
-
-    //     // Obtener sub usuario
-    //     const sub = await Auth.currentUserInfo()
-    //         .then(r => {
-    //             return (r.attributes.sub)
-    //         }).catch(e => console.log("Error obteniendo el usuario", e))
-
-    //     // Verificar que no exista ya esa relacion
-    //     const exists = (await API.graphql({
-    //         query: listChatRoomUsuarios,
-    //         variables: {
-    //             filter: { usuarioID: { "eq": sub }, chatroomID: { "eq": chatroomID } }
-    //         }
-    //     }).then(r => {
-    //         return r.data.listChatRoomUsuarios.items
-    //     })).length === 0 ? false : true
-    //     console.log("Existe grupo con esa persona:", exists)
-
-    //     // Si no existe la relacion se agrega usuario al chat
-    //     if (!exists) {
-    //         // Agregar usuario al grupo de chat
-    //         await API.graphql({
-    //             query: createChatRoomUsuario,
-    //             variables: {
-    //                 input: {
-    //                     chatroomID,
-    //                     usuarioID: sub
-    //                 }
-    //             }
-    //         }).catch(e => {
-    //             console.log(e)
-    //             Alert.alert("Error", "Error agregando usuario al grupo")
-    //         })
-    //     }
-
-
-    //     // Query base de datos con reservacion exitosa
-    //     API.graphql({
-    //         query: createReservaciones, variables: {
-    //             input: {
-    //                 fechaID,
-
-    //                 // Variables del precio
-    //                 total: totalSinComision,
-    //                 comisionPorPersona,
-
-    //                 // Variable de personas
-    //                 personas: adultos + ninos + tercera,
-    //                 adultos, ninos: ninos, tercera,
-
-    //                 idPago,
-
-    //                 usuarioID: sub
-    //             }
-    //         }
-    //     })
-    //         .then(c => {
-    //             setButtonLoading(false)
-    //             setButtonDoneLoading(true)
-
-    //             Alert.alert("Reservacion exitosa",
-    //                 "La reservacion fue creada con exito!!",
-    //                 [
-    //                     {
-    //                         text: "OK",
-    //                         onPress: OK
-    //                     },
-    //                 ],
-    //                 { cancelable: false }
-    //             )
-    //         })
-    //         .catch(e => {
-    //             Alert.alert("Error", "Error creando reservacion, comunicate con nosotros para mas info")
-    //             console.log(e)
-    //         })
-
-
-    // }
-
-
-    // Abrir modal opciones de pago
 
 
     const openPaymentSheet = async () => {
@@ -305,46 +193,111 @@ export default function ({ route, navigation }) {
             Alert.alert("Error", "Error haciendo el pago, vuelve a intentarlo mas tarde")
             return
         }
-        // setButtonLoading(true)
-
-
-        // function verOpciones() {
-        //     navigation.pop(3)
-        // }
-
-        // Checar que no se haya llenado la fecha
-        // let fecha = await API.graphql({
-        //     query: getPersonasEnFecha,
-        //     variables: { id: fechaID }
-        // })
-        // fecha = fecha.data.getFecha
-        // let numReservaciones = 0
-        // fecha.Reservaciones.items.map(f => {
-        //     numReservaciones += f.personas
-        // })
-
-        // if (numReservaciones + personasTotales <= fecha.personasTotales) {
         if (clientSecret !== null) {
             openPaymentSheet()
-        }
-        // }
-        else {
-            Alert.alert("Atencion",
-                "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
-                [
-                    {
-                        text: "OK",
-                        // onPress: verOpciones
-                    },
-                ],
-                { cancelable: false }
-            )
-
+        } else {
+            Alert.alert("Error", "Ocurrio un error, vuelve a intentarlo mas tarde")
+            setError(true)
         }
     }
 
 
     const handleConfirm = async () => {
+        // Revisar que no se haya llenado la fecha
+        if (await isFechaFull(fechaID)) {
+            Alert.alert("Atencion",
+                "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
+                [
+                    {
+                        text: "OK",
+                        onPress: verOpciones
+                    },
+                ],
+                { cancelable: false }
+            )
+        } else {
+            // Verificar que el usuario no este agregado ya al chatRoom
+            const sub = getUserSub()
+        }
+        return
+        //     // Obtener sub usuario
+        //     const sub = await Auth.currentUserInfo()
+        //         .then(r => {
+        //             return (r.attributes.sub)
+        //         }).catch(e => console.log("Error obteniendo el usuario", e))
+
+        //     // Verificar que no exista ya esa relacion
+        //     const exists = (await API.graphql({
+        //         query: listChatRoomUsuarios,
+        //         variables: {
+        //             filter: { usuarioID: { "eq": sub }, chatroomID: { "eq": chatroomID } }
+        //         }
+        //     }).then(r => {
+        //         return r.data.listChatRoomUsuarios.items
+        //     })).length === 0 ? false : true
+        //     console.log("Existe grupo con esa persona:", exists)
+
+        //     // Si no existe la relacion se agrega usuario al chat
+        //     if (!exists) {
+        //         // Agregar usuario al grupo de chat
+        //         await API.graphql({
+        //             query: createChatRoomUsuario,
+        //             variables: {
+        //                 input: {
+        //                     chatroomID,
+        //                     usuarioID: sub
+        //                 }
+        //             }
+        //         }).catch(e => {
+        //             console.log(e)
+        //             Alert.alert("Error", "Error agregando usuario al grupo")
+        //         })
+        //     }
+
+
+        //     // Query base de datos con reservacion exitosa
+        //     API.graphql({
+        //         query: createReservaciones, variables: {
+        //             input: {
+        //                 fechaID,
+
+        //                 // Variables del precio
+        //                 total: totalSinComision,
+        //                 comisionPorPersona,
+
+        //                 // Variable de personas
+        //                 personas: adultos + ninos + tercera,
+        //                 adultos, ninos: ninos, tercera,
+
+        //                 idPago,
+
+        //                 usuarioID: sub
+        //             }
+        //         }
+        //     })
+        //         .then(c => {
+        //             setButtonLoading(false)
+        //             setButtonDoneLoading(true)
+
+        //             Alert.alert("Reservacion exitosa",
+        //                 "La reservacion fue creada con exito!!",
+        //                 [
+        //                     {
+        //                         text: "OK",
+        //                         onPress: OK
+        //                     },
+        //                 ],
+        //                 { cancelable: false }
+        //             )
+        //         })
+        //         .catch(e => {
+        //             Alert.alert("Error", "Error creando reservacion, comunicate con nosotros para mas info")
+        //             console.log(e)
+        //         })
+
+
+        // }
+
         if (!paymentOption?.label || !paymentOption?.image) {
             Alert.alert("Error", "Agrega primero un metodo de pago")
             return
@@ -352,6 +305,7 @@ export default function ({ route, navigation }) {
 
         setButtonLoading(true)
         const { error } = await confirmPaymentSheetPayment().catch(e => {
+            Alert.alert("Error", "Error realizando el pago")
             console.log(e)
         })
 
@@ -360,6 +314,12 @@ export default function ({ route, navigation }) {
             setButtonLoading(false)
             Alert.alert(`Error code: ${error.code}`, error.message);
         } else {
+            const datosReserva = {
+
+            }
+            // Crear la reservacion en DataStore
+            DataStore.save(new Reserva())
+
             setButtonLoading(false)
             setButtonDoneLoading(true)
             navigation.navigate("ExitoScreen", {})
@@ -374,7 +334,7 @@ export default function ({ route, navigation }) {
             {/* Mostrar la aventura a pagar */}
             <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
                 <Image
-                    source={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
+                    source={{ uri: imagenFondo }}
                     style={styles.imgAventura}
                 />
 
@@ -386,7 +346,7 @@ export default function ({ route, navigation }) {
                         <Text style={{
                             fontSize: 16,
                             flex: 1,
-                        }}>Nevado de colima</Text>
+                        }}>{tituloAventura}</Text>
                     </View>
 
                     <Text style={{
@@ -394,7 +354,7 @@ export default function ({ route, navigation }) {
                         fontSize: 12,
                         marginBottom: 5,
 
-                    }}>AGO 30 - SEP 02</Text>
+                    }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
 
 
 
@@ -407,18 +367,18 @@ export default function ({ route, navigation }) {
                                 style={styles.guiaIcon}
 
                             />
-                            <Text style={{ color: "#0000009E", }}>@mateodelat</Text>
+                            <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
                         </View>
 
                         {/* Calificacion guia */}
-                        <View style={{ ...styles.row, marginTop: 0, }}>
+                        {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
                             <Entypo name="star" size={11} color="#F4984A" />
-                            <Text style={{ fontSize: 11, }}>4.7</Text>
-                        </View>
+                            <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
+                        </View>}
                     </View>
 
                     {/* Descripcion fecha */}
-                    <Text style={{ fontSize: 10, marginTop: 10, }}>Esta es la descripcion de la fecha hecha por el guia. Normalmente se incluye toda la info de la fecha en una manera reducida </Text>
+                    {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
                 </View>
             </View>
 
@@ -582,7 +542,7 @@ const styles = StyleSheet.create({
     },
 
     bolita: {
-        ...shadowMediaa,
+        ...shadowMedia,
 
         borderRadius: 100,
         borderWidth: 3,

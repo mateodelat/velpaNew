@@ -1192,6 +1192,32 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "materialDefault",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "incluidoDefault",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "_version",
           "description" : null,
           "args" : [ ],
@@ -1723,14 +1749,14 @@
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
-              "name" : "AWSJSON",
+              "name" : "String",
               "ofType" : null
             }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "ubicacionNombre",
+          "name" : "puntoReunionNombre",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -1745,7 +1771,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "ubicacionLink",
+          "name" : "puntoReunionLink",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -1809,7 +1835,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
-              "name" : "AWSJSON",
+              "name" : "String",
               "ofType" : null
             }
           },
@@ -1820,9 +1846,13 @@
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "SCALAR",
-            "name" : "ID",
-            "ofType" : null
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -1831,9 +1861,13 @@
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "SCALAR",
-            "name" : "ID",
-            "ofType" : null
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -1850,6 +1884,17 @@
           "deprecationReason" : null
         }, {
           "name" : "descripcion",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "imagenRuta",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -3061,7 +3106,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionNombre",
+          "name" : "puntoReunionNombre",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -3070,7 +3115,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionLink",
+          "name" : "puntoReunionLink",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -3143,6 +3188,15 @@
           "defaultValue" : null
         }, {
           "name" : "descripcion",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "imagenRuta",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5978,6 +6032,24 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "materialDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "incluidoDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "and",
           "description" : null,
           "type" : {
@@ -6514,6 +6586,60 @@
         "name" : "Mutation",
         "description" : null,
         "fields" : [ {
+          "name" : "createPaymentIntent",
+          "description" : null,
+          "args" : [ {
+            "name" : "amount",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "Float",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "destinationStripeID",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "String",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "comision",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "Float",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          } ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "PaymentIntent",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "createAventura",
           "description" : null,
           "args" : [ {
@@ -7509,6 +7635,37 @@
         "enumValues" : null,
         "possibleTypes" : null
       }, {
+        "kind" : "OBJECT",
+        "name" : "PaymentIntent",
+        "description" : null,
+        "fields" : [ {
+          "name" : "id",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "clientSecret",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        } ],
+        "inputFields" : null,
+        "interfaces" : [ ],
+        "enumValues" : null,
+        "possibleTypes" : null
+      }, {
         "kind" : "INPUT_OBJECT",
         "name" : "CreateAventuraInput",
         "description" : null,
@@ -7734,6 +7891,28 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "materialDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "incluidoDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "_version",
           "description" : null,
           "type" : {
@@ -7915,6 +8094,24 @@
           "defaultValue" : null
         }, {
           "name" : "puntoReunionLink",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "materialDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "incluidoDefault",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -8152,6 +8349,28 @@
             "kind" : "SCALAR",
             "name" : "AWSURL",
             "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "materialDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "incluidoDefault",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
           },
           "defaultValue" : null
         }, {
@@ -8658,13 +8877,13 @@
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
-              "name" : "AWSJSON",
+              "name" : "String",
               "ofType" : null
             }
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionNombre",
+          "name" : "puntoReunionNombre",
           "description" : null,
           "type" : {
             "kind" : "NON_NULL",
@@ -8677,7 +8896,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionLink",
+          "name" : "puntoReunionLink",
           "description" : null,
           "type" : {
             "kind" : "NON_NULL",
@@ -8732,7 +8951,7 @@
             "name" : null,
             "ofType" : {
               "kind" : "SCALAR",
-              "name" : "AWSJSON",
+              "name" : "String",
               "ofType" : null
             }
           },
@@ -8741,18 +8960,26 @@
           "name" : "aventuraID",
           "description" : null,
           "type" : {
-            "kind" : "SCALAR",
-            "name" : "ID",
-            "ofType" : null
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
           },
           "defaultValue" : null
         }, {
           "name" : "usuarioID",
           "description" : null,
           "type" : {
-            "kind" : "SCALAR",
-            "name" : "ID",
-            "ofType" : null
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
           },
           "defaultValue" : null
         }, {
@@ -8766,6 +8993,15 @@
           "defaultValue" : null
         }, {
           "name" : "descripcion",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "imagenRuta",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -8846,7 +9082,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionNombre",
+          "name" : "puntoReunionNombre",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -8855,7 +9091,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionLink",
+          "name" : "puntoReunionLink",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -8928,6 +9164,15 @@
           "defaultValue" : null
         }, {
           "name" : "descripcion",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "imagenRuta",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -9042,12 +9287,12 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
-            "name" : "AWSJSON",
+            "name" : "String",
             "ofType" : null
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionNombre",
+          "name" : "puntoReunionNombre",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -9056,7 +9301,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "ubicacionLink",
+          "name" : "puntoReunionLink",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -9096,7 +9341,7 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
-            "name" : "AWSJSON",
+            "name" : "String",
             "ofType" : null
           },
           "defaultValue" : null
@@ -9129,6 +9374,15 @@
           "defaultValue" : null
         }, {
           "name" : "descripcion",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "imagenRuta",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -12252,6 +12506,23 @@
         "onFragment" : false,
         "onField" : true
       }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
         "name" : "aws_auth",
         "description" : "Directs the schema to enforce authorization on a field",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -12297,23 +12568,6 @@
             }
           },
           "defaultValue" : null
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
         } ],
         "onOperation" : false,
         "onFragment" : false,

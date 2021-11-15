@@ -9,6 +9,7 @@ import React from "react";
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { Fecha } from "../../src/models";
 
 
 
@@ -56,10 +57,6 @@ export const addDays = (dayStr, add) => {
   return (yyyy + '-' + mm + '-' + dd);
 
 }
-
-
-
-
 
 export const queryUsuario = /* GraphQL */ `
 query GetUsuario($id: ID!) {
@@ -407,13 +404,13 @@ export const formatDateShort = (msInicial, msFinal) => {
 
     // Si es de un solo dia se regresa un numero
     if (ddFinal === ddInicial && mmInicial === mmFinal) {
-      return ("Logistica " + ddInicial + " " + meses[mmInicial]);
+      return (ddInicial + " " + meses[mmInicial]);
 
     }
 
     // Si los meses son iguales se pone sin 2 veces un mes
     if (mmInicial === mmInicial) {
-      return ("Logistica " + ddInicial + " - " + ddFinal + " " + meses[mmInicial]);
+      return (ddInicial + " - " + ddFinal + " " + meses[mmInicial]);
 
     } else {
       return (ddInicial + " " + meses[mmInicial] + " - " + ddFinal + " " + meses[mmFinal]);
@@ -425,6 +422,12 @@ export const formatDateShort = (msInicial, msFinal) => {
   }
 
 
+}
+
+export const isFechaFull = async (fechaID) => {
+  // Checar que no se haya llenado la fecha
+  console.log(fechaID)
+  return true
 }
 
 export const getBlob = async (uri) => {
@@ -509,26 +512,9 @@ export const deleteAventura = /* GraphQL */ `
 `;
 
 
-export function validURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-  return !!pattern.test(str);
-}
-
-export function isUrl(string) {
-  let url;
-
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
-  }
-
-  return url.protocol === "http:" || url.protocol === "https:";
+export function isUrl(str) {
+  var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  return regexp.test(str);
 }
 
 
@@ -1193,6 +1179,58 @@ export const formatDia = (ms) => {
       break;
     case 11:
       mes = "dic"
+      break;
+
+    default:
+      break;
+  }
+
+  return (dia + " " + mes)
+}
+
+
+export const formatDiaMesCompeto = (ms) => {
+  const fecha = new Date(ms)
+
+  let mes = fecha.getUTCMonth()
+  let dia = fecha.getUTCDate()
+
+  switch (mes) {
+    case 0:
+      mes = "ENERO"
+      break;
+    case 1:
+      mes = "FEBRERO"
+      break;
+    case 2:
+      mes = "MARZO"
+      break;
+    case 3:
+      mes = "ABRIL"
+      break;
+    case 4:
+      mes = "MAYO"
+      break;
+    case 5:
+      mes = "JUNIO"
+      break;
+    case 6:
+      mes = "JULIO"
+      break;
+    case 7:
+      mes = "AGOSTO"
+      break;
+    case 8:
+      mes = "SEPTIEMBRE"
+      break;
+    case 9:
+      mes = "OCTUBRE"
+      break;
+    case 10:
+      mes = "NOVIEMBRE"
+      break;
+    case 11:
+      mes = "DICIEMBRE"
       break;
 
     default:

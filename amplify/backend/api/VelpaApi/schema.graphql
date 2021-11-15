@@ -52,9 +52,9 @@ type Fecha @model @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "b
   allowNinos: Boolean!
   material: String
   incluido: String!
-  aventuraID: ID
+  aventuraID: ID!
   Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
-  usuarioID: ID
+  usuarioID: ID!
   titulo: String
   descripcion: String
   imagenRuta: String
@@ -161,3 +161,15 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
  
+ 
+##################################################x
+####################FUNCIONES#####################
+##################################################x
+type Mutation {
+  createPaymentIntent(amount: Float!,destinationStripeID:String!,comision:Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+}
+
+type PaymentIntent {
+  id: String
+  clientSecret:String
+}

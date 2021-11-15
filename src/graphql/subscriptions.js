@@ -24,6 +24,8 @@ export const onCreateAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionLink
+      materialDefault
+      incluidoDefault
       _version
       _deleted
       _lastChangedAt
@@ -39,8 +41,8 @@ export const onCreateAventura = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -49,6 +51,7 @@ export const onCreateAventura = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -115,6 +118,8 @@ export const onUpdateAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionLink
+      materialDefault
+      incluidoDefault
       _version
       _deleted
       _lastChangedAt
@@ -130,8 +135,8 @@ export const onUpdateAventura = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -140,6 +145,7 @@ export const onUpdateAventura = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -206,6 +212,8 @@ export const onDeleteAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionLink
+      materialDefault
+      incluidoDefault
       _version
       _deleted
       _lastChangedAt
@@ -221,8 +229,8 @@ export const onDeleteAventura = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -231,6 +239,7 @@ export const onDeleteAventura = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -347,8 +356,8 @@ export const onCreateFecha = /* GraphQL */ `
       precio
       comision
       itinerario
-      ubicacionNombre
-      ubicacionLink
+      puntoReunionNombre
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -357,6 +366,7 @@ export const onCreateFecha = /* GraphQL */ `
       usuarioID
       titulo
       descripcion
+      imagenRuta
       _version
       _deleted
       _lastChangedAt
@@ -397,8 +407,8 @@ export const onUpdateFecha = /* GraphQL */ `
       precio
       comision
       itinerario
-      ubicacionNombre
-      ubicacionLink
+      puntoReunionNombre
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -407,6 +417,7 @@ export const onUpdateFecha = /* GraphQL */ `
       usuarioID
       titulo
       descripcion
+      imagenRuta
       _version
       _deleted
       _lastChangedAt
@@ -447,8 +458,8 @@ export const onDeleteFecha = /* GraphQL */ `
       precio
       comision
       itinerario
-      ubicacionNombre
-      ubicacionLink
+      puntoReunionNombre
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -457,6 +468,7 @@ export const onDeleteFecha = /* GraphQL */ `
       usuarioID
       titulo
       descripcion
+      imagenRuta
       _version
       _deleted
       _lastChangedAt
@@ -544,8 +556,8 @@ export const onCreateUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -554,6 +566,7 @@ export const onCreateUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -686,8 +699,8 @@ export const onUpdateUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -696,6 +709,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -828,8 +842,8 @@ export const onDeleteUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -838,6 +852,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -934,8 +949,8 @@ export const onCreateChatRoom = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -944,6 +959,7 @@ export const onCreateChatRoom = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -1010,8 +1026,8 @@ export const onUpdateChatRoom = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -1020,6 +1036,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -1086,8 +1103,8 @@ export const onDeleteChatRoom = /* GraphQL */ `
         precio
         comision
         itinerario
-        ubicacionNombre
-        ubicacionLink
+        puntoReunionNombre
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -1096,6 +1113,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
         usuarioID
         titulo
         descripcion
+        imagenRuta
         _version
         _deleted
         _lastChangedAt
@@ -1314,6 +1332,8 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1385,6 +1405,8 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1456,6 +1478,8 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1527,6 +1551,8 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1632,6 +1658,8 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1737,6 +1765,8 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionLink
+        materialDefault
+        incluidoDefault
         _version
         _deleted
         _lastChangedAt
@@ -1890,8 +1920,8 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -1900,6 +1930,7 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -2000,8 +2031,8 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -2010,6 +2041,7 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt
@@ -2110,8 +2142,8 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
           precio
           comision
           itinerario
-          ubicacionNombre
-          ubicacionLink
+          puntoReunionNombre
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -2120,6 +2152,7 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
           usuarioID
           titulo
           descripcion
+          imagenRuta
           _version
           _deleted
           _lastChangedAt

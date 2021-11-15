@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 
 import { API, Storage } from 'aws-amplify';
-import { listCategorias, validURL } from '../../../../assets/constants';
+import { listCategorias } from '../../../../assets/constants';
 
 import { Loading } from '../../../components/Loading';
 

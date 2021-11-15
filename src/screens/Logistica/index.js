@@ -7,11 +7,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import QueLlevar from './components/QueLlevar';
 import Boton from '../../components/Boton';
 import RadioButton from '../../components/RadioButton';
+import QueLlevar from '../AgregarFecha/components/QueLlevar';
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
+    const {
+        material,
+        allowTercera,
+        allowNinos,
+
+        imagenFondo,
+        tituloAventura,
+        descripcion,
+
+        nicknameGuia,
+        calificacionGuia,
+        stripeID,
+
+        fechaInicial,
+        fechaFinal,
+        fechaID
+    } = route.params
 
     const [tercera, setTercera] = useState(0);
     const [adultos, setAdultos] = useState(1);
@@ -25,14 +42,18 @@ export default ({ navigation }) => {
     const personasMaximas = 10
     const total = tercera + adultos + ninos
 
-
-
     const comisionVelpa = .2
+
+    // Logica para poner material incluido como lista
+    let incluido = []
+    const parseIncluido = JSON.parse(route.params?.incluido)
+    incluido = [...parseIncluido.default, ...parseIncluido.agregado]
 
     let precioIndividualSinComision = 400
     const precioIndividual = calculatePrice(precioIndividualSinComision, total, comisionVelpa)
 
     function handlePagar(params) {
+
         if (!aceptoTerminos || !aceptoMaterial) {
             Alert.alert("Error", "No se ha aceptado todo")
             return
@@ -47,6 +68,19 @@ export default ({ navigation }) => {
             comisionVelpa,
             precioIndividualSinComision: calculatePrice(precioIndividualSinComision, total),
 
+            imagenFondo,
+            tituloAventura,
+
+            descripcion,
+
+            nicknameGuia,
+            calificacionGuia,
+
+            fechaFinal,
+            fechaInicial,
+            stripeID,
+
+            fechaID
         })
     }
 
@@ -66,13 +100,22 @@ export default ({ navigation }) => {
 
                 </View>
 
-                <Selector
+                <Text style={styles.warning}>{
+                    !allowNinos && !allowTercera ?
+                        "*No se permiten niños ni tercera edad en esta fecha" :
+                        !allowNinos ?
+                            "*No se permiten niños esta fecha" :
+                            !allowTercera &&
+                            "*No se permite tercera edad en esta fecha"
+                }</Text>
+
+                {allowTercera && <Selector
                     titulo={"Tercera edad"}
                     descripcion={"Edad 65 años en adelante"}
                     setCantidad={setTercera}
                     cantidad={tercera}
                     maxReached={total >= personasMaximas}
-                />
+                />}
 
                 <Selector
                     titulo={"Adultos"}
@@ -83,13 +126,13 @@ export default ({ navigation }) => {
                     maxReached={total >= personasMaximas}
                 />
 
-                <Selector
+                {allowNinos && <Selector
                     titulo={"Niños"}
                     descripcion={"Menores de 12 años"}
                     setCantidad={setNinos}
                     cantidad={ninos}
                     maxReached={total >= personasMaximas}
-                />
+                />}
 
 
                 {/* Precios */}
@@ -124,12 +167,7 @@ export default ({ navigation }) => {
                         <View style={styles.linea} />
 
                         <QueLlevar
-                            datos={{
-                                materialObligatorio: ["Ropa para el frio"],
-                                materialAcampada: ["Una casita de campaña", "Una casita de campaña", "Una casita de campaña", "Una casita de campaña"],
-                                materialOpcional: ["Ahi tu gorro"],
-                                alimentacion: [],
-                            }}
+                            datos={JSON.parse(material)}
                         />
                     </View>
                 }
@@ -155,13 +193,16 @@ export default ({ navigation }) => {
                 {/* Cuerpo */}
                 <View style={{ marginTop: 10, marginLeft: 10, }}>
                     {
-                        ["Electrolit", "Suero", "Transporte hasta campamento",].map((el, idx) => (
-                            <Text
-                                style={styles.incluido}
-                                key={idx.toString()}
-                            >{el}</Text>
+                        incluido.map((el, idx) => {
+                            return (
+                                < Text
+                                    style={styles.incluido}
+                                    key={idx.toString()}
+                                > {el}</Text>
 
-                        ))
+                            )
+                        }
+                        )
                     }
 
                 </View>
@@ -212,7 +253,7 @@ export default ({ navigation }) => {
                 titulo={"Pagar"}
             />
 
-        </ScrollView>
+        </ScrollView >
     )
 }
 
@@ -287,6 +328,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
 
-
+    warning: {
+        marginBottom: 10,
+        color: 'red',
+    }
 
 })

@@ -1,72 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import { Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, moradoClaro, msInDay, wait } from '../../../assets/constants';
+import { colorFondo, formatDia, formatDiaMesCompeto, moradoClaro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
 import { DataStore } from '@aws-amplify/datastore';
 import { Fecha } from '../../models';
 
-export default index = ({ route }) => {
+export default index = ({ route, navigation }) => {
     const { height, width } = Dimensions.get("screen")
 
     const scrollY = React.useRef(new Animated.Value(0)).current
     const [refreshing, setRefreshing] = useState(false);
 
-    const { titulo, imagenFondo, aventuraID } = route.params
+    const { titulo, imagenFondo, aventuraID } = {
+        "aventuraID": "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
+        "imagenFondo": "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
+        "titulo": "Iztacihuatl",
+    }
 
+    // fechas
+    const [fechas, setFechas] = useState([]);
     useEffect(() => {
-
+        fetchFechas()
     }, []);
+
+    const fetchFechas = async () => {
+        DataStore.query(Fecha, f => f.aventuraID("eq", aventuraID))
+            .then(r => {
+                setFechas(r)
+            })
+
+    }
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         wait(1000).then(() => setRefreshing(false));
     }, []);
 
-    const crearFecha = async () => {
-        const initialDate = 1875433509
-        const itinerario = {
+    const handleContinuar = (fecha, guia) => {
+        navigation.navigate("Logistica", {
+            ...fecha,
+            imagenFondo,
+            tituloAventura: titulo,
+            nicknameGuia: guia.nickname,
+            calificacionGuia: guia.calificacion,
+            stripeID: guia.stripeID,
 
-        }
-
-        const incluido = {
-
-        }
-        console.log({
-            "personasTotales": 2,
-            "fechaInicial": 1875433509,
-            "fechaFinal": 1875433509 + msInDay * 2,
-            "precio": 1230,
-            "comision": 123.45,
-            "itinerario": JSON.stringify(itinerario),
-            "ubicacionNombre": "Lorem ipsum dolor sit amet",
-            "ubicacionLink": "Lorem ipsum dolor sit amet",
-            "allowTercera": true,
-            "allowNinos": true,
-            "material": "Lorem ipsum dolor sit amet",
-            "incluido": JSON.stringify(incluido),
-            "usuarioID": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d"
+            fechaID: fecha.id
         })
-        // await DataStore.save(
-        //     new Fecha({
-        //         "personasTotales": 2,
-        //         "fechaInicial": 1875433509,
-        //         "fechaFinal": 1875433509 + msInDay * 2,
-        //         "precio": 1230,
-        //         "comision": 123.45,
-        //         "itinerario":  /* Provide init commands */,
-        //         "ubicacionNombre": "Lorem ipsum dolor sit amet",
-        //         "ubicacionLink": "Lorem ipsum dolor sit amet",
-        //         "allowTercera": true,
-        //         "allowNinos": true,
-        //         "material": "Lorem ipsum dolor sit amet",
-        //         "incluido":  /* Provide init commands */,
-        //         "usuarioID": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d"
-        //     })
-        // );
     }
+
 
     return (
         <View style={{
@@ -93,17 +78,43 @@ export default index = ({ route }) => {
                 showsVerticalScrollIndicator={false}
                 style={{
                     padding: 20,
-                    paddingTop: height * 0.24 + 20,
                 }}>
-                {/* Texto de fecha inicial */}
-                <Text style={styles.fecha}>30 OCTUBRE</Text>
+                <View style={{
+                    height: height * 0.24 + 20,
+                }} />
+                {
+                    fechas.map((e, idx) => {
 
-                <ElementoFecha />
-                <ElementoFecha />
-                <Text style={styles.fecha}>31 OCTUBRE</Text>
+                        const feInicial = new Date(e.fechaInicial)
+                        // Si es el primer elemento
+                        if (!idx) return <View key={idx.toString()}>
+                            <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
+                            <ElementoFecha
+                                fecha={e}
+                                handleContinuar={handleContinuar}
+                            />
+                        </View>
 
-                <ElementoFecha />
-                <ElementoFecha />
+                        const feAnterior = new Date(fechas[idx - 1].fechaInicial)
+                        // Si el dia inicial es distinto al dia inicial de la siguiente fecha
+                        if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
+                            return <View key={idx.toString()}>
+                                <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
+                                <ElementoFecha
+                                    fecha={e}
+                                    handleContinuar={handleContinuar}
+
+                                />
+                            </View>
+
+                        return <ElementoFecha
+                            key={idx.toString()}
+                            fecha={e}
+                            handleContinuar={handleContinuar}
+                        />
+
+                    })
+                }
             </Animated.ScrollView >
             <HeaderConImagen
                 titulo={titulo}

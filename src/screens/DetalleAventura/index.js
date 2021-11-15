@@ -28,7 +28,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Descripcion from './components/Descripcion';
 import CuadradoImagen from '../../components/CuadradoImagen';
 import Boton from '../../components/Boton';
-import { getAventura, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
+import { getAventura, listAventurasSugeridas, moradoOscuro } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
 import Header from '../../components/header';
@@ -94,7 +94,7 @@ export default ({ navigation, route }) => {
         }
 
         // Obtener aventuras sugeridas
-        listAventurasAutorizadas(3).then(r => {
+        listAventurasSugeridas(id, 4).then(r => {
             setAventurasSugeridas(r)
             setLoading(false)
 

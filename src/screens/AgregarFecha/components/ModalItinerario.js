@@ -186,6 +186,8 @@ const ModalItinerario = ({
     itinerario,
     setItinerario,
 
+    modifiable
+
 }) => {
     // Variables selector de hora
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -377,22 +379,24 @@ const ModalItinerario = ({
                     textAlign: 'center',
                 }}>Itinerario</Text>
 
-                {editAllowed &&
-                    modify ? <MaterialIcons
-                    onPress={handleSave}
-                    name={"check"}
-                    size={35}
-                    color={"green"}
-                    style={styles.icon}
-                />
-                    :
-                    <Feather
-                        onPress={handleSave}
-                        name={"edit"}
-                        size={35}
-                        color={moradoClaro}
-                        style={styles.icon}
-                    />}
+                {
+                    modifiable && (
+                        editAllowed &&
+                            modify ? <MaterialIcons
+                            onPress={handleSave}
+                            name={"check"}
+                            size={35}
+                            color={"green"}
+                            style={styles.icon}
+                        />
+                            :
+                            <Feather
+                                onPress={handleSave}
+                                name={"edit"}
+                                size={35}
+                                color={moradoClaro}
+                                style={styles.icon}
+                            />)}
 
 
             </View>

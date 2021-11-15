@@ -1,13 +1,10 @@
-import { Feather } from "@expo/vector-icons";
-import { Alert, Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { getChatRoomHeader, moradoClaro, validURL } from "../../assets/constants";
-
-import { S3Image } from 'aws-amplify-react-native';
+import { moradoClaro } from "../../assets/constants";
 
 
 export default ({ titulo, image }) => {

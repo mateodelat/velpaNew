@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Alert,
     Image,
@@ -9,17 +9,20 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { diffDays, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import ListaPersonas from './ListaPersonas';
-import ModalItinerario from './ModalItinerario';
 import ModalRuta from './ModalRuta';
 import { useNavigation } from '@react-navigation/native';
+import { DataStore } from '@aws-amplify/datastore';
+import { Usuario } from '../../../models';
+import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
-export default function () {
+
+export default function ({ fecha, handleContinuar }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("");
 
@@ -38,6 +41,59 @@ export default function () {
         setTipoModal("ruta")
     }
 
+
+    const {
+        titulo,
+        descripcion,
+        precio,
+        fechaInicial,
+        fechaFinal,
+        usuarioID
+    } = fecha
+
+    const handleNavigateGuia = () => {
+        navigation.navigate("PerfilScreen", { id: usuarioID })
+    }
+
+    // Obtener el guia
+    const [guia, setGuia] = useState(null);
+    useEffect(() => {
+        (async () => {
+            const perfil = await DataStore.query(Usuario, usuarioID)
+                .then(r => {
+                    return {
+                        ...r,
+                        foto: isUrl(r.foto) ? r.foto :
+                            //Obtener uri de S3
+                            null
+                    }
+                })
+
+
+            setGuia(perfil)
+        })()
+    }, []);
+
+    // Personas reservadas
+    const personasReservadas = [
+        {
+            foto: "https://static.remove.bg/remove-bg-web/f50bd6ad4990ff621deccea155ab762c39d8c77a/assets/start_remove-c851bdf8d3127a24e2d137a55b1b427378cd17385b01aec6e59d5d4b5f39d2ec.png",
+            nickname: "mateo delat",
+            personasReservadas: 1
+        },
+        {
+            foto: "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
+            nickname: "mateo delat",
+            personasReservadas: 1
+        },
+        {
+            foto: "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
+            nickname: "mateo delat",
+            personasReservadas: 2
+        },
+
+    ]
+
     return (
         <View style={{
             marginLeft: 10,
@@ -52,15 +108,17 @@ export default function () {
 
                 {/* Titulo y precio */}
                 <View style={styles.row}>
-                    <Text
+                    {titulo ? <Text
                         numberOfLines={1}
                         style={styles.titulo}
-                    >Subida todo incluido</Text>
+                    >{titulo}</Text> :
+                        <Text numberOfLines={1} style={styles.titulo}
+                        >{formatDateShort(fechaInicial, fechaFinal)}</Text>}
 
-                    <View style={{}}>
+                    <View>
                         <Text
                             style={styles.precio}
-                        >18000$</Text>
+                        >{precio}$</Text>
                         <Text
                             style={{
                                 textAlign: 'right',
@@ -74,16 +132,16 @@ export default function () {
 
 
                 {/* Descripcion */}
-                <View style={styles.row}>
+                {descripcion && <View style={styles.row}>
                     <Text
                         numberOfLines={openDetails ? null : 1}
                         style={styles.descripcion}
-                    >{("Texto describiendo detalles de la fecha pero esta muy largo para que quepa por lo que tiene que ser mfdsfasdfs adfasdf adsfadsvgdfgfdsas")}</Text>
+                    >{descripcion}</Text>
 
                     {!openDetails && <Text
                         style={[styles.precio, { color: '#fff', }]}
-                    >18000$</Text>}
-                </View>
+                    >{precio}$</Text>}
+                </View>}
 
 
                 {/* Elementos de detalle */}
@@ -98,10 +156,17 @@ export default function () {
                         }}>
 
                         <View style={{ alignItems: 'flex-start', }}>
-                            <Text style={{ fontSize: 16, }}>Mariana De La Tower</Text>
-                            <Text style={styles.nickname}>@lameramer</Text>
+                            <Text style={{ fontSize: 16, }}>{guia?.nombre} {guia?.apellido}</Text>
+                            <Text style={styles.nickname}>@{guia?.nickname}</Text>
                         </View>
-                        <Image source={{ uri: "https://thispersondoesnotexist.com/image" }} style={styles.foto} />
+                        <Pressable
+                            onPress={handleNavigateGuia}
+
+                        >
+
+                            <Image
+                                source={{ uri: guia?.foto }} style={styles.foto} />
+                        </Pressable>
 
                     </View>
 
@@ -123,13 +188,13 @@ export default function () {
                         <View style={styles.cuadradoDatos}>
                             <Text style={styles.tituloCuadro}>DIAS</Text>
                             <View style={styles.diasContainer}>
-                                <Text style={styles.diasTxt}>6</Text>
+                                <Text style={styles.diasTxt}>{Math.round(diffDays(fechaInicial, fechaFinal) + 1)}</Text>
                             </View>
                         </View>
 
 
                         {
-                            true && <>
+                            fecha.ruta && <>
                                 <View style={styles.lineaVertical} />
                                 <View style={styles.cuadradoDatos}>
                                     <Text style={styles.tituloCuadro}>RUTA</Text>
@@ -167,18 +232,17 @@ export default function () {
 
 
 
-
                 {/* Lista personas */}
                 <ListaPersonas
-                    personasReservadas={3}
-                    personasTotales={6}
+                    personasReservadas={personasReservadas}
+                    personasTotales={fecha.personasTotales}
 
                 />
 
 
 
                 {openDetails && <Pressable
-                    onPress={() => navigation.navigate("Logistica")}
+                    onPress={() => handleContinuar(fecha, guia)}
                     style={{ ...styles.botonRedondo, width: '50%', alignSelf: 'center', marginBottom: 20, }}>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', }}>Reservar</Text>
                 </Pressable>}
@@ -195,7 +259,9 @@ export default function () {
             >
                 {tipoModal === "itinerario" ?
                     <ModalItinerario
+                        editAllowed={false}
                         setModalVisible={setModalVisible}
+                        itinerario={JSON.parse(fecha.itinerario)}
                     /> :
                     <ModalRuta
                         img={"https://i.ibb.co/dcXDs4G/Ruta-Nevado-Garmin.png"}
