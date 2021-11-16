@@ -134,6 +134,35 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "puntoReunionNombre": {
+                    "name": "puntoReunionNombre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "materialDefault": {
+                    "name": "materialDefault",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "incluidoDefault": {
+                    "name": "incluidoDefault",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "SolicitudGuias": {
                     "name": "SolicitudGuias",
                     "isArray": true,
@@ -176,34 +205,33 @@ export const schema = {
                         "associatedWith": "aventuraID"
                     }
                 },
-                "puntoReunionNombre": {
-                    "name": "puntoReunionNombre",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "puntoReunionLink": {
-                    "name": "puntoReunionLink",
-                    "isArray": false,
-                    "type": "AWSURL",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "materialDefault": {
-                    "name": "materialDefault",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "incluidoDefault": {
-                    "name": "incluidoDefault",
+                "Notificaciones": {
+                    "name": "Notificaciones",
                     "isArray": true,
-                    "type": "String",
+                    "type": {
+                        "model": "Notificacion"
+                    },
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": true
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "aventuraID"
+                    }
+                },
+                "Publicidad": {
+                    "name": "Publicidad",
+                    "isArray": true,
+                    "type": {
+                        "model": "Publicidad"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "aventuraID"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -438,10 +466,17 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "comentarios": {
-                    "name": "comentarios",
+                "evaluadorID": {
+                    "name": "evaluadorID",
                     "isArray": false,
-                    "type": "String",
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -459,12 +494,19 @@ export const schema = {
                         "associatedWith": "solicitudguia"
                     }
                 },
-                "evaluadorID": {
-                    "name": "evaluadorID",
-                    "isArray": false,
-                    "type": "ID",
+                "Notificaciones": {
+                    "name": "Notificaciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Notificacion"
+                    },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "solicitudGuiaID"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -495,7 +537,193 @@ export const schema = {
                     "properties": {
                         "name": "byUsuario",
                         "fields": [
-                            "evaluadorID"
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "read",
+                                    "create",
+                                    "update",
+                                    "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Notificacion": {
+            "name": "Notificacion",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "metadata": {
+                    "name": "metadata",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tipo": {
+                    "name": "tipo",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoNotificacion"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "titulo": {
+                    "name": "titulo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "reservaID": {
+                    "name": "reservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "aventuraID": {
+                    "name": "aventuraID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "solicitudGuiaID": {
+                    "name": "solicitudGuiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Notificacions",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byReserva",
+                        "fields": [
+                            "reservaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byFecha",
+                        "fields": [
+                            "fechaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAventura",
+                        "fields": [
+                            "aventuraID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "bySolicitudGuia",
+                        "fields": [
+                            "solicitudGuiaID"
                         ]
                     }
                 },
@@ -699,6 +927,15 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "tipo": {
+                    "name": "tipo",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoUsuario"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "nombre": {
                     "name": "nombre",
                     "isArray": false,
@@ -734,12 +971,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "tipo": {
-                    "name": "tipo",
+                "stripeID": {
+                    "name": "stripeID",
                     "isArray": false,
-                    "type": {
-                        "enum": "TipoUsuario"
-                    },
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -811,13 +1046,6 @@ export const schema = {
                 },
                 "usuarioRedSocial": {
                     "name": "usuarioRedSocial",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "stripeID": {
-                    "name": "stripeID",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -900,8 +1128,22 @@ export const schema = {
                         "associatedWith": "usuarioID"
                     }
                 },
-                "SolicitudesEvaluadas": {
-                    "name": "SolicitudesEvaluadas",
+                "Notificaciones": {
+                    "name": "Notificaciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Notificacion"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "usuarioID"
+                    }
+                },
+                "SolicitudesCreadas": {
+                    "name": "SolicitudesCreadas",
                     "isArray": true,
                     "type": {
                         "model": "SolicitudGuia"
@@ -911,7 +1153,7 @@ export const schema = {
                     "isArrayNullable": true,
                     "association": {
                         "connectionType": "HAS_MANY",
-                        "associatedWith": "evaluadorID"
+                        "associatedWith": "usuarioID"
                     }
                 },
                 "createdAt": {
@@ -945,7 +1187,8 @@ export const schema = {
                             {
                                 "allow": "public",
                                 "operations": [
-                                    "create"
+                                    "create",
+                                    "read"
                                 ]
                             },
                             {
@@ -1068,10 +1311,15 @@ export const schema = {
                                 "allow": "owner",
                                 "operations": [
                                     "create",
-                                    "update",
                                     "delete"
                                 ],
                                 "identityClaim": "cognito:username"
+                            },
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "read"
+                                ]
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -1264,7 +1512,20 @@ export const schema = {
                 "lastMessage": {
                     "name": "lastMessage",
                     "isArray": false,
-                    "type": "String",
+                    "type": {
+                        "model": "Mensaje"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "chatRoomLastMessageId"
+                    }
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1295,13 +1556,6 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "chatroom"
                     }
-                },
-                "fechaID": {
-                    "name": "fechaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1425,6 +1679,20 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "Notificaciones": {
+                    "name": "Notificaciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Notificacion"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "reservaID"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1603,34 +1871,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "aventuraID": {
-                    "name": "aventuraID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "Reservas": {
-                    "name": "Reservas",
-                    "isArray": true,
-                    "type": {
-                        "model": "Reserva"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "fechaID"
-                    }
-                },
-                "usuarioID": {
-                    "name": "usuarioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "titulo": {
                     "name": "titulo",
                     "isArray": false,
@@ -1652,11 +1892,53 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "aventuraID": {
+                    "name": "aventuraID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "Reservas": {
+                    "name": "Reservas",
+                    "isArray": true,
+                    "type": {
+                        "model": "Reserva"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "fechaID"
+                    }
+                },
                 "ChatRoom": {
                     "name": "ChatRoom",
                     "isArray": true,
                     "type": {
                         "model": "ChatRoom"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "fechaID"
+                    }
+                },
+                "Notificaciones": {
+                    "name": "Notificaciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Notificacion"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -1748,6 +2030,136 @@ export const schema = {
                     }
                 }
             ]
+        },
+        "Publicidad": {
+            "name": "Publicidad",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tipo": {
+                    "name": "tipo",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoPublicidad"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "metadata": {
+                    "name": "metadata",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "titulo": {
+                    "name": "titulo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "imagenFondo": {
+                    "name": "imagenFondo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "video": {
+                    "name": "video",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "linkAnuncio": {
+                    "name": "linkAnuncio",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "aventuraID": {
+                    "name": "aventuraID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Publicidads",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAventura",
+                        "fields": [
+                            "aventuraID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "read",
+                                    "create",
+                                    "update",
+                                    "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
     "enums": {
@@ -1775,11 +2187,30 @@ export const schema = {
                 "RECHAZADA"
             ]
         },
+        "TipoNotificacion": {
+            "name": "TipoNotificacion",
+            "values": [
+                "RESERVAENFECHA",
+                "RESERVACREADA",
+                "RECORDATORIOFECHA",
+                "SOLICITUDGUIA",
+                "SOLICITUDAVENTURA",
+                "ADMIN"
+            ]
+        },
         "TipoUsuario": {
             "name": "TipoUsuario",
             "values": [
                 "AGENCIA",
                 "GUIAINDIVIDUAL"
+            ]
+        },
+        "TipoPublicidad": {
+            "name": "TipoPublicidad",
+            "values": [
+                "AVENTURA",
+                "ANUNCIO",
+                "ACTUALIZACION"
             ]
         }
     },
@@ -1802,7 +2233,19 @@ export const schema = {
                     "attributes": []
                 }
             }
+        },
+        "CreateAcount": {
+            "name": "CreateAcount",
+            "fields": {
+                "url": {
+                    "name": "url",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
-    "version": "528807cf84e3ddcfd30b6aa132dac5b6"
+    "version": "f7ea06662389689c5b4d018927f39ae3"
 };

@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
-import { colorFondo, container, wait } from '../../../assets/constants'
+import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
 import ChatRoomItem from './components/ChatRoomItem';
 
 
 import { Entypo } from '@expo/vector-icons';
+import { DataStore } from '@aws-amplify/datastore';
+
+import { ChatRoomUsuario } from '../../models';
+import { Loading } from '../../components/Loading';
+import { Mensaje } from '../../models';
 
 export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
@@ -13,14 +18,47 @@ export default ({ navigation }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        wait(1000).then(() => setRefreshing(false));
+        wait(300).then(() => {
+            setRefreshing(false)
+            fetchChatRooms()
+        });
     }, []);
 
 
-    const handleChat = (titulo, image) => {
+    const [chats, setChats] = useState(null);
+    useEffect(() => {
+        fetchChatRooms()
+    }, []);
+
+    const fetchChatRooms = async () => {
+        const sub = await getUserSub()
+
+        // Obtener todos los chatrooms que pertenecen al usuario
+        const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuario))
+            .filter(e => e.usuario.id === sub).map(async e => {
+                e = e.chatroom
+                // Obtener el ultimo mensaje
+                e = {
+                    ...e,
+                    lastMessage: await DataStore.query(Mensaje, e.chatRoomLastMessageId)
+                }
+
+                return e
+            }))
+
+        setChats(chatRooms)
+        return chatRooms
+    }
+
+    const handleChat = (chat) => {
+        const {
+            id,
+            name: titulo,
+            picture: image
+        } = chat
         navigation.navigate("ChatRoom", {
-            titulo,
-            image
+            id,
+            titulo, image
         })
     }
 
@@ -62,41 +100,36 @@ export default ({ navigation }) => {
 
             {/* Lista de chatRooms */}
             <View style={styles.innerContainer}>
-                <ChatRoomItem
-                    onPress={() => handleChat("Nevado de colima 15 ago", require("../../../assets/IMG/Selfie.png"))}
-                    titulo={"Nevado de colima 15 ago"}
-                    descripcion={"Hola a que lugar tenemos ir?"}
-                    hora={"11:00 am"}
-                    image={require("../../../assets/IMG/Selfie.png")}
-                    newMessages={99}
 
-                />
+                {
+                    !chats ?
+                        <Loading indicator={true} /> :
+                        chats.map((item, index) => {
+                            // Ver si se pone la linea al final
+                            if (index === chats.length - 1) {
+                                return <ChatRoomItem
+                                    key={index.toString()}
+                                    onPress={() => handleChat(item)}
+                                    item={item}
+                                />
 
-                <View style={styles.line} />
+                            } else {
+                                return <View
+                                    key={index.toString()}
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <ChatRoomItem
+                                        onPress={() => handleChat(item)}
+                                        item={item}
+                                    />
 
-
-                <ChatRoomItem
-                    onPress={() => handleChat("Iztacihuatl 01 ene", require("../../../assets/IMG/Montana.jpg"))}
-                    titulo={"Iztacihuatl 01 ene"}
-                    image={require("../../../assets/IMG/Montana.jpg")}
-                />
-
-                <View style={styles.line} />
-
-
-                <ChatRoomItem
-                    onPress={() => handleChat("La hierbabuena", require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"))}
-                    image={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
-
-                    titulo={"La hierbabuena"}
-                    descripcion={"Todo listo!!"}
-
-                    newMessages={2}
-
-                    hora={"1:00 pm"}
-
-                />
-
+                                    <View style={styles.line} />
+                                </View>
+                            }
+                        })}
             </View>
 
         </ScrollView>

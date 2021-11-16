@@ -1,34 +1,40 @@
+import { DataStore, OpType } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { formatAMPM, moradoClaro, moradoOscuro } from '../../../../assets/constants'
+
+import moment from "moment";
 
 
 export default ({
-    titulo,
-    descripcion,
-    hora,
-    image,
     onPress,
-    newMessages
+    item,
+
 }) => {
+    const { name,
+        picture,
+        newMessages,
+        lastMessage
+    } = item
+
 
     return (
         <Pressable
             onPress={onPress}
             style={styles.container}>
-            <Image source={image} style={styles.image} />
+            <Image source={{ uri: picture }} style={styles.image} />
             {!!newMessages && <View style={styles.badge}>
                 <Text
                     numberOfLines={1}
                     style={styles.badgeTxt}>{newMessages}</Text>
             </View>}
             <View style={{ flex: 1, justifyContent: 'center', }}>
-                <Text style={styles.titulo}>{titulo}</Text>
-                {(descripcion && descripcion.length !== 0) && <Text style={styles.descripcion}>{descripcion}</Text>}
+                <Text style={styles.titulo}>{name}</Text>
+                {lastMessage && <Text style={styles.descripcion}>{lastMessage.content}</Text>}
             </View>
 
-            <Text style={{ ...styles.titulo, color: moradoClaro, }}>{hora}</Text>
+            {lastMessage && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{moment(lastMessage?.createdAt).from(moment())}</Text>}
         </Pressable>
     )
 }

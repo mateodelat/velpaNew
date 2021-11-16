@@ -1,20 +1,20 @@
 /* Amplify Params - DO NOT EDIT
-  API_VELPANEWVERSION_GRAPHQLAPIENDPOINTOUTPUT
-  API_VELPANEWVERSION_GRAPHQLAPIIDOUTPUT
-  API_VELPANEWVERSION_GRAPHQLAPIKEYOUTPUT
-  ENV
-  REGION
+    API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
+    API_VELPAAPI_GRAPHQLAPIIDOUTPUT
+    API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+    ENV
+    REGION
 Amplify Params - DO NOT EDIT */
 
 const https = require('https');
 const AWS = require("aws-sdk");
 const urlParse = require("url").URL;
 const stripe = require('stripe')('sk_test_51J7OwUFIERW56TAEe1Ih8TU1SRyeoyLvP17jicv86HOaEJCjEakiYqMqMJ5ZdsCf3OdXV5Km1qwEN7QYvwEgjv4J00XeAeyKE1');
-const appsyncUrl = process.env.API_VELPATEST_GRAPHQLAPIENDPOINTOUTPUT;
+const appsyncUrl = process.env.API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
 const region = process.env.REGION;
 const endpoint = new urlParse(appsyncUrl).hostname.toString();
-const { updateUsuario, getUsuario } = require('../../../amplify/backend/function/CreateStripeAcount/src/query.js');
-const apiKey = process.env.API_VELPATEST_GRAPHQLAPIKEYOUTPUT;
+const { updateUsuario, getUsuario } = require("./query");
+const apiKey = process.env.API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
 
 exports.handler = async (event) => {
     const { arguments } = event

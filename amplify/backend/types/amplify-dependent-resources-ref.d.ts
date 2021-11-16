@@ -31,5 +31,11 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         }
+    },
+    "storage": {
+        "velpastorage": {
+            "BucketName": "string",
+            "Region": "string"
+        }
     }
 }

@@ -27,10 +27,11 @@ import CuadradoImagen from '../../components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import Boton from '../../components/Boton';
 import AddElemento from './components/AddElemento';
-import { Categorias, Usuario } from '../../models';
+import { AventuraSolicitudGuia, Categorias, StatusSolicitud, Usuario } from '../../models';
 import { DataStore } from '@aws-amplify/datastore';
 import { AventuraUsuario } from '../../models';
 import Auth from '@aws-amplify/auth';
+import { SolicitudGuia } from '../../models';
 
 
 
@@ -41,7 +42,7 @@ export default ({
     // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
 
     // Variables iniciales
-    const { esSelector } = route.params
+    const { esSelector } = { esSelector: true }/*route.params*/
 
     let titulo
     let descripcion
@@ -123,11 +124,9 @@ export default ({
         return (
             [{
                 selected: false,
-                key: "Id izquierda",
             },
             {
                 selected: false,
-                key: "Id derecha",
             },
             ]
         )
@@ -154,31 +153,41 @@ export default ({
     // Funcion continuar solo en caso que sea selector
     const handleContinuar = async () => {
         // Extraer solos los id's de aventuras seleccionadas
-        let listaIDs = []
+        let listaAventuras = []
 
         selectedItems.map((row) => {
             row.map(e => {
                 if (e.selected) {
-                    listaIDs.push(e.key)
+                    listaAventuras.push(e.aventura)
                 }
             })
         })
 
-        if (listaIDs.length === 0) {
+        if (listaAventuras.length === 0) {
             Alert.alert("Error", "Selecciona minimo una aventura a validar")
             return
         }
 
-        setButtonLoading(true)
-        setTimeout(() => {
-            setButtonLoading(false)
-            Alert.alert("Crear solicitud", "Se crea una solicitud con los ids:\n" + listaIDs)
-            navigation.popToTop()
-            navigation.navigate("ExitoScreen", {
-                txtExito: "Solicitud enviada con exito, espera nuestra llamada!!",
-                txtOnPress: "Volver al incio",
-            })
-        }, 500);
+
+
+        const solicitudguia = await DataStore.save(new SolicitudGuia({
+            status: StatusSolicitud.PENDIENTE,
+        }))
+
+        // Crear relaciones a aventura para cada una
+        await Promise.all(listaAventuras.map(aventura => {
+            return DataStore.save(new AventuraSolicitudGuia({
+                aventura,
+                solicitudguia
+            }))
+        }))
+
+        setButtonLoading(false)
+        navigation.popToTop()
+        navigation.navigate("ExitoScreen", {
+            txtExito: "Solicitud enviada con exito, espera nuestra llamada!!",
+            txtOnPress: "Volver al incio",
+        })
     }
 
 
@@ -189,6 +198,9 @@ export default ({
 
             // Se cambia el valor del item seleccionado
             newSelectedItems[row][column].selected = !newSelectedItems[row][column].selected
+
+            // Se agrega el id del item seleccionado
+            newSelectedItems[row][column].aventura = aventura
 
             setSelectedItems(newSelectedItems)
         } else {

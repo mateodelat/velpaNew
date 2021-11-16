@@ -1,6 +1,6 @@
 projects:
   VelpaApi:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/VelpaApi/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

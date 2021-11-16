@@ -423,6 +423,40 @@ export const formatDateShort = (msInicial, msFinal) => {
 
 
 }
+export const listChatRooms = /* GraphQL */ `
+  query ListChatRooms(
+    $filter: ModelChatRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        picture
+        newMessages
+        lastMessage
+        fechaID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+
 
 export const getBlob = async (uri) => {
   return (await fetch(uri)).blob()
@@ -1096,11 +1130,10 @@ export function calculatePrice(precioIndividual, total, personasReservadas) {
   }
 }
 
-export function formatAMPM(dateInMs, hideAMPM) {
+export function formatAMPM(dateInMs, hideAMPM, localTime) {
   const date = new Date(dateInMs)
-
-  var hours = date.getUTCHours();
-  var minutes = date.getUTCMinutes();
+  var hours = date[localTime ? "getHours" : "getUTCHours"]();
+  var minutes = date[localTime ? "getMinutes" : "getUTCMinutes"]();
   var ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'

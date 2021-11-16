@@ -1,16 +1,32 @@
 import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { moradoClaro } from "../../assets/constants";
+import { DataStore } from "@aws-amplify/datastore";
+import API from "@aws-amplify/api";
+import { getChatRoom } from "../graphql/queries";
+import { ChatRoom } from "../models";
+
+export const getUsersInChat = /* GraphQL */ `
+    query getChatRoom($id: ID!) {
+        getChatRoom(id: $id) {
+            Participantes(limit: 3) {
+                items {
+                    usuario {
+                        nickname
+                    }
+                }
+            }
+        }
+    }
+`;
 
 
-export default ({ titulo, image }) => {
+export default ({ id, titulo, image }) => {
     const navigation = useNavigation()
-
-    const [data, setData] = useState({});
 
     const handlePress = () => {
         navigation.pop()
@@ -19,15 +35,24 @@ export default ({ titulo, image }) => {
 
     const handleNavigate = () => {
         Alert.alert("Navegar a detalles de participantes")
-
-
-        // navigation.navigate("DetalleChatRoom", {
-        //     image,
-        //     titulo
-        // })   
     }
 
-    const listaUsuarios = ["@alguienpar", "@mateodelat", "@gabrielGRV"]
+    const [listaUsuarios, setListaUsuarios] = useState(null);
+
+    useEffect(() => {
+        obtenerUsuarios()
+    }, []);
+
+
+    async function obtenerUsuarios() {
+        await API.graphql({ query: getUsersInChat, variables: { id } })
+            .then(r => {
+                r = r.data.getChatRoom.Participantes.items.map(e => e.usuario.nickname)
+                setListaUsuarios(r)
+            })
+
+    }
+
 
     return (
         <Pressable
@@ -45,13 +70,17 @@ export default ({ titulo, image }) => {
                 <Text
                     numberOfLines={1}
                     style={styles.titulo}>{titulo}</Text>
-                <Text
-                    numberOfLines={1}
-                    style={styles.descripcion}>{listaUsuarios.map((e) => e + " ")}</Text>
+                {!listaUsuarios ?
+                    <Text
+                        numberOfLines={1}
+                        style={styles.descripcion}></Text>
 
+                    : listaUsuarios.length !== 0 && <Text
+                        numberOfLines={1}
+                        style={styles.descripcion}>{listaUsuarios?.map((e) => "@" + e + " ")}</Text>}
             </View>
 
-            <Image source={image} style={styles.image} />
+            <Image source={{ uri: image }} style={styles.image} />
 
         </Pressable>
     )

@@ -36,7 +36,7 @@ export default () => (
     <NavigationContainer>
 
         <Stack.Navigator
-            // initialRouteName={"FechasAventura"}
+            // initialRouteName={"SeleccionaAventura"}
             screenOptions={{
 
                 header: ({ scene, previous, navigation }) => {
@@ -92,6 +92,7 @@ export default () => (
                     return {
                         header: () => (
                             <ChatRoomHeader
+                                id={route.params?.id}
                                 titulo={route.params?.titulo}
                                 image={route.params?.image}
                             />

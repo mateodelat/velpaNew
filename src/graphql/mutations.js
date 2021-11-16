@@ -17,6 +17,13 @@ export const createPaymentIntent = /* GraphQL */ `
     }
   }
 `;
+export const createStripeAcount = /* GraphQL */ `
+  mutation CreateStripeAcount($sub: String!, $email: String!, $url: String!) {
+    createStripeAcount(sub: $sub, email: $email, url: $url) {
+      url
+    }
+  }
+`;
 export const createAventura = /* GraphQL */ `
   mutation CreateAventura(
     $input: CreateAventuraInput!
@@ -66,17 +73,59 @@ export const createAventura = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Publicidad {
+        items {
+          id
+          tipo
+          metadata
+          titulo
+          descripcion
+          imagenFondo
+          video
+          linkAnuncio
+          aventuraID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -163,17 +212,59 @@ export const updateAventura = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Publicidad {
+        items {
+          id
+          tipo
+          metadata
+          titulo
+          descripcion
+          imagenFondo
+          video
+          linkAnuncio
+          aventuraID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -260,17 +351,59 @@ export const deleteAventura = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Publicidad {
+        items {
+          id
+          tipo
+          metadata
+          titulo
+          descripcion
+          imagenFondo
+          video
+          linkAnuncio
+          aventuraID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -329,6 +462,28 @@ export const createReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -353,6 +508,28 @@ export const updateReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -377,6 +554,28 @@ export const deleteReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -399,11 +598,11 @@ export const createFecha = /* GraphQL */ `
       allowNinos
       material
       incluido
-      aventuraID
-      usuarioID
       titulo
       descripcion
       imagenRuta
+      aventuraID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -431,6 +630,44 @@ export const createFecha = /* GraphQL */ `
         startedAt
       }
       owner
+      ChatRoom {
+        items {
+          id
+          name
+          picture
+          newMessages
+          fechaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -453,11 +690,11 @@ export const updateFecha = /* GraphQL */ `
       allowNinos
       material
       incluido
-      aventuraID
-      usuarioID
       titulo
       descripcion
       imagenRuta
+      aventuraID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -485,6 +722,44 @@ export const updateFecha = /* GraphQL */ `
         startedAt
       }
       owner
+      ChatRoom {
+        items {
+          id
+          name
+          picture
+          newMessages
+          fechaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -507,11 +782,11 @@ export const deleteFecha = /* GraphQL */ `
       allowNinos
       material
       incluido
-      aventuraID
-      usuarioID
       titulo
       descripcion
       imagenRuta
+      aventuraID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -539,6 +814,44 @@ export const deleteFecha = /* GraphQL */ `
         startedAt
       }
       owner
+      ChatRoom {
+        items {
+          id
+          name
+          picture
+          newMessages
+          fechaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -549,12 +862,13 @@ export const createUsuario = /* GraphQL */ `
   ) {
     createUsuario(input: $input, condition: $condition) {
       id
+      tipo
       nombre
       apellido
       foto
       nickname
       calificacion
-      tipo
+      stripeID
       selfie
       INE
       licencia
@@ -565,7 +879,6 @@ export const createUsuario = /* GraphQL */ `
       certificaciones
       sitioWeb
       usuarioRedSocial
-      stripeID
       owner
       _version
       _deleted
@@ -608,11 +921,11 @@ export const createUsuario = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
@@ -639,18 +952,40 @@ export const createUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      SolicitudesEvaluadas {
+      SolicitudesCreadas {
         items {
           id
           status
-          comentarios
           evaluadorID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -695,12 +1030,13 @@ export const updateUsuario = /* GraphQL */ `
   ) {
     updateUsuario(input: $input, condition: $condition) {
       id
+      tipo
       nombre
       apellido
       foto
       nickname
       calificacion
-      tipo
+      stripeID
       selfie
       INE
       licencia
@@ -711,7 +1047,6 @@ export const updateUsuario = /* GraphQL */ `
       certificaciones
       sitioWeb
       usuarioRedSocial
-      stripeID
       owner
       _version
       _deleted
@@ -754,11 +1089,11 @@ export const updateUsuario = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
@@ -785,18 +1120,40 @@ export const updateUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      SolicitudesEvaluadas {
+      SolicitudesCreadas {
         items {
           id
           status
-          comentarios
           evaluadorID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -841,12 +1198,13 @@ export const deleteUsuario = /* GraphQL */ `
   ) {
     deleteUsuario(input: $input, condition: $condition) {
       id
+      tipo
       nombre
       apellido
       foto
       nickname
       calificacion
-      tipo
+      stripeID
       selfie
       INE
       licencia
@@ -857,7 +1215,6 @@ export const deleteUsuario = /* GraphQL */ `
       certificaciones
       sitioWeb
       usuarioRedSocial
-      stripeID
       owner
       _version
       _deleted
@@ -900,11 +1257,11 @@ export const deleteUsuario = /* GraphQL */ `
           allowNinos
           material
           incluido
-          aventuraID
-          usuarioID
           titulo
           descripcion
           imagenRuta
+          aventuraID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
@@ -931,18 +1288,40 @@ export const deleteUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      SolicitudesEvaluadas {
+      SolicitudesCreadas {
         items {
           id
           status
-          comentarios
           evaluadorID
+          usuarioID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
           owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
         }
         nextToken
         startedAt
@@ -990,40 +1369,22 @@ export const createChatRoom = /* GraphQL */ `
       name
       picture
       newMessages
-      lastMessage
+      fechaID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      Fecha {
+      lastMessage {
         id
-        personasTotales
-        fechaInicial
-        fechaFinal
-        precio
-        comision
-        itinerario
-        puntoReunionNombre
-        puntoReunionLink
-        allowTercera
-        allowNinos
-        material
-        incluido
-        aventuraID
+        content
         usuarioID
-        titulo
-        descripcion
-        imagenRuta
+        chatroomID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
         owner
       }
       Mensajes {
@@ -1070,40 +1431,22 @@ export const updateChatRoom = /* GraphQL */ `
       name
       picture
       newMessages
-      lastMessage
+      fechaID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      Fecha {
+      lastMessage {
         id
-        personasTotales
-        fechaInicial
-        fechaFinal
-        precio
-        comision
-        itinerario
-        puntoReunionNombre
-        puntoReunionLink
-        allowTercera
-        allowNinos
-        material
-        incluido
-        aventuraID
+        content
         usuarioID
-        titulo
-        descripcion
-        imagenRuta
+        chatroomID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
         owner
       }
       Mensajes {
@@ -1150,40 +1493,22 @@ export const deleteChatRoom = /* GraphQL */ `
       name
       picture
       newMessages
-      lastMessage
+      fechaID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      Fecha {
+      lastMessage {
         id
-        personasTotales
-        fechaInicial
-        fechaFinal
-        precio
-        comision
-        itinerario
-        puntoReunionNombre
-        puntoReunionLink
-        allowTercera
-        allowNinos
-        material
-        incluido
-        aventuraID
+        content
         usuarioID
-        titulo
-        descripcion
-        imagenRuta
+        chatroomID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
         owner
       }
       Mensajes {
@@ -1285,14 +1610,36 @@ export const createSolicitudGuia = /* GraphQL */ `
     createSolicitudGuia(input: $input, condition: $condition) {
       id
       status
-      comentarios
       evaluadorID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
       Aventuras {
         items {
           id
@@ -1319,14 +1666,36 @@ export const updateSolicitudGuia = /* GraphQL */ `
     updateSolicitudGuia(input: $input, condition: $condition) {
       id
       status
-      comentarios
       evaluadorID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
       Aventuras {
         items {
           id
@@ -1353,14 +1722,36 @@ export const deleteSolicitudGuia = /* GraphQL */ `
     deleteSolicitudGuia(input: $input, condition: $condition) {
       id
       status
-      comentarios
       evaluadorID
+      usuarioID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      Notificaciones {
+        items {
+          id
+          metadata
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          owner
+          reservaID
+          fechaID
+          aventuraID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
       Aventuras {
         items {
           id
@@ -1376,6 +1767,150 @@ export const deleteSolicitudGuia = /* GraphQL */ `
         nextToken
         startedAt
       }
+    }
+  }
+`;
+export const createNotificacion = /* GraphQL */ `
+  mutation CreateNotificacion(
+    $input: CreateNotificacionInput!
+    $condition: ModelNotificacionConditionInput
+  ) {
+    createNotificacion(input: $input, condition: $condition) {
+      id
+      metadata
+      tipo
+      titulo
+      descripcion
+      usuarioID
+      owner
+      reservaID
+      fechaID
+      aventuraID
+      solicitudGuiaID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateNotificacion = /* GraphQL */ `
+  mutation UpdateNotificacion(
+    $input: UpdateNotificacionInput!
+    $condition: ModelNotificacionConditionInput
+  ) {
+    updateNotificacion(input: $input, condition: $condition) {
+      id
+      metadata
+      tipo
+      titulo
+      descripcion
+      usuarioID
+      owner
+      reservaID
+      fechaID
+      aventuraID
+      solicitudGuiaID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteNotificacion = /* GraphQL */ `
+  mutation DeleteNotificacion(
+    $input: DeleteNotificacionInput!
+    $condition: ModelNotificacionConditionInput
+  ) {
+    deleteNotificacion(input: $input, condition: $condition) {
+      id
+      metadata
+      tipo
+      titulo
+      descripcion
+      usuarioID
+      owner
+      reservaID
+      fechaID
+      aventuraID
+      solicitudGuiaID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPublicidad = /* GraphQL */ `
+  mutation CreatePublicidad(
+    $input: CreatePublicidadInput!
+    $condition: ModelPublicidadConditionInput
+  ) {
+    createPublicidad(input: $input, condition: $condition) {
+      id
+      tipo
+      metadata
+      titulo
+      descripcion
+      imagenFondo
+      video
+      linkAnuncio
+      aventuraID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePublicidad = /* GraphQL */ `
+  mutation UpdatePublicidad(
+    $input: UpdatePublicidadInput!
+    $condition: ModelPublicidadConditionInput
+  ) {
+    updatePublicidad(input: $input, condition: $condition) {
+      id
+      tipo
+      metadata
+      titulo
+      descripcion
+      imagenFondo
+      video
+      linkAnuncio
+      aventuraID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePublicidad = /* GraphQL */ `
+  mutation DeletePublicidad(
+    $input: DeletePublicidadInput!
+    $condition: ModelPublicidadConditionInput
+  ) {
+    deletePublicidad(input: $input, condition: $condition) {
+      id
+      tipo
+      metadata
+      titulo
+      descripcion
+      imagenFondo
+      video
+      linkAnuncio
+      aventuraID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -1426,6 +1961,14 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1438,14 +1981,18 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
       solicitudguia {
         id
         status
-        comentarios
         evaluadorID
+        usuarioID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
         owner
+        Notificaciones {
+          nextToken
+          startedAt
+        }
         Aventuras {
           nextToken
           startedAt
@@ -1502,6 +2049,14 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1514,14 +2069,18 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
       solicitudguia {
         id
         status
-        comentarios
         evaluadorID
+        usuarioID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
         owner
+        Notificaciones {
+          nextToken
+          startedAt
+        }
         Aventuras {
           nextToken
           startedAt
@@ -1578,6 +2137,14 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1590,14 +2157,18 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
       solicitudguia {
         id
         status
-        comentarios
         evaluadorID
+        usuarioID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
         owner
+        Notificaciones {
+          nextToken
+          startedAt
+        }
         Aventuras {
           nextToken
           startedAt
@@ -1654,6 +2225,14 @@ export const createAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1665,12 +2244,13 @@ export const createAventuraUsuario = /* GraphQL */ `
       }
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -1681,7 +2261,6 @@ export const createAventuraUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -1700,7 +2279,11 @@ export const createAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -1764,6 +2347,14 @@ export const updateAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1775,12 +2366,13 @@ export const updateAventuraUsuario = /* GraphQL */ `
       }
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -1791,7 +2383,6 @@ export const updateAventuraUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -1810,7 +2401,11 @@ export const updateAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -1874,6 +2469,14 @@ export const deleteAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        Publicidad {
+          nextToken
+          startedAt
+        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1885,12 +2488,13 @@ export const deleteAventuraUsuario = /* GraphQL */ `
       }
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -1901,7 +2505,6 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -1920,7 +2523,11 @@ export const deleteAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -1953,12 +2560,13 @@ export const createChatRoomUsuario = /* GraphQL */ `
       updatedAt
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -1969,7 +2577,6 @@ export const createChatRoomUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -1988,7 +2595,11 @@ export const createChatRoomUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -2006,31 +2617,17 @@ export const createChatRoomUsuario = /* GraphQL */ `
         name
         picture
         newMessages
-        lastMessage
+        fechaID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Fecha {
+        lastMessage {
           id
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          itinerario
-          puntoReunionNombre
-          puntoReunionLink
-          allowTercera
-          allowNinos
-          material
-          incluido
-          aventuraID
+          content
           usuarioID
-          titulo
-          descripcion
-          imagenRuta
+          chatroomID
           _version
           _deleted
           _lastChangedAt
@@ -2067,12 +2664,13 @@ export const updateChatRoomUsuario = /* GraphQL */ `
       updatedAt
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -2083,7 +2681,6 @@ export const updateChatRoomUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -2102,7 +2699,11 @@ export const updateChatRoomUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -2120,31 +2721,17 @@ export const updateChatRoomUsuario = /* GraphQL */ `
         name
         picture
         newMessages
-        lastMessage
+        fechaID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Fecha {
+        lastMessage {
           id
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          itinerario
-          puntoReunionNombre
-          puntoReunionLink
-          allowTercera
-          allowNinos
-          material
-          incluido
-          aventuraID
+          content
           usuarioID
-          titulo
-          descripcion
-          imagenRuta
+          chatroomID
           _version
           _deleted
           _lastChangedAt
@@ -2181,12 +2768,13 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
       updatedAt
       usuario {
         id
+        tipo
         nombre
         apellido
         foto
         nickname
         calificacion
-        tipo
+        stripeID
         selfie
         INE
         licencia
@@ -2197,7 +2785,6 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
         certificaciones
         sitioWeb
         usuarioRedSocial
-        stripeID
         owner
         _version
         _deleted
@@ -2216,7 +2803,11 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        SolicitudesEvaluadas {
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -2234,31 +2825,17 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
         name
         picture
         newMessages
-        lastMessage
+        fechaID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Fecha {
+        lastMessage {
           id
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          itinerario
-          puntoReunionNombre
-          puntoReunionLink
-          allowTercera
-          allowNinos
-          material
-          incluido
-          aventuraID
+          content
           usuarioID
-          titulo
-          descripcion
-          imagenRuta
+          chatroomID
           _version
           _deleted
           _lastChangedAt

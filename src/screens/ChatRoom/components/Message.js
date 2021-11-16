@@ -14,18 +14,18 @@ export default function ({
     guia,
 
     lastMessagePerson,
-    firstMessagePerson
+    firstMessagePerson,
+
+    diferentToPreviousTime
 }) {
     // SI EL EMISOR ES EL USUARIO
     if (isMe) return (
         <View style={{ ...styles.container, marginBottom: lastMessagePerson ? 25 : 5, }}>
-            {/* Emisor y hora */}
-
-            {/* Imagen y mensaje */}
+            {/* Mensaje */}
             <View style={{ alignItems: 'flex-end', }}>
 
                 <View>
-                    {firstMessagePerson &&
+                    {firstMessagePerson ?
                         <View style={{
                             height: 20,
                             bottom: 15,
@@ -35,7 +35,9 @@ export default function ({
                             <Text style={{ ...styles.contentTxt, color: 'transparent', }}>{content}</Text>
 
                             <View style={styles.infoContainer}>
-                                <Text style={styles.headerMe}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={styles.headerMe}>
                                     <Text>{person}, </Text>
                                     <Text>{time}</Text>
                                 </Text>
@@ -45,11 +47,24 @@ export default function ({
                             </View>
 
                         </View>
+                        :
+                        diferentToPreviousTime && <View style={{
+                            height: 20,
+                            alignItems: 'flex-end',
+                        }}>
+                            <View style={styles.infoContainer}>
+                                <Text style={{
+                                    ...styles.headerMe,
+                                    right: 0,
+                                }}>{time}</Text>
+                            </View>
+
+                        </View>
                     }
                 </View>
 
                 {/* Contenedor de mensaje */}
-                <View style={{ ...styles.content, borderBottomRightRadius: lastMessagePerson ? 4 : 15, backgroundColor: moradoClaro, }}>
+                <View style={{ ...styles.content, borderBottomRightRadius: lastMessagePerson || diferentToPreviousTime ? 4 : 15, backgroundColor: moradoClaro, }}>
                     <Text style={{ ...styles.contentTxt, color: '#fff', }}>{content}</Text>
                 </View>
             </View>
@@ -64,32 +79,52 @@ export default function ({
     return (
         <View style={{ ...styles.container, marginBottom: lastMessagePerson ? 25 : 5, }}>
             {/* Emisor y hora */}
-            {firstMessagePerson &&
-                <View style={{ ...styles.infoContainer, left: 40, }}>
-                    <Text style={styles.header}>
-                        <Text>{person}, </Text>
-                        <Text>{time}</Text>
-                    </Text>
-                    {guia && <Text style={styles.guia}>Guia</Text>}
 
-                </View>
-            }
 
             {/* Imagen y mensaje */}
             <View style={{ flexDirection: 'row', }}>
                 {/* Imagen */}
                 <View style={styles.imageContainer}>
-                    {lastMessagePerson ? <Image source={image} style={styles.image} />
+                    {lastMessagePerson && image ? <Image source={{ uri: image }} style={styles.image} />
                         :
                         <View style={{ width: 30, flex: 1, }} />
                     }
                 </View>
 
                 {/* Contenedor de mensaje */}
-                <View style={{ ...styles.content, borderBottomLeftRadius: lastMessagePerson ? 4 : 15 }}>
-                    <Text style={styles.contentTxt}>{content}</Text>
-                    <View style={{ flex: 1, }} />
+                <View >
+                    {firstMessagePerson ?
+                        <View style={{ ...styles.infoContainer, bottom: 0 }}>
+                            {/* <Text style={{ ...styles.contentTxt, color: 'transparent', }}>{content}</Text> */}
+
+                            <Text
+                                numberOfLines={1}
+                                style={styles.header}>
+                                <Text>{person}, </Text>
+                                <Text>{time}</Text>
+                            </Text>
+                            {guia && <Text style={{
+                                ...styles.guia,
+                                marginLeft: 20,
+                            }}>Guia</Text>}
+
+                        </View>
+                        :
+                        diferentToPreviousTime && <View style={styles.infoContainer}>
+                            <Text style={styles.header}>
+                                {time}
+                            </Text>
+                        </View>
+
+
+                    }
+                    <Text style={{
+                        ...styles.contentTxt,
+                        ...styles.content,
+                        borderBottomLeftRadius: lastMessagePerson || diferentToPreviousTime ? 4 : 15
+                    }}>{content}</Text>
                 </View>
+                <View style={{ flex: 1, }} />
             </View>
         </View>
     )
@@ -104,11 +139,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         fontSize: 12,
         fontWeight: 'bold',
+        color: "black"
     },
     headerMe: {
         fontSize: 12,
         fontWeight: 'bold',
         right: 30,
+        color: "black"
 
     },
     content: {
@@ -134,7 +171,7 @@ const styles = StyleSheet.create({
     },
 
     contentTxt: {
-        fontSize: 14,
+        fontSize: 14, color: 'black',
     },
 
     infoContainer: {
@@ -143,7 +180,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         maxWidth: (width * 0.85) - 50,
         marginBottom: 4,
-
 
     },
 

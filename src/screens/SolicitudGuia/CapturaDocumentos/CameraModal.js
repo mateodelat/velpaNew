@@ -224,6 +224,7 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
 
     return (
         <Modal
+            statusBarTranslucent={true}
             animationType="none"
             transparent={true}
             visible={modalVisible}
@@ -293,7 +294,7 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
                             <Text style={{
 
                                 fontSize: 15,
-                                bottom: 50,
+                                bottom: width / 5,
                                 color: '#fff',
                             }}>{mensajeDetalleCamara}</Text>
 

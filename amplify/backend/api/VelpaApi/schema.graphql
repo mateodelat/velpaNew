@@ -1,4 +1,9 @@
-type Aventura @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+type Aventura @model @auth(rules: [
+   {allow: private, operations: [read]},
+   {allow: owner}, 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ]) {
+
   id: ID!
   titulo: String!
   imagenFondoIdx: Int!
@@ -17,16 +22,30 @@ type Aventura @model @auth(rules: [{allow: private, operations: [read]}, {allow:
   distanciaRecorrida: Float
   altimetriaRecorrida: Float
   categoria: Categorias
-  SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
-  UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
-  Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
   puntoReunionNombre: String
   puntoReunionLink: AWSURL
   materialDefault: String
   incluidoDefault: [String]
+
+
+  SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
+  UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
+  Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
+  Notificaciones: [Notificacion] @connection(keyName: "byAventura", fields: ["id"])
+
+  Publicidad: [Publicidad] @connection(keyName: "byAventura", fields: ["id"])
+
 }
 
-type Reserva @model @key(name: "byFecha", fields: ["fechaID"]) @key(name: "byUsuario", fields: ["usuarioID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+type Reserva @model 
+@key(name: "byFecha", fields: ["fechaID"]) 
+@key(name: "byUsuario", fields: ["usuarioID"]) 
+@auth(rules: [
+   {allow: private, operations: [read]}, 
+   {allow: owner}, 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ]) {
+
   id: ID!
   total: Float!
   comisionPorPersona: Float!
@@ -34,11 +53,23 @@ type Reserva @model @key(name: "byFecha", fields: ["fechaID"]) @key(name: "byUsu
   ninos: Int!
   adultos: Int!
   pagoID: String!
+
   fechaID: ID
   usuarioID: ID
+
+  Notificaciones:[Notificacion] @connection(keyName: "byReserva", fields: ["id"])
+
 }
 
-type Fecha @model @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "byUsuario", fields: ["usuarioID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+type Fecha @model 
+@key(name: "byAventura", fields: ["aventuraID"]) 
+@key(name: "byUsuario", fields: ["usuarioID"]) 
+@auth(rules: [
+   {allow: private, operations: [read]}, 
+   {allow: owner}, 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ]) {
+
   id: ID!
   personasTotales: Int!
   fechaInicial: AWSTimestamp!
@@ -52,23 +83,38 @@ type Fecha @model @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "b
   allowNinos: Boolean!
   material: String
   incluido: String!
-  aventuraID: ID!
-  Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
-  usuarioID: ID!
   titulo: String
   descripcion: String
   imagenRuta: String
+
+  aventuraID: ID!
+  usuarioID: ID!
+
+  Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
   ChatRoom: [ChatRoom] @connection(keyName: "byFecha", fields: ["id"])
+
+  Notificaciones:[Notificacion] @connection(keyName: "byFecha", fields: ["id"])
 }
 
-type Usuario @model @auth(rules: [{allow: public, operations: [create]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner, ownerField: "owner"}]) {
+type Usuario @model 
+@auth(rules: [
+   {allow: public, operations: [create,read]}, 
+   {allow: private, operations: [read]}, 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
+   {allow: owner, ownerField: "owner"}
+  ]) 
+  {
   id: ID!
+  tipo: TipoUsuario
+
   nombre: String
   apellido: String
   foto: String
   nickname: String
   calificacion: Float
-  tipo: TipoUsuario
+
+  stripeID: String
+  
   selfie: String
   INE: [String]
   licencia: [String]
@@ -79,46 +125,141 @@ type Usuario @model @auth(rules: [{allow: public, operations: [create]}, {allow:
   certificaciones: [String]
   sitioWeb: AWSURL
   usuarioRedSocial: String
-  stripeID: String
+
   owner: String
+  
   AventurasAutorizadas: [AventuraUsuario] @connection(keyName: "byUsuario", fields: ["id"])
   Mensajes: [Mensaje] @connection(keyName: "byUsuario", fields: ["id"])
   ChatRooms: [ChatRoomUsuario] @connection(keyName: "byUsuario", fields: ["id"])
   Reservas: [Reserva] @connection(keyName: "byUsuario", fields: ["id"])
   Fechas: [Fecha] @connection(keyName: "byUsuario", fields: ["id"])
-  SolicitudesEvaluadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
+  Notificaciones:[Notificacion] @connection(keyName: "byUsuario", fields: ["id"])
+  SolicitudesCreadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
 }
 
-type ChatRoom @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) @key(name: "byFecha", fields: ["fechaID"]) {
+type ChatRoom @model 
+@auth(rules: [
+   {allow: public, operations: [read]}, 
+   {allow: private}
+  ]) 
+@key(name: "byFecha", fields: ["fechaID"])
+{
   id: ID!
   name: String!
   picture: String
   newMessages: Int!
-  lastMessage: String
+  lastMessage: Mensaje @connection
+
+  fechaID: ID
+
   Mensajes: [Mensaje] @connection(keyName: "byChatRoom", fields: ["id"])
   Participantes: [ChatRoomUsuario] @connection(keyName: "byChatRoom", fields: ["id"])
-  fechaID: ID
 }
 
-type Mensaje @model @key(name: "byUsuario", fields: ["usuarioID"]) @key(name: "byChatRoom", fields: ["chatroomID"]) @auth(rules: [{allow: owner, operations: [create, update, delete]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+type Mensaje @model 
+@key(name: "byUsuario", fields: ["usuarioID"]) 
+@key(name: "byChatRoom", fields: ["chatroomID"])
+@auth(rules: [
+   {allow: owner, operations: [create, delete]}, 
+   {allow: private, operations: [read]},
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ]) {
+
   id: ID!
   content: String!
   usuarioID: ID
   chatroomID: ID
 }
 
-type SolicitudGuia @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) @key(name: "byUsuario", fields: ["evaluadorID"]) {
+
+type SolicitudGuia @model 
+@auth(rules: [
+   {allow: owner}, 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ])
+@key(name: "byUsuario", fields: ["usuarioID"])
+ {
+
   id: ID!
   status: StatusSolicitud!
-  comentarios: String
-  Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
   evaluadorID: ID
+  usuarioID:ID
+  Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
+  Notificaciones: [Notificacion] @connection(keyName: "bySolicitudGuia", fields: ["id"])
 }
+
+type Notificacion @model
+ @key(name: "byUsuario", fields: ["usuarioID"])
+ @key(name: "byReserva", fields: ["reservaID"]) 
+ @key(name: "byFecha", fields: ["fechaID"]) 
+ @key(name: "byAventura", fields: ["aventuraID"]) 
+ @key(name: "bySolicitudGuia", fields: ["solicitudGuiaID"]) 
+
+ @auth(rules: [
+   {allow: owner, ownerField: "owner"},
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
+  ]) {
+
+  id: ID!
+  metadata: String
+  tipo: TipoNotificacion!
+  titulo:String!
+  descripcion:String
+  usuarioID: ID!
+
+  owner:String
+
+  reservaID: ID
+  fechaID: ID
+  aventuraID: ID
+  solicitudGuiaID: ID
+}
+
+
+type Publicidad @model
+ @key(name: "byAventura", fields: ["aventuraID"])
+ @auth(rules: [
+   {allow: public, operations: [read]} , 
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
+  ]) {
+
+  id: ID!
+  tipo: TipoPublicidad!
+
+  metadata: String
+  titulo:String!
+  descripcion:String
+  imagenFondo:String!
+  video:String
+  linkAnuncio:String
+
+  aventuraID: ID
+}
+
 
 enum EstadoAventura {
   AUTORIZADO
   PENDIENTE
   RECHAZADO
+}
+
+
+enum TipoNotificacion{
+  RESERVAENFECHA
+  RESERVACREADA
+
+  RECORDATORIOFECHA
+
+  SOLICITUDGUIA
+  SOLICITUDAVENTURA
+
+  ADMIN
+}
+
+enum TipoPublicidad {
+  AVENTURA
+  ANUNCIO
+  ACTUALIZACION
 }
 
 enum Categorias {
@@ -162,12 +303,22 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
 
+
+
+########################################################
+########################FUNCIONES#######################
+########################################################
 type Mutation {
   createPaymentIntent(amount: Float!, destinationStripeID: String!, comision: Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+  createStripeAcount(sub: String!, email: String!, url: String!): CreateAcount! @function(name: "CreateStripeAcount-${env}")
 }
 
 type PaymentIntent {
   id: String
   clientSecret: String
+}
+ 
+type CreateAcount {
+  url: String
 }
  

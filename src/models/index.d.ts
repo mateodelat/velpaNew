@@ -18,15 +18,35 @@ export enum StatusSolicitud {
   RECHAZADA = "RECHAZADA"
 }
 
+export enum TipoNotificacion {
+  RESERVAENFECHA = "RESERVAENFECHA",
+  RESERVACREADA = "RESERVACREADA",
+  RECORDATORIOFECHA = "RECORDATORIOFECHA",
+  SOLICITUDGUIA = "SOLICITUDGUIA",
+  SOLICITUDAVENTURA = "SOLICITUDAVENTURA",
+  ADMIN = "ADMIN"
+}
+
 export enum TipoUsuario {
   AGENCIA = "AGENCIA",
   GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
+}
+
+export enum TipoPublicidad {
+  AVENTURA = "AVENTURA",
+  ANUNCIO = "ANUNCIO",
+  ACTUALIZACION = "ACTUALIZACION"
 }
 
 export declare class PaymentIntent {
   readonly id?: string;
   readonly clientSecret?: string;
   constructor(init: ModelInit<PaymentIntent>);
+}
+
+export declare class CreateAcount {
+  readonly url?: string;
+  constructor(init: ModelInit<CreateAcount>);
 }
 
 type AventuraMetaData = {
@@ -38,6 +58,10 @@ type AventuraSolicitudGuiaMetaData = {
 }
 
 type SolicitudGuiaMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type NotificacionMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
@@ -69,6 +93,10 @@ type FechaMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
+type PublicidadMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 export declare class Aventura {
   readonly id: string;
   readonly titulo: string;
@@ -88,13 +116,15 @@ export declare class Aventura {
   readonly distanciaRecorrida?: number;
   readonly altimetriaRecorrida?: number;
   readonly categoria?: Categorias | keyof typeof Categorias;
-  readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
-  readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
-  readonly Fechas?: (Fecha | null)[];
   readonly puntoReunionNombre?: string;
   readonly puntoReunionLink?: string;
   readonly materialDefault?: string;
   readonly incluidoDefault?: (string | null)[];
+  readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
+  readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
+  readonly Fechas?: (Fecha | null)[];
+  readonly Notificaciones?: (Notificacion | null)[];
+  readonly Publicidad?: (Publicidad | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Aventura, AventuraMetaData>);
@@ -114,13 +144,32 @@ export declare class AventuraSolicitudGuia {
 export declare class SolicitudGuia {
   readonly id: string;
   readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
-  readonly comentarios?: string;
-  readonly Aventuras?: (AventuraSolicitudGuia | null)[];
   readonly evaluadorID?: string;
+  readonly usuarioID?: string;
+  readonly Aventuras?: (AventuraSolicitudGuia | null)[];
+  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<SolicitudGuia, SolicitudGuiaMetaData>);
   static copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia, SolicitudGuiaMetaData>) => MutableModel<SolicitudGuia, SolicitudGuiaMetaData> | void): SolicitudGuia;
+}
+
+export declare class Notificacion {
+  readonly id: string;
+  readonly metadata?: string;
+  readonly tipo: TipoNotificacion | keyof typeof TipoNotificacion;
+  readonly titulo: string;
+  readonly descripcion?: string;
+  readonly usuarioID: string;
+  readonly owner?: string;
+  readonly reservaID?: string;
+  readonly fechaID?: string;
+  readonly aventuraID?: string;
+  readonly solicitudGuiaID?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
+  constructor(init: ModelInit<Notificacion, NotificacionMetaData>);
+  static copyOf(source: Notificacion, mutator: (draft: MutableModel<Notificacion, NotificacionMetaData>) => MutableModel<Notificacion, NotificacionMetaData> | void): Notificacion;
 }
 
 export declare class AventuraUsuario {
@@ -135,12 +184,13 @@ export declare class AventuraUsuario {
 
 export declare class Usuario {
   readonly id: string;
+  readonly tipo?: TipoUsuario | keyof typeof TipoUsuario;
   readonly nombre?: string;
   readonly apellido?: string;
   readonly foto?: string;
   readonly nickname?: string;
   readonly calificacion?: number;
-  readonly tipo?: TipoUsuario | keyof typeof TipoUsuario;
+  readonly stripeID?: string;
   readonly selfie?: string;
   readonly INE?: (string | null)[];
   readonly licencia?: (string | null)[];
@@ -151,14 +201,14 @@ export declare class Usuario {
   readonly certificaciones?: (string | null)[];
   readonly sitioWeb?: string;
   readonly usuarioRedSocial?: string;
-  readonly stripeID?: string;
   readonly owner?: string;
   readonly AventurasAutorizadas?: (AventuraUsuario | null)[];
   readonly Mensajes?: (Mensaje | null)[];
   readonly ChatRooms?: (ChatRoomUsuario | null)[];
   readonly Reservas?: (Reserva | null)[];
   readonly Fechas?: (Fecha | null)[];
-  readonly SolicitudesEvaluadas?: (SolicitudGuia | null)[];
+  readonly Notificaciones?: (Notificacion | null)[];
+  readonly SolicitudesCreadas?: (SolicitudGuia | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Usuario, UsuarioMetaData>);
@@ -191,10 +241,10 @@ export declare class ChatRoom {
   readonly name: string;
   readonly picture?: string;
   readonly newMessages: number;
-  readonly lastMessage?: string;
+  readonly lastMessage?: Mensaje;
+  readonly fechaID?: string;
   readonly Mensajes?: (Mensaje | null)[];
   readonly Participantes?: (ChatRoomUsuario | null)[];
-  readonly fechaID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<ChatRoom, ChatRoomMetaData>);
@@ -211,6 +261,7 @@ export declare class Reserva {
   readonly pagoID: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
+  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);
@@ -231,15 +282,32 @@ export declare class Fecha {
   readonly allowNinos: boolean;
   readonly material?: string;
   readonly incluido: string;
-  readonly aventuraID: string;
-  readonly Reservas?: (Reserva | null)[];
-  readonly usuarioID: string;
   readonly titulo?: string;
   readonly descripcion?: string;
   readonly imagenRuta?: string;
+  readonly aventuraID: string;
+  readonly usuarioID: string;
+  readonly Reservas?: (Reserva | null)[];
   readonly ChatRoom?: (ChatRoom | null)[];
+  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Fecha, FechaMetaData>);
   static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
+}
+
+export declare class Publicidad {
+  readonly id: string;
+  readonly tipo: TipoPublicidad | keyof typeof TipoPublicidad;
+  readonly metadata?: string;
+  readonly titulo: string;
+  readonly descripcion?: string;
+  readonly imagenFondo: string;
+  readonly video?: string;
+  readonly linkAnuncio?: string;
+  readonly aventuraID?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
+  constructor(init: ModelInit<Publicidad, PublicidadMetaData>);
+  static copyOf(source: Publicidad, mutator: (draft: MutableModel<Publicidad, PublicidadMetaData>) => MutableModel<Publicidad, PublicidadMetaData> | void): Publicidad;
 }

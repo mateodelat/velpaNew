@@ -1,7 +1,18 @@
 import React from 'react';
-import { View, Image } from 'react-native'
-export const Loading = ({ containerStyle, valor }) => {
+import { View, Image, ActivityIndicator } from 'react-native'
+export const Loading = ({ containerStyle, valor, indicator }) => {
     valor !== undefined ? null : valor = 1
+
+    if (indicator) {
+        return <View style={{
+            flex: 1,
+            alignItems: 'center', justifyContent: 'center',
+
+        }}>
+            <ActivityIndicator size={"large"} color={"black"} />
+
+        </View>
+    }
 
     return (
         <View

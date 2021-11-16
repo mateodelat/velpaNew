@@ -20,17 +20,33 @@ const StatusSolicitud = {
   "RECHAZADA": "RECHAZADA"
 };
 
+const TipoNotificacion = {
+  "RESERVAENFECHA": "RESERVAENFECHA",
+  "RESERVACREADA": "RESERVACREADA",
+  "RECORDATORIOFECHA": "RECORDATORIOFECHA",
+  "SOLICITUDGUIA": "SOLICITUDGUIA",
+  "SOLICITUDAVENTURA": "SOLICITUDAVENTURA",
+  "ADMIN": "ADMIN"
+};
+
 const TipoUsuario = {
   "AGENCIA": "AGENCIA",
   "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
 };
 
-const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, PaymentIntent } = initSchema(schema);
+const TipoPublicidad = {
+  "AVENTURA": "AVENTURA",
+  "ANUNCIO": "ANUNCIO",
+  "ACTUALIZACION": "ACTUALIZACION"
+};
+
+const { Aventura, AventuraSolicitudGuia, SolicitudGuia, Notificacion, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, Publicidad, PaymentIntent, CreateAcount } = initSchema(schema);
 
 export {
   Aventura,
   AventuraSolicitudGuia,
   SolicitudGuia,
+  Notificacion,
   AventuraUsuario,
   Usuario,
   Mensaje,
@@ -38,9 +54,13 @@ export {
   ChatRoom,
   Reserva,
   Fecha,
+  Publicidad,
   EstadoAventura,
   Categorias,
   StatusSolicitud,
+  TipoNotificacion,
   TipoUsuario,
-  PaymentIntent
+  TipoPublicidad,
+  PaymentIntent,
+  CreateAcount
 };

@@ -23,13 +23,17 @@ import { Entypo } from '@expo/vector-icons';
 import ImageModal from './ImageModal';
 import CameraModal from './CameraModal';
 import { API, Auth, Storage, } from 'aws-amplify';
-import { colorFondo, getBlob, moradoClaro, moradoOscuro, openImagePickerAsync, updateUsuario } from '../../../../assets/constants';
+import { DataStore } from '@aws-amplify/datastore';
+
+
+import { colorFondo, getBlob, getUserSub, isUrl, moradoClaro, moradoOscuro, openImagePickerAsync, updateUsuario } from '../../../../assets/constants';
 import Boton from '../../../components/Boton';
 
 
 import * as WebBrowser from 'expo-web-browser';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { createStripeAcount } from '../../../graphql/mutations.js';
+import { Usuario } from '../../../models';
 
 
 function Icono({ tipo }) {
@@ -116,7 +120,7 @@ export default ({ navigation }) => {
 
     /////////////////////////Obtener link de Stripe/////////////////////////////
     useEffect(() => {
-        // ObtenerLinkUsuarioStripe()
+        ObtenerLinkUsuarioStripe()
     }, []);
 
 
@@ -147,12 +151,16 @@ export default ({ navigation }) => {
         return Auth.currentUserInfo()
             .then(async r => {
                 const { sub, email } = r.attributes
-
                 return API.graphql({
                     query: createStripeAcount,
-                    variables: { email, sub, url: "http://localhost:19000/" }
+                    variables: {
+                        email,
+                        sub,
+                        url: "http://localhost:19000/",
+
+                    }
                 }).then(r => {
-                    const link = r.data.CreateStripeAcount.url
+                    const link = r.data.createStripeAcount.url
                     console.log(link)
                     setLinkStripe(link)
                     return link
@@ -163,7 +171,6 @@ export default ({ navigation }) => {
                 Alert.alert("Error", "Error obteninendo el link de stripe, contacta al desarollador")
             })
     }
-
     const handleStripe = async () => {
         if (linkStripe.length === 0) {
             Alert.alert("Atencion", "El link aun no ha cargado")
@@ -193,14 +200,18 @@ export default ({ navigation }) => {
     }
 
     const handleContinuar = async () => {
-        // Verificaciones
-        navigation.navigate("SeleccionaAventura", { esSelector: true })
-        return
+        const navigateNext = () => {
+            navigation.navigate("SeleccionaAventura", { esSelector: true })
+        }
+        // Pedir usuario
+        const sub = await getUserSub()
+        const telefonoAEnviar = telefono ? "+521" + telefono.toString() : null
 
-        // Si no se presiono el link se devuelve error
+        // Verificaciones
+        // Si no se presiono el link de stripe se devuelve error
         if (!linkPressed) {
-            // ObtenerLinkUsuarioStripe()
-            Alert.alert("Error", "No capturaste todos los datos, vuelve a intentarlo")
+            ObtenerLinkUsuarioStripe()
+            Alert.alert("Error", "No tus datos bancarios, vuelve a intentarlo")
             return
         }
         if (agencia) {
@@ -217,6 +228,11 @@ export default ({ navigation }) => {
                 return
             }
 
+            if (!isUrl("https://" + sitioWeb)) {
+                Alert.alert("Intruce un sitio web valido")
+
+            }
+
             if (!telefono) {
                 Alert.alert("Introduce el numero telefonico de la agencia")
                 return
@@ -227,12 +243,6 @@ export default ({ navigation }) => {
             }
 
             setLoading(true)
-            // Pedir usuario
-            let sub = ""
-            let usr = await Auth.currentAuthenticatedUser().then(e => {
-                sub = e.attributes.sub
-                return e
-            })
 
             // Subir las imagenes al bucket S3
             // Selfie
@@ -252,29 +262,29 @@ export default ({ navigation }) => {
             Promises.push(Storage.put("usr-" + sub + "INEReverso" + ".jpg", INEReversoBlob))
 
             Promise.all(Promises)
-                .then(r => {
+                .then(async r => {
                     const selfie = r[0].key
                     const INEFrente = r[1].key
                     const INEReverso = r[2].key
 
 
                     // Datos actualizados en database
-                    API.graphql({
-                        query: updateUsuario, variables: {
-                            input: {
-                                id: sub,
-                                tipo: "agencia",
-                                sitioWeb,
-                                redSocial,
-                                selfie: selfie,
-                                INE: [INEFrente, INEReverso],
-                                telefono,
-                                comentariosAdicionales: comentarios,
+                    const usuarioActualizar = await DataStore.query(Usuario, sub)
+                    DataStore.save(Usuario.copyOf(usuarioActualizar, updated => {
+                        updated.tipo = "AGENCIA"
 
-                                capacidadMaxima: 0,
-                            }
-                        }
-                    })
+                        updated.selfie = selfie
+                        updated.INE = [INEFrente, INEReverso]
+                        updated.telefono = telefonoAEnviar
+                        updated.comentariosAdicionales = comentarios
+
+                        updated.capacidadMaxima = 0
+                        updated.sitioWeb = ("https://" + sitioWeb)
+                        updated.usuarioRedSocial = redSocial
+                    }))
+                        .then(r => {
+                            console.log(r)
+                        })
                         .catch(e => {
                             console.log(e)
                             Alert.alert("Error subiendo los datos")
@@ -287,13 +297,7 @@ export default ({ navigation }) => {
                     Alert.alert("Exito", "Los datos se han subido con exito", [
                         {
                             text: "OK",
-                            onPress: () => {
-                                navigation.popToTop()
-                                navigation.navigate("SolicitudGuia", {
-                                    screen:
-                                        "SeleccionaAventura"
-                                })
-                            }
+                            onPress: () => navigateNext()
                         }
                     ])
                 })
@@ -333,14 +337,6 @@ export default ({ navigation }) => {
             }
 
             setLoading(true)
-            // Pedir usuario
-            let sub = ""
-            let usr = await Auth.currentAuthenticatedUser().then(e => {
-                sub = e.attributes.sub
-                return e
-            }).catch(e => console.log(e))
-
-
             // Obtener blobs de imagen
             // Selfie
             const selfieBlob = await getBlob(datos.selfie)
@@ -393,48 +389,38 @@ export default ({ navigation }) => {
             Promises.push(Storage.put(tarjetaCirculacion, tarjetaCirculacionBlob))
 
             Promise.all(Promises)
-                .then(r => {
+                .then(async r => {
+                    const usuarioActualizar = await DataStore.query(Usuario, sub)
+                    DataStore.save(Usuario.copyOf(usuarioActualizar, updated => {
+                        updated.tipo = "GUIAINDIVIDUAL"
+
+                        updated.selfie = selfie
+                        updated.licencia = [licenciaFrente, licenciaReverso]
+                        updated.tarjetaCirculacion = tarjetaCirculacion
+                        updated.certificaciones = cert
 
 
-                    // Actualizar datos en database
-                    API.graphql({
-                        query: updateUsuario, variables: {
-                            input: {
-                                id: sub,
-                                tipo: "guiaIndividual",
+                        updated.telefono = telefonoAEnviar
+                        updated.comentariosAdicionales = comentarios
 
-                                selfie,
-                                licencia: [licenciaFrente, licenciaReverso],
-                                tarjetaCirculacion,
-                                certificaciones: cert,
-                                telefono,
-                                comentariosAdicionales: comentarios,
+                        updated.capacidadMaxima = 0
+                    }))
 
-                                capacidadMaxima: 0,
-                            }
-                        }
-                    })
                         .then(r => {
-                            const final = new Date
+                            console.log(r)
                         })
                         .catch(e => {
                             console.log(e)
                             Alert.alert("Error subiendo los datos")
                         })
                 })
-                .then(r => {
+                .then(() => {
                     setLoading(false)
                     setDoneLoading(true)
                     Alert.alert("Exito", "Los datos se han subido con exito", [
                         {
                             text: "OK",
-                            onPress: () => {
-                                navigation.popToTop()
-                                navigation.navigate("SolicitudGuia", {
-                                    screen:
-                                        "SeleccionaAventura"
-                                })
-                            }
+                            onPress: () => navigateNext()
                         }
                     ])
                 })
@@ -458,13 +444,13 @@ export default ({ navigation }) => {
                         setAgencia(true)
                     }}
                     style={{
-                        ...styles.agenciaTxt,
-                        borderTopLeftRadius: 50,
-                        borderBottomLeftRadius: 50,
-                        borderColor: agencia ? moradoOscuro : "gray",
-                        backgroundColor: agencia ? moradoOscuro + "10" : null,
+                        ...styles.agenciaPressable,
+                        backgroundColor: agencia ? moradoOscuro : null,
                     }}>
-                    <Text>Agencia</Text>
+                    <Text style={{
+                        ...styles.agenciaTxt,
+                        color: agencia ? "white" : "black",
+                    }}>Agencia</Text>
 
                 </Pressable>
                 <Pressable
@@ -472,13 +458,13 @@ export default ({ navigation }) => {
                         setAgencia(false)
                     }}
                     style={{
-                        ...styles.agenciaTxt,
-                        borderTopRightRadius: 50,
-                        borderBottomRightRadius: 50,
-                        borderColor: agencia === false ? moradoOscuro : "gray",
-                        backgroundColor: agencia === false ? moradoOscuro + "10" : null,
+                        ...styles.agenciaPressable,
+                        backgroundColor: agencia === false ? moradoOscuro : null,
                     }}>
-                    <Text>Guia individual</Text>
+                    <Text style={{
+                        ...styles.agenciaTxt,
+                        color: agencia === false ? "white" : "black",
+                    }}>Guia individual</Text>
 
                 </Pressable>
             </View>
@@ -671,6 +657,16 @@ export default ({ navigation }) => {
                     </View>
 
                 </Pressable>
+
+                <Boton
+                    buttonRef={buttonRef}
+                    titulo={"Continuar"}
+                    loading={loading}
+                    done={doneLoading}
+                    onPress={handleContinuar} />
+                <View style={{
+                    height: 40,
+                }} />
 
 
 
@@ -960,31 +956,30 @@ export default ({ navigation }) => {
 
                     </Pressable>
 
-                </ScrollView >}
-            <View style={{
-                padding: 20,
-                backgroundColor: colorFondo,
-            }}>
-                <Boton
-                    buttonRef={buttonRef}
-                    titulo={"Continuar"}
-                    loading={loading}
-                    done={doneLoading}
-                    onPress={handleContinuar} />
+                    <Boton
+                        buttonRef={buttonRef}
+                        titulo={"Continuar"}
+                        loading={loading}
+                        done={doneLoading}
+                        onPress={handleContinuar} />
+                    <View style={{
+                        height: 40,
+                    }} />
 
-                {tipoModal === "displayFoto" ? <ImageModal
-                    setModalVisible={setModalVisible}
-                    modalVisible={modalVisible}
-                    imagen={dataModal.imagen}
-                    titulo={dataModal.titulo}
-                /> : <CameraModal
-                    fotos={datos}
-                    setFotos={setDatos}
-                    tipo={tipoModal}
-                    setModalVisible={setModalVisible}
-                    modalVisible={modalVisible}
-                />}
-            </View>
+
+                </ScrollView >}
+            {tipoModal === "displayFoto" ? <ImageModal
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+                imagen={dataModal.imagen}
+                titulo={dataModal.titulo}
+            /> : <CameraModal
+                fotos={datos}
+                setFotos={setDatos}
+                tipo={tipoModal}
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+            />}
         </View>
     )
 }
@@ -1056,17 +1051,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         marginVertical: 15,
-        borderRadius: 20,
+        borderRadius: 10,
         width: '70%',
-        backgroundColor: '#fff',
+        backgroundColor: "#fff",
 
     },
-    agenciaTxt: {
+    agenciaPressable: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 5,
-        borderWidth: .5,
+        paddingVertical: 10,
+        borderRadius: 10,
+
+    },
+
+    agenciaTxt: {
+        fontSize: 15,
     },
 
     txtResaltado: {

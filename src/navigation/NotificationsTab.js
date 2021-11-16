@@ -2,16 +2,36 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Notifications from '../screens/Notifications';
 import Messages from '../screens/Messages';
 import React from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { colorFondo, moradoOscuro } from '../../assets/constants';
 
 const Tab = createMaterialTopTabNavigator();
 
+const Texto = ({ focused, color, texto }) => {
+    return <View>
+        <View style={{
+            position: 'absolute',
+            alignItems: 'center',
+            backgroundColor: "#ff0000",
+            width: 6,
+            height: 6,
+            borderRadius: 10,
+            right: -15,
+            top: -10,
+        }} />
+        <Text style={{
+            ...styles.text,
+            color
+        }}>{texto}</Text>
+
+    </View>
+}
 export default function () {
     const { width } = Dimensions.get("screen")
     return (
         <Tab.Navigator
             screenOptions={{
+
                 tabBarPressOpacity: 0,
                 tabBarIndicatorStyle: {
                     backgroundColor: colorFondo,
@@ -34,8 +54,30 @@ export default function () {
             }}
 
         >
-            <Tab.Screen name="Notificaciones" component={Notifications} />
-            <Tab.Screen name="Mensajes" component={Messages} />
+            <Tab.Screen name="Notificaciones"
+                options={{
+                    tabBarLabel: ({ color, focused }) => {
+                        return <Texto color={color} focused={focused} texto={"NOTIFICACIONES"} />
+
+                    }
+                }}
+                component={Notifications} />
+            <Tab.Screen
+                options={{
+                    tabBarLabel: ({ color, focused }) => {
+                        return <Texto color={color} focused={focused} texto={"MENSAJES"} />
+                    }
+                }}
+                name="Mensajes" component={Messages} />
         </Tab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: "white"
+    },
+
+});
