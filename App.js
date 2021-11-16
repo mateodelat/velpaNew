@@ -129,14 +129,8 @@ const App = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      < StripeProvider
-        publishableKey="pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd"
-        // urlScheme={localRedirectSignIn} // required for 3D Secure and bank redirects
-        merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
-      >
-        <StatusBar hidden={true} />
-        <Router />
-      </StripeProvider>
+      <StatusBar hidden={true} />
+      <Router />
     </View>
   );
 

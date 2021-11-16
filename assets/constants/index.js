@@ -424,12 +424,6 @@ export const formatDateShort = (msInicial, msFinal) => {
 
 }
 
-export const isFechaFull = async (fechaID) => {
-  // Checar que no se haya llenado la fecha
-  console.log(fechaID)
-  return true
-}
-
 export const getBlob = async (uri) => {
   return (await fetch(uri)).blob()
     .then(response => {
@@ -544,6 +538,21 @@ export const listAventurasAutorizadas = async (maxItems) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c.estadoAventura("eq", "AUTORIZADO"),
+    {
+      limit: maxItems
+    })
+    .catch(e => {
+      Alert.alert("Error", "Error obteniendo aventuras")
+      console.log(e)
+    })
+
+  return ave
+
+}
+export const listAventurasSugeridas = async (id, maxItems) => {
+  const ave = await DataStore.query(Aventura,
+    // Pedir solo las aventuras ya verificadas
+    c => c.estadoAventura("eq", "AUTORIZADO").id("ne", id),
     {
       limit: maxItems
     })
@@ -1061,30 +1070,29 @@ export function asignarReservaciones(fecha) {
 }
 
 // Funcion que calcula el precio dependiendo de el numero de personas
-export function calculatePrice(precioIndividual, total, comision, personasReservadas) {
+export function calculatePrice(precioIndividual, total, personasReservadas) {
   const sumaPersonas = personasReservadas ? total + personasReservadas : total
 
-  !comision ? comision = 1 : comision += 1
 
   if (personasReservadas === sumaPersonas) {
-    return precioIndividual * comision
+    return precioIndividual
   }
 
   switch (sumaPersonas) {
     case 0:
-      return precioIndividual * comision
+      return precioIndividual
     case 1:
 
-      return precioIndividual * 2.52 * comision
+      return precioIndividual * 2.52
 
     case 2:
-      return precioIndividual * 1.6 * comision
+      return precioIndividual * 1.6
 
     case 3:
-      return precioIndividual * 1.2 * comision
+      return precioIndividual * 1.2
 
     default:
-      return precioIndividual * comision
+      return precioIndividual
   }
 }
 

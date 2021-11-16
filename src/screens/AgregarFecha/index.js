@@ -160,6 +160,7 @@ export default function ({ navigation, route }) {
 
     const handleContinuar = () => {
         const { incluidoDefault, materialDefault } = aventura
+        const imagenFondo = aventura.imagenDetalle[aventura.imagenFondoIdx]
 
         const navigate = () => navigation.navigate("AgregarFecha2", {
             personasTotales,
@@ -180,7 +181,9 @@ export default function ({ navigation, route }) {
 
             tituloAventura,
             aventuraID: aventura.id,
-            comision: aventura.comision
+            comision: aventura.comision,
+
+            imagenFondo
         })
 
         // Verificaciones

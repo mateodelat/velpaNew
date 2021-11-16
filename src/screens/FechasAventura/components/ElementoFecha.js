@@ -22,7 +22,7 @@ import { Usuario } from '../../../models';
 import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
 
-export default function ({ fecha, handleContinuar }) {
+export default function ({ fecha, handleContinuar, idx }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("");
 
@@ -42,7 +42,7 @@ export default function ({ fecha, handleContinuar }) {
     }
 
 
-    const {
+    let {
         titulo,
         descripcion,
         precio,
@@ -50,6 +50,7 @@ export default function ({ fecha, handleContinuar }) {
         fechaFinal,
         usuarioID
     } = fecha
+    precio *= (fecha.comision + 1)
 
     const handleNavigateGuia = () => {
         navigation.navigate("PerfilScreen", { id: usuarioID })
@@ -75,24 +76,6 @@ export default function ({ fecha, handleContinuar }) {
     }, []);
 
     // Personas reservadas
-    const personasReservadas = [
-        {
-            foto: "https://static.remove.bg/remove-bg-web/f50bd6ad4990ff621deccea155ab762c39d8c77a/assets/start_remove-c851bdf8d3127a24e2d137a55b1b427378cd17385b01aec6e59d5d4b5f39d2ec.png",
-            nickname: "mateo delat",
-            personasReservadas: 1
-        },
-        {
-            foto: "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
-            nickname: "mateo delat",
-            personasReservadas: 1
-        },
-        {
-            foto: "https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg",
-            nickname: "mateo delat",
-            personasReservadas: 2
-        },
-
-    ]
 
     return (
         <View style={{
@@ -140,7 +123,7 @@ export default function ({ fecha, handleContinuar }) {
 
                     {!openDetails && <Text
                         style={[styles.precio, { color: '#fff', }]}
-                    >{precio}$</Text>}
+                    >{precio * (fecha.comision + 1)}$</Text>}
                 </View>}
 
 
@@ -234,7 +217,7 @@ export default function ({ fecha, handleContinuar }) {
 
                 {/* Lista personas */}
                 <ListaPersonas
-                    personasReservadas={personasReservadas}
+                    personasReservadas={fecha.personasReservadas}
                     personasTotales={fecha.personasTotales}
 
                 />
@@ -242,7 +225,7 @@ export default function ({ fecha, handleContinuar }) {
 
 
                 {openDetails && <Pressable
-                    onPress={() => handleContinuar(fecha, guia)}
+                    onPress={() => handleContinuar(fecha, guia, idx)}
                     style={{ ...styles.botonRedondo, width: '50%', alignSelf: 'center', marginBottom: 20, }}>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', }}>Reservar</Text>
                 </Pressable>}

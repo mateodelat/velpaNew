@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
 
 
 import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -12,8 +12,10 @@ import ModalRuta from '../FechasAventura/components/ModalRuta';
 import QueLlevar from './components/QueLlevar';
 import Incluido from './components/Incluido';
 import { DataStore } from '@aws-amplify/datastore';
-import { Fecha } from '../../models';
-import { Mensaje } from '../../models';
+import { ChatRoomUsuario, Fecha } from '../../models';
+
+import { ChatRoom } from '../../models';
+import { Usuario } from '../../models';
 
 const { height } = Dimensions.get("screen")
 
@@ -151,7 +153,8 @@ export default function ({ navigation, route }) {
             descripcion,
 
             aventuraID,
-            comision
+            comision,
+            imagenFondo
         } = route.params
 
         const fecha = {
@@ -179,10 +182,30 @@ export default function ({ navigation, route }) {
             imagenRuta,
         }
 
-        await DataStore.save(
+
+        DataStore.save(
             new Fecha(fecha)
         )
-            .then(r => {
+            .then(async fecha => {
+                // Crear chatRoom
+                const chatroom = await DataStore.save(new ChatRoom({
+                    name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
+                    newMessages: 0,
+                    picture: imagenFondo,
+                    fechaID: fecha.id,
+                }))
+
+                // Obtener usuario del guia
+                const usuario = await DataStore.query(Usuario, sub)
+
+                // Agregar guia al chat
+                await DataStore.save(new ChatRoomUsuario({
+                    chatroom,
+                    usuario
+                }))
+
+                // Navegar a exitoso
+                setButtonLoading(false)
                 navigation.navigate("ExitoScreen", {
                     txtExito: "Fecha agregada con exito!!"
                 })

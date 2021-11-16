@@ -25,7 +25,7 @@ const TipoUsuario = {
   "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
 };
 
-const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Fecha, Reserva } = initSchema(schema);
+const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, PaymentIntent } = initSchema(schema);
 
 export {
   Aventura,
@@ -36,10 +36,11 @@ export {
   Mensaje,
   ChatRoomUsuario,
   ChatRoom,
-  Fecha,
   Reserva,
+  Fecha,
   EstadoAventura,
   Categorias,
   StatusSolicitud,
-  TipoUsuario
+  TipoUsuario,
+  PaymentIntent
 };

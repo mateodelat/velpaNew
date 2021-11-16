@@ -11,11 +11,12 @@ import {
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, formatDateShort, getUserSub, isFechaFull, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getUserSub, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
 import {
     confirmPaymentSheetPayment,
+    StripeProvider,
     useStripe
 } from '@stripe/stripe-react-native';
 
@@ -23,7 +24,9 @@ import API from '@aws-amplify/api';
 import ElementoPersonas from './components/ElementoPersonas';
 import { createPaymentIntent } from '../../graphql/mutations';
 import { DataStore } from '@aws-amplify/datastore';
-import { Reserva } from '../../models';
+import { ChatRoom, ChatRoomUsuario, Reserva } from '../../models';
+import { Fecha } from '../../models';
+import { Usuario } from '../../models';
 
 
 export default function ({ route, navigation }) {
@@ -61,7 +64,6 @@ export default function ({ route, navigation }) {
 
     // UI del boton
     const [buttonLoading, setButtonLoading] = useState(false);
-    const [buttonDoneLoading, setButtonDoneLoading] = useState(false);
 
 
     const personasTotales = adultos + ninos + tercera
@@ -101,7 +103,7 @@ export default function ({ route, navigation }) {
     /////////////////////////////FUNCIONES/////////////////////////////
     ///////////////////////////////////////////////////////////////////
     function verOpciones() {
-        navigation.pop(3)
+        navigation.pop(2)
     }
 
     // Obtener el clientSecret del backend
@@ -201,268 +203,237 @@ export default function ({ route, navigation }) {
         }
     }
 
+    const isFechaFull = async () => {
+        const fecha = await DataStore.query(Fecha, fechaID)
+        const reservas = await DataStore.query(Reserva, r => r.fechaID("eq", fechaID))
+        let personasReservadas = 0
+
+        reservas.map(res => {
+            const personas = res.tercera + res.total + res.ninos
+            personasReservadas += personas
+        })
+
+        return (personasReservadas + personasTotales > fecha.personasTotales)
+    }
 
     const handleConfirm = async () => {
         // Revisar que no se haya llenado la fecha
-        if (await isFechaFull(fechaID)) {
+        if (!await isFechaFull()) {
             Alert.alert("Atencion",
                 "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
                 [
                     {
-                        text: "OK",
+                        text: "Ver",
                         onPress: verOpciones
                     },
                 ],
                 { cancelable: false }
             )
         } else {
-            // Verificar que el usuario no este agregado ya al chatRoom
-            const sub = getUserSub()
-        }
-        return
-        //     // Obtener sub usuario
-        //     const sub = await Auth.currentUserInfo()
-        //         .then(r => {
-        //             return (r.attributes.sub)
-        //         }).catch(e => console.log("Error obteniendo el usuario", e))
-
-        //     // Verificar que no exista ya esa relacion
-        //     const exists = (await API.graphql({
-        //         query: listChatRoomUsuarios,
-        //         variables: {
-        //             filter: { usuarioID: { "eq": sub }, chatroomID: { "eq": chatroomID } }
-        //         }
-        //     }).then(r => {
-        //         return r.data.listChatRoomUsuarios.items
-        //     })).length === 0 ? false : true
-        //     console.log("Existe grupo con esa persona:", exists)
-
-        //     // Si no existe la relacion se agrega usuario al chat
-        //     if (!exists) {
-        //         // Agregar usuario al grupo de chat
-        //         await API.graphql({
-        //             query: createChatRoomUsuario,
-        //             variables: {
-        //                 input: {
-        //                     chatroomID,
-        //                     usuarioID: sub
-        //                 }
-        //             }
-        //         }).catch(e => {
-        //             console.log(e)
-        //             Alert.alert("Error", "Error agregando usuario al grupo")
-        //         })
-        //     }
-
-
-        //     // Query base de datos con reservacion exitosa
-        //     API.graphql({
-        //         query: createReservaciones, variables: {
-        //             input: {
-        //                 fechaID,
-
-        //                 // Variables del precio
-        //                 total: totalSinComision,
-        //                 comisionPorPersona,
-
-        //                 // Variable de personas
-        //                 personas: adultos + ninos + tercera,
-        //                 adultos, ninos: ninos, tercera,
-
-        //                 idPago,
-
-        //                 usuarioID: sub
-        //             }
-        //         }
-        //     })
-        //         .then(c => {
-        //             setButtonLoading(false)
-        //             setButtonDoneLoading(true)
-
-        //             Alert.alert("Reservacion exitosa",
-        //                 "La reservacion fue creada con exito!!",
-        //                 [
-        //                     {
-        //                         text: "OK",
-        //                         onPress: OK
-        //                     },
-        //                 ],
-        //                 { cancelable: false }
-        //             )
-        //         })
-        //         .catch(e => {
-        //             Alert.alert("Error", "Error creando reservacion, comunicate con nosotros para mas info")
-        //             console.log(e)
-        //         })
-
-
-        // }
-
-        if (!paymentOption?.label || !paymentOption?.image) {
-            Alert.alert("Error", "Agrega primero un metodo de pago")
-            return
-        }
-
-        setButtonLoading(true)
-        const { error } = await confirmPaymentSheetPayment().catch(e => {
-            Alert.alert("Error", "Error realizando el pago")
-            console.log(e)
-        })
-
-
-        if (error) {
-            setButtonLoading(false)
-            Alert.alert(`Error code: ${error.code}`, error.message);
-        } else {
-            const datosReserva = {
-
+            // Verificar pago
+            if (!paymentOption?.label || !paymentOption?.image) {
+                Alert.alert("Error", "Agrega primero un metodo de pago")
+                return
             }
-            // Crear la reservacion en DataStore
-            DataStore.save(new Reserva())
 
+            setButtonLoading(true)
+            const { error } = await confirmPaymentSheetPayment()
+                .catch(e => {
+                    Alert.alert("Error", "Error realizando el pago")
+                    console.log(e)
+                })
+
+            if (error) {
+                Alert.alert(`Error code: ${error.code}`, error.message);
+            } else {
+                //////////////////////////////////////////////////////////////////////////////
+                ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
+                //////////////////////////////////////////////////////////////////////////////
+                const sub = await getUserSub()
+                // Obtener id del chatroom correspondiente a la aventura
+                const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID("eq", fechaID)))[0]
+
+                // Obtener el usuario logeado
+                const usuario = await DataStore.query(Usuario, sub)
+
+
+                // Verificar que el usuario no este agregado ya al chatRoom
+                const relacion = (await DataStore.query(ChatRoomUsuario)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
+                if (!relacion) {
+                    // Si no esta el usuario se agrega
+                    await DataStore.save(new ChatRoomUsuario({
+                        usuario,
+                        chatroom
+                    }))
+                    console.log("Usuario agregado al grupo")
+                }
+
+
+                const datosReserva = {
+                    total: precioTotal,
+                    comisionPorPersona: precioIndividualConComision - precioIndividualSinComision,
+
+                    adultos, ninos, tercera,
+
+                    pagoID: idPago,
+
+                    fechaID,
+                    usuarioID: sub
+                }
+
+                // Crear la reservacion en DataStore
+                await DataStore.save(new Reserva(datosReserva))
+
+                navigation.navigate("ExitoScreen", {})
+            }
             setButtonLoading(false)
-            setButtonDoneLoading(true)
-            navigation.navigate("ExitoScreen", {})
         }
     }
 
     return (
-        <View style={styles.container}>
+        < StripeProvider
+            publishableKey="pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd"
+            // urlScheme={localRedirectSignIn} // required for 3D Secure and bank redirects
+            merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
+        >
+
+            <View style={styles.container}>
 
 
 
-            {/* Mostrar la aventura a pagar */}
-            <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
-                <Image
-                    source={{ uri: imagenFondo }}
-                    style={styles.imgAventura}
-                />
+                {/* Mostrar la aventura a pagar */}
+                <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
+                    <Image
+                        source={{ uri: imagenFondo }}
+                        style={styles.imgAventura}
+                    />
 
-                <View style={styles.adventureTextContainer}>
-
-
-                    <View style={[styles.row, { marginTop: 0, }]}>
-                        {/* Titulo de la aventura */}
-                        <Text style={{
-                            fontSize: 16,
-                            flex: 1,
-                        }}>{tituloAventura}</Text>
-                    </View>
-
-                    <Text style={{
-                        color: moradoClaro,
-                        fontSize: 12,
-                        marginBottom: 5,
-
-                    }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
+                    <View style={styles.adventureTextContainer}>
 
 
-
-                    <View style={styles.row}>
-
-                        {/* Guia */}
-                        <View style={{ flexDirection: 'row', }}>
-                            <Image
-                                source={require("../../../assets/icons/guia.png")}
-                                style={styles.guiaIcon}
-
-                            />
-                            <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
+                        <View style={[styles.row, { marginTop: 0, }]}>
+                            {/* Titulo de la aventura */}
+                            <Text style={{
+                                fontSize: 16,
+                                flex: 1,
+                            }}>{tituloAventura}</Text>
                         </View>
 
-                        {/* Calificacion guia */}
-                        {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
-                            <Entypo name="star" size={11} color="#F4984A" />
-                            <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
-                        </View>}
+                        <Text style={{
+                            color: moradoClaro,
+                            fontSize: 12,
+                            marginBottom: 5,
+
+                        }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
+
+
+
+                        <View style={styles.row}>
+
+                            {/* Guia */}
+                            <View style={{ flexDirection: 'row', }}>
+                                <Image
+                                    source={require("../../../assets/icons/guia.png")}
+                                    style={styles.guiaIcon}
+
+                                />
+                                <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
+                            </View>
+
+                            {/* Calificacion guia */}
+                            {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
+                                <Entypo name="star" size={11} color="#F4984A" />
+                                <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
+                            </View>}
+                        </View>
+
+                        {/* Descripcion fecha */}
+                        {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
                     </View>
-
-                    {/* Descripcion fecha */}
-                    {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
-                </View>
-            </View>
-
-
-
-
-            <View style={[styles.innerContainer, { padding: 15, }]}>
-
-                <ElementoPersonas
-                    precio={precioIndividualConComision}
-                    titulo={"Tercera edad"}
-
-                    cantidad={tercera}
-                />
-
-                <View style={styles.line} />
-
-                <ElementoPersonas
-                    precio={precioIndividualConComision}
-                    titulo={"Adultos"}
-
-                    cantidad={adultos}
-                />
-
-                <View style={styles.line} />
-
-                <ElementoPersonas
-                    precio={precioIndividualConComision}
-                    titulo={"Niños"}
-
-                    cantidad={ninos}
-                />
-
-                <View style={styles.line} />
-
-                {/* Precio */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <Text
-                        style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
-                    <Text
-                        style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
-
                 </View>
 
-            </View>
 
 
-            {/* Metodo de pago */}
-            {
-                // Si no se tiene el ultimo numero y la imagen, se muestra agregar
-                (!paymentOption?.label && !paymentOption?.image) ?
-                    <Pressable
-                        onPress={handleAddPaymentMethod}
-                        style={{ ...styles.metodoDePago, justifyContent: 'space-between', }}>
-                        <Text style={styles.titulo}>Agregar metodo de pago</Text>
-                        <Entypo name="plus" size={24} color={moradoClaro} />
-                    </Pressable>
-                    :
 
-                    <View style={styles.metodoDePago}>
-                        <View style={styles.bolita} />
+                <View style={[styles.innerContainer, { padding: 15, }]}>
 
-                        <Image
-                            source={{
-                                uri: `data:image/png;base64,${paymentOption?.image}`,
-                            }}
-                            style={{
-                                width: '30%',
-                                height: '100%',
-                            }}
-                        />
-                        <Text style={styles.cardNumber}>{paymentOption?.label}</Text>
+                    <ElementoPersonas
+                        precio={precioIndividualConComision}
+                        titulo={"Tercera edad"}
+
+                        cantidad={tercera}
+                    />
+
+                    <View style={styles.line} />
+
+                    <ElementoPersonas
+                        precio={precioIndividualConComision}
+                        titulo={"Adultos"}
+
+                        cantidad={adultos}
+                    />
+
+                    <View style={styles.line} />
+
+                    <ElementoPersonas
+                        precio={precioIndividualConComision}
+                        titulo={"Niños"}
+
+                        cantidad={ninos}
+                    />
+
+                    <View style={styles.line} />
+
+                    {/* Precio */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                        <Text
+                            style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
+                        <Text
+                            style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
 
                     </View>
-            }
 
-            <View style={{ flex: 1, }} />
-            <Boton
-                loading={buttonLoading}
-                done={buttonDoneLoading}
-                titulo={"Confirmar"}
-                onPress={handleConfirm}
-            />
-        </View>
+                </View>
+
+
+                {/* Metodo de pago */}
+                {
+                    // Si no se tiene el ultimo numero y la imagen, se muestra agregar
+                    (!paymentOption?.label && !paymentOption?.image) ?
+                        <Pressable
+                            onPress={handleAddPaymentMethod}
+                            style={{ ...styles.metodoDePago, justifyContent: 'space-between', }}>
+                            <Text style={styles.titulo}>Agregar metodo de pago</Text>
+                            <Entypo name="plus" size={24} color={moradoClaro} />
+                        </Pressable>
+                        :
+
+                        <View style={styles.metodoDePago}>
+                            <View style={styles.bolita} />
+
+                            <Image
+                                source={{
+                                    uri: `data:image/png;base64,${paymentOption?.image}`,
+                                }}
+                                style={{
+                                    width: '30%',
+                                    height: '100%',
+                                }}
+                            />
+                            <Text style={styles.cardNumber}>{paymentOption?.label}</Text>
+
+                        </View>
+                }
+
+                <View style={{ flex: 1, }} />
+                <Boton
+                    loading={buttonLoading}
+                    titulo={"Confirmar"}
+                    onPress={handleConfirm}
+                />
+            </View>
+        </StripeProvider>
+
     )
 }
 

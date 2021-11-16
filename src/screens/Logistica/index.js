@@ -27,7 +27,13 @@ export default ({ navigation, route }) => {
 
         fechaInicial,
         fechaFinal,
-        fechaID
+        fechaID,
+
+        totalPersonasReservadas,
+        personasTotales,
+
+        precio,
+        comision
     } = route.params
 
     const [tercera, setTercera] = useState(0);
@@ -39,20 +45,20 @@ export default ({ navigation, route }) => {
     const [aceptoMaterial, setAceptoMaterial] = useState(false);
     const [aceptoTerminos, setAceptoTerminos] = useState(false);
 
-    const personasMaximas = 10
+    const personasMaximas = personasTotales - totalPersonasReservadas
     const total = tercera + adultos + ninos
 
-    const comisionVelpa = .2
+    const comisionVelpa = comision
 
     // Logica para poner material incluido como lista
     let incluido = []
     const parseIncluido = JSON.parse(route.params?.incluido)
     incluido = [...parseIncluido.default, ...parseIncluido.agregado]
 
-    let precioIndividualSinComision = 400
-    const precioIndividual = calculatePrice(precioIndividualSinComision, total, comisionVelpa)
+    let precioIndividualSinComision = calculatePrice(precio, total, totalPersonasReservadas)
+    const precioIndividual = precioIndividualSinComision * (comisionVelpa + 1)
 
-    function handlePagar(params) {
+    function handlePagar() {
 
         if (!aceptoTerminos || !aceptoMaterial) {
             Alert.alert("Error", "No se ha aceptado todo")
@@ -66,7 +72,7 @@ export default ({ navigation, route }) => {
             ninos,
 
             comisionVelpa,
-            precioIndividualSinComision: calculatePrice(precioIndividualSinComision, total),
+            precioIndividualSinComision: precioIndividualSinComision,
 
             imagenFondo,
             tituloAventura,

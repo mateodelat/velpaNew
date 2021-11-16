@@ -54,15 +54,13 @@ export default ({ personasReservadas, personasTotales }) => {
                     flex: 1,
                 }}>
                     <Text style={{
-                        letterSpacing: 3,
                         fontWeight: 'bold',
-                    }}>{totalPersonas}/{personasTotales}</Text>
+                    }}>{totalPersonas} / {personasTotales}</Text>
                     <Text style={{
                         marginLeft: 4,
-                        letterSpacing: 0,
                         fontWeight: 'normal',
                         color: '#00000060',
-                    }}>Personas {!length && "reservadas"}</Text>
+                    }}>Personas</Text>
                 </View>
 
                 {!!length && <Pressable

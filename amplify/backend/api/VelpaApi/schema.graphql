@@ -58,6 +58,7 @@ type Fecha @model @key(name: "byAventura", fields: ["aventuraID"]) @key(name: "b
   titulo: String
   descripcion: String
   imagenRuta: String
+  ChatRoom: [ChatRoom] @connection(keyName: "byFecha", fields: ["id"])
 }
 
 type Usuario @model @auth(rules: [{allow: public, operations: [create]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner, ownerField: "owner"}]) {
@@ -88,7 +89,7 @@ type Usuario @model @auth(rules: [{allow: public, operations: [create]}, {allow:
   SolicitudesEvaluadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
 }
 
-type ChatRoom @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
+type ChatRoom @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) @key(name: "byFecha", fields: ["fechaID"]) {
   id: ID!
   name: String!
   picture: String
@@ -96,7 +97,7 @@ type ChatRoom @model @auth(rules: [{allow: public, operations: [read]}, {allow: 
   lastMessage: String
   Mensajes: [Mensaje] @connection(keyName: "byChatRoom", fields: ["id"])
   Participantes: [ChatRoomUsuario] @connection(keyName: "byChatRoom", fields: ["id"])
-  Fecha: Fecha @connection
+  fechaID: ID
 }
 
 type Mensaje @model @key(name: "byUsuario", fields: ["usuarioID"]) @key(name: "byChatRoom", fields: ["chatroomID"]) @auth(rules: [{allow: owner, operations: [create, update, delete]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
@@ -160,16 +161,13 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
- 
- 
-##################################################x
-####################FUNCIONES#####################
-##################################################x
+
 type Mutation {
-  createPaymentIntent(amount: Float!,destinationStripeID:String!,comision:Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+  createPaymentIntent(amount: Float!, destinationStripeID: String!, comision: Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
 }
 
 type PaymentIntent {
   id: String
-  clientSecret:String
+  clientSecret: String
 }
+ 

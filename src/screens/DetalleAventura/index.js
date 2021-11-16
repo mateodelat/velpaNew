@@ -31,7 +31,7 @@ import Boton from '../../components/Boton';
 import { getAventura, listAventurasSugeridas, moradoOscuro } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
-import Header from '../../components/header';
+
 
 
 
@@ -193,7 +193,7 @@ export default ({ navigation, route }) => {
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
-                        }}>$ {aventura.precioMin} - {aventura.precioMax}
+                        }}>$ {aventura.precioMin * (aventura.comision + 1)} - {aventura.precioMax * (aventura.comision + 1)}
                         </Text>
                     </View>
 

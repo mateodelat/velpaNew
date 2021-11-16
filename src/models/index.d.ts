@@ -23,7 +23,11 @@ export enum TipoUsuario {
   GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
 }
 
-
+export declare class PaymentIntent {
+  readonly id?: string;
+  readonly clientSecret?: string;
+  constructor(init: ModelInit<PaymentIntent>);
+}
 
 type AventuraMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
@@ -57,11 +61,11 @@ type ChatRoomMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type FechaMetaData = {
+type ReservaMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type ReservaMetaData = {
+type FechaMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
@@ -190,37 +194,11 @@ export declare class ChatRoom {
   readonly lastMessage?: string;
   readonly Mensajes?: (Mensaje | null)[];
   readonly Participantes?: (ChatRoomUsuario | null)[];
-  readonly Fecha?: Fecha;
+  readonly fechaID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<ChatRoom, ChatRoomMetaData>);
   static copyOf(source: ChatRoom, mutator: (draft: MutableModel<ChatRoom, ChatRoomMetaData>) => MutableModel<ChatRoom, ChatRoomMetaData> | void): ChatRoom;
-}
-
-export declare class Fecha {
-  readonly id: string;
-  readonly personasTotales: number;
-  readonly fechaInicial: number;
-  readonly fechaFinal: number;
-  readonly precio: number;
-  readonly comision: number;
-  readonly itinerario: string;
-  readonly puntoReunionNombre: string;
-  readonly puntoReunionLink: string;
-  readonly allowTercera: boolean;
-  readonly allowNinos: boolean;
-  readonly material?: string;
-  readonly incluido: string;
-  readonly aventuraID?: string;
-  readonly Reservas?: (Reserva | null)[];
-  readonly usuarioID?: string;
-  readonly titulo?: string;
-  readonly descripcion?: string;
-  readonly imagenRuta?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Fecha, FechaMetaData>);
-  static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
 }
 
 export declare class Reserva {
@@ -237,4 +215,31 @@ export declare class Reserva {
   readonly updatedAt?: string;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);
   static copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva, ReservaMetaData>) => MutableModel<Reserva, ReservaMetaData> | void): Reserva;
+}
+
+export declare class Fecha {
+  readonly id: string;
+  readonly personasTotales: number;
+  readonly fechaInicial: number;
+  readonly fechaFinal: number;
+  readonly precio: number;
+  readonly comision: number;
+  readonly itinerario: string;
+  readonly puntoReunionNombre: string;
+  readonly puntoReunionLink: string;
+  readonly allowTercera: boolean;
+  readonly allowNinos: boolean;
+  readonly material?: string;
+  readonly incluido: string;
+  readonly aventuraID: string;
+  readonly Reservas?: (Reserva | null)[];
+  readonly usuarioID: string;
+  readonly titulo?: string;
+  readonly descripcion?: string;
+  readonly imagenRuta?: string;
+  readonly ChatRoom?: (ChatRoom | null)[];
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
+  constructor(init: ModelInit<Fecha, FechaMetaData>);
+  static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
 }
