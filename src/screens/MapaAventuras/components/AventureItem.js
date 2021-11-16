@@ -3,6 +3,7 @@ import React from 'react'
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { shadowMedia } from "../../../../assets/constants"
 import { MaterialIcons } from '@expo/vector-icons';
+import { Categorias } from "../../../models";
 
 
 export default class AdventureItem extends PureComponent {
@@ -24,7 +25,7 @@ export default class AdventureItem extends PureComponent {
                         flex: 1,
                     }}>
                         <Image
-                            source={this.props.item.image}
+                            source={{ uri: this.props.item.imagenDetalle[this.props.item.imagenFondoIdx] }}
                             style={styles.imagenLista}
                         />
                     </View>
@@ -38,7 +39,11 @@ export default class AdventureItem extends PureComponent {
                             <Text style={styles.titleTxt}>{this.props.item.titulo}</Text>
 
                             {/* Categoria */}
-                            <Text style={styles.categoriaTxt}>{this.props.item.categoria}</Text>
+                            <Text style={styles.categoriaTxt}>{
+                                this.props.item.categoria === Categorias.APLINISMO ? "Alpinismo" :
+                                    this.props.item.categoria === Categorias.MTB ? "Ciclismo" :
+                                        "Otros"
+                            }</Text>
                         </View>
                         <MaterialIcons
                             name={"keyboard-arrow-right"}

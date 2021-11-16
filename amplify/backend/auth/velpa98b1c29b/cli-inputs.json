@@ -1,0 +1,54 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "authSelections": "identityPoolAndUserPool",
+    "requiredAttributes": [
+      "email"
+    ],
+    "resourceName": "velpa98b1c29b",
+    "serviceName": "Cognito",
+    "useDefault": "defaultSocial",
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "aliasAttributes": [],
+    "resourceNameTruncated": "velpa98b1c29b",
+    "sharedId": "98b1c29b",
+    "userPoolGroupList": [],
+    "userPoolName": "velpa98b1c29b_userpool_98b1c29b",
+    "usernameAttributes": [
+      "email"
+    ],
+    "usernameCaseSensitive": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientSetAttributes": false,
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientLambdaRole": "velpa998b1c29b_userpoolclient_lambda_role",
+    "passwordPolicyCharacters": [],
+    "passwordPolicyMinLength": 8,
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "hostedUI": true,
+    "hostedUIDomainName": "autenticacionvelpa",
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\"]}",
+    "authProvidersUserPool": [
+      "Google"
+    ],
+    "identityPoolName": "velpa98b1c29b_identitypool_98b1c29b",
+    "allowUnauthenticatedIdentities": true,
+    "triggers": {}
+  }
+}

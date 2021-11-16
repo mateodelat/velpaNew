@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, Image, Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native'
 import { Marker } from 'react-native-maps';
 
 import MapView from "react-native-map-clustering";
 
 import { FontAwesome5 } from '@expo/vector-icons';
-import { moradoOscuro, verificarUbicacion } from '../../../assets/constants';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+
+import { categorias, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
+import { DataStore } from '@aws-amplify/datastore';
+import { Aventura, Categorias } from '../../models';
+import { Loading } from '../../components/Loading';
 
 
 
@@ -16,101 +22,62 @@ export default function ({ navigation }) {
 
     useEffect(() => {
         verificarUbicacion()
+        obtenerAventuras()
     }, []);
+
 
     const [selectedMarkerIdx, setSelectedMarkerIdx] = useState(null);
     const [buscar, setBuscar] = useState("");
+    const [aventuras, setAventuras] = useState(null);
 
     // Variables para cambiar uno a otro
     const flatlist = useRef(null);
     const map = useRef(null);
 
+    function distancia(lat1, lon1, lat2, lon2) {
+        const p = 0.017453292519943295
+        const hav = 0.5 - Math.cos((lat2 - lat1) * p) / 2 + Math.cos(lat1 * p) * Math.cos(lat2 * p) * (1 - Math.cos((lon2 - lon1) * p)) / 2
+        return 12742 * Math.asin(Math.sqrt(hav))
+    }
 
-    const listaAventuras = [
-        {
-            titulo: "El nevado de colima",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 3,
-            coordinates: {
-                latitude: 20.696042,
-                longitude: -103.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Alpinismo",
-        },
-        {
-            titulo: "Huaxtla",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 1,
-            coordinates: {
-                latitude: 20.80,
-                longitude: -103.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Alpinismo",
-        },
-        {
-            titulo: "La barranca de huentitan",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 2,
-            coordinates: {
-                latitude: 20,
-                longitude: -103.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Alpinismo",
-        },
-        {
-            titulo: "Kilimanjaro",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 2,
-            coordinates: {
-                longitude: 20,
-                latitude: -103.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Alpinismo",
-        },
-        {
-            titulo: "Iztacihuatl",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 5,
-            coordinates: {
-                latitude: 21.696042,
-                longitude: -102.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Bici de montaña",
-        },
-        {
-            titulo: "Chupinaya",
-            precioMin: 400,
-            precioMax: 3500,
-            dificultad: 2,
-            coordinates: {
-                latitude: 20.696042,
-                longitude: -104.440991,
-            },
-            image: { uri: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" },
-            categoria: "Otros",
-        },
-    ]
+    const obtenerAventuras = async () => {
+        await DataStore.query(Aventura, ave => ave.estadoAventura("eq", 'AUTORIZADO'))
+            .then(r => {
 
-    const handleVerElemento = (idx) => {
+                // Sortear de izquierda a derecha en el mapa
+                r = r.sort((a, b) => {
+                    const {
+                        latitude: latitudeA,
+                        longitude: longitudeA
+                    } = a.coordenadas
+                    const {
+                        latitude: latitudeB,
+                        longitude: longitudeB
+                    } = b.coordenadas
+                    return (latitudeA < latitudeB)
+                })
+
+                setAventuras(r)
+            })
+            .catch(e => {
+                Alert.alert("Error obteniendo aventura")
+                console.log(e)
+            })
+
+    }
+
+
+    const handleVerElemento = (e, idx) => {
+        if (!e) return
         setBuscar("")
 
         setSelectedMarkerIdx(idx)
 
-        const selectedPlace = listaAventuras[idx];
+        const selectedPlace = e;
 
         const region = {
-            latitude: selectedPlace.coordinates.latitude,
-            longitude: selectedPlace.coordinates.longitude,
+            latitude: selectedPlace.coordenadas.latitude,
+            longitude: selectedPlace.coordenadas.longitude,
             latitudeDelta: 0.8,
             longitudeDelta: 0.8,
         }
@@ -125,11 +92,14 @@ export default function ({ navigation }) {
     const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
             const index = viewableItems[0].index;
-            console.log(index)
-            handleVerElemento(index)
+            const item = viewableItems[0].item
+            handleVerElemento(item, index)
         }
     })
 
+    if (!aventuras) {
+        return <Loading />
+    }
 
     return (
         <View style={styles.container}>
@@ -155,29 +125,53 @@ export default function ({ navigation }) {
                 clusterColor={moradoOscuro}
                 showsUserLocation={true}
                 loadingEnabled={true}
-            >
-                {listaAventuras.map((e, i) => <Marker
-                    key={i.toString()}
-                    coordinate={e.coordinates}
-                    tracksViewChanges={false}
-                    onPress={() => handleVerElemento(i)}
-                >
-                    <View style={{
-                        ...styles.iconContainer,
-                        backgroundColor: selectedMarkerIdx === i ? moradoOscuro : "#fff",
-                    }}>
-                        <FontAwesome5
-                            style={styles.icono}
-                            name="mountain"
-                            size={15}
-                            color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-                        />
-                    </View>
-                </Marker>)}
+            >{
+                    aventuras ?
+                        aventuras.map((e, i) => <Marker
+                            key={i.toString()}
+                            coordinate={e.coordenadas}
+                            tracksViewChanges={false}
+                            onPress={() => handleVerElemento(e, i)}
+                        >
+                            <View style={{
+                                ...styles.iconContainer,
+                                backgroundColor: selectedMarkerIdx === i ? moradoOscuro : "#fff",
+                            }}>
+
+                                {/* Render iconos dependiendo de la categoria    */}
+                                {e.categoria === Categorias.APLINISMO ?
+                                    <FontAwesome5
+                                        name="mountain"
+                                        size={15}
+                                        color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
+                                    /> :
+                                    e.categoria === Categorias.MTB ?
+                                        <MaterialIcons
+                                            name="directions-bike"
+                                            size={24}
+                                            color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
+                                        /> :
+                                        <Entypo
+                                            name="dots-three-horizontal"
+                                            size={15}
+                                            color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
+
+                                        />
+                                }
+                            </View>
+                        </Marker>)
+                        : <View style={{
+                            flex: 1,
+                            backgroundColor: 'red',
+                            alignItems: 'center', justifyContent: 'center',
+                        }}>
+                            <ActivityIndicator size={"large"} color={"black"} />
+                        </View>
+                }
             </MapView>
             <FlatList
                 ref={flatlist}
-                data={listaAventuras}
+                data={aventuras}
                 style={styles.flatList}
                 horizontal
                 pagingEnabled
@@ -201,7 +195,7 @@ export default function ({ navigation }) {
             <Header
                 buscar={buscar}
                 setBuscar={setBuscar}
-                listaAventuras={listaAventuras}
+                listaAventuras={aventuras}
                 onPress={handleVerElemento}
             />
         </View>

@@ -218,7 +218,7 @@ export default function ({ route, navigation }) {
 
     const handleConfirm = async () => {
         // Revisar que no se haya llenado la fecha
-        if (!await isFechaFull()) {
+        if (await isFechaFull()) {
             Alert.alert("Atencion",
                 "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
                 [

@@ -104,6 +104,16 @@ export default index = ({ route, navigation }) => {
                     let totalPersonasReservadas = 0
                     // Obtener todas las reservaciones en la fecha
                     const reservaciones = await DataStore.query(Reserva, res => res.fechaID("eq", fecha.id))
+
+                    // Primero mapear todas las reservaciones y sacar las que esten llenas
+                    reservaciones.map(res => {
+                        const totalPersonas = res.adultos + res.ninos + res.tercera
+                        totalPersonasReservadas += totalPersonas
+                    })
+                    if (totalPersonasReservadas >= fecha.personasTotales) {
+                        return false
+                    }
+
                     await Promise.all(reservaciones.map(async res => {
                         const totalPersonas = res.adultos + res.ninos + res.tercera
 
@@ -113,11 +123,8 @@ export default index = ({ route, navigation }) => {
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas
                         })
-                        totalPersonasReservadas += totalPersonas
                     }))
-                    if (totalPersonasReservadas >= fecha.personasTotales) {
-                        return false
-                    }
+
 
                     return {
                         ...fecha,

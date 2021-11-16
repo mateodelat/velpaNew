@@ -72,8 +72,8 @@ export default function ({
                     sugested.length !== 0 ?
                         sugested.map((e, i) => (
                             <Pressable
-                                key={e.key}
-                                onPress={() => onPress(e.index)}
+                                key={i.toString()}
+                                onPress={() => onPress(e, e.index)}
                                 style={styles.sugerenciaItem}>
                                 <Entypo
                                     name="location-pin"
