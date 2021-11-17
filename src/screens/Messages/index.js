@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
 import ChatRoomItem from './components/ChatRoomItem';
 
 
 import { Entypo } from '@expo/vector-icons';
-import { DataStore } from '@aws-amplify/datastore';
+import { DataStore, Predicates } from '@aws-amplify/datastore';
 
 import { ChatRoomUsuario } from '../../models';
 import { Loading } from '../../components/Loading';
@@ -35,7 +35,9 @@ export default ({ navigation }) => {
 
         // Obtener todos los chatrooms que pertenecen al usuario
         const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuario))
-            .filter(e => e.usuario.id === sub).map(async e => {
+            .filter(e => e.usuario.id === sub)
+            .sort((a, b) => a.chatroom.updatedAt < b.chatroom.updatedAt)
+            .map(async e => {
                 e = e.chatroom
                 // Obtener el ultimo mensaje
                 e = {
@@ -63,20 +65,17 @@ export default ({ navigation }) => {
     }
 
     return (
-        <ScrollView
-            refreshControl={<RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-            />
-            }
+        <View
+
             style={{ ...container, borderLeftWidth: .25, }}>
 
 
             {/* Barra de busqueda */}
-            <View style={{ ...styles.innerContainer, flexDirection: 'row', paddingRight: 17, }}>
+            {/* <View style={{ ...styles.innerContainer, flexDirection: 'row', paddingRight: 17, }}>
 
 
-                <View style={styles.lupa}>
+                <View
+                    style={styles.lupa}>
                     <Entypo
                         name="magnifying-glass" size={25} color="black" />
 
@@ -96,50 +95,67 @@ export default ({ navigation }) => {
                 />}
 
 
-            </View>
+            </View> */}
 
             {/* Lista de chatRooms */}
-            <View style={styles.innerContainer}>
+            {
+                !chats ?
+                    <Loading indicator={true} /> :
+                    <View style={{
+                        ...styles.innerContainer,
+                        // marginTop: 20,
+                    }}>
 
-                {
-                    !chats ?
-                        <Loading indicator={true} /> :
-                        chats.map((item, index) => {
-                            // Ver si se pone la linea al final
-                            if (index === chats.length - 1) {
-                                return <ChatRoomItem
-                                    key={index.toString()}
-                                    onPress={() => handleChat(item)}
-                                    item={item}
-                                />
 
-                            } else {
-                                return <View
-                                    key={index.toString()}
-                                    style={{
-                                        width: '100%',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <ChatRoomItem
+                        <FlatList
+                            refreshControl={<RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                            }
+                            style={{ width: '100%', }}
+                            data={chats}
+                            renderItem={({ item, index }) => {
+                                // Ver si se pone la linea al final
+                                if (index === chats.length - 1) {
+                                    return <ChatRoomItem
+                                        index={index}
+                                        setChatRooms={setChats}
+                                        key={index.toString()}
                                         onPress={() => handleChat(item)}
                                         item={item}
                                     />
 
-                                    <View style={styles.line} />
-                                </View>
-                            }
-                        })}
-            </View>
+                                } else {
+                                    return <View
+                                        key={index.toString()}
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <ChatRoomItem
+                                            index={index}
+                                            setChatRooms={setChats}
+                                            onPress={() => handleChat(item)}
+                                            item={item}
+                                        />
 
-        </ScrollView>
+                                        <View style={styles.line} />
+                                    </View>
+                                }
+                            }}
+                        />
+                    </View>
+            }
+
+        </View>
     )
 }
 
 
 const styles = StyleSheet.create({
     innerContainer: {
-        flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 15,
 

@@ -5,11 +5,15 @@ import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { formatAMPM, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 import moment from "moment";
+import { ChatRoom } from '../../../models'
+import { Mensaje } from '../../../models'
 
 
 export default ({
     onPress,
     item,
+    setChatRooms,
+    index
 
 }) => {
     const { name,
@@ -18,6 +22,32 @@ export default ({
         lastMessage
     } = item
 
+    // Subscribirse a actualizaciones
+    useEffect(() => {
+        const subscription = DataStore.observe(ChatRoom, item.id)
+            .subscribe(async (msg) => {
+                const newElement = msg.element
+                if (msg.opType === OpType.UPDATE && !!newElement.name) {
+                    const lastMessage = await DataStore.query(Mensaje, newElement?.chatRoomLastMessageId)
+
+                    setChatRooms((existingChats) => {
+                        let newChats = [...existingChats]
+
+
+                        newChats[index] = {
+                            ...newElement,
+                            lastMessage
+                        }
+
+                        newChats = newChats.sort((a, b) => a.updatedAt < b.updatedAt)
+                        return [...newChats]
+                    })
+                }
+            })
+
+        return () => subscription.unsubscribe()
+
+    }, []);
 
     return (
         <Pressable
@@ -29,9 +59,14 @@ export default ({
                     numberOfLines={1}
                     style={styles.badgeTxt}>{newMessages}</Text>
             </View>}
-            <View style={{ flex: 1, justifyContent: 'center', }}>
-                <Text style={styles.titulo}>{name}</Text>
-                {lastMessage && <Text style={styles.descripcion}>{lastMessage.content}</Text>}
+            <View
+                style={{ flex: 1, justifyContent: 'center', }}>
+                <Text
+                    numberOfLines={1}
+                    style={styles.titulo}>{name}</Text>
+                {lastMessage && <Text
+                    numberOfLines={1}
+                    style={styles.descripcion}>{lastMessage.content}</Text>}
             </View>
 
             {lastMessage && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{moment(lastMessage?.createdAt).from(moment())}</Text>}

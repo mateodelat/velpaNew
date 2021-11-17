@@ -17,7 +17,7 @@
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "@stripe/stripe-react-native": "0.2.2",
-    "aws-amplify": "^4.3.2",
+    "aws-amplify": "^4.3.7",
     "aws-amplify-react-native": "^5.0.3",
     "expo": "^43.0.0",
     "expo-av": "~10.1.3",
