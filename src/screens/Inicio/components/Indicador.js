@@ -6,7 +6,7 @@ export default ({ scrollX, width, data }) => {
     return <View
         style={{
             position: 'absolute',
-            bottom: 10,
+            bottom: 30,
             flexDirection: 'row',
             borderRadius: 10,
         }}

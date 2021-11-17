@@ -205,20 +205,6 @@ export const schema = {
                         "associatedWith": "aventuraID"
                     }
                 },
-                "Notificaciones": {
-                    "name": "Notificaciones",
-                    "isArray": true,
-                    "type": {
-                        "model": "Notificacion"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "aventuraID"
-                    }
-                },
                 "Publicidad": {
                     "name": "Publicidad",
                     "isArray": true,
@@ -494,20 +480,6 @@ export const schema = {
                         "associatedWith": "solicitudguia"
                     }
                 },
-                "Notificaciones": {
-                    "name": "Notificaciones",
-                    "isArray": true,
-                    "type": {
-                        "model": "Notificacion"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "solicitudGuiaID"
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -538,192 +510,6 @@ export const schema = {
                         "name": "byUsuario",
                         "fields": [
                             "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Notificacion": {
-            "name": "Notificacion",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "metadata": {
-                    "name": "metadata",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "tipo": {
-                    "name": "tipo",
-                    "isArray": false,
-                    "type": {
-                        "enum": "TipoNotificacion"
-                    },
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "titulo": {
-                    "name": "titulo",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "descripcion": {
-                    "name": "descripcion",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "usuarioID": {
-                    "name": "usuarioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "reservaID": {
-                    "name": "reservaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "fechaID": {
-                    "name": "fechaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "aventuraID": {
-                    "name": "aventuraID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "solicitudGuiaID": {
-                    "name": "solicitudGuiaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Notificacions",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byUsuario",
-                        "fields": [
-                            "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byReserva",
-                        "fields": [
-                            "reservaID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byFecha",
-                        "fields": [
-                            "fechaID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAventura",
-                        "fields": [
-                            "aventuraID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "bySolicitudGuia",
-                        "fields": [
-                            "solicitudGuiaID"
                         ]
                     }
                 },
@@ -1680,20 +1466,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Notificaciones": {
-                    "name": "Notificaciones",
-                    "isArray": true,
-                    "type": {
-                        "model": "Notificacion"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "reservaID"
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1934,20 +1706,6 @@ export const schema = {
                         "associatedWith": "fechaID"
                     }
                 },
-                "Notificaciones": {
-                    "name": "Notificaciones",
-                    "isArray": true,
-                    "type": {
-                        "model": "Notificacion"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "fechaID"
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -2031,6 +1789,156 @@ export const schema = {
                 }
             ]
         },
+        "Notificacion": {
+            "name": "Notificacion",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tipo": {
+                    "name": "tipo",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoNotificacion"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "titulo": {
+                    "name": "titulo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "imagen": {
+                    "name": "imagen",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "reservaID": {
+                    "name": "reservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "aventuraID": {
+                    "name": "aventuraID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "solicitudGuiaID": {
+                    "name": "solicitudGuiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Notificacions",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "read",
+                                    "create",
+                                    "update",
+                                    "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Publicidad": {
             "name": "Publicidad",
             "fields": {
@@ -2048,13 +1956,6 @@ export const schema = {
                         "enum": "TipoPublicidad"
                     },
                     "isRequired": true,
-                    "attributes": []
-                },
-                "metadata": {
-                    "name": "metadata",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
                     "attributes": []
                 },
                 "titulo": {
@@ -2187,6 +2088,13 @@ export const schema = {
                 "RECHAZADA"
             ]
         },
+        "TipoUsuario": {
+            "name": "TipoUsuario",
+            "values": [
+                "AGENCIA",
+                "GUIAINDIVIDUAL"
+            ]
+        },
         "TipoNotificacion": {
             "name": "TipoNotificacion",
             "values": [
@@ -2196,13 +2104,6 @@ export const schema = {
                 "SOLICITUDGUIA",
                 "SOLICITUDAVENTURA",
                 "ADMIN"
-            ]
-        },
-        "TipoUsuario": {
-            "name": "TipoUsuario",
-            "values": [
-                "AGENCIA",
-                "GUIAINDIVIDUAL"
             ]
         },
         "TipoPublicidad": {
@@ -2247,5 +2148,5 @@ export const schema = {
             }
         }
     },
-    "version": "f7ea06662389689c5b4d018927f39ae3"
+    "version": "f1e41c9c41246bfed200513d14e1ce96"
 };

@@ -1,11 +1,14 @@
+import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useRef, useState } from 'react'
 import {
     ActivityIndicator,
+    Alert,
     Animated,
     Dimensions,
     FlatList,
     Image,
     Keyboard,
+    Linking,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -15,6 +18,9 @@ import {
 
 import { listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
+import { Loading } from '../../components/Loading';
+import { TipoPublicidad } from '../../models';
+import { Publicidad } from '../../models';
 import ComponentePublicidad from './components/ComponentePublicidad';
 import Indicador from './components/Indicador';
 
@@ -24,26 +30,26 @@ export default ({ navigation }) => {
 
     const flatList = useRef(null)
 
-    const [actualIdx, setActualIdx] = useState(null);
+    const [actualIdx, setActualIdx] = useState(0);
     const [aventuras, setAventuras] = useState([]);
-    const [loadingAventuras, setLoadingAventuras] = useState(true);
 
-    const lenghtPublicidad = 3
+    const [publicidad, setPublicidad] = useState(null);
+
 
     let timer
 
     function empezarTimer(duration) {
+
         if (actualIdx === null) {
-            setActualIdx(1)
+            setActualIdx(0)
             return
         }
-
 
         timer = setTimeout(() => {
             flatList?.current?.scrollToIndex({
                 index: actualIdx
             })
-            setActualIdx(actualIdx < (lenghtPublicidad - 1) ? actualIdx + 1 : 0)
+            setActualIdx(actualIdx < (publicidad.length - 1) ? actualIdx + 1 : 0)
         }, duration);
     }
 
@@ -58,6 +64,8 @@ export default ({ navigation }) => {
 
 
     useEffect(() => {
+        fetchPublicidad()
+
         // Pedir 5 aventuras autorizadas
         listAventurasAutorizadas(5)
             .then(r => {
@@ -66,6 +74,13 @@ export default ({ navigation }) => {
 
     }, []);
 
+    const fetchPublicidad = async () => {
+        const publicidades = await DataStore.query(Publicidad)
+
+        console.log(publicidades)
+        setPublicidad(publicidades)
+    }
+
 
 
     const scrollX = useRef(new Animated.Value(0)).current
@@ -73,6 +88,30 @@ export default ({ navigation }) => {
     // calcular el promedio de dos precios
     const promedioPrecios = (inicial, final) => {
         return Math.round((inicial + final) / 2)
+    }
+
+    const handleNavigateAventura = (id) => {
+        navigation.navigate("DetalleAventura", { id })
+    }
+
+
+    const handleOpenAnuncio = (link) => {
+        if (!link) {
+            Alert.alert("Error", "No se pudo obtener el link del anuncio")
+            return
+        }
+
+
+        Alert.alert("Link externo", "Deseas salir de velpa para abrir el link", [
+            {
+                text: "CANCEL",
+                style: "cancel"
+            },
+            {
+                text: "OK",
+                onPress: () => Linking.openURL(link)
+            },
+        ])
     }
 
 
@@ -95,54 +134,77 @@ export default ({ navigation }) => {
                 marginTop: 20,
                 alignItems: 'center',
             }}>
-                <Animated.FlatList
-                    pagingEnabled
-                    horizontal
-                    ref={flatList}
+                {
+                    !publicidad ?
+                        <View style={{
+                            height: height * 0.25
 
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(i, idx) => idx.toString()}
+                        }}>
+                            <Loading indicator />
 
-                    onTouchStart={() => {
-                        clearTimeout(timer)
-                        empezarTimer(10000)
-                    }}
+                        </View>
+                        :
+                        publicidad.length === 0 ? null :
+                            <>
+                                <Animated.FlatList
+                                    pagingEnabled
+                                    horizontal
+                                    ref={flatList}
 
-                    onScroll={
-                        Animated.event(
-                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                            { useNativeDriver: true }
-                        )}
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(i, idx) => idx.toString()}
 
+                                    onTouchStart={() => {
+                                        clearTimeout(timer)
+                                        empezarTimer(10000)
+                                    }}
 
-                    data={[require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"), require("../../../assets/IMG/ImageExample.png"), require("../../../assets/IMG/Montana.jpg")]}
-                    renderItem={({ item, index, }) => {
+                                    onScroll={
+                                        Animated.event(
+                                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                                            { useNativeDriver: true }
+                                        )}
 
-                        return <ComponentePublicidad
-                            imagenVideo={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
-                            imagenFondo={item}
-                            titulo={"Nevado de colima"}
-                            descripcion={"Descubre esta nueva aventura"}
-                            onPress={
-                                () => navigation.navigate("DetalleAventura")
-                            }
-                        />
-                    }}
-                />
-                <Indicador
-                    scrollX={scrollX}
-                    width={width - 40}
-                    data={[1, 2, 3]}
-                />
+                                    data={publicidad}
+                                    renderItem={({ item, index, }) => {
+
+                                        const { tipo } = item
+
+                                        return <ComponentePublicidad
+                                            item={item}
+                                            onPress={
+                                                tipo === TipoPublicidad.AVENTURA ?
+                                                    () => handleNavigateAventura(item.aventuraID) :
+
+                                                    tipo === TipoPublicidad.ANUNCIO ?
+                                                        () => handleOpenAnuncio(item.linkAnuncio) :
+
+                                                        // Actualizacion
+                                                        () => navigation.navigate("DetalleAventura", { id: item.aventuraID })
+                                            }
+                                        />
+                                    }}
+                                />
+                                <Indicador
+                                    scrollX={scrollX}
+                                    width={width - 40}
+                                    data={publicidad}
+                                />
+
+                                <View style={{
+                                    marginBottom: 20,
+                                }}>
+
+                                </View>
+                            </>
+                }
 
             </View>
 
             {/* $$$$$$$$$$*/}
             {/* Aventuras recomendadas*/}
             {/* $$$$$$$$$$*/}
-            <View style={{
-                marginTop: 20,
-            }}>
+            <View style={{ flex: 1, }}>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -173,7 +235,7 @@ export default ({ navigation }) => {
                     style={{
                         marginTop: 20,
                         flexDirection: 'row',
-                        marginBottom: 20,
+                        marginBottom: 10,
 
                     }}>
 
@@ -270,25 +332,25 @@ export default ({ navigation }) => {
                     }
 
                 </ScrollView>
-                <Pressable
-                    onPress={() => navigation.navigate("MisReservas")}
-                    style={{
-                        backgroundColor: moradoOscuro,
-                        padding: 10,
-                        borderRadius: 30,
-                        alignItems: 'center',
-                        width: '40%',
-                        marginTop: 7,
-                    }}
-                >
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            color: '#fff',
-                            fontSize: 16,
-                        }}>Mis aventuras</Text>
-                </Pressable>
             </View>
+            <Pressable
+                onPress={() => navigation.navigate("MisReservas")}
+                style={{
+                    backgroundColor: moradoOscuro,
+                    padding: 10,
+                    borderRadius: 30,
+                    alignItems: 'center',
+                    width: '40%',
+                    marginTop: 7,
+                }}
+            >
+                <Text
+                    numberOfLines={1}
+                    style={{
+                        color: '#fff',
+                        fontSize: 16,
+                    }}>Mis aventuras</Text>
+            </Pressable>
         </ScrollView >
     )
 }

@@ -62,33 +62,10 @@ export const onCreateAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Publicidad {
         items {
           id
           tipo
-          metadata
           titulo
           descripcion
           imagenFondo
@@ -198,33 +175,10 @@ export const onUpdateAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Publicidad {
         items {
           id
           tipo
-          metadata
           titulo
           descripcion
           imagenFondo
@@ -334,33 +288,10 @@ export const onDeleteAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Publicidad {
         items {
           id
           tipo
-          metadata
           titulo
           descripcion
           imagenFondo
@@ -427,28 +358,6 @@ export const onCreateReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -470,28 +379,6 @@ export const onUpdateReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -513,28 +400,6 @@ export const onDeleteReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -593,28 +458,6 @@ export const onCreateFecha = /* GraphQL */ `
           picture
           newMessages
           fechaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
@@ -691,28 +534,6 @@ export const onUpdateFecha = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -771,28 +592,6 @@ export const onDeleteFecha = /* GraphQL */ `
           picture
           newMessages
           fechaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
@@ -918,11 +717,11 @@ export const onCreateUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
-          metadata
           tipo
           titulo
           descripcion
           usuarioID
+          imagen
           owner
           reservaID
           fechaID
@@ -1083,11 +882,11 @@ export const onUpdateUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
-          metadata
           tipo
           titulo
           descripcion
           usuarioID
+          imagen
           owner
           reservaID
           fechaID
@@ -1248,11 +1047,11 @@ export const onDeleteUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
-          metadata
           tipo
           titulo
           descripcion
           usuarioID
+          imagen
           owner
           reservaID
           fechaID
@@ -1538,28 +1337,6 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Aventuras {
         items {
           id
@@ -1591,28 +1368,6 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Aventuras {
         items {
           id
@@ -1644,28 +1399,6 @@ export const onDeleteSolicitudGuia = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Aventuras {
         items {
           id
@@ -1688,11 +1421,11 @@ export const onCreateNotificacion = /* GraphQL */ `
   subscription OnCreateNotificacion($owner: String) {
     onCreateNotificacion(owner: $owner) {
       id
-      metadata
       tipo
       titulo
       descripcion
       usuarioID
+      imagen
       owner
       reservaID
       fechaID
@@ -1710,11 +1443,11 @@ export const onUpdateNotificacion = /* GraphQL */ `
   subscription OnUpdateNotificacion($owner: String) {
     onUpdateNotificacion(owner: $owner) {
       id
-      metadata
       tipo
       titulo
       descripcion
       usuarioID
+      imagen
       owner
       reservaID
       fechaID
@@ -1732,11 +1465,11 @@ export const onDeleteNotificacion = /* GraphQL */ `
   subscription OnDeleteNotificacion($owner: String) {
     onDeleteNotificacion(owner: $owner) {
       id
-      metadata
       tipo
       titulo
       descripcion
       usuarioID
+      imagen
       owner
       reservaID
       fechaID
@@ -1755,7 +1488,6 @@ export const onCreatePublicidad = /* GraphQL */ `
     onCreatePublicidad {
       id
       tipo
-      metadata
       titulo
       descripcion
       imagenFondo
@@ -1775,7 +1507,6 @@ export const onUpdatePublicidad = /* GraphQL */ `
     onUpdatePublicidad {
       id
       tipo
-      metadata
       titulo
       descripcion
       imagenFondo
@@ -1795,7 +1526,6 @@ export const onDeletePublicidad = /* GraphQL */ `
     onDeletePublicidad {
       id
       tipo
-      metadata
       titulo
       descripcion
       imagenFondo
@@ -1854,10 +1584,6 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -1882,10 +1608,6 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Aventuras {
           nextToken
           startedAt
@@ -1939,10 +1661,6 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -1967,10 +1685,6 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Aventuras {
           nextToken
           startedAt
@@ -2024,10 +1738,6 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -2052,10 +1762,6 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Aventuras {
           nextToken
           startedAt
@@ -2106,10 +1812,6 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         updatedAt
         owner
         Fechas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
           nextToken
           startedAt
         }
@@ -2228,10 +1930,6 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -2344,10 +2042,6 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         updatedAt
         owner
         Fechas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
           nextToken
           startedAt
         }

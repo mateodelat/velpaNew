@@ -18,6 +18,11 @@ export enum StatusSolicitud {
   RECHAZADA = "RECHAZADA"
 }
 
+export enum TipoUsuario {
+  AGENCIA = "AGENCIA",
+  GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
+}
+
 export enum TipoNotificacion {
   RESERVAENFECHA = "RESERVAENFECHA",
   RESERVACREADA = "RESERVACREADA",
@@ -25,11 +30,6 @@ export enum TipoNotificacion {
   SOLICITUDGUIA = "SOLICITUDGUIA",
   SOLICITUDAVENTURA = "SOLICITUDAVENTURA",
   ADMIN = "ADMIN"
-}
-
-export enum TipoUsuario {
-  AGENCIA = "AGENCIA",
-  GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
 }
 
 export enum TipoPublicidad {
@@ -61,10 +61,6 @@ type SolicitudGuiaMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type NotificacionMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
 type AventuraUsuarioMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -90,6 +86,10 @@ type ReservaMetaData = {
 }
 
 type FechaMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type NotificacionMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
@@ -123,7 +123,6 @@ export declare class Aventura {
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
   readonly Fechas?: (Fecha | null)[];
-  readonly Notificaciones?: (Notificacion | null)[];
   readonly Publicidad?: (Publicidad | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
@@ -147,29 +146,10 @@ export declare class SolicitudGuia {
   readonly evaluadorID?: string;
   readonly usuarioID?: string;
   readonly Aventuras?: (AventuraSolicitudGuia | null)[];
-  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<SolicitudGuia, SolicitudGuiaMetaData>);
   static copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia, SolicitudGuiaMetaData>) => MutableModel<SolicitudGuia, SolicitudGuiaMetaData> | void): SolicitudGuia;
-}
-
-export declare class Notificacion {
-  readonly id: string;
-  readonly metadata?: string;
-  readonly tipo: TipoNotificacion | keyof typeof TipoNotificacion;
-  readonly titulo: string;
-  readonly descripcion?: string;
-  readonly usuarioID: string;
-  readonly owner?: string;
-  readonly reservaID?: string;
-  readonly fechaID?: string;
-  readonly aventuraID?: string;
-  readonly solicitudGuiaID?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Notificacion, NotificacionMetaData>);
-  static copyOf(source: Notificacion, mutator: (draft: MutableModel<Notificacion, NotificacionMetaData>) => MutableModel<Notificacion, NotificacionMetaData> | void): Notificacion;
 }
 
 export declare class AventuraUsuario {
@@ -261,7 +241,6 @@ export declare class Reserva {
   readonly pagoID: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
-  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);
@@ -289,17 +268,33 @@ export declare class Fecha {
   readonly usuarioID: string;
   readonly Reservas?: (Reserva | null)[];
   readonly ChatRoom?: (ChatRoom | null)[];
-  readonly Notificaciones?: (Notificacion | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Fecha, FechaMetaData>);
   static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
 }
 
+export declare class Notificacion {
+  readonly id: string;
+  readonly tipo: TipoNotificacion | keyof typeof TipoNotificacion;
+  readonly titulo: string;
+  readonly descripcion?: string;
+  readonly usuarioID: string;
+  readonly imagen?: string;
+  readonly owner?: string;
+  readonly reservaID?: string;
+  readonly fechaID?: string;
+  readonly aventuraID?: string;
+  readonly solicitudGuiaID?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
+  constructor(init: ModelInit<Notificacion, NotificacionMetaData>);
+  static copyOf(source: Notificacion, mutator: (draft: MutableModel<Notificacion, NotificacionMetaData>) => MutableModel<Notificacion, NotificacionMetaData> | void): Notificacion;
+}
+
 export declare class Publicidad {
   readonly id: string;
   readonly tipo: TipoPublicidad | keyof typeof TipoPublicidad;
-  readonly metadata?: string;
   readonly titulo: string;
   readonly descripcion?: string;
   readonly imagenFondo: string;

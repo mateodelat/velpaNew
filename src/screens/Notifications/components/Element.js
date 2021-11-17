@@ -12,7 +12,7 @@ export default ({ titulo, descripcion, tiempo, onPress, image }) => {
             {/* Imagen de notificacion */}
             <Image
                 style={styles.image}
-                source={image}
+                source={{ uri: image }}
             />
 
             {/* Textos */}

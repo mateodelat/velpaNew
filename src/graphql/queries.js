@@ -62,33 +62,10 @@ export const getAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Publicidad {
         items {
           id
           tipo
-          metadata
           titulo
           descripcion
           imagenFondo
@@ -177,10 +154,6 @@ export const listAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -245,10 +218,6 @@ export const syncAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Publicidad {
           nextToken
           startedAt
@@ -285,28 +254,6 @@ export const getReserva = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -333,10 +280,6 @@ export const listReservas = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
       }
       nextToken
       startedAt
@@ -372,10 +315,6 @@ export const syncReservas = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
       }
       nextToken
       startedAt
@@ -446,28 +385,6 @@ export const getFecha = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -508,10 +425,6 @@ export const listFechas = /* GraphQL */ `
         }
         owner
         ChatRoom {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
           nextToken
           startedAt
         }
@@ -564,10 +477,6 @@ export const syncFechas = /* GraphQL */ `
         }
         owner
         ChatRoom {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
           nextToken
           startedAt
         }
@@ -690,11 +599,11 @@ export const getUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
-          metadata
           tipo
           titulo
           descripcion
           usuarioID
+          imagen
           owner
           reservaID
           fechaID
@@ -1116,28 +1025,6 @@ export const getSolicitudGuia = /* GraphQL */ `
       createdAt
       updatedAt
       owner
-      Notificaciones {
-        items {
-          id
-          metadata
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          owner
-          reservaID
-          fechaID
-          aventuraID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Aventuras {
         items {
           id
@@ -1174,10 +1061,6 @@ export const listSolicitudGuias = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Aventuras {
           nextToken
           startedAt
@@ -1212,10 +1095,6 @@ export const syncSolicitudGuias = /* GraphQL */ `
         createdAt
         updatedAt
         owner
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Aventuras {
           nextToken
           startedAt
@@ -1230,11 +1109,11 @@ export const getNotificacion = /* GraphQL */ `
   query GetNotificacion($id: ID!) {
     getNotificacion(id: $id) {
       id
-      metadata
       tipo
       titulo
       descripcion
       usuarioID
+      imagen
       owner
       reservaID
       fechaID
@@ -1257,11 +1136,11 @@ export const listNotificacions = /* GraphQL */ `
     listNotificacions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        metadata
         tipo
         titulo
         descripcion
         usuarioID
+        imagen
         owner
         reservaID
         fechaID
@@ -1293,11 +1172,11 @@ export const syncNotificacions = /* GraphQL */ `
     ) {
       items {
         id
-        metadata
         tipo
         titulo
         descripcion
         usuarioID
+        imagen
         owner
         reservaID
         fechaID
@@ -1319,7 +1198,6 @@ export const getPublicidad = /* GraphQL */ `
     getPublicidad(id: $id) {
       id
       tipo
-      metadata
       titulo
       descripcion
       imagenFondo
@@ -1344,7 +1222,6 @@ export const listPublicidads = /* GraphQL */ `
       items {
         id
         tipo
-        metadata
         titulo
         descripcion
         imagenFondo
@@ -1378,7 +1255,6 @@ export const syncPublicidads = /* GraphQL */ `
       items {
         id
         tipo
-        metadata
         titulo
         descripcion
         imagenFondo

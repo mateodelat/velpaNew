@@ -10,12 +10,15 @@ const { height, width } = Dimensions.get("window")
 
 
 export default ({
-    imagenFondo,
-    imagenVideo,
-    titulo,
-    descripcion,
-    onPress
+    onPress,
+    item
 }) => {
+    const {
+        imagenFondo,
+        videoUrl,
+        titulo,
+        descripcion,
+    } = item
 
     return (
         <View
@@ -23,9 +26,12 @@ export default ({
         >
 
             <Image
-                source={imagenFondo}
+                source={{ uri: imagenFondo }}
                 style={styles.imagenFondo} />
-            <View style={{ flexDirection: 'row', }}>
+
+            {/* Filtro negro */}
+            <View style={styles.filtro} />
+            <View style={{ flexDirection: 'row', padding: 15, }}>
 
                 <View style={{
                     flex: 2,
@@ -49,7 +55,7 @@ export default ({
                     </Pressable>
 
                 </View>
-                <Pressable
+                {videoUrl && <Pressable
                     onPress={() => Alert.alert("Reproducir video en pantalla completa")}
                     style={{
                         flex: 1,
@@ -61,14 +67,14 @@ export default ({
                             height: 90,
                             borderRadius: 7,
                         }}
-                        source={imagenVideo}
+                        source={{ uri: videoUrl }}
                     />
                     <FontAwesome5 style={{
                         position: 'absolute',
                         opacity: 0.55
                     }} name="play" size={20} color="white" />
 
-                </Pressable>
+                </Pressable>}
             </View>
         </View>)
 }
@@ -80,7 +86,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: height * 0.25,
         width: width - 40,
-        padding: 15,
+        overflow: 'hidden',
+        borderRadius: 10,
     },
 
     imagenFondo: {
@@ -88,7 +95,6 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         height: height * 0.25,
         width: width - 40,
-        borderRadius: 10,
     },
 
 
@@ -110,5 +116,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '50%',
         marginTop: 7,
+    },
+
+    filtro: {
+        backgroundColor: '#00000033',
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
     }
 })

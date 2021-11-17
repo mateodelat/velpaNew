@@ -1,8 +1,12 @@
+import { DataStore, Predicates } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
-import React, { useState } from 'react'
-import { Alert, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { colorFondo, container, wait } from '../../../assets/constants'
+import { Loading } from '../../components/Loading'
+import { Notificacion } from '../../models'
 import Element from './components/Element'
+import moment from "moment";
 
 
 
@@ -14,76 +18,86 @@ export default () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        wait(1000).then(() => setRefreshing(false));
+        fetchNotificaciones()
+        wait(300).then(() => setRefreshing(false));
     }, []);
 
 
-    const handleIrAReserva = () => {
-        Alert.alert("Ir a la reservacion",)
-        navigation.navigate("MisReservas")
+    const handleIrAReserva = (idReserva) => {
+        console.log({
+            idReserva
+        })
+
+        Alert.alert("Ir a la reservacion")
+        // navigation.navigate("MisReservas")
+    }
+
+    const handleIrAReservaEnFecha = (idFecha, idReserva) => {
+        console.log({
+            idFecha,
+            idReserva
+        })
+        Alert.alert("Ir a la fecha con reservacion seleccionada",)
+        // navigation.navigate("MisReservas")
     }
 
     const handleVerTutorial = () => {
         Alert.alert("Mostrar tutorial velpa",)
 
     }
+    const [notificaciones, setNotificaciones] = useState(null);
+
+    useEffect(() => {
+        fetchNotificaciones()
+    }, []);
+
+    const fetchNotificaciones = async () => {
+        const notificaciones = await DataStore.query(Notificacion, Predicates.ALL, {
+            sort: e => e.createdAt("DESCENDING")
+        })
+        setNotificaciones(notificaciones)
+    }
+    if (!notificaciones) {
+        return <Loading indicator />
+    }
+
+    if (notificaciones.length === 0) {
+        return <View
+            style={styles.container}
+        >
+            <Text style={styles.noHayTxt}>No hay notificaciones</Text>
+        </View>
+    }
+
     return (
-        <ScrollView
+        <FlatList
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
+                />}
+
+            style={container}
+            data={notificaciones}
+            renderItem={({ item, index }) => {
+                const { tipo } = item
+                return <Element
+                    image={item.imagen}
+                    titulo={item.titulo}
+                    descripcion={item.descripcion}
+                    tiempo={moment(item.createdAt).from(moment())}
+
+                    onPress={tipo === "RESERVAENFECHA" ?
+                        () => handleIrAReservaEnFecha(item.fechaID, item.reservaID) :
+                        tipo === "RESERVACREADA" ?
+                            () => handleIrAReserva(item.reservaID) :
+                            () => handleIrAReserva(item.reservaID)
+
+                    }
                 />
-            }
 
-            style={{ ...container, borderRightWidth: .25, }}>
-
-
-            <Element
-                image={require("../../../assets/IMG/Montana.jpg")}
-                titulo={"Nueva reserva"}
-                descripcion={"Tienes una nueva reservacion en el Nevado de Colima el 30 de ago"}
-                tiempo={"Hace 1 seg"}
-
-                onPress={handleIrAReserva}
-            />
-
-            <Element
-                image={require("../../../assets/IMG/ImageExample.png")}
-                titulo={"Reservacion exitosa"}
-                descripcion={"Se ha creado una reservacion exitosamente en el nevado de colima"}
-                tiempo={"hace 30 min"}
-
-                onPress={handleIrAReserva}
-            />
-
-            <Element
-                image={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
-                titulo={"Falta muy poco!!"}
-                descripcion={"Tu reserva para el nevado de colima es en 1 dia, ve donde es el punto de reunion"}
-                tiempo={"hace 1 hora"}
-
-                onPress={handleIrAReserva}
-            />
-            <Element
-                image={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
-                titulo={"¿Listo para la aventura?"}
-                descripcion={"Tu reserva de el nevado de colima es en 1 semana, has click aqui para ver que llevar"}
-                tiempo={"hace 6 dias"}
-
-                onPress={handleIrAReserva}
-            />
-
-
-            <Element
-                image={require("../../../assets/VELPA.png")}
-                titulo={"Velpa Adventures"}
-                descripcion={"Gracias por registrarte en velpa, ve un breve tutorial de como usar la app"}
-                tiempo={"hace 1 mes"}
-
-                onPress={handleVerTutorial}
-            />
-        </ScrollView>
+            }}
+        />
     )
 }
 
@@ -92,5 +106,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colorFondo,
         padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRightWidth: .25,
+    },
+
+    noHayTxt: {
+        fontSize: 18,
+        fontWeight: 'bold',
     }
 })

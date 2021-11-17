@@ -11,7 +11,7 @@ import {
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, formatDateShort, getUserSub, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
+import { colorFondo, formatDateShort, formatDia, getUserSub, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
 import {
@@ -24,7 +24,7 @@ import API from '@aws-amplify/api';
 import ElementoPersonas from './components/ElementoPersonas';
 import { createPaymentIntent } from '../../graphql/mutations';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoom, ChatRoomUsuario, Reserva } from '../../models';
+import { ChatRoom, ChatRoomUsuario, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
 
@@ -65,6 +65,9 @@ export default function ({ route, navigation }) {
     // UI del boton
     const [buttonLoading, setButtonLoading] = useState(false);
 
+    // Fecha
+    const [fecha, setFecha] = useState(null);
+
 
     const personasTotales = adultos + ninos + tercera
 
@@ -73,6 +76,7 @@ export default function ({ route, navigation }) {
 
 
     useEffect(() => {
+        fetchFecha()
         // Empezar a cargar el client secret primero
         fetchPaymentIntent()
             .catch(e => {
@@ -82,6 +86,10 @@ export default function ({ route, navigation }) {
             })
     }, []);
 
+    const fetchFecha = async () => {
+        setFecha(await DataStore.query(Fecha, fechaID))
+
+    }
 
     useEffect(() => {
         // Una vez se obtiene preparar el modal de pago
@@ -203,28 +211,27 @@ export default function ({ route, navigation }) {
         }
     }
 
-    const isFechaFull = async () => {
-        const fecha = await DataStore.query(Fecha, fechaID)
+    const isFechaFull = async (fecha) => {
         const reservas = await DataStore.query(Reserva, r => r.fechaID("eq", fechaID))
         let personasReservadas = 0
 
         reservas.map(res => {
-            const personas = res.tercera + res.total + res.ninos
+            const personas = res.tercera + res.adultos + res.ninos
             personasReservadas += personas
         })
 
-        return (personasReservadas + personasTotales > fecha.personasTotales)
+        return (personasReservadas + personasTotales > fecha?.personasTotales)
     }
 
     const handleConfirm = async () => {
         // Revisar que no se haya llenado la fecha
-        if (await isFechaFull()) {
+        if (await isFechaFull(fecha)) {
             Alert.alert("Atencion",
                 "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
                 [
                     {
                         text: "Ver",
-                        onPress: verOpciones
+                        // onPress: verOpciones
                     },
                 ],
                 { cancelable: false }
@@ -282,7 +289,43 @@ export default function ({ route, navigation }) {
                 }
 
                 // Crear la reservacion en DataStore
-                await DataStore.save(new Reserva(datosReserva))
+                const reserva = await DataStore.save(new Reserva(datosReserva))
+
+
+                //////////////////////////////////////////////////////////////////////////////
+                //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
+                //////////////////////////////////////////////////////////////////////////////
+
+                // Notificacion a el guia
+                await DataStore.save(new Notificacion({
+                    tipo: TipoNotificacion.RESERVAENFECHA,
+
+                    titulo: "Nueva reserva",
+                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+
+                    // Autorizar al guia a ver la misma
+                    owner: fecha?.owner,
+                    usuarioID: fecha?.usuarioID,
+                    imagen: imagenFondo,
+
+                    fechaID: fecha?.id,
+                    reservaID: reserva.id
+                }))
+
+                // Notificacion a el usuario
+                await DataStore.save(new Notificacion({
+                    tipo: TipoNotificacion.RESERVACREADA,
+
+                    titulo: "Reserva exitosa!!",
+                    descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura,
+                    imagen: imagenFondo,
+
+                    usuarioID: fecha?.usuarioID,
+
+                    fechaID: fecha?.id,
+                    reservaID: reserva.id
+                }))
+
 
                 navigation.navigate("ExitoScreen", {})
             }

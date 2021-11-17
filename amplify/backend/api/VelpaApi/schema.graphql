@@ -31,8 +31,6 @@ type Aventura @model @auth(rules: [
   SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
   UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
   Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
-  Notificaciones: [Notificacion] @connection(keyName: "byAventura", fields: ["id"])
-
   Publicidad: [Publicidad] @connection(keyName: "byAventura", fields: ["id"])
 
 }
@@ -56,9 +54,6 @@ type Reserva @model
 
   fechaID: ID
   usuarioID: ID
-
-  Notificaciones:[Notificacion] @connection(keyName: "byReserva", fields: ["id"])
-
 }
 
 type Fecha @model 
@@ -92,8 +87,6 @@ type Fecha @model
 
   Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
   ChatRoom: [ChatRoom] @connection(keyName: "byFecha", fields: ["id"])
-
-  Notificaciones:[Notificacion] @connection(keyName: "byFecha", fields: ["id"])
 }
 
 type Usuario @model 
@@ -185,27 +178,22 @@ type SolicitudGuia @model
   evaluadorID: ID
   usuarioID:ID
   Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
-  Notificaciones: [Notificacion] @connection(keyName: "bySolicitudGuia", fields: ["id"])
 }
 
 type Notificacion @model
  @key(name: "byUsuario", fields: ["usuarioID"])
- @key(name: "byReserva", fields: ["reservaID"]) 
- @key(name: "byFecha", fields: ["fechaID"]) 
- @key(name: "byAventura", fields: ["aventuraID"]) 
- @key(name: "bySolicitudGuia", fields: ["solicitudGuiaID"]) 
-
  @auth(rules: [
    {allow: owner, ownerField: "owner"},
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
 
   id: ID!
-  metadata: String
   tipo: TipoNotificacion!
   titulo:String!
   descripcion:String
   usuarioID: ID!
+
+  imagen:String
 
   owner:String
 
@@ -226,7 +214,6 @@ type Publicidad @model
   id: ID!
   tipo: TipoPublicidad!
 
-  metadata: String
   titulo:String!
   descripcion:String
   imagenFondo:String!
