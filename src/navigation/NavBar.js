@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, moradoOscuro } from '../../assets/constants';
+import { colorFondo, getUserSub, moradoOscuro, userEsGuia } from '../../assets/constants';
 import Inicio from '../screens/Inicio';
 import HeaderNav from './components/HeaderNav';
 
@@ -19,6 +19,8 @@ import ComponentePrueba from '../components/ComponentePrueba';
 import ModalAgregar from './components/ModalAgregar';
 import { useNavigation } from '@react-navigation/native';
 import MapaAventuras from '../screens/MapaAventuras';
+import { DataStore } from '@aws-amplify/datastore';
+import { Notificacion } from '../models';
 
 
 const Tab = createBottomTabNavigator()
@@ -115,18 +117,40 @@ const { width, height } = Dimensions.get("window")
 export default () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [esGuia, setEsGuia] = useState(null);
+	const [newNotificaciones, setNewNotificaciones] = useState(false);
 
 	useEffect(() => {
+		let subscripcion
 		verificarGuia()
+		verNuevasNotificaciones().
+			then(r => {
+				const sub = r
+				subscripcion = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+					.subscribe(msg => {
+						setNewNotificaciones(true)
+					})
+			})
 
+		return () => subscripcion?.unsubscribe()
 
 	}, []);
 
-	function verificarGuia() {
-		setTimeout(() => {
-			setEsGuia(true)
-		}, 500);
+	async function verificarGuia() {
+		const guia = await userEsGuia()
+		setEsGuia(guia)
 
+	}
+
+	async function verNuevasNotificaciones() {
+		const sub = await getUserSub()
+
+		// Obtener todas las notificaciones no vistas
+		const unread = await DataStore.query(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+
+		if (unread.length !== 0) {
+			setNewNotificaciones(true)
+		}
+		return sub
 	}
 
 	return (
@@ -212,10 +236,20 @@ export default () => {
 				<Tab.Screen
 					name="Notificaciones"
 					component={NotificationsTab}
-					options={{
-						tabBarIcon: ({ color, }) => {
+					options={({ navigation }) => ({
+						tabBarIcon: ({ color, focused }) => {
+
+							// Si se selecciona se quita la bolita roja
+							const handlePress = () => {
+								navigation.navigate("Notificaciones")
+								setNewNotificaciones(false)
+							}
+
+
 							return (
-								<View style={{ alignItems: 'center', justifyContent: 'center', }}>
+								<Pressable
+									onPress={handlePress}
+									style={{ alignItems: 'center', justifyContent: 'center', }}>
 
 									<FontAwesome5 name="bell" size={tamañoLogo} color={color} />
 									<Text
@@ -227,7 +261,7 @@ export default () => {
 										}}>Notificaciones</Text>
 
 									{/* Indicador mensajes nuevos */}
-									<View style={{
+									{newNotificaciones && <View style={{
 										height: 10,
 										width: 10,
 										borderRadius: 10,
@@ -235,11 +269,11 @@ export default () => {
 										position: 'absolute',
 										top: 3,
 										right: 24,
-									}} />
+									}} />}
 
-								</View>)
+								</Pressable>)
 						},
-					}}
+					})}
 				/>
 
 				<Tab.Screen

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, formatDateShort, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getBlob, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
 
 
 import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -12,10 +12,13 @@ import ModalRuta from '../FechasAventura/components/ModalRuta';
 import QueLlevar from './components/QueLlevar';
 import Incluido from './components/Incluido';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoomUsuario, Fecha } from '../../models';
+import { ChatRoomUsuario, Fecha, Notificacion, TipoNotificacion } from '../../models';
 
 import { ChatRoom } from '../../models';
 import { Usuario } from '../../models';
+
+import uuid from 'react-native-uuid';
+import Storage from '@aws-amplify/storage';
 
 const { height } = Dimensions.get("screen")
 
@@ -131,13 +134,6 @@ export default function ({ navigation, route }) {
     }
 
     const handleContinuar = async () => {
-        // Subir la imagen de la ruta a S3
-        // Subir todos los datos a la database 
-
-
-        setButtonLoading(true)
-        const sub = await getUserSub()
-
         const {
             personasTotales,
             fechaInicial,
@@ -156,6 +152,24 @@ export default function ({ navigation, route }) {
             comision,
             imagenFondo
         } = route.params
+
+
+
+        // setButtonLoading(true)
+        const sub = await getUserSub()
+        let imagenRutaKey
+
+        if (imagenRuta) {
+            // Subir la imagen de la ruta a S3
+            const key = "fecha-imagenRuta " + uuid.v4() + ".jpg"
+            const blobImagenRuta = await getBlob(imagenRuta)
+
+
+            await Storage.put(key, blobImagenRuta).then(r => {
+                imagenRutaKey = r.key
+            })
+
+        }
 
         const fecha = {
             personasTotales,
@@ -179,10 +193,11 @@ export default function ({ navigation, route }) {
 
             titulo,
             descripcion,
-            imagenRuta,
+            imagenRuta: imagenRutaKey ? imagenRutaKey : null,
         }
 
 
+        // Subir todos los datos a la database 
         DataStore.save(
             new Fecha(fecha)
         )
@@ -204,6 +219,18 @@ export default function ({ navigation, route }) {
                     usuario
                 }))
 
+                // Crear notificacion
+                DataStore.save(new Notificacion({
+                    tipo: "FECHACREADA",
+
+                    titulo: "Fecha creada",
+                    descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
+
+                    usuarioID: sub,
+                    imagen: imagenFondo,
+
+                    fechaID: fecha.id,
+                }))
                 // Navegar a exitoso
                 setButtonLoading(false)
                 navigation.navigate("ExitoScreen", {

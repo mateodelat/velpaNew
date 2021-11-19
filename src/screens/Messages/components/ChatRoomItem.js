@@ -64,12 +64,12 @@ export default ({
                 <Text
                     numberOfLines={1}
                     style={styles.titulo}>{name}</Text>
-                {lastMessage && <Text
+                {!!lastMessage?.content && <Text
                     numberOfLines={1}
                     style={styles.descripcion}>{lastMessage.content}</Text>}
             </View>
 
-            {lastMessage && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{moment(lastMessage?.createdAt).from(moment())}</Text>}
+            {!!lastMessage?.createdAt && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{moment(lastMessage?.createdAt).from(moment())}</Text>}
         </Pressable>
     )
 }

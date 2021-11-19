@@ -10,7 +10,7 @@ const EstadoAventura = {
 
 const Categorias = {
   "APLINISMO": "APLINISMO",
-  "MTB": "MTB",
+  "CICLISMO": "CICLISMO",
   "OTROS": "OTROS"
 };
 
@@ -31,7 +31,9 @@ const TipoNotificacion = {
   "RECORDATORIOFECHA": "RECORDATORIOFECHA",
   "SOLICITUDGUIA": "SOLICITUDGUIA",
   "SOLICITUDAVENTURA": "SOLICITUDAVENTURA",
-  "ADMIN": "ADMIN"
+  "ADMIN": "ADMIN",
+  "BIENVENIDA": "BIENVENIDA",
+  "FECHACREADA": "FECHACREADA"
 };
 
 const TipoPublicidad = {

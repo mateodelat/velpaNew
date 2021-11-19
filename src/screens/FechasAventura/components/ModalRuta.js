@@ -72,7 +72,7 @@ export default ({
                     <MaterialIcons name="add-a-photo" size={40} color="black" />
                     <Text style={styles.agregarTxt}>Agregar imagen de ruta</Text>
                 </Pressable>
-                    : imagenRuta && modify ? <Pressable
+                    : !!imagenRuta && modify ? <Pressable
                         onPress={handleAddImg}
                         style={styles.body}>
                         <Image

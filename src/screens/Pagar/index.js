@@ -320,7 +320,7 @@ export default function ({ route, navigation }) {
                     descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura,
                     imagen: imagenFondo,
 
-                    usuarioID: fecha?.usuarioID,
+                    usuarioID: sub,
 
                     fechaID: fecha?.id,
                     reservaID: reserva.id

@@ -31,8 +31,6 @@ type Aventura @model @auth(rules: [
   SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
   UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
   Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
-  Publicidad: [Publicidad] @connection(keyName: "byAventura", fields: ["id"])
-
 }
 
 type Reserva @model 
@@ -99,6 +97,7 @@ type Usuario @model
   {
   id: ID!
   tipo: TipoUsuario
+  guia:Boolean
 
   nombre: String
   apellido: String
@@ -112,7 +111,7 @@ type Usuario @model
   INE: [String]
   licencia: [String]
   comentariosAdicionales: String
-  telefono: AWSPhone
+  telefono: String
   capacidadMaxima: Int
   tarjetaCirculacion: String
   certificaciones: [String]
@@ -197,6 +196,8 @@ type Notificacion @model
 
   owner:String
 
+  leido:Boolean
+
   reservaID: ID
   fechaID: ID
   aventuraID: ID
@@ -205,9 +206,8 @@ type Notificacion @model
 
 
 type Publicidad @model
- @key(name: "byAventura", fields: ["aventuraID"])
  @auth(rules: [
-   {allow: public, operations: [read]} , 
+   {allow: private, operations: [read]} , 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
   ]) {
 
@@ -241,6 +241,8 @@ enum TipoNotificacion{
   SOLICITUDAVENTURA
 
   ADMIN
+  BIENVENIDA
+  FECHACREADA
 }
 
 enum TipoPublicidad {
@@ -251,7 +253,7 @@ enum TipoPublicidad {
 
 enum Categorias {
   APLINISMO
-  MTB
+  CICLISMO
   OTROS
 }
 

@@ -8,7 +8,7 @@ export enum EstadoAventura {
 
 export enum Categorias {
   APLINISMO = "APLINISMO",
-  MTB = "MTB",
+  CICLISMO = "CICLISMO",
   OTROS = "OTROS"
 }
 
@@ -29,7 +29,9 @@ export enum TipoNotificacion {
   RECORDATORIOFECHA = "RECORDATORIOFECHA",
   SOLICITUDGUIA = "SOLICITUDGUIA",
   SOLICITUDAVENTURA = "SOLICITUDAVENTURA",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
+  BIENVENIDA = "BIENVENIDA",
+  FECHACREADA = "FECHACREADA"
 }
 
 export enum TipoPublicidad {
@@ -123,7 +125,6 @@ export declare class Aventura {
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
   readonly Fechas?: (Fecha | null)[];
-  readonly Publicidad?: (Publicidad | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Aventura, AventuraMetaData>);
@@ -165,6 +166,7 @@ export declare class AventuraUsuario {
 export declare class Usuario {
   readonly id: string;
   readonly tipo?: TipoUsuario | keyof typeof TipoUsuario;
+  readonly guia?: boolean;
   readonly nombre?: string;
   readonly apellido?: string;
   readonly foto?: string;
@@ -282,6 +284,7 @@ export declare class Notificacion {
   readonly usuarioID: string;
   readonly imagen?: string;
   readonly owner?: string;
+  readonly leido?: boolean;
   readonly reservaID?: string;
   readonly fechaID?: string;
   readonly aventuraID?: string;

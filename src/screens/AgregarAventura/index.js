@@ -21,37 +21,42 @@ import Carrousel from './components/Carrousel';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 
 
 import Boton from '../../components/Boton';
 import { colorFondo, moradoClaro, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
-import dificultad from '../../../assets/dificultad';
+
+import uuid from 'react-native-uuid';
+import QueLlevar from './components/QueLlevar';
+import { Categorias } from '../../models';
+
 
 const { height } = Dimensions.get("screen")
+const colorInput = "#f4f6f6"
 
 export default ({ navigation }) => {
-    //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
-
-
     const scrollX = useRef(new Animated.Value(0)).current
-    const scrollY = useRef(new Animated.Value(0)).current
 
 
     let { width, height } = Dimensions.get("screen")
     height = height * 0.35
-
+    const listCategorias = Object.values(Categorias)
 
     // Variables del visor imagenes
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState([]);
+
+    const [categoria, setCategoria] = useState(Categorias.APLINISMO);
+    const [showCategorias, setShowCategorias] = useState(false);
+
     const [aventura, setAventura] = useState({
         imagenDetalle: [],
+        imagenFondoIdx: null,
+        id: uuid.v4()
     });
-
-
 
     const [initialImageIdx, setInitialImageIdx] = useState(0);
     const [dificultad, setDificultad] = useState(3);
@@ -61,26 +66,16 @@ export default ({ navigation }) => {
     const [errorPrecioMin, setErrorprecioMin] = useState(false);
     const [errorPrecioMax, setErrorprecioMax] = useState(false);
 
-    const [errorDistancia, setErrordistancia] = useState(false);
-    const [errorAltitud, setErroraltitud] = useState(false);
-    const [errorAscenso, setErrorascenso] = useState(false);
 
-    const [errorDescripcion, setErrordescripcion] = useState(false);
+    const handleShowCategoria = () => {
+        setShowCategorias(!showCategorias)
+    }
 
-    const [buttonLoading, setButtonLoading] = useState(false);
+    const handleSelectCategoria = (index) => {
+        setCategoria(listCategorias[index])
+        setShowCategorias(false)
+    }
 
-    // Variables del mapa
-    const [region, setRegion] = useState({
-        latitude: 21.76227198730249,
-        latitudeDelta: 32.71611359157346,
-        longitude: -104.03593288734555,
-        longitudeDelta: 60.73143247514963,
-    });
-
-    // Checar si la ubicacion esta activada
-    useEffect(() => {
-        verificarUbicacion()
-    }, []);
 
     function handleContinuar() {
         const precioMin = isNaN(parseFloat(aventura.precioMin, 10)) ? null : parseFloat(aventura.precioMin, 10)
@@ -90,18 +85,37 @@ export default ({ navigation }) => {
         const altitud = isNaN(parseFloat(aventura.altitud, 10)) ? null : parseFloat(aventura.altitud, 10)
         const ascenso = isNaN(parseFloat(aventura.ascenso, 10)) ? null : parseFloat(aventura.ascenso, 10)
 
+        // Verificacion de index de imagen fondo
+        if (aventura.imagenFondoIdx === null || aventura.imagenFondoIdx >= aventura.imagenDetalle.length) {
+            Alert.alert("Error", "Selecciona una imagen principal para la aventura")
+            return
+        }
+
+
+        const imagenFondo = aventura.imagenDetalle[aventura.imagenFondoIdx].uri
+
+        // Obtener la key de cada imagen
+        const imagenDetalle = aventura.imagenDetalle.map(e => {
+            return e.key
+        })
 
         // Verificaciones
         const aventuraAEnviar = {
             ...aventura,
+            imagenDetalle,
             precioMax,
             precioMin,
-            distancia,
-            altitud,
-            ascenso,
+
+            // Parametros que dependen de la categoria para enviarse
+            distancia: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? distancia : null,
+            altitud: (categoria === Categorias.APLINISMO) ? altitud : null,
+            ascenso: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? ascenso : null,
+
+            categoria,
 
             dificultad,
-            region
+
+            imagenFondo
         }
 
         // Existencia de parametros
@@ -111,7 +125,7 @@ export default ({ navigation }) => {
             return
         }
 
-        if (aventura.imagenDetalle.length === 0) {
+        if (aventura.imagenDetalle.length === 0 || (aventura.imagenDetalle.length === 1 && aventura.imagenDetalle[0].video)) {
             Alert.alert("Error", "Agrega minimo una imagen de la aventura")
             return
         }
@@ -129,16 +143,7 @@ export default ({ navigation }) => {
             return
         }
 
-
-        setButtonLoading(true)
-
-        setTimeout(() => {
-            setButtonLoading(false)
-            navigation.navigate("ExitoScreen", {
-                txtExito: "Solicitud enviada con exito, espera nuestra respuesta!!",
-            })
-
-        }, 1000);
+        navigation.navigate("AgregarAventura2", aventuraAEnviar)
         console.log(aventuraAEnviar)
     }
 
@@ -146,25 +151,13 @@ export default ({ navigation }) => {
         setDificultad(index)
     }
 
-    const handleRegionMap = (e) => {
-        const { latitude, longitude } = e
-
-        console.log(e)
-
-        setRegion(e)
-
-    }
 
     return (
         <View style={{ flex: 1, }}>
 
-            <Animated.ScrollView
+            <ScrollView
+                onScroll={() => setShowCategorias(false)}
                 showsVerticalScrollIndicator={false}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                    { useNativeDriver: false }
-                )}
-
                 style={styles.container}>
                 <Carrousel
                     aventura={aventura}
@@ -181,33 +174,17 @@ export default ({ navigation }) => {
 
                     scrollX={scrollX}
                 />
-                {/* <Pressable
-                onPress={() => navigation.pop()}
-                style={{
-                    position: 'absolute',
-                    left: 10,
-                    top: 10,
-                    padding: 4,
-                    backgroundColor: '#fff',
-                    borderRadius: 20,
-                }}>
-                <MaterialIcons
-                    name={"keyboard-arrow-left"}
-                    size={35}
-                    color={moradoOscuro}
-                />
-
-            </Pressable> */}
-
 
                 <View style={styles.bodyContainer}>
 
                     {/* Primer grupo */}
                     <View>
 
-                        <View style={styles.row}>
+                        <View style={{
+                            ...styles.row,
+                        }}>
                             {/* Titulo */}
-                            <View style={{ flex: 1, marginRight: 20, }}>
+                            <View style={{ flex: 1, }}>
                                 <Text style={styles.captionTxt}>Titulo*</Text>
 
                                 <TextInput
@@ -227,15 +204,23 @@ export default ({ navigation }) => {
                                     style={{
                                         ...styles.textInput,
                                         borderColor: errorTitulo ? "red" : "transparent",
+                                        marginRight: 10,
                                     }}
                                 />
                             </View>
 
 
-                            <View style={{ width: 160, }}>
-                                <Text style={styles.captionTxt}>Rango precio /persona</Text>
+                            <View style={{ flex: 1, }}>
+                                <Text style={{
+                                    ...styles.captionTxt,
 
-                                <View style={styles.row}>
+                                    textAlign: 'left',
+                                }}>Rango precio /persona</Text>
+
+                                <View style={{
+                                    ...styles.row,
+                                    marginLeft: 10
+                                }}>
                                     <Text style={styles.precioIndicadores}>$ </Text>
 
                                     {/* PrecioMin */}
@@ -286,26 +271,106 @@ export default ({ navigation }) => {
                             </View>
                         </View>
 
-                        {/* Dificultad */}
-                        <View style={styles.dificultad}>
-                            <Text style={styles.captionTxt}>Dificultad*</Text>
-                            <View style={styles.row}>
-                                {[...Array(5).keys()].map((e, i) => {
+                        <View style={{
+                            ...styles.row,
+                            marginVertical: 30,
+                        }}>
 
-                                    return (
-                                        <Pressable
-                                            key={i}
-                                            onPress={() => handleSelectDificultad(i + 1)}
-                                            style={styles.dificultadIconContainer}
-                                        >
-                                            <Foundation name="mountains" size={30} color={i < dificultad ? "black" : "#00000077"} />
-                                        </Pressable>
-                                    )
-                                })}
+                            {/* Dificultad */}
+                            <View style={styles.dificultad}>
+                                <Text style={styles.captionTxt}>Dificultad*</Text>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    height: 45,
+                                    alignItems: 'center',
+                                }}>
+                                    {[...Array(5).keys()].map((e, i) => {
+
+                                        return (
+                                            <Pressable
+                                                key={i}
+                                                onPress={() => handleSelectDificultad(i + 1)}
+                                                style={styles.dificultadIconContainer}
+                                            >
+                                                <Foundation name="mountains" size={28} color={i < dificultad ? "black" : "#00000077"} />
+                                            </Pressable>
+                                        )
+                                    })}
+
+                                </View>
+                            </View>
+
+                            {/* Categoria */}
+                            <View style={styles.categoriaContainer}>
+                                <Text style={{
+                                    ...styles.captionTxt,
+                                    textAlign: 'left',
+                                }}>Categoria*</Text>
+                                <Pressable
+                                    onPress={handleShowCategoria}
+                                    style={{
+                                        height: 45,
+                                    }}>
+
+                                    <View style={{
+                                        paddingHorizontal: 15,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+
+                                        backgroundColor: colorInput,
+                                        flex: 1,
+
+                                    }}>
+
+                                        <Text style={styles.categoriaTxt}>{categoria}</Text>
+                                        <MaterialIcons
+                                            name={showCategorias ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+                                            size={30}
+                                            color={moradoClaro}
+                                        />
+                                    </View>
+
+                                </Pressable>
+                                {showCategorias && <View style={{
+                                    width: '100%',
+                                    zIndex: 1,
+                                    position: 'absolute',
+                                    backgroundColor: colorInput,
+                                    top: 65,
+                                    paddingTop: 5,
+                                }}>
+                                    {
+                                        listCategorias.map((e, idx) => (
+                                            <Pressable
+                                                key={idx.toString()}
+                                                style={{
+                                                    paddingHorizontal: 15,
+                                                    paddingVertical: 10,
+                                                    backgroundColor: categoria === e ? moradoClaro : "transparent",
+                                                }}
+                                                onPress={() => handleSelectCategoria(idx)}
+
+                                            >
+
+                                                <Text
+                                                    style={{
+                                                        ...styles.categoriaTxt,
+                                                        color: categoria !== e ? moradoClaro : "#fff",
+                                                    }}
+                                                >{e}</Text>
+                                            </Pressable>
+                                        ))
+                                    }
+
+                                </View>
+                                }
 
                             </View>
                         </View>
+
+
                     </View>
+
 
 
                     <View style={styles.line} />
@@ -313,7 +378,7 @@ export default ({ navigation }) => {
                     {/* Iconos informativos */}
                     <View style={{
                         marginHorizontal: 4,
-                        marginBottom: 10,
+                        marginBottom: 20,
                     }}>
                         {/* Contenedor dist y dur */}
                         <View style={{
@@ -323,16 +388,15 @@ export default ({ navigation }) => {
                             marginBottom: 10,
                         }}>
                             {/* Duracion */}
-                            {/* Titulo */}
                             <View style={{ flex: 1, marginRight: 20, }}>
-                                <Text style={[styles.captionTxt, { marginLeft: 40, }]}>Duracion</Text>
+                                <Text style={[styles.captionTxt, { marginLeft: 40, }]}>Duracion aprox</Text>
                                 <View style={styles.row}>
                                     <View style={{ width: 35, }}>
                                         <Feather name="clock" size={25} color="gray" />
                                     </View>
                                     <TextInput
                                         value={aventura.duracion}
-                                        maxLength={10}
+                                        maxLength={15}
                                         placeholderTextColor={"#00000040"}
                                         placeholder="1 a 2 dias"
                                         onChangeText={(e) => {
@@ -348,7 +412,7 @@ export default ({ navigation }) => {
                             </View>
 
                             {/* Distancia */}
-                            <View style={{
+                            {categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO ? <View style={{
                                 flex: 1,
                             }}>
                                 <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Distancia inicio a fin</Text>
@@ -366,9 +430,6 @@ export default ({ navigation }) => {
                                         placeholderTextColor={"#00000040"}
                                         placeholder="3.6"
                                         keyboardType={"numeric"}
-                                        onPressIn={() => {
-                                            setErrordistancia(false)
-                                        }}
                                         onChangeText={(e) => {
                                             setAventura({
                                                 ...aventura,
@@ -379,7 +440,6 @@ export default ({ navigation }) => {
                                             flex: 0,
                                             width: 60,
                                             textAlign: 'center',
-                                            borderColor: errorDistancia ? "red" : "transparent",
 
                                         }]}
                                     />
@@ -388,20 +448,21 @@ export default ({ navigation }) => {
                                         fontSize: 15,
                                     }}>  KM</Text>
                                 </View>
-                            </View>
+                            </View> : <View style={{ flex: 1, }} />}
                         </View>
 
 
 
-                        {/* Contenedor ubicacion y altitud */}
-                        <View style={{
+                        {/* Contenedor Altitud y ascenso */}
+                        {categoria !== Categorias.OTROS && <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             marginTop: 5,
+                            marginBottom: 20,
                         }}>
-                            {/* Ubicacion aventura */}
-                            <View>
+                            {/* Altitud aventura */}
+                            {categoria === Categorias.APLINISMO && <View>
                                 <Text style={[styles.captionTxt, { textAlign: 'left', marginLeft: 40, }]}>Altitud cima</Text>
                                 <View style={styles.row}>
                                     <View style={{ width: 35, }}>
@@ -416,11 +477,8 @@ export default ({ navigation }) => {
                                         value={aventura.altitud}
                                         maxLength={4}
                                         placeholderTextColor={"#00000040"}
-                                        placeholder="750"
+                                        placeholder="4500"
                                         keyboardType={"numeric"}
-                                        onPressIn={() => {
-                                            setErroraltitud(false)
-                                        }}
                                         onChangeText={(e) => {
                                             setAventura({
                                                 ...aventura,
@@ -431,7 +489,6 @@ export default ({ navigation }) => {
                                             flex: 0,
                                             width: 60,
                                             textAlign: 'center',
-                                            borderColor: errorAltitud ? "red" : "transparent",
 
                                         }]}
                                     />
@@ -440,10 +497,12 @@ export default ({ navigation }) => {
                                         fontSize: 15,
                                     }}>  m</Text>
                                 </View>
-                            </View>
+                            </View>}
 
-                            {/* Distancia */}
-                            <View>
+
+
+                            {/* Ascenso recorrido */}
+                            {(categoria === Categorias.CICLISMO || categoria === Categorias.APLINISMO) && <View>
                                 <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Ascenso recorrido</Text>
                                 <View style={styles.row}>
                                     <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', marginRight: 8, }}>
@@ -455,9 +514,6 @@ export default ({ navigation }) => {
                                         placeholderTextColor={"#00000040"}
                                         placeholder="750"
                                         keyboardType={"numeric"}
-                                        onPressIn={() => {
-                                            setErrorascenso(false)
-                                        }}
                                         onChangeText={(e) => {
                                             setAventura({
                                                 ...aventura,
@@ -468,7 +524,6 @@ export default ({ navigation }) => {
                                             flex: 0,
                                             width: 60,
                                             textAlign: 'center',
-                                            borderColor: errorAscenso ? "red" : "transparent",
 
                                         }]}
                                     />
@@ -479,42 +534,8 @@ export default ({ navigation }) => {
                                         textAlign: 'center',
                                     }}>  m</Text>
                                 </View>
-                            </View>
-                        </View>
-                    </View>
-
-                    <Text style={{
-                        ...styles.captionTxt,
-                        marginTop: 20,
-                    }}>Ubicacion aproximada aventura*</Text>
-                    <View style={styles.mapContainer}>
-
-                        <MapView
-                            provider={"google"}
-                            mapType={"standard"}
-
-                            showsUserLocation={true}
-                            loadingEnabled={true}
-
-                            initialRegion={region}
-
-                            style={{
-                                ...StyleSheet.absoluteFillObject,
-
-                            }}
-
-                            onRegionChangeComplete={handleRegionMap}
-
-                        />
-                        <Entypo
-                            style={{
-                                bottom: 16,
-                            }}
-                            name="location-pin"
-                            size={40}
-                            color={moradoOscuro}
-                        />
-
+                            </View>}
+                        </View>}
                     </View>
 
 
@@ -523,7 +544,7 @@ export default ({ navigation }) => {
 
                     {/* Descripcion */}
                     <View style={{
-                        marginTop: 40,
+                        marginTop: 20,
 
                         flex: 1,
                     }}>
@@ -534,9 +555,6 @@ export default ({ navigation }) => {
                             multiline={true}
                             placeholderTextColor={"#00000040"}
                             placeholder="Esta aventura contiene pedazos con alto nivel tecnico pero al final de cuentas se disfruta mucho..."
-                            onPressIn={() => {
-                                setErrordescripcion(false)
-                            }}
                             onChangeText={(e) => {
                                 setAventura({
                                     ...aventura,
@@ -546,7 +564,6 @@ export default ({ navigation }) => {
                             style={{
                                 ...styles.textInput,
                                 textAlignVertical: "top",
-                                borderColor: errorDescripcion ? "red" : "transparent",
                             }}
                         />
                     </View>
@@ -554,8 +571,7 @@ export default ({ navigation }) => {
                     <Boton
                         onPress={handleContinuar}
                         style={{ marginTop: 40, }}
-                        titulo={"Enviar"}
-                        loading={buttonLoading}
+                        titulo={"Continuar"}
                     />
                 </View>
 
@@ -577,11 +593,10 @@ export default ({ navigation }) => {
                     />
                 </Modal>
 
-            </Animated.ScrollView>
+            </ScrollView>
         </View>
     )
 }
-
 
 
 const styles = StyleSheet.create({
@@ -596,12 +611,13 @@ const styles = StyleSheet.create({
         top: -30,
         borderRadius: 30,
         padding: 20,
-        paddingTop: 25,
+        paddingBottom: 0,
+        paddingTop: 25
     },
     textInput: {
         fontSize: 17,
         flex: 1,
-        backgroundColor: "#f4f6f6",
+        backgroundColor: colorInput,
         padding: 5,
         paddingLeft: 10,
         borderRadius: 7,
@@ -627,7 +643,6 @@ const styles = StyleSheet.create({
     },
 
     line: {
-        marginTop: 30,
         marginBottom: 10,
         borderTopWidth: .5,
         borderColor: moradoClaro,
@@ -637,17 +652,33 @@ const styles = StyleSheet.create({
 
     dificultad: {
         flex: 1,
-        marginTop: 20,
+        // marginTop: 20,
 
     },
 
     dificultadIconContainer: {
-        padding: 6,
+        padding: 3,
+        paddingVertical: 0
     },
 
     mapContainer: {
         width: '100%',
         height: height * 0.3,
         alignItems: 'center', justifyContent: 'center',
+    },
+
+    queLlevarContainer: {
+        marginTop: 20,
+    },
+
+    categoriaContainer: {
+        flex: 1,
+    },
+
+    categoriaTxt: {
+        fontSize: 17,
+        color: moradoClaro,
+        flex: 1,
+        // textAlign: 'right',
     }
 })

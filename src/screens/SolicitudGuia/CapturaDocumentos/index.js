@@ -205,7 +205,6 @@ export default ({ navigation }) => {
         }
         // Pedir usuario
         const sub = await getUserSub()
-        const telefonoAEnviar = telefono ? "+521" + telefono.toString() : null
 
         // Verificaciones
         // Si no se presiono el link de stripe se devuelve error
@@ -275,7 +274,7 @@ export default ({ navigation }) => {
 
                         updated.selfie = selfie
                         updated.INE = [INEFrente, INEReverso]
-                        updated.telefono = telefonoAEnviar
+                        updated.telefono = telefono
                         updated.comentariosAdicionales = comentarios
 
                         updated.capacidadMaxima = 0
@@ -400,7 +399,7 @@ export default ({ navigation }) => {
                         updated.certificaciones = cert
 
 
-                        updated.telefono = telefonoAEnviar
+                        updated.telefono = telefono
                         updated.comentariosAdicionales = comentarios
 
                         updated.capacidadMaxima = 0

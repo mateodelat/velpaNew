@@ -88,7 +88,7 @@ export default ({ navigation }) => {
                     (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (newCategoriasSelect[1] && e.categoria === Categorias.MTB) ||
+                    (newCategoriasSelect[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
@@ -136,7 +136,7 @@ export default ({ navigation }) => {
                     (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (categoriasSeleccionadas[1] && e.categoria === Categorias.MTB) ||
+                    (categoriasSeleccionadas[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
@@ -171,7 +171,7 @@ export default ({ navigation }) => {
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // MOUNTAIN BIKE
-                    (categorias[1] && e.categoria === Categorias.MTB) ||
+                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // OTROS
                     (categorias[2] && e.categoria === Categorias.OTROS)
@@ -202,7 +202,7 @@ export default ({ navigation }) => {
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (categorias[1] && e.categoria === Categorias.MTB) ||
+                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (categorias[2] && e.categoria === Categorias.OTROS)

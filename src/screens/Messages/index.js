@@ -71,7 +71,7 @@ export default ({ navigation }) => {
 
 
             {/* Barra de busqueda */}
-            {/* <View style={{ ...styles.innerContainer, flexDirection: 'row', paddingRight: 17, }}>
+            <View style={{ ...styles.innerContainer, flexDirection: 'row', paddingRight: 17, }}>
 
 
                 <View
@@ -95,58 +95,64 @@ export default ({ navigation }) => {
                 />}
 
 
-            </View> */}
+            </View>
 
             {/* Lista de chatRooms */}
             {
                 !chats ?
                     <Loading indicator={true} /> :
-                    <View style={{
-                        ...styles.innerContainer,
-                        // marginTop: 20,
-                    }}>
+                    chats.length === 0 ?
+                        <View
+                            style={styles.container}
+                        >
+                            <Text style={styles.noHayTxt}>No hay mensajes</Text>
+                        </View>
+                        :
+                        <View style={{
+                            ...styles.innerContainer,
+                            // marginTop: 20,
+                        }}>
 
-
-                        <FlatList
-                            refreshControl={<RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
-                            />
-                            }
-                            style={{ width: '100%', }}
-                            data={chats}
-                            renderItem={({ item, index }) => {
-                                // Ver si se pone la linea al final
-                                if (index === chats.length - 1) {
-                                    return <ChatRoomItem
-                                        index={index}
-                                        setChatRooms={setChats}
-                                        key={index.toString()}
-                                        onPress={() => handleChat(item)}
-                                        item={item}
-                                    />
-
-                                } else {
-                                    return <View
-                                        key={index.toString()}
-                                        style={{
-                                            width: '100%',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <ChatRoomItem
+                            <FlatList
+                                refreshControl={<RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                                }
+                                style={{ width: '100%', }}
+                                data={chats}
+                                renderItem={({ item, index }) => {
+                                    // Ver si se pone la linea al final
+                                    if (index === chats.length - 1) {
+                                        return <ChatRoomItem
                                             index={index}
                                             setChatRooms={setChats}
+                                            key={index.toString()}
                                             onPress={() => handleChat(item)}
                                             item={item}
                                         />
 
-                                        <View style={styles.line} />
-                                    </View>
-                                }
-                            }}
-                        />
-                    </View>
+                                    } else {
+                                        return <View
+                                            key={index.toString()}
+                                            style={{
+                                                width: '100%',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <ChatRoomItem
+                                                index={index}
+                                                setChatRooms={setChats}
+                                                onPress={() => handleChat(item)}
+                                                item={item}
+                                            />
+
+                                            <View style={styles.line} />
+                                        </View>
+                                    }
+                                }}
+                            />
+                        </View>
             }
 
         </View>
@@ -155,6 +161,10 @@ export default ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center', justifyContent: 'center', flex: 1,
+    },
+
     innerContainer: {
         backgroundColor: '#fff',
         paddingHorizontal: 15,
@@ -182,5 +192,11 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 10,
         flex: 1,
+    },
+
+    noHayTxt: {
+        fontSize: 18,
+        fontWeight: 'bold',
     }
+
 })

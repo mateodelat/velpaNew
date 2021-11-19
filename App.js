@@ -15,7 +15,9 @@ import awsconfig from "./src/aws-exports";
 import * as WebBrowser from 'expo-web-browser';
 import { createUsuario } from './assets/constants';
 import { Loading } from './src/components/Loading';
-import { StripeProvider } from '@stripe/stripe-react-native';
+import { Aventura } from './src/models';
+import { Publicidad } from './src/models';
+
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
 async function urlOpener(url, redirectUrl) {
@@ -52,29 +54,36 @@ Amplify.configure({
   }
 });
 
+let publicidadLoaded
+let aventuraLoaded
+
 const App = () => {
 
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [animacion, setAnimacion] = useState(true);
+  const [cargandoModelos, setCargandoModelos] = useState(false);
 
   useEffect(() => {
-    DataStore.start()
-
     Auth.currentUserCredentials()
       .then(user => {
         setLoading(false)
-        user.authenticated ? setAuthenticated(true) : Auth.signOut()
-        // console.log(user.authenticated ? "Usuario autenticado" : "Usuario no autenticado")
+        if (user.authenticated) {
+          DataStore.start()
+          setAuthenticated(true)
+        } else {
+          Auth.signOut()
+        }
       }).catch(err => {
         setLoading(false)
         console.log("Error getting credentials", err)
       })
 
-    Hub.listen("auth", (data) => {
+    const auth = Hub.listen("auth", (data) => {
       const { event, message } = data.payload
       switch (event) {
         case "signIn":
+          setCargandoModelos(true)
+          DataStore.start()
           setLoading(false)
           setAuthenticated(true)
           break;
@@ -86,14 +95,13 @@ const App = () => {
           setLoading(false)
           // Tras iniciar sesion con Google se intenta crear el usr y solo se corre una vez
           if (message.startsWith("A user google")) {
-            console.log("crearUsuario")
             Auth.currentUserInfo()
               .then(r => {
-                createUsuario(r.attributes)
+                setCargandoModelos(true)
+                createUsuario(r.attributes, false, r.username)
                 setAuthenticated(true)
               })
-              .catch(e => {
-              })
+
           }
           break;
 
@@ -102,20 +110,37 @@ const App = () => {
       }
     });
 
-    setTimeout(() => {
-      setAnimacion(false)
-    }, 5500)
-    return () => Hub.remove("auth", () => console.log("fin del hub"))
+    // Crear listener para datastore
+    const listener = Hub.listen("datastore", async hubData => {
+      const { event, data } = hubData.payload;
+      if (event === "modelSynced" && data?.model === Aventura) {
+        aventuraLoaded = true
+      } else if (event === "modelSynced" && data?.model === Publicidad) {
+        publicidadLoaded = true
+
+      } else if (publicidadLoaded && aventuraLoaded) {
+        setCargandoModelos(false)
+
+      }
+    })
+
+
+    return () => {
+      Hub.remove("auth", () => console.log("fin del hub"))
+
+      Hub.remove("datastore", () => console.log("fin del hub"))
+      listener()
+      auth()
+    }
   }, []);
 
 
 
-  // if (animacion) return (<Loading valor={0} />)
 
-
-  if (loading) return (
+  if (loading || cargandoModelos) return (
     <Loading valor={0} />
   )
+
 
   if (!authenticated) {
     return (
@@ -126,6 +151,7 @@ const App = () => {
       </View>
     )
   }
+
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>

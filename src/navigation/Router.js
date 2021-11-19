@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -27,129 +27,131 @@ import SolicitudAventura from '../screens/SolicitudAventura';
 import Agregar2 from '../screens/AgregarFecha/Agregar2';
 import MisReservas from '../screens/MisReservas';
 import MisSolicitudes from '../screens/MisSolicitudes';
+import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
 
 const Stack = createStackNavigator();
 
 
 
-export default () => (
-    <NavigationContainer>
+export default () => {
+    return (
+        <NavigationContainer>
 
-        <Stack.Navigator
-            // initialRouteName={"SeleccionaAventura"}
-            screenOptions={{
+            <Stack.Navigator
+                initialRouteName={"AgregarAventura2"}
+                screenOptions={{
 
-                header: ({ scene, previous, navigation }) => {
-                    const { options } = scene.descriptor;
-                    const title =
-                        options.headerTitle !== undefined
-                            ? options.headerTitle
-                            : options.title !== undefined
-                                ? options.title
-                                : scene.route.name;
+                    header: ({ scene, previous, navigation }) => {
+                        const { options } = scene.descriptor;
+                        const title =
+                            options.headerTitle !== undefined
+                                ? options.headerTitle
+                                : options.title !== undefined
+                                    ? options.title
+                                    : scene.route.name;
 
-                    return (
-                        <Header title={title} />
-                    );
-                }
-            }}
-        >
-            <Stack.Screen
-                name='inicio'
-                component={NavBar}
-                options={{
-                    headerShown: false
-                }}
-            />
-
-
-            <Stack.Screen
-                name="Pagar"
-                component={Pagar}
-            />
-
-            <Stack.Screen
-                name="Logistica"
-                component={Logistica}
-            />
-
-            <Stack.Screen
-                name="ExitoScreen"
-                component={Exito}
-                options={{
-                    headerShown: false
-                }}
-
-            />
-
-
-
-            <Stack.Screen
-                name="ChatRoom"
-                component={ChatRoom}
-                options={({ route }) => {
-
-                    return {
-                        header: () => (
-                            <ChatRoomHeader
-                                id={route.params?.id}
-                                titulo={route.params?.titulo}
-                                image={route.params?.image}
-                            />
-                        )
+                        return (
+                            <Header title={title} />
+                        );
                     }
                 }}
-            />
+            >
+                <Stack.Screen
+                    name='inicio'
+                    component={NavBar}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+
+
+                <Stack.Screen
+                    name="Pagar"
+                    component={Pagar}
+                />
+
+                <Stack.Screen
+                    name="Logistica"
+                    component={Logistica}
+                />
+
+                <Stack.Screen
+                    name="ExitoScreen"
+                    component={Exito}
+                    options={{
+                        headerShown: false
+                    }}
+
+                />
 
 
 
-            <Stack.Screen
-                name="DetalleChatRoom"
-                component={DetalleChatRoom}
-                options={{
-                    headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="ChatRoom"
+                    component={ChatRoom}
+                    options={({ route }) => {
+
+                        return {
+                            header: () => (
+                                <ChatRoomHeader
+                                    id={route.params?.id}
+                                    titulo={route.params?.titulo}
+                                    image={route.params?.image}
+                                />
+                            )
+                        }
+                    }}
+                />
 
 
 
-            <Stack.Screen
-                name="SolicitudGuia"
-                component={SolicitudStack}
-                options={{
-                    headerShown: false
-                }}
-            />
-
-            <Stack.Screen
-                name="DetalleAventura"
-                component={DetalleAventura}
-                options={{
-                    headerShown: false,
-                }}
-            />
-
-
-            <Stack.Screen
-                name="FechasAventura"
-                component={FechasAventura}
-                options={{
-                    headerShown: false
-                }}
-            />
-
-            {/* Perfil */}
-            <Stack.Screen
-                name="PerfilScreen"
-                component={Perfil}
-                options={{
-                    headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="DetalleChatRoom"
+                    component={DetalleChatRoom}
+                    options={{
+                        headerShown: false
+                    }}
+                />
 
 
 
-            {/* <Stack.Screen
+                <Stack.Screen
+                    name="SolicitudGuia"
+                    component={SolicitudStack}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+
+                <Stack.Screen
+                    name="DetalleAventura"
+                    component={DetalleAventura}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+
+
+                <Stack.Screen
+                    name="FechasAventura"
+                    component={FechasAventura}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+
+                {/* Perfil */}
+                <Stack.Screen
+                    name="PerfilScreen"
+                    component={Perfil}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+
+
+
+                {/* <Stack.Screen
                 name="Solicitudes"
                 component={Solicitudes}
                 options={{
@@ -158,80 +160,89 @@ export default () => (
             /> */}
 
 
-            <Stack.Screen
-                name="AgregarAventura"
-                component={AgregarAventura}
-                options={{
-                    title: "Solicitar aventura",
-                }}
-            />
+                <Stack.Screen
+                    name="AgregarAventura"
+                    component={AgregarAventura}
+                    options={{
+                        title: "Solicitar aventura",
+                    }}
+                />
 
-            <Stack.Screen
-                name="AgregarFecha"
-                component={AgregarFecha}
-                options={{
-                    headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="AgregarAventura2"
+                    component={AgregarAventura2}
+                    options={{
+                        title: "Ubicacion aventura",
+                    }}
+                />
 
-            <Stack.Screen
-                name="AgregarFecha2"
-                component={Agregar2}
-                options={{
-                    headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="AgregarFecha"
+                    component={AgregarFecha}
+                    options={{
+                        headerShown: false
+                    }}
+                />
 
-            <Stack.Screen
-                name="SeleccionaAventura"
-                component={SeleccionaAventura}
-                options={{
-                    headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="AgregarFecha2"
+                    component={Agregar2}
+                    options={{
+                        headerShown: false
+                    }}
+                />
 
-            <Stack.Screen
-                name="SolicitudAventuraScreen"
-                component={SolicitudAventura}
-                options={{
-                    title: "Solicitar aventura",
+                <Stack.Screen
+                    name="SeleccionaAventura"
+                    component={SeleccionaAventura}
+                    options={{
+                        headerShown: false
+                    }}
+                />
 
-                }}
-            />
+                <Stack.Screen
+                    name="SolicitudAventuraScreen"
+                    component={SolicitudAventura}
+                    options={{
+                        title: "Solicitar aventura",
 
-            <Stack.Screen
-                name="Admin"
-                component={AdminStack}
-                options={{
-                    headerShown: false
-                }}
-            />
+                    }}
+                />
 
-            <Stack.Screen
-                name="MisReservas"
-                component={MisReservas}
-                options={{
-                    // headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="Admin"
+                    component={AdminStack}
+                    options={{
+                        headerShown: false
+                    }}
+                />
 
-            <Stack.Screen
-                name="MisSolicitudes"
-                component={MisSolicitudes}
-                options={{
-                    // headerShown: false
-                }}
-            />
+                <Stack.Screen
+                    name="MisReservas"
+                    component={MisReservas}
+                    options={{
+                        // headerShown: false
+                    }}
+                />
 
-            <Stack.Screen
-                options={{
-                    headerShown: false
-                }}
-                name={"Busqueda"}
-                component={BuscarAventura}
+                <Stack.Screen
+                    name="MisSolicitudes"
+                    component={MisSolicitudes}
+                    options={{
+                        // headerShown: false
+                    }}
+                />
 
-            />
+                <Stack.Screen
+                    options={{
+                        headerShown: false
+                    }}
+                    name={"Busqueda"}
+                    component={BuscarAventura}
 
-        </Stack.Navigator>
-    </NavigationContainer>
-)
+                />
+
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
+}

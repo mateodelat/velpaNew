@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, formatDia, formatDiaMesCompeto, isFechaFull, moradoClaro, msInDay, wait } from '../../../assets/constants';
+import { colorFondo, formatDia, formatDiaMesCompeto, isFechaFull, isUrl, moradoClaro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
@@ -10,6 +10,7 @@ import { Fecha } from '../../models';
 import { Reserva } from '../../models';
 import { Usuario } from '../../models';
 import { useNavigation } from '@react-navigation/core';
+import Storage from '@aws-amplify/storage';
 
 export default index = ({ route, navigation }) => {
     const { height, width } = Dimensions.get("screen")
@@ -119,15 +120,21 @@ export default index = ({ route, navigation }) => {
 
                         const usuario = await DataStore.query(Usuario, res.usuarioID)
                         personasReservadas.push({
-                            foto: usuario.foto,
+                            foto: isUrl(usuario.foto) ? usuario.foto : await Storage.get(usuario.foto),
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas
                         })
                     }))
 
+                    const imagenRuta = fecha.imagenRuta ? {
+                        key: fecha.imagenRuta,
+                        url: isUrl(fecha.imagenRuta) ? fecha.imagenRuta : await Storage.get(fecha.imagenRuta)
+                    } : null
+
 
                     return {
                         ...fecha,
+                        imagenRuta,
                         personasReservadas,
                         totalPersonasReservadas
                     }

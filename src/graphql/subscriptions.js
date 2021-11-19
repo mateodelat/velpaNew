@@ -62,25 +62,6 @@ export const onCreateAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Publicidad {
-        items {
-          id
-          tipo
-          titulo
-          descripcion
-          imagenFondo
-          video
-          linkAnuncio
-          aventuraID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       SolicitudGuias {
         items {
           id
@@ -175,25 +156,6 @@ export const onUpdateAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Publicidad {
-        items {
-          id
-          tipo
-          titulo
-          descripcion
-          imagenFondo
-          video
-          linkAnuncio
-          aventuraID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       SolicitudGuias {
         items {
           id
@@ -284,25 +246,6 @@ export const onDeleteAventura = /* GraphQL */ `
           createdAt
           updatedAt
           owner
-        }
-        nextToken
-        startedAt
-      }
-      Publicidad {
-        items {
-          id
-          tipo
-          titulo
-          descripcion
-          imagenFondo
-          video
-          linkAnuncio
-          aventuraID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -609,6 +552,7 @@ export const onCreateUsuario = /* GraphQL */ `
     onCreateUsuario {
       id
       tipo
+      guia
       nombre
       apellido
       foto
@@ -723,6 +667,7 @@ export const onCreateUsuario = /* GraphQL */ `
           usuarioID
           imagen
           owner
+          leido
           reservaID
           fechaID
           aventuraID
@@ -774,6 +719,7 @@ export const onUpdateUsuario = /* GraphQL */ `
     onUpdateUsuario {
       id
       tipo
+      guia
       nombre
       apellido
       foto
@@ -888,6 +834,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           usuarioID
           imagen
           owner
+          leido
           reservaID
           fechaID
           aventuraID
@@ -939,6 +886,7 @@ export const onDeleteUsuario = /* GraphQL */ `
     onDeleteUsuario {
       id
       tipo
+      guia
       nombre
       apellido
       foto
@@ -1053,6 +1001,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           usuarioID
           imagen
           owner
+          leido
           reservaID
           fechaID
           aventuraID
@@ -1427,6 +1376,7 @@ export const onCreateNotificacion = /* GraphQL */ `
       usuarioID
       imagen
       owner
+      leido
       reservaID
       fechaID
       aventuraID
@@ -1449,6 +1399,7 @@ export const onUpdateNotificacion = /* GraphQL */ `
       usuarioID
       imagen
       owner
+      leido
       reservaID
       fechaID
       aventuraID
@@ -1471,6 +1422,7 @@ export const onDeleteNotificacion = /* GraphQL */ `
       usuarioID
       imagen
       owner
+      leido
       reservaID
       fechaID
       aventuraID
@@ -1584,10 +1536,6 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1658,10 +1606,6 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         updatedAt
         owner
         Fechas {
-          nextToken
-          startedAt
-        }
-        Publicidad {
           nextToken
           startedAt
         }
@@ -1738,10 +1682,6 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1815,10 +1755,6 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1831,6 +1767,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -1930,10 +1867,6 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -1946,6 +1879,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -2045,10 +1979,6 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -2061,6 +1991,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -2130,6 +2061,7 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -2231,6 +2163,7 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -2332,6 +2265,7 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
       usuario {
         id
         tipo
+        guia
         nombre
         apellido
         foto

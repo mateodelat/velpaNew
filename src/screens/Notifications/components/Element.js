@@ -2,17 +2,29 @@ import React from 'react'
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons';
+import { moradoOscuro } from '../../../../assets/constants';
 
-export default ({ titulo, descripcion, tiempo, onPress, image }) => {
+export default ({
+    titulo,
+    descripcion,
+    tiempo,
+    onPress,
+    image,
+    leido
+}) => {
     return (
         <Pressable
             onPress={onPress}
             style={styles.container}>
+            {/* Puntito de notificacion */}
+            {!leido && <View style={styles.unread}>
+
+            </View>}
 
             {/* Imagen de notificacion */}
             <Image
                 style={styles.image}
-                source={{ uri: image }}
+                source={image}
             />
 
             {/* Textos */}
@@ -42,6 +54,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 8,
         marginBottom: 15,
+        paddingLeft: 20,
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -71,6 +84,15 @@ const styles = StyleSheet.create({
     tiempo: {
         fontSize: 10,
         marginLeft: 4,
+    },
+
+    unread: {
+        backgroundColor: moradoOscuro,
+        height: 6,
+        width: 6,
+        position: 'absolute',
+        left: 8,
+        borderRadius: 10,
     }
 
 })

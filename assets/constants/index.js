@@ -3,13 +3,14 @@ import { Alert, Linking, Platform } from "react-native";
 import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import { Aventura } from "../../src/models";
+import { Aventura, Notificacion, TipoNotificacion } from "../../src/models";
 import { DataStore } from '@aws-amplify/datastore';
 import React from "react";
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Fecha } from "../../src/models";
+import { Usuario } from "../../src/models";
 
 
 
@@ -100,6 +101,17 @@ const crearUsr = /* GraphQL */ `
     $condition: ModelUsuarioConditionInput
   ) {
     createUsuario(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+const crearNotificacion = /* GraphQL */ `
+  mutation CreateNotificacion(
+    $input: CreateNotificacionInput!
+    $condition: ModelNotificacionConditionInput
+  ) {
+    createNotificacion(input: $input, condition: $condition) {
       id
     }
   }
@@ -276,44 +288,60 @@ export const mayusFirstLetter = (string) => {
 }
 
 
-export const createUsuario = async (attributes, unathenticated) => {
+export const createUsuario = async (attributes, unathenticated, username) => {
   // Si no esta autenticado se crea con api key y el ownerfield se asigna para poder modificar
-  if (unathenticated) {
-    return await API.graphql({
-      query: crearUsr, variables: {
+  const inputUsuario = unathenticated ? {
+    nombre: attributes.name ? attributes.name : attributes.nickname,
+    apellido: attributes.family_name ? attributes.family_name : null,
+    id: attributes.sub,
+    foto: attributes.picture ? attributes.picture : null,
+    nickname: attributes.nickname,
+    owner: attributes.sub
+  } : {
+    nombre: attributes.name ? attributes.name : attributes.nickname,
+    apellido: attributes.family_name ? attributes.family_name : null,
+    id: attributes.sub,
+    foto: attributes.picture ? attributes.picture : null,
+    nickname: attributes.nickname,
+  }
+  await API.graphql({
+    query: crearUsr, variables: {
+      input: inputUsuario
+    }
+    , authMode: unathenticated ? 'API_KEY' : 'AMAZON_COGNITO_USER_POOLS'
+  }).then(r => {
+
+
+    // Notificacion de bienvenida con apikey
+    API.graphql({
+      query: crearNotificacion, variables: {
         input: {
-          nombre: attributes.name ? attributes.name : attributes.nickname,
-          apellido: attributes.family_name ? attributes.family_name : null,
-          id: attributes.sub,
-          foto: attributes.picture ? attributes.picture : null,
-          nickname: attributes.nickname,
-          owner: attributes.sub
+          tipo: TipoNotificacion.BIENVENIDA,
+
+          titulo: "Velpa adventures",
+          descripcion: (attributes.name ? attributes.name : attributes.nickname) + " gracias por registrarte en Velpa, ve un breve tutorial de como usar la app",
+
+          usuarioID: attributes.sub,
+          owner: username ? username : attributes.sub,
         }
       }
       , authMode: 'API_KEY'
-    }).then(r => {
-      return r.data.createUsuario
     })
-      .catch(e => {
-        Alert.alert("Error", "Error creando el usuario, avisa a los desarrolladores")
-        console.log(e)
+      .then(r => {
+        console.log(r)
       })
-  }
+      .catch(e => {
+        console.log("Error creando notificacion bienvenida", e)
+      })
 
-  API.graphql({
-    query: crearUsr, variables: {
-      input: {
-        nombre: attributes.name ? attributes.name : attributes.nickname,
-        apellido: attributes.family_name ? attributes.family_name : null,
-        id: attributes.sub,
-        foto: attributes.picture ? attributes.picture : null,
-        nickname: attributes.nickname,
-      }
-    }
+    return r.data.createUsuario
   })
     .catch(e => {
     })
+
+
 }
+
 
 export async function handleGoogle() {
   Auth.federatedSignIn({ provider: "Google" })
@@ -1371,22 +1399,6 @@ export async function obtenerUriImagenesGuia(data) {
 }
 
 
-export const categorias = [
-  {
-    titulo: "Alpinismo",
-    icono: (color) => <FontAwesome5 name="hiking" size={25} color={color} />
-  },
-  {
-    titulo: "MTB",
-    icono: (color) => <Ionicons name="bicycle" size={25} color={color} />
-  },
-  {
-    titulo: "Otros",
-    icono: (color) => <Ionicons name="md-reorder-three" size={25} color={color} />
-  },
-]
-
-
 export const abrirStripeAccount = async (stripeID) => {
   const url = "https://dashboard.stripe.com/connect/accounts/" + stripeID
   return await WebBrowser.openBrowserAsync(url)
@@ -1422,6 +1434,8 @@ export const verificarUbicacion = async () => {
     return true
   }
 }
+
+export const mapsAPIKey = "AIzaSyCaRZjZvo3u_3tLCK7cOGigyfFEF6kR4Hw"
 
 
 export const shadowMedia = {
@@ -1487,10 +1501,10 @@ export const makeUsrGuide = async () => {
 }
 
 export const userEsGuia = async () => {
+  const sub = await getUserSub()
 
-  const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
-
-  if (!!Number(user.attributes["custom:guia"])) {
+  const user = await DataStore.query(Usuario, sub)
+  if (!!user?.guia) {
     console.log("Usuario es guia")
     return true
   } else {

@@ -177,7 +177,7 @@ export default function ({ fecha, handleContinuar, idx }) {
 
 
                         {
-                            fecha.ruta && <>
+                            !!fecha.imagenRuta && <>
                                 <View style={styles.lineaVertical} />
                                 <View style={styles.cuadradoDatos}>
                                     <Text style={styles.tituloCuadro}>RUTA</Text>
@@ -247,7 +247,7 @@ export default function ({ fecha, handleContinuar, idx }) {
                         itinerario={JSON.parse(fecha.itinerario)}
                     /> :
                     <ModalRuta
-                        img={"https://i.ibb.co/dcXDs4G/Ruta-Nevado-Garmin.png"}
+                        img={fecha?.imagenRuta?.url}
                         setModalVisible={setModalVisible}
                     />}
             </Modal>

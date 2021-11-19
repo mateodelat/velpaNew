@@ -2,11 +2,12 @@ import { DataStore, Predicates } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, wait } from '../../../assets/constants'
+import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
 import Element from './components/Element'
 import moment from "moment";
+import { TipoNotificacion } from '../../models'
 
 
 
@@ -52,11 +53,56 @@ export default () => {
     }, []);
 
     const fetchNotificaciones = async () => {
-        const notificaciones = await DataStore.query(Notificacion, Predicates.ALL, {
+        const sub = await getUserSub()
+        const notificaciones = await DataStore.query(Notificacion, (e) => e.usuarioID("eq", sub), {
             sort: e => e.createdAt("DESCENDING")
         })
         setNotificaciones(notificaciones)
     }
+
+    const handleVerNotificacion = (idx) => {
+        let nuevasNotificaciones = [...notificaciones]
+        let notificacion = nuevasNotificaciones[idx]
+
+
+        DataStore.save(
+            Notificacion.copyOf(notificacion, nuevo => {
+                nuevo.leido = true
+            }))
+
+        // Cambiar la notificacion
+        notificacion = {
+            ...notificacion,
+            leido: true
+        }
+
+        nuevasNotificaciones[idx] = notificacion
+        setNotificaciones([...nuevasNotificaciones])
+    }
+
+    const handlePressItem = (item, index) => {
+        handleVerNotificacion(index)
+
+        const { tipo } = item
+        switch (tipo) {
+            case TipoNotificacion.RESERVAENFECHA:
+                handleIrAReservaEnFecha(item.fechaID, item.reservaID)
+                break;
+
+            case TipoNotificacion.RESERVACREADA:
+                handleIrAReserva(item.reservaID)
+                break;
+
+            case TipoNotificacion.BIENVENIDA:
+                handleVerTutorial()
+                break;
+
+            default:
+                console.log("otro tipo de notificacion")
+                break;
+        }
+    }
+
     if (!notificaciones) {
         return <Loading indicator />
     }
@@ -69,8 +115,10 @@ export default () => {
         </View>
     }
 
-    return (
+    return (<View style={{ flex: 1, }}>
+
         <FlatList
+            showsVerticalScrollIndicator={false}
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
@@ -78,26 +126,27 @@ export default () => {
                 />}
 
             style={container}
+
+
             data={notificaciones}
+            initialNumToRender={6}
             renderItem={({ item, index }) => {
                 const { tipo } = item
-                return <Element
-                    image={item.imagen}
-                    titulo={item.titulo}
-                    descripcion={item.descripcion}
-                    tiempo={moment(item.createdAt).from(moment())}
+                return <View style={{ flex: 1, marginBottom: index === notificaciones.length - 1 ? 40 : 0, }}>
+                    <Element
+                        image={tipo === "BIENVENIDA" ? require("../../../assets/VELPA.png") : { uri: item.imagen }}
+                        titulo={item.titulo}
+                        descripcion={item.descripcion}
+                        tiempo={moment(item.createdAt).from(moment())}
+                        leido={!!item.leido}
 
-                    onPress={tipo === "RESERVAENFECHA" ?
-                        () => handleIrAReservaEnFecha(item.fechaID, item.reservaID) :
-                        tipo === "RESERVACREADA" ?
-                            () => handleIrAReserva(item.reservaID) :
-                            () => handleIrAReserva(item.reservaID)
+                        onPress={() => handlePressItem(item, index)}
+                    />
 
-                    }
-                />
-
+                </View>
             }}
         />
+    </View>
     )
 }
 

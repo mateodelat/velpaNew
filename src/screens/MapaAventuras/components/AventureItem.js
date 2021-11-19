@@ -41,7 +41,7 @@ export default class AdventureItem extends PureComponent {
                             {/* Categoria */}
                             <Text style={styles.categoriaTxt}>{
                                 this.props.item.categoria === Categorias.APLINISMO ? "Alpinismo" :
-                                    this.props.item.categoria === Categorias.MTB ? "Ciclismo" :
+                                    this.props.item.categoria === Categorias.CICLISMO ? "Ciclismo" :
                                         "Otros"
                             }</Text>
                         </View>

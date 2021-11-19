@@ -1,8 +1,11 @@
+import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useState } from 'react';
 
 import { Calendar } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars';
-import { addDays, diffDays, formatDate, moradoClaro, moradoOscuro, msInHour } from '../../../../assets/constants';
+import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, moradoOscuro, msInHour } from '../../../../assets/constants';
+import { Loading } from '../../../components/Loading';
+import { Fecha } from '../../../models';
 
 
 // Personalizar idiomas
@@ -24,12 +27,113 @@ export default ({
     setFechaInicial,
 
 }) => {
+    const colorFondoLocked = "#cccccc"
+    const colorTextoLocked = "#fff"
 
     // Fechas por defecto ya reservadas
-    // Dias marcados
-    const [markedDays, setmarkedDays] = useState({
+    const [fechasExistentes, setFechasExistentes] = useState({});
+    useEffect(() => {
+        pedirFechasDelGuia()
+    }, []);
 
-    });
+    const pedirFechasDelGuia = async () => {
+        const sub = await getUserSub()
+        DataStore.query(Fecha, e => e.usuarioID("eq", sub))
+            .then(r => {
+                let diasMarcados = {}
+
+                r.map(fecha => {
+
+                    const { fechaInicial, fechaFinal } = fecha
+
+                    const daysAdd = Math.floor(diffDays(fechaInicial, fechaFinal) + 1)
+
+                    // Calcular diferencia de dias
+                    let middleDays = {}
+                    // Ciclo que va a revisar los dias intermedios
+                    // Se le agrega al objeto los anteriores y aparte el nuevo dia
+                    for (let i = 1; i < daysAdd; i++) {
+                        middleDays = {
+                            ...middleDays,
+                            [addDays(fechaInicial, i)]: {
+                                color: colorFondoLocked,
+                                textColor: colorTextoLocked,
+                                disableTouchEvent: true,
+                            }
+                        }
+                    }
+                    switch (daysAdd) {
+                        case 1:
+                            diasMarcados = {
+                                ...diasMarcados,
+                                // Primero
+                                [formatDate(fechaInicial)]: {
+                                    color: colorFondoLocked,
+                                    textColor: colorTextoLocked,
+                                    startingDay: true,
+                                    disableTouchEvent: true,
+                                    endingDay: true,
+                                },
+                            }
+                            break;
+
+                        case 2:
+                            diasMarcados = {
+                                ...diasMarcados,
+                                // Primero
+                                [formatDate(fechaInicial)]: {
+                                    color: colorFondoLocked,
+                                    textColor: colorTextoLocked,
+                                    startingDay: true,
+                                    disableTouchEvent: true,
+                                    endingDay: false,
+                                },
+                                // Ultimo
+                                [formatDate(fechaFinal)]: {
+                                    disableTouchEvent: true,
+                                    color: colorFondoLocked,
+                                    textColor: colorTextoLocked,
+                                    startingDay: false,
+                                    endingDay: true,
+                                },
+                            }
+                            break;
+
+                        default:
+                            diasMarcados = {
+                                ...diasMarcados,
+                                // Primero
+                                [formatDate(fechaInicial)]: {
+                                    color: colorFondoLocked,
+                                    textColor: colorTextoLocked,
+                                    startingDay: true,
+                                    disableTouchEvent: true,
+                                    endingDay: false,
+                                },
+                                ...middleDays,
+
+                                // Ultimo
+                                [formatDate(fechaFinal)]: {
+                                    disableTouchEvent: true,
+                                    color: colorFondoLocked,
+                                    textColor: colorTextoLocked,
+                                    startingDay: false,
+                                    endingDay: true,
+                                },
+                            }
+                            break;
+                    }
+
+                    // Se hacen los dias marcados a el primero, intermedios y ultimo
+
+                })
+                setFechasExistentes(diasMarcados)
+            })
+    }
+
+
+    // Dias seleccionados
+    const [markedDays, setmarkedDays] = useState({});
 
 
     const colorFondoSelected = moradoClaro
@@ -78,6 +182,7 @@ export default ({
 
         // Si se presiona una fecha posterior a la inicial
         if (timestamp > fechaInicial) {
+
             // Calcular diferencia de dias
             const daysAdd = diffDays(fechaInicial, timestamp)
 
@@ -85,6 +190,24 @@ export default ({
             // Ciclo que va a revisar los dias intermedios
             // Se le agrega al objeto los anteriores y aparte el nuevo dia
             for (let i = 1; i < daysAdd; i++) {
+                // Revisar que no intervenga con fechas bloqueadas
+                if (!!fechasExistentes[addDays(fechaInicial, i)]) {
+                    // Si interviene se hace el dia seleccionado el ulitmo
+                    setmarkedDays({
+                        [dateString]: {
+                            disableTouchEvent: false,
+                            color: colorFondoSelected,
+                            textColor: colorTexto,
+                            startingDay: true,
+                            endingDay: true,
+                        },
+                    })
+
+                    setFechaInicial(timestamp + 8 * msInHour)
+                    return
+                }
+
+
                 middleDays = {
                     ...middleDays,
                     [addDays(fechaInicial, i)]: {
@@ -134,16 +257,27 @@ export default ({
 
     }
 
+    if (!fechasExistentes) return <Loading indicator containerStyle={{
+        height: 350,
+    }} />
+
     return (
 
         <Calendar
             markingType={'period'}
-            markedDates={markedDays}
+            markedDates={{
+                ...markedDays,
+                ...fechasExistentes
+            }}
             minDate={Date()}
             maxDate={(Date.now() + 31540000000)}
             onDayPress={handleDayPress}
             enableSwipeMonths={true}
             firstDay={1}
+
+            onDayLongPress={(date) => {
+                console.log(date)
+            }}
 
             theme={{
                 arrowColor: moradoOscuro,

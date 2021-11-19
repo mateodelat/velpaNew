@@ -17,12 +17,59 @@ import { Aventura, Categorias } from '../../models';
 import { Loading } from '../../components/Loading';
 
 
+export const obtenerAventurasParaMapa = async () => {
+    return await DataStore.query(Aventura, ave => ave.estadoAventura("eq", 'AUTORIZADO'))
+        .then(r => {
+
+            // Sortear de izquierda a derecha en el mapa
+            r = r.sort((a, b) => {
+                const {
+                    latitude: latitudeA,
+                    longitude: longitudeA
+                } = a.coordenadas
+                const {
+                    latitude: latitudeB,
+                    longitude: longitudeB
+                } = b.coordenadas
+                return (latitudeA < latitudeB)
+            })
+
+            return (r)
+        })
+        .catch(e => {
+            Alert.alert("Error obteniendo aventura")
+            console.log(e)
+        })
+
+}
+
 
 export default function ({ navigation }) {
+    const [region, setRegion] = useState(null);
 
     useEffect(() => {
         verificarUbicacion()
-        obtenerAventuras()
+            .then(async r => {
+                const { coords: { latitude, longitude } } = await getLastKnownPositionAsync()
+
+                const defaultLocation = {
+                    latitude: 21.76227198730249,
+                    longitude: -104.03593288734555,
+                    latitudeDelta: 32.71611359157346,
+                    longitudeDelta: 60.73143247514963,
+                }
+                const location = {
+                    latitude,
+                    longitude,
+                    latitudeDelta: 10,
+                    longitudeDelta: 10,
+
+                }
+                setRegion(latitude ? location : defaultLocation)
+            })
+        obtenerAventurasParaMapa().then(r => {
+            setAventuras(r)
+        })
     }, []);
 
 
@@ -34,37 +81,6 @@ export default function ({ navigation }) {
     const flatlist = useRef(null);
     const map = useRef(null);
 
-    function distancia(lat1, lon1, lat2, lon2) {
-        const p = 0.017453292519943295
-        const hav = 0.5 - Math.cos((lat2 - lat1) * p) / 2 + Math.cos(lat1 * p) * Math.cos(lat2 * p) * (1 - Math.cos((lon2 - lon1) * p)) / 2
-        return 12742 * Math.asin(Math.sqrt(hav))
-    }
-
-    const obtenerAventuras = async () => {
-        await DataStore.query(Aventura, ave => ave.estadoAventura("eq", 'AUTORIZADO'))
-            .then(r => {
-
-                // Sortear de izquierda a derecha en el mapa
-                r = r.sort((a, b) => {
-                    const {
-                        latitude: latitudeA,
-                        longitude: longitudeA
-                    } = a.coordenadas
-                    const {
-                        latitude: latitudeB,
-                        longitude: longitudeB
-                    } = b.coordenadas
-                    return (latitudeA < latitudeB)
-                })
-
-                setAventuras(r)
-            })
-            .catch(e => {
-                Alert.alert("Error obteniendo aventura")
-                console.log(e)
-            })
-
-    }
 
 
     const handleVerElemento = (e, idx) => {
@@ -103,7 +119,7 @@ export default function ({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <MapView
+            {region ? <MapView
                 ref={map}
                 onPress={() => {
                     Keyboard.dismiss()
@@ -115,12 +131,7 @@ export default function ({ navigation }) {
                     top: 70,
                 }}
 
-                initialRegion={{
-                    latitude: 20.696042,
-                    longitude: -103.440991,
-                    latitudeDelta: 15,
-                    longitudeDelta: 15,
-                }}
+                initialRegion={region}
 
                 clusterColor={moradoOscuro}
                 showsUserLocation={true}
@@ -145,7 +156,7 @@ export default function ({ navigation }) {
                                         size={15}
                                         color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
                                     /> :
-                                    e.categoria === Categorias.MTB ?
+                                    e.categoria === Categorias.CICLISMO ?
                                         <MaterialIcons
                                             name="directions-bike"
                                             size={24}
@@ -168,7 +179,7 @@ export default function ({ navigation }) {
                             <ActivityIndicator size={"large"} color={"black"} />
                         </View>
                 }
-            </MapView>
+            </MapView> : <Loading indicator />}
             <FlatList
                 ref={flatlist}
                 data={aventuras}

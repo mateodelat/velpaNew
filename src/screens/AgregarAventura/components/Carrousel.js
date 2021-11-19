@@ -17,7 +17,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DoubleClick from '../../../components/DoubleClick.js';
-import { openImagePickerAsync, colorFondo } from '../../../../assets/constants/index.js';
+import { openImagePickerAsync, colorFondo, moradoOscuro, getBlob } from '../../../../assets/constants/index.js';
+import Storage from '@aws-amplify/storage';
 
 
 
@@ -159,11 +160,21 @@ export default ({
 
     }
 
+    // Asignar index de imagen de fondo
+    const handleSetImagenFondo = (index) => {
+
+        setAventura({
+            ...aventura,
+            imagenFondoIdx: index === aventura.imagenFondoIdx ? null : index
+
+
+        })
+    }
+
     ///////////////////////////////////////////////////
     //////////MODIFICAR O VER IMAGENES/////////////////
     ///////////////////////////////////////////////////
     const handlePressItem = (index, visor) => {
-
         // Si queremos utilizar visor de imagen solo se muestra el modal
         if (visor) {
             let indexVideo
@@ -193,6 +204,7 @@ export default ({
                 .then(async r => {
                     if (r) {
                         const isVideo = r.type === "video"
+                        const key = "imagen-" + index + " ave-" + aventura.id + (isVideo ? ".mp4" : ".jpg")
 
                         if (isVideo) {
                             // Revisar que sea formato .mp4
@@ -201,69 +213,38 @@ export default ({
                                 return
                             }
 
-
-                            // Borrarlo y ponerlo
-                            newImagenDetalle.splice(index, 1)
                             if (!!newImagenDetalle.find(e => e.video)) {
                                 // Revisar que sea el unico video
                                 Alert.alert("Error", "Actualmente solo soportamos un solo video por aventura")
                                 return
                             }
-                            newImagenDetalle.splice(index, 0, r.uri)
                         }
 
                         // Subir al bucket
                         setUploading(index)
+                        const blobImagen = await getBlob(r.uri)
+                        await Storage.put(key, blobImagen)
 
-                        setTimeout(() => {
-                            newImagenDetalle.splice(index, 1, {
-                                uri: r.uri,
-                                video: r.uri.endsWith(".mp4") ? true : false
-                            })
+                        newImagenDetalle.splice(index, 1, {
+                            uri: r.uri,
+                            video: isVideo,
+                            key
+                        })
 
-                            // Quitar errores
-                            let newArray = [...errorImagenes]
-                            newArray[index] = false
-                            setErrorImagenes([...newArray])
+                        // Quitar errores
+                        let newArray = [...errorImagenes]
+                        newArray[index] = false
+                        setErrorImagenes([...newArray])
 
-                            setAventura({
+                        setAventura({
 
-                                ...aventura,
-                                imagenDetalle: newImagenDetalle
-                            })
+                            ...aventura,
+                            imagenDetalle: newImagenDetalle
+                        })
 
-                            agregarImagenesAlVisor(newImagenDetalle)
+                        agregarImagenesAlVisor(newImagenDetalle)
 
-                            setUploading(null)
-                        }, 100);
-
-                        // subirImagen(r.uri, aventura.id, index, isVideo)
-                        //     .then(async r => {
-                        //         Alert.alert("Exito", "Archivo subido con exito")
-                        //         const signedURL = await Storage.get(r.key);
-                        //         newImagenDetalle.splice(index, 1, {
-                        //             key: r.key,
-                        //             uri: signedURL,
-                        //             video: r.key.endsWith(".mp4") ? true : false
-                        //         })
-
-                        //         // Quitar errores
-                        //         let newArray = [...errorImagenes]
-                        //         newArray[index] = false
-                        //         setErrorImagenes([...newArray])
-
-                        //         setAventura({
-
-                        //             ...aventura,
-                        //             imagenDetalle: newImagenDetalle
-                        //         })
-                        //         setUploading(null)
-
-                        //     })
-                        //     .catch(e => {
-                        //         console.log(e)
-                        //         Alert.alert("Error", "Error subiendo la imagen")
-                        //     })
+                        setUploading(null)
                     }
                 })
                 .catch(e => {
@@ -284,6 +265,9 @@ export default ({
 
         setAventura({
             ...aventura,
+
+            // Reiniciar index si es mayor
+            imagenFondoIdx: index <= aventura.imagenFondoIdx ? aventura.imagenFondoIdx : null,
             imagenDetalle: newImagenDetalle
         })
 
@@ -306,7 +290,7 @@ export default ({
         }
 
         openImagePickerAsync()
-            .then(r => {
+            .then(async r => {
                 if (r) {
                     const isVideo = r.type === "video"
                     if (isVideo) {
@@ -322,53 +306,33 @@ export default ({
                             return
                         }
                     }
-                    setUploading(index)
 
-                    setTimeout(() => {
-                        setUploading(false)
-                    }, 100);
+                    // Subir imagen a S3
+                    const key = "imagen-" + index + " ave-" + aventura.id + (isVideo ? ".mp4" : ".jpg")
 
-                    newImagenDetalle.splice(index + (side === "left" ? 0 : 1), 0, {
-                        uri: r.uri,
-                        video: r.uri.endsWith(".mp4") ? true : false
-                    })
-
-                    let newArray = [...errorImagenes]
-                    newArray[index + (side === "left" ? 0 : 1)] = false
-                    setErrorImagenes([...newArray])
 
                     setAventura({
                         ...aventura,
                         imagenDetalle: newImagenDetalle
                     })
 
+                    newImagenDetalle.splice(index + (side === "left" ? 0 : 1), 0, {
+                        key,
+                        uri: r.uri,
+                        video: isVideo,
+                    })
+
+                    setUploading(index + (side === "left" ? 0 : 1))
+                    const blobImagen = await getBlob(r.uri)
+                    await Storage.put(key, blobImagen)
+
+                    // Limpiar errores
+                    let newArray = [...errorImagenes]
+                    newArray[index + (side === "left" ? 0 : 1)] = false
+                    setErrorImagenes([...newArray])
+
                     agregarImagenesAlVisor(newImagenDetalle)
-                    // Subir al bucket
-                    // subirImagen(r.uri, aventura.id, index + (side === "left" ? 0 : 1), isVideo)
-                    //     .then(async r => {
-
-                    //         const signedURL = await Storage.get(r.key);
-                    //         newImagenDetalle.splice(index + (side === "left" ? 0 : 1), 0, {
-                    //             key: r.key,
-                    //             uri: signedURL,
-                    //             video: r.key.endsWith(".mp4") ? true : false
-                    //         })
-
-                    //         let newArray = [...errorImagenes]
-                    //         newArray[index + (side === "left" ? 0 : 1)] = false
-                    //         setErrorImagenes([...newArray])
-
-                    //         setAventura({
-                    //             ...aventura,
-                    //             imagenDetalle: newImagenDetalle
-                    //         })
-                    //         setUploading(null)
-
-                    //     })
-                    //     .catch(e => {
-                    //         console.log(e)
-                    //         Alert.alert("Error", "Error subiendo la imagen")
-                    //     })
+                    setUploading(null)
                 }
             })
             .catch(e => {
@@ -570,13 +534,33 @@ export default ({
                                             }}
                                             style={styles.controlesImagen}>
 
+                                            {!isVideo &&
+                                                <View style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    alignItems: 'center',
+                                                    position: 'absolute',
+                                                }}>
+
+                                                    <Pressable
+                                                        onPress={() => handleSetImagenFondo(index)}
+                                                        style={{
+                                                            ...styles.setImagenFondoContainer,
+                                                            backgroundColor: aventura.imagenFondoIdx === index ? moradoOscuro : '#fff',
+                                                        }}>
+                                                        <Text style={{
+                                                            color: aventura.imagenFondoIdx === index ? '#fff' : '#000',
+                                                        }}>Imagen principal</Text>
+                                                    </Pressable>
+                                                </View>}
+
 
                                             {/* Boton borrar imagen */}
                                             <Pressable
                                                 onPress={() => handleRemoveImage(index)}
                                                 style={{
                                                     ...styles.iconContainer,
-                                                    backgroundColor: 'red',
+                                                    backgroundColor: '#ff0000',
                                                     alignSelf: 'flex-start',
                                                     position: 'absolute',
                                                     left: 10,
@@ -669,7 +653,7 @@ const styles = StyleSheet.create({
         borderRadius: 35,
         alignItems: 'center',
         borderRadius: 100,
-        backgroundColor: '#fff',
+        backgroundColor: '#ffffff',
         justifyContent: 'center',
 
         width: 45,
@@ -684,6 +668,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-    }
+    },
 
+    setImagenFondoContainer: {
+        top: 10,
+        borderRadius: 20,
+        backgroundColor: moradoOscuro,
+        padding: 10,
+    }
 });

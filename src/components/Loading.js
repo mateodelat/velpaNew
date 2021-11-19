@@ -7,7 +7,7 @@ export const Loading = ({ containerStyle, valor, indicator }) => {
         return <View style={{
             flex: 1,
             alignItems: 'center', justifyContent: 'center',
-
+            ...containerStyle
         }}>
             <ActivityIndicator size={"large"} color={"black"} />
 

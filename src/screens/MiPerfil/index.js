@@ -96,6 +96,8 @@ export default ({ route, navigation }) => {
 
     async function miSaldo() {
         setButtonLoading("saldo")
+        Alert.alert("Ir a pantalla de saldo")
+        return
         // Obtener el sub
 
         try {
@@ -127,7 +129,7 @@ export default ({ route, navigation }) => {
                 })
             })
                 .catch(e => {
-                    console.log(r)
+                    console.log(e)
                     return e
                 })
 
@@ -185,7 +187,9 @@ export default ({ route, navigation }) => {
     }
 
 
-    function cerrarSesion() {
+    async function cerrarSesion() {
+        await DataStore.stop()
+        DataStore.clear()
         Auth.signOut()
     }
 

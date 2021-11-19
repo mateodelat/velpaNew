@@ -20,14 +20,14 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { categorias, colorFondo, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { categorias, colorFondo, getUserSub, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from '../../components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import Boton from '../../components/Boton';
 import AddElemento from './components/AddElemento';
-import { AventuraSolicitudGuia, Categorias, StatusSolicitud, Usuario } from '../../models';
+import { AventuraSolicitudGuia, Categorias, Notificacion, StatusSolicitud, TipoNotificacion, Usuario } from '../../models';
 import { DataStore } from '@aws-amplify/datastore';
 import { AventuraUsuario } from '../../models';
 import Auth from '@aws-amplify/auth';
@@ -42,7 +42,7 @@ export default ({
     // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
 
     // Variables iniciales
-    const { esSelector } = { esSelector: true }/*route.params*/
+    const { esSelector } = route.params
 
     let titulo
     let descripcion
@@ -155,6 +155,7 @@ export default ({
         // Extraer solos los id's de aventuras seleccionadas
         let listaAventuras = []
 
+
         selectedItems.map((row) => {
             row.map(e => {
                 if (e.selected) {
@@ -162,6 +163,8 @@ export default ({
                 }
             })
         })
+
+        const sub = await getUserSub()
 
         if (listaAventuras.length === 0) {
             Alert.alert("Error", "Selecciona minimo una aventura a validar")
@@ -172,6 +175,7 @@ export default ({
 
         const solicitudguia = await DataStore.save(new SolicitudGuia({
             status: StatusSolicitud.PENDIENTE,
+            usuarioID: sub
         }))
 
         // Crear relaciones a aventura para cada una
@@ -180,6 +184,25 @@ export default ({
                 aventura,
                 solicitudguia
             }))
+        }))
+
+
+        // Mandar notificacion
+        await DataStore.save(new Notificacion({
+            tipo: TipoNotificacion.SOLICITUDGUIA,
+
+            titulo: "Nueva solicitud",
+            descripcion: "Se ha creado una solicitud de guia para" + listaAventuras.map(e => (" " + e.titulo)) + ", espera nuestra llamada!!",
+            imagen: listaAventuras[0].imagenDetalle[listaAventuras[0].imagenFondoIdx],
+
+            usuarioID: sub,
+
+        }))
+
+        // Poner el estatus de guia en el usuario actual
+        const user = await DataStore.query(Usuario, sub)
+        DataStore.save(Usuario.copyOf(user, nuevo => {
+            nuevo.guia = true
         }))
 
         setButtonLoading(false)
@@ -251,7 +274,7 @@ export default ({
                     (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (newCategoriasSelect[1] && e.categoria === Categorias.MTB) ||
+                    (newCategoriasSelect[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
@@ -299,7 +322,7 @@ export default ({
                     (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (categoriasSeleccionadas[1] && e.categoria === Categorias.MTB) ||
+                    (categoriasSeleccionadas[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
@@ -334,7 +357,7 @@ export default ({
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // MOUNTAIN BIKE
-                    (categorias[1] && e.categoria === Categorias.MTB) ||
+                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // OTROS
                     (categorias[2] && e.categoria === Categorias.OTROS)
@@ -365,7 +388,7 @@ export default ({
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
 
                     // Dificultad media
-                    (categorias[1] && e.categoria === Categorias.MTB) ||
+                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
 
                     // Dificultad dificil
                     (categorias[2] && e.categoria === Categorias.OTROS)

@@ -62,25 +62,6 @@ export const getAventura = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Publicidad {
-        items {
-          id
-          tipo
-          titulo
-          descripcion
-          imagenFondo
-          video
-          linkAnuncio
-          aventuraID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       SolicitudGuias {
         items {
           id
@@ -154,10 +135,6 @@ export const listAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Publicidad {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -215,10 +192,6 @@ export const syncAventuras = /* GraphQL */ `
         updatedAt
         owner
         Fechas {
-          nextToken
-          startedAt
-        }
-        Publicidad {
           nextToken
           startedAt
         }
@@ -491,6 +464,7 @@ export const getUsuario = /* GraphQL */ `
     getUsuario(id: $id) {
       id
       tipo
+      guia
       nombre
       apellido
       foto
@@ -605,6 +579,7 @@ export const getUsuario = /* GraphQL */ `
           usuarioID
           imagen
           owner
+          leido
           reservaID
           fechaID
           aventuraID
@@ -661,6 +636,7 @@ export const listUsuarios = /* GraphQL */ `
       items {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -733,6 +709,7 @@ export const syncUsuarios = /* GraphQL */ `
       items {
         id
         tipo
+        guia
         nombre
         apellido
         foto
@@ -1115,6 +1092,7 @@ export const getNotificacion = /* GraphQL */ `
       usuarioID
       imagen
       owner
+      leido
       reservaID
       fechaID
       aventuraID
@@ -1142,6 +1120,7 @@ export const listNotificacions = /* GraphQL */ `
         usuarioID
         imagen
         owner
+        leido
         reservaID
         fechaID
         aventuraID
@@ -1178,6 +1157,7 @@ export const syncNotificacions = /* GraphQL */ `
         usuarioID
         imagen
         owner
+        leido
         reservaID
         fechaID
         aventuraID
@@ -1398,6 +1378,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         usuario {
           id
           tipo
+          guia
           nombre
           apellido
           foto
@@ -1453,6 +1434,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
         usuario {
           id
           tipo
+          guia
           nombre
           apellido
           foto

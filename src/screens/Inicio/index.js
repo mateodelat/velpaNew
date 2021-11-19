@@ -1,3 +1,4 @@
+import { Hub } from '@aws-amplify/core';
 import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useRef, useState } from 'react'
 import {
@@ -20,6 +21,7 @@ import { listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../as
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
+import { Aventura } from '../../models';
 import { Publicidad } from '../../models';
 import ComponentePublicidad from './components/ComponentePublicidad';
 import Indicador from './components/Indicador';
@@ -30,8 +32,8 @@ export default ({ navigation }) => {
 
     const flatList = useRef(null)
 
-    const [actualIdx, setActualIdx] = useState(0);
-    const [aventuras, setAventuras] = useState([]);
+    const [actualIdx, setActualIdx] = useState(null);
+    const [aventuras, setAventuras] = useState(null);
 
     const [publicidad, setPublicidad] = useState(null);
 
@@ -39,9 +41,8 @@ export default ({ navigation }) => {
     let timer
 
     function empezarTimer(duration) {
-
         if (actualIdx === null) {
-            setActualIdx(0)
+            setActualIdx(1)
             return
         }
 
@@ -49,24 +50,22 @@ export default ({ navigation }) => {
             flatList?.current?.scrollToIndex({
                 index: actualIdx
             })
-            setActualIdx(actualIdx < (publicidad.length - 1) ? actualIdx + 1 : 0)
+            setActualIdx(actualIdx < (publicidad?.length - 1) ? actualIdx + 1 : 0)
         }, duration);
     }
 
     useEffect(() => {
-
         // Timer de publicidad
         if (actualIdx === null) {
             empezarTimer()
         }
-        empezarTimer(4000)
+        empezarTimer(6000)
     }, [actualIdx]);
 
 
     useEffect(() => {
         fetchPublicidad()
 
-        // Pedir 5 aventuras autorizadas
         listAventurasAutorizadas(5)
             .then(r => {
                 setAventuras(r)
@@ -76,8 +75,6 @@ export default ({ navigation }) => {
 
     const fetchPublicidad = async () => {
         const publicidades = await DataStore.query(Publicidad)
-
-        console.log(publicidades)
         setPublicidad(publicidades)
     }
 
@@ -114,6 +111,10 @@ export default ({ navigation }) => {
         ])
     }
 
+    const handleMisAventuras = async () => {
+        () => navigation.navigate("MisReservas")
+    }
+
 
     return (
         <ScrollView
@@ -144,7 +145,9 @@ export default ({ navigation }) => {
 
                         </View>
                         :
-                        publicidad.length === 0 ? null :
+                        publicidad.length === 0 ? <View style={{ height: height * 0.25, }}>
+
+                        </View> :
                             <>
                                 <Animated.FlatList
                                     pagingEnabled
@@ -229,112 +232,129 @@ export default ({ navigation }) => {
                 {/* $$$$$$$$$$$$$*/}
                 {/* Lista lugares*/}
                 {/* $$$$$$$$$$$$$*/}
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={{
-                        marginTop: 20,
-                        flexDirection: 'row',
-                        marginBottom: 10,
+                {
+                    !aventuras ?
+                        <View style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 198.6,
+                            width: "100%",
+                        }}>
+                            <ActivityIndicator
+                                size={"large"}
+                                color={"black"}
+                            />
 
-                    }}>
+                        </View>
+                        :
 
-                    {/* Mapear todas las aventuras */}
-                    {
-                        aventuras.length !== 0 ?
-                            aventuras.map((e, idxAve) => (
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            style={{
+                                marginTop: 20,
+                                flexDirection: 'row',
+                                marginBottom: 10,
 
-                                <Pressable
-                                    key={"idxAve", idxAve}
-                                    onPress={() => navigation.navigate("DetalleAventura", {
-                                        id: e.id
-                                    })}
-                                    style={{
-                                        overflow: "hidden",
-                                        marginRight: idxAve === 4 - 1 ? 0 : 30,
-                                        borderRadius: 7,
-                                        width: width * 0.6,
-
-                                    }}>
-                                    {/* Imagenes */}
-                                    <Image
-                                        source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
-                                        style={{
-                                            width: width * 0.6,
-                                            height: height * 0.2,
-
-                                            resizeMode: 'cover',
-                                        }} />
-
-
-
-                                    {/* Footer */}
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        backgroundColor: '#F4F6F6',
-                                        padding: 5,
-                                        paddingTop: 7,
-                                        // width: '100%',
-                                    }}>
-                                        {/* Titulo y desc */}
-                                        <View style={{
-                                            flex: 1,
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: 'bold',
-                                                }}
-                                            >{e.titulo}</Text>
-                                            <Text
-                                                numberOfLines={1}
-                                                style={{
-                                                    fontSize: 14,
-                                                    marginTop: 5,
-                                                }}
-                                            >{e.descripcion}</Text>
-                                        </View>
-
-
-                                        {/* Precio y flecha de continuar */}
-                                        <View style={{
-                                            width: 50,
-                                            height: 50,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    color: '#000',
-                                                    fontWeight: 'bold',
-                                                    fontSize: 14,
-                                                    marginBottom: 5,
-                                                }}
-                                            >$ {promedioPrecios(e.precioMin, e.precioMax)}</Text>
-
-
-                                            <Flecha />
-                                        </View>
-                                    </View>
-                                </Pressable>
-                            )) :
-                            <View style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                height: 198.6,
-                                width: width - 40,
                             }}>
-                                <ActivityIndicator
-                                    size={"large"}
-                                    color={"black"}
-                                />
-                            </View>
-                    }
 
-                </ScrollView>
+                            {/* Mapear todas las aventuras */}
+                            {
+                                aventuras.length !== 0 ?
+                                    aventuras.map((e, idxAve) => (
+
+                                        <Pressable
+                                            key={"idxAve", idxAve}
+                                            onPress={() => navigation.navigate("DetalleAventura", {
+                                                id: e.id
+                                            })}
+                                            style={{
+                                                overflow: "hidden",
+                                                marginRight: idxAve === 4 - 1 ? 0 : 30,
+                                                borderRadius: 7,
+                                                width: width * 0.6,
+
+                                            }}>
+                                            {/* Imagenes */}
+                                            <Image
+                                                source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
+                                                style={{
+                                                    width: width * 0.6,
+                                                    height: height * 0.2,
+
+                                                    resizeMode: 'cover',
+                                                }} />
+
+
+
+                                            {/* Footer */}
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                backgroundColor: '#F4F6F6',
+                                                padding: 5,
+                                                paddingTop: 7,
+                                                // width: '100%',
+                                            }}>
+                                                {/* Titulo y desc */}
+                                                <View style={{
+                                                    flex: 1,
+                                                }}>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 16,
+                                                            fontWeight: 'bold',
+                                                        }}
+                                                    >{e.titulo}</Text>
+                                                    <Text
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            fontSize: 14,
+                                                            marginTop: 5,
+                                                        }}
+                                                    >{e.descripcion}</Text>
+                                                </View>
+
+
+                                                {/* Precio y flecha de continuar */}
+                                                <View style={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                    <Text
+                                                        style={{
+                                                            color: '#000',
+                                                            fontWeight: 'bold',
+                                                            fontSize: 14,
+                                                            marginBottom: 5,
+                                                        }}
+                                                    >$ {promedioPrecios(e.precioMin, e.precioMax)}</Text>
+
+
+                                                    <Flecha />
+                                                </View>
+                                            </View>
+                                        </Pressable>
+                                    )) :
+                                    <View style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: 198.6,
+                                        width: width - 40,
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 18,
+                                            fontWeight: 'bold',
+                                        }}>No hay aventuras sugeridas</Text>
+                                    </View>
+                            }
+
+                        </ScrollView>
+                }
             </View>
             <Pressable
-                onPress={() => navigation.navigate("MisReservas")}
+                onPress={handleMisAventuras}
                 style={{
                     backgroundColor: moradoOscuro,
                     padding: 10,

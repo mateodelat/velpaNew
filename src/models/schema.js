@@ -205,20 +205,6 @@ export const schema = {
                         "associatedWith": "aventuraID"
                     }
                 },
-                "Publicidad": {
-                    "name": "Publicidad",
-                    "isArray": true,
-                    "type": {
-                        "model": "Publicidad"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "aventuraID"
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -722,6 +708,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "guia": {
+                    "name": "guia",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "nombre": {
                     "name": "nombre",
                     "isArray": false,
@@ -797,7 +790,7 @@ export const schema = {
                 "telefono": {
                     "name": "telefono",
                     "isArray": false,
-                    "type": "AWSPhone",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1843,6 +1836,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "leido": {
+                    "name": "leido",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "reservaID": {
                     "name": "reservaID",
                     "isArray": false,
@@ -2025,20 +2025,11 @@ export const schema = {
                     "properties": {}
                 },
                 {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAventura",
-                        "fields": [
-                            "aventuraID"
-                        ]
-                    }
-                },
-                {
                     "type": "auth",
                     "properties": {
                         "rules": [
                             {
-                                "allow": "public",
+                                "allow": "private",
                                 "operations": [
                                     "read"
                                 ]
@@ -2076,7 +2067,7 @@ export const schema = {
             "name": "Categorias",
             "values": [
                 "APLINISMO",
-                "MTB",
+                "CICLISMO",
                 "OTROS"
             ]
         },
@@ -2103,7 +2094,9 @@ export const schema = {
                 "RECORDATORIOFECHA",
                 "SOLICITUDGUIA",
                 "SOLICITUDAVENTURA",
-                "ADMIN"
+                "ADMIN",
+                "BIENVENIDA",
+                "FECHACREADA"
             ]
         },
         "TipoPublicidad": {
@@ -2148,5 +2141,5 @@ export const schema = {
             }
         }
     },
-    "version": "f1e41c9c41246bfed200513d14e1ce96"
+    "version": "0ffd6b9d6448bb01c669e8d75769bcc0"
 };

@@ -4,6 +4,7 @@ import { Alert, Dimensions, Image, Pressable, StyleSheet, Text, View } from 'rea
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { moradoOscuro } from '../../../../assets/constants';
+import { TipoPublicidad } from '../../../models';
 
 
 const { height, width } = Dimensions.get("window")
@@ -18,6 +19,7 @@ export default ({
         videoUrl,
         titulo,
         descripcion,
+        tipo
     } = item
 
     return (
@@ -51,7 +53,7 @@ export default ({
                         <Text style={{
                             color: '#fff',
                             fontSize: 16,
-                        }}>Ir ahora</Text>
+                        }}>{tipo === TipoPublicidad.ANUNCIO ? "Ver" : "Ir ahora"}</Text>
                     </Pressable>
 
                 </View>
