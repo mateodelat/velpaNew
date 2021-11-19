@@ -640,7 +640,9 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
 export const listAventurasSugeridas = async (id, maxItems) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
-    c => c.estadoAventura("eq", "AUTORIZADO").id("ne", id),
+    c => c
+      // .estadoAventura("eq", "AUTORIZADO")
+      .id("ne", id),
     {
       limit: maxItems
     })

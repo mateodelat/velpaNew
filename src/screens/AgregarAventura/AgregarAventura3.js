@@ -48,29 +48,6 @@ export default ({ navigation, route }) => {
             estadoAventura: EstadoAventura.PENDIENTE,
             // _version: 0,
         }
-        // const e = {
-        //     altimetriaRecorrida: 536,
-        //     altitud: 3397,
-        //     categoria: APLINISMO,
-        //     comision: 0.2,
-        //     coordenadas: "{\"latitude\":19.587589422964793,\"longitude\":-103.59767854213713}",
-        //     dificultad: 3,
-        //     distanciaRecorrida: 96,
-        //     duracion: "1 dia",
-        //     estadoAventura: PENDIENTE,
-        //     id: "a95efc41-b75b-46fb-a2ec-80d617bf51d5",
-        //     imagenDetalle: [
-        //         "imagen-0 ave-a95efc41-b75b-46fb-a2ec-80d617bf51d5.jpg",
-        //     ],
-        //     imagenFondoIdx: 0,
-        //     materialDefault: "[[\"Obligatorio\",[\"material\"]],[\"Alimentacion\",[\"comida\"]],[\"Acampada\",[\"material\"]]]",
-        //     precioMax: 43423,
-        //     precioMin: 34,
-        //     titulo: "nevado de colima",
-        //     ubicacionId: "ChIJAAAAAAAAAAARpypMya362EY",
-        //     ubicacionLink: "https://maps.google.com/?cid=5105105801937955495",
-        //     ubicacionNombre: "Campamento La Joya",
-        // }
 
         // Existencia de parametros
         console.log(aventuraAEnviar)

@@ -12,7 +12,7 @@ import { categorias, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion 
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
-import { DataStore } from '@aws-amplify/datastore';
+
 import { Aventura, Categorias } from '../../models';
 import { Loading } from '../../components/Loading';
 import { getLastKnownPositionAsync } from 'expo-location';

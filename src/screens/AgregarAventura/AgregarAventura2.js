@@ -78,10 +78,7 @@ export default ({ navigation, route }) => {
                 const region = (coords || latitude) ? location : defaultLocation
 
                 // Si no hay permisos de ubicacion
-                if (!r) {
-                    setLocationPermision(false)
-                    console.log("")
-                }
+                setLocationPermision(r)
 
                 // Buscar aventura por el titulo
                 handleSearchPlace(aventura.titulo, region)
@@ -199,6 +196,7 @@ export default ({ navigation, route }) => {
         setRegion(e)
     }
     const clearSugested = () => {
+        Keyboard.dismiss()
         setBuscar("")
         setSuggestedPlace([])
     }
@@ -252,7 +250,7 @@ export default ({ navigation, route }) => {
 
 
     return (
-        <Pressable
+        <View
             onPress={() => {
                 Keyboard.dismiss()
             }}
@@ -291,36 +289,48 @@ export default ({ navigation, route }) => {
 
             </View>
             {
-                suggestedPlace.length !== 0 &&
-                <View style={styles.sugestionsContainer}>
-                    <View style={styles.line} />
+                buscar.length !== 0 && (
+                    suggestedPlace.length !== 0 ?
+                        <View style={styles.sugestionsContainer}>
+                            <View style={styles.line} />
 
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {suggestedPlace.map((e, i) => {
-                            const titulo = e.structured_formatting?.main_text
-                            const descripcion = e.structured_formatting?.secondary_text
-                            return <Pressable
-                                onPress={() => handlePressSuggested(e)}
-                                key={i.toString()}
-                                style={styles.suggestedPlace}>
-                                <Entypo
-                                    style={styles.icon}
-                                    name="location-pin"
-                                    size={30}
-                                    color={moradoOscuro}
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {suggestedPlace.map((e, i) => {
+                                    const titulo = e.structured_formatting?.main_text
+                                    const descripcion = e.structured_formatting?.secondary_text
+                                    return <Pressable
+                                        onPress={() => handlePressSuggested(e)}
+                                        key={i.toString()}
+                                        style={styles.suggestedPlace}>
+                                        <Entypo
+                                            style={styles.icon}
+                                            name="location-pin"
+                                            size={30}
+                                            color={moradoOscuro}
 
-                                />
+                                        />
 
-                                <Text numberOfLines={2} style={styles.tituloSugested}>{titulo} <Text style={styles.descripcionSugested}>{descripcion}</Text></Text>
-                            </Pressable>
-                        })}
-                    </ScrollView>
-                </View>
-            }
-            {
-                console.log(region && locationPermision !== null)
+                                        <Text numberOfLines={2} style={styles.tituloSugested}>{titulo} <Text style={styles.descripcionSugested}>{descripcion}</Text></Text>
+                                    </Pressable>
+                                })}
+                            </ScrollView>
+                        </View>
+                        : <View style={styles.sugestionsContainer}>
+                            <View style={styles.line} />
+                            <View style={{
+                                ...styles.suggestedPlace,
+                                flex: 1,
+                            }}>
+                                <Text numberOfLines={2} style={{
+                                    ...styles.tituloSugested,
+                                    textAlign: 'center',
+                                }}>No se han encontrado lugares</Text>
+
+                            </View>
+                        </View>
+                )
             }
 
             <Text style={styles.infoTxt}>Selecciona el pin de la aventura</Text>
@@ -330,16 +340,12 @@ export default ({ navigation, route }) => {
                     provider={"google"}
                     mapType={"terrain"}
 
-                    showsUserLocation={locationPermision ? true : false}
+                    showsUserLocation={locationPermision}
                     loadingEnabled={true}
 
                     initialRegion={region}
                     clusterColor={moradoOscuro}
-                    onTouchStart={() => {
-                        setSuggestedPlace([])
-                        setBuscar("")
-
-                    }}
+                    onTouchStart={clearSugested}
                     onPress={({ nativeEvent }) => {
                         const { coordinate } = nativeEvent
                         handlePressPlace(coordinate)
@@ -412,14 +418,14 @@ export default ({ navigation, route }) => {
             </View>
 
             <Boton
-                style={{
-                    marginTop: 30,
-                }}
                 onPress={handleContinuar}
                 titulo={"Continuar"}
                 loading={buttonLoading}
+                style={{
+                    marginTop: 30,
+                }}
             />
-        </Pressable>
+        </View>
     )
 }
 
@@ -460,7 +466,7 @@ const styles = StyleSheet.create({
     },
 
     mapContainer: {
-        height: height - 305,
+        flex: 1,
         borderRadius: 7,
         overflow: "hidden",
         alignItems: 'center', justifyContent: 'center',
@@ -487,7 +493,7 @@ const styles = StyleSheet.create({
         top: 68,
         zIndex: 1,
         width: '100%',
-        maxHeight: height * 0.4,
+        maxHeight: height * 0.45,
         borderBottomRightRadius: 7,
         borderBottomLeftRadius: 7,
         paddingBottom: 10,

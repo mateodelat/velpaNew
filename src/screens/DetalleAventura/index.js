@@ -149,24 +149,6 @@ export default ({ navigation, route }) => {
                     images={aventura.imagenDetalle}
                     scrollX={scrollX}
                 />
-                {/* <Pressable
-                onPress={() => navigation.pop()}
-                style={{
-                    position: 'absolute',
-                    left: 10,
-                    top: 10,
-                    padding: 4,
-                    backgroundColor: '#fff',
-                    borderRadius: 20,
-                }}>
-                <MaterialIcons
-                    name={"keyboard-arrow-left"}
-                    size={35}
-                    color={moradoOscuro}
-                />
-
-            </Pressable> */}
-
 
                 <View style={styles.bodyContainer}>
 
@@ -234,7 +216,7 @@ export default ({ navigation, route }) => {
                             justifyContent: 'space-between',
                         }}>
                             {/* Duracion */}
-                            <View style={{
+                            {aventura.distanciaRecorrida && <View style={{
                                 flexDirection: 'row',
                             }}>
                                 <View style={{ width: 35, }}>
@@ -244,7 +226,7 @@ export default ({ navigation, route }) => {
                                     fontSize: 16,
                                     color: 'gray',
                                 }}>{aventura.duracion}</Text>
-                            </View>
+                            </View>}
 
                             {/* Distancia */}
                             {aventura.distanciaRecorrida && <View style={{

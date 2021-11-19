@@ -155,7 +155,7 @@ export default function ({ navigation, route }) {
 
 
 
-        // setButtonLoading(true)
+        setButtonLoading(true)
         const sub = await getUserSub()
         let imagenRutaKey
 
