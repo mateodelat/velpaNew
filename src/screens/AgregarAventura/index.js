@@ -137,7 +137,8 @@ export default ({ navigation }) => {
             return
         }
 
-        if ((!!aventura.precioMax) && aventura.precioMin > aventura.precioMax) {
+
+        if ((!!aventura.precioMax) && precioMin > precioMax) {
             setErrorprecioMax(true)
             Alert.alert("Error", "El precio maximo debe ser mayor que el precio minimo")
             return

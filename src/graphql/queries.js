@@ -15,6 +15,7 @@ export const getAventura = /* GraphQL */ `
       dificultad
       ubicacionNombre
       ubicacionId
+      ubicacionLink
       comision
       estadoAventura
       coordenadas
@@ -24,6 +25,7 @@ export const getAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -43,6 +45,7 @@ export const getAventura = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -114,6 +117,7 @@ export const listAventuras = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -123,6 +127,7 @@ export const listAventuras = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -174,6 +179,7 @@ export const syncAventuras = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -183,6 +189,7 @@ export const syncAventuras = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -306,6 +313,7 @@ export const getFecha = /* GraphQL */ `
       itinerario
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -378,6 +386,7 @@ export const listFechas = /* GraphQL */ `
         itinerario
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -430,6 +439,7 @@ export const syncFechas = /* GraphQL */ `
         itinerario
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         allowTercera
         allowNinos
         material
@@ -519,6 +529,7 @@ export const getUsuario = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -1286,6 +1297,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           dificultad
           ubicacionNombre
           ubicacionId
+          ubicacionLink
           comision
           estadoAventura
           coordenadas
@@ -1295,6 +1307,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           categoria
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           materialDefault
           incluidoDefault
           _version
@@ -1357,6 +1370,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           dificultad
           ubicacionNombre
           ubicacionId
+          ubicacionLink
           comision
           estadoAventura
           coordenadas
@@ -1366,6 +1380,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           categoria
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           materialDefault
           incluidoDefault
           _version

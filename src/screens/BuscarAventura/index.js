@@ -32,7 +32,6 @@ export default ({ navigation }) => {
 
     // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
 
-
     const [buscar, setBuscar] = useState("");
 
     const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, false, false]);
@@ -376,7 +375,7 @@ export default ({ navigation }) => {
 
                                                     }}>
                                                     {/* Icono  */}
-                                                    {item.icono(categoriasSeleccionadas[index] ? "#fff" : '#000')}
+                                                    {item.icono(categoriasSeleccionadas[index] ? "#fff" : '#000', 25)}
                                                 </View>
                                                 <Text
                                                     style={{

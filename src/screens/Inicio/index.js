@@ -11,13 +11,14 @@ import {
     Keyboard,
     Linking,
     Pressable,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
     View
 } from 'react-native'
 
-import { listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { listAventurasAutorizadas, moradoClaro, moradoOscuro, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
@@ -36,7 +37,7 @@ export default ({ navigation }) => {
     const [aventuras, setAventuras] = useState(null);
 
     const [publicidad, setPublicidad] = useState(null);
-
+    const [refreshing, setRefreshing] = useState(false);
 
     let timer
 
@@ -64,6 +65,11 @@ export default ({ navigation }) => {
 
 
     useEffect(() => {
+        fetchData()
+    }, []);
+
+
+    const fetchData = () => {
         fetchPublicidad()
 
         listAventurasAutorizadas(5)
@@ -71,8 +77,7 @@ export default ({ navigation }) => {
                 setAventuras(r)
             })
 
-    }, []);
-
+    }
     const fetchPublicidad = async () => {
         const publicidades = await DataStore.query(Publicidad)
         setPublicidad(publicidades)
@@ -115,10 +120,22 @@ export default ({ navigation }) => {
         () => navigation.navigate("MisReservas")
     }
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetchData()
+
+        wait(300).then(() => setRefreshing(false));
+    }, []);
+
 
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
 
             onPress={() => Keyboard.dismiss()}
 

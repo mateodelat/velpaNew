@@ -7,10 +7,11 @@ import { Aventura, Notificacion, TipoNotificacion } from "../../src/models";
 import { DataStore } from '@aws-amplify/datastore';
 import React from "react";
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { Foundation, MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { Fecha } from "../../src/models";
 import { Usuario } from "../../src/models";
+import { Categorias } from "../../src/models";
 
 
 
@@ -1070,10 +1071,11 @@ export const msInDay = 86400000
 export const comision = .20
 
 export const abrirEnGoogleMaps = (placeId) => {
-  const link = `https://www.google.com/maps/place/?q=place_id:${placeId}`
+  console.log(placeId)
+  const link = `https://maps.google.com/?cid=13884668388091519820`
 
 
-  Linking.canOpenURL(linkUbicacion).then(r => {
+  Linking.canOpenURL(link).then(r => {
     if (r) {
       Alert.alert("Ir a google maps", "¿Deseas abrir el link?", [
         {
@@ -1082,7 +1084,7 @@ export const abrirEnGoogleMaps = (placeId) => {
         },
         {
           text: "OK",
-          onPress: () => Linking.openURL(linkUbicacion)
+          onPress: () => Linking.openURL(link)
         },
       ])
     } else {
@@ -1286,6 +1288,49 @@ export async function obtenerUriImagenesGuia(data) {
       })
   }
 }
+
+export const categorias = [...Object.keys(Categorias)].map(e => {
+  let icono
+  let titulo
+
+  switch (e) {
+    case Categorias.APLINISMO:
+      icono = (color, size) => < Foundation
+        name="mountains"
+        size={size}
+        color={color}
+      />
+      titulo = "Alpinismo"
+      break;
+
+    case Categorias.CICLISMO:
+      icono = (color, size) => <MaterialIcons
+        name="directions-bike"
+        size={size}
+        color={color}
+
+      />
+      titulo = "Ciclismo"
+
+      break;
+
+    default:
+      icono = (color, size) => <Entypo
+        name="dots-three-horizontal"
+        size={size}
+        color={color}
+
+      />
+      titulo = "Otros"
+
+      break;
+  }
+  return {
+    titulo,
+    icono
+  }
+
+})
 
 
 export const abrirStripeAccount = async (stripeID) => {

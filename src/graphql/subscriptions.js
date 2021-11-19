@@ -15,6 +15,7 @@ export const onCreateAventura = /* GraphQL */ `
       dificultad
       ubicacionNombre
       ubicacionId
+      ubicacionLink
       comision
       estadoAventura
       coordenadas
@@ -24,6 +25,7 @@ export const onCreateAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -43,6 +45,7 @@ export const onCreateAventura = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -109,6 +112,7 @@ export const onUpdateAventura = /* GraphQL */ `
       dificultad
       ubicacionNombre
       ubicacionId
+      ubicacionLink
       comision
       estadoAventura
       coordenadas
@@ -118,6 +122,7 @@ export const onUpdateAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -137,6 +142,7 @@ export const onUpdateAventura = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -203,6 +209,7 @@ export const onDeleteAventura = /* GraphQL */ `
       dificultad
       ubicacionNombre
       ubicacionId
+      ubicacionLink
       comision
       estadoAventura
       coordenadas
@@ -212,6 +219,7 @@ export const onDeleteAventura = /* GraphQL */ `
       categoria
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -231,6 +239,7 @@ export const onDeleteAventura = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -358,6 +367,7 @@ export const onCreateFecha = /* GraphQL */ `
       itinerario
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -425,6 +435,7 @@ export const onUpdateFecha = /* GraphQL */ `
       itinerario
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -492,6 +503,7 @@ export const onDeleteFecha = /* GraphQL */ `
       itinerario
       puntoReunionNombre
       puntoReunionId
+      puntoReunionLink
       allowTercera
       allowNinos
       material
@@ -607,6 +619,7 @@ export const onCreateUsuario = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -774,6 +787,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -941,6 +955,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           itinerario
           puntoReunionNombre
           puntoReunionId
+          puntoReunionLink
           allowTercera
           allowNinos
           material
@@ -1515,6 +1530,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1524,6 +1540,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1588,6 +1605,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1597,6 +1615,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1661,6 +1680,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1670,6 +1690,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1734,6 +1755,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1743,6 +1765,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1846,6 +1869,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1855,6 +1879,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1958,6 +1983,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         dificultad
         ubicacionNombre
         ubicacionId
+        ubicacionLink
         comision
         estadoAventura
         coordenadas
@@ -1967,6 +1993,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         categoria
         puntoReunionNombre
         puntoReunionId
+        puntoReunionLink
         materialDefault
         incluidoDefault
         _version

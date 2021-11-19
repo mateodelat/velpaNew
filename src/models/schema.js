@@ -81,6 +81,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "ubicacionLink": {
+                    "name": "ubicacionLink",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "comision": {
                     "name": "comision",
                     "isArray": false,
@@ -143,6 +150,13 @@ export const schema = {
                 },
                 "puntoReunionId": {
                     "name": "puntoReunionId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1608,6 +1622,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "allowTercera": {
                     "name": "allowTercera",
                     "isArray": false,
@@ -2141,5 +2162,5 @@ export const schema = {
             }
         }
     },
-    "version": "3add1d93c15e76888d0825e8032acce2"
+    "version": "51b1c6ca008482b8afa573276d8c66f7"
 };

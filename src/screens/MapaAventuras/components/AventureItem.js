@@ -18,7 +18,7 @@ export default class AdventureItem extends PureComponent {
                 width: this.dimensions.width,
             }}>
                 <Pressable
-                    onPress={() => this.props.navigation.navigate("DetalleAventura")}
+                    onPress={() => this.props.navigation.navigate("DetalleAventura", { id: this.props.item.id })}
                     style={styles.elementContainer}>
                     {/* Imagen de aventura */}
                     <View style={{

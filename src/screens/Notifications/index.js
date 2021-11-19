@@ -2,16 +2,20 @@ import { DataStore, Predicates } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
+import { colorFondo, container, getUserSub, isUrl, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
 import Element from './components/Element'
-import moment from "moment";
 import { TipoNotificacion } from '../../models'
 
+import moment from "moment";
+import Storage from '@aws-amplify/storage'
+// import 'moment/locale/es'
+moment.locale('es')
 
 
 export default () => {
+
 
     const navigation = useNavigation()
 
@@ -43,10 +47,11 @@ export default () => {
     }
 
     const handleVerTutorial = () => {
-        Alert.alert("Mostrar tutorial velpa",)
+        Alert.alert("Mostrar tutorial velpa")
 
     }
     const [notificaciones, setNotificaciones] = useState(null);
+    const [notificacionesOriginal, setNotificacionesOriginal] = useState([]);
 
     useEffect(() => {
         fetchNotificaciones()
@@ -56,17 +61,31 @@ export default () => {
         const sub = await getUserSub()
         const notificaciones = await DataStore.query(Notificacion, (e) => e.usuarioID("eq", sub), {
             sort: e => e.createdAt("DESCENDING")
+        }).then(async r => {
+            setNotificacionesOriginal(r)
+            return Promise.all(r.map(async e => {
+                const imagen = {
+                    url: isUrl(e.imagen) ? e.imagen : await Storage.get(e.imagen),
+                    key: e.imagen
+                }
+                return {
+                    ...e,
+                    imagen
+                }
+            }))
         })
+
+        console.log(notificaciones)
+
         setNotificaciones(notificaciones)
     }
 
     const handleVerNotificacion = (idx) => {
         let nuevasNotificaciones = [...notificaciones]
         let notificacion = nuevasNotificaciones[idx]
-
-
+        let originalModel = notificacionesOriginal[idx]
         DataStore.save(
-            Notificacion.copyOf(notificacion, nuevo => {
+            Notificacion.copyOf(originalModel, nuevo => {
                 nuevo.leido = true
             }))
 
@@ -134,7 +153,7 @@ export default () => {
                 const { tipo } = item
                 return <View style={{ flex: 1, marginBottom: index === notificaciones.length - 1 ? 40 : 0, }}>
                     <Element
-                        image={tipo === "BIENVENIDA" ? require("../../../assets/VELPA.png") : { uri: item.imagen }}
+                        image={tipo === "BIENVENIDA" ? require("../../../assets/VELPA.png") : { uri: item.imagen?.url }}
                         titulo={item.titulo}
                         descripcion={item.descripcion}
                         tiempo={moment(item.createdAt).from(moment())}

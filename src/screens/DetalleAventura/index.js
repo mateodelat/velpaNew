@@ -261,7 +261,7 @@ export default ({ navigation, route }) => {
                         }}>
                             {/* Ubicacion aventura */}
                             <Pressable
-                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionId)}
+                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionUbicacionLink)}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',

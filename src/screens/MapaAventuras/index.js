@@ -15,6 +15,7 @@ import Header from './components/Header';
 import { DataStore } from '@aws-amplify/datastore';
 import { Aventura, Categorias } from '../../models';
 import { Loading } from '../../components/Loading';
+import { getLastKnownPositionAsync } from 'expo-location';
 
 
 export const obtenerAventurasParaMapa = async () => {
@@ -50,7 +51,11 @@ export default function ({ navigation }) {
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
-                const { coords: { latitude, longitude } } = await getLastKnownPositionAsync()
+                let latitude, longitude
+
+                const coords = (await getLastKnownPositionAsync())?.coords
+                latitude = coords?.latitude
+                longitude = coords?.longitude
 
                 const defaultLocation = {
                     latitude: 21.76227198730249,

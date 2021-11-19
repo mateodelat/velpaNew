@@ -5,6 +5,9 @@ import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { formatAMPM, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 import moment from "moment";
+moment.locale('es')
+
+
 import { ChatRoom } from '../../../models'
 import { Mensaje } from '../../../models'
 

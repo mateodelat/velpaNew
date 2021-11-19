@@ -25,6 +25,8 @@ export default function ({ navigation, route }) {
     const {
         puntoReunionNombre,
         puntoReunionId,
+        puntoReunionLink,
+
         precioMin,
         precioMax,
         titulo: tituloAventura } = aventura
@@ -105,7 +107,7 @@ export default function ({ navigation, route }) {
     }
 
     const handlePuntoDeReunion = () => {
-        abrirEnGoogleMaps(puntoReunionId)
+        abrirEnGoogleMaps(puntoReunionLink)
     }
 
 
@@ -170,6 +172,8 @@ export default function ({ navigation, route }) {
 
             puntoReunionNombre,
             puntoReunionId,
+            puntoReunionLink,
+
             allowTercera,
             allowNinos,
 

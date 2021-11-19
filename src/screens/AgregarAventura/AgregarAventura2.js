@@ -53,7 +53,12 @@ export default ({ navigation, route }) => {
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
-                const { coords: { latitude, longitude } } = await getLastKnownPositionAsync()
+                let latitude, longitude
+
+                const coords = (await getLastKnownPositionAsync())?.coords
+                latitude = coords?.latitude
+                longitude = coords?.longitude
+
 
                 const defaultLocation = {
                     latitude: 21.76227198730249,
@@ -87,7 +92,13 @@ export default ({ navigation, route }) => {
             return
         }
         // Verificaciones
-        const { latitude, longitude } = selectedPlace
+        let { latitude, longitude, ubicacionLink, ubicacionId } = selectedPlace
+
+        // Si no hay un link de ubicacion se pide
+        if (!ubicacionLink) {
+            ubicacionLink = (await handlePressSuggested({ place_id: ubicacionId }))?.ubicacionLink
+        }
+
         let altitud = null
 
         // Obtener la elevacion si es alpinismo
@@ -118,7 +129,8 @@ export default ({ navigation, route }) => {
             }),
             altitud,
             ubicacionNombre: selectedPlace.ubicacionNombre,
-            ubicacionId: selectedPlace.ubicacionId
+            ubicacionId: selectedPlace.ubicacionId,
+            ubicacionLink
         }
         navigation.navigate("AgregarAventura3", aventuraAEnviar)
         setButtonLoading(false)
@@ -186,13 +198,15 @@ export default ({ navigation, route }) => {
     const handlePressSuggested = async (e) => {
         const { place_id } = e
         clearSugested()
+        const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url&placeid=${place_id}&key=${mapsAPIKey}`
+        let ubicacionLink
 
-        const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry&placeid=${place_id}&key=${mapsAPIKey}`
         const region = await fetch(url)
             .then(r => {
                 return r.json()
                     .then(r => {
                         r = r.result
+                        ubicacionLink = r.url
                         const { lat: latitude, lng: longitude } = r.geometry.location
                         const latitudeDelta = Math.abs(r.geometry.viewport.northeast.lat - r.geometry.viewport.southwest.lat)
                         const longitudeDelta = Math.abs(r.geometry.viewport.northeast.lng - r.geometry.viewport.southwest.lng)
@@ -215,8 +229,17 @@ export default ({ navigation, route }) => {
             latitude,
             longitude,
             ubicacionId: place_id,
-            ubicacionNombre: e.structured_formatting.main_text
+            ubicacionNombre: e.structured_formatting?.main_text,
+            ubicacionLink
         })
+
+        return {
+            latitude,
+            longitude,
+            ubicacionId: place_id,
+            ubicacionNombre: e.structured_formatting?.main_text,
+            ubicacionLink
+        }
     }
 
 
@@ -289,8 +312,8 @@ export default ({ navigation, route }) => {
                 </View>
             }
 
+            <Text style={styles.infoTxt}>Selecciona el pin de la aventura</Text>
             <View style={styles.mapContainer}>
-
                 {region ? <MapView
                     ref={map}
                     provider={"google"}
@@ -426,7 +449,7 @@ const styles = StyleSheet.create({
     },
 
     mapContainer: {
-        height: height - 295,
+        height: height - 305,
         borderRadius: 7,
         overflow: "hidden",
         alignItems: 'center', justifyContent: 'center',
@@ -442,7 +465,7 @@ const styles = StyleSheet.create({
     buscarContainer: {
         backgroundColor: "#f4f6f6",
         padding: 10,
-        marginBottom: 20,
+        marginBottom: 10,
         borderRadius: 7,
         flexDirection: 'row',
     },
@@ -479,5 +502,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         padding: 7,
+    },
+
+    infoTxt: {
+        fontSize: 16,
+        color: moradoOscuro,
     }
 })

@@ -10,7 +10,7 @@ import {
 
 
 import Boton from '../../components/Boton';
-import { comisionVelpa, createAventura, getUserSub, moradoClaro } from '../../../assets/constants';
+import { comisionVelpa, getUserSub, moradoClaro } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import Header from '../../components/header';
@@ -21,6 +21,7 @@ import { EstadoAventura } from '../../models';
 import { TipoNotificacion } from '../../models';
 import { Notificacion } from '../../models';
 import API from '@aws-amplify/api';
+import { createAventura } from '../../graphql/mutations';
 
 const { height } = Dimensions.get("window")
 
@@ -33,43 +34,46 @@ export default ({ navigation, route }) => {
     const [modify, setModify] = useState(true);
 
     async function handleContinuar() {
-        // Filtrar a material con titulo
+
+
         setButtonLoading(true)
 
+        // Filtrar a material con titulo
         const newMaterial = materialALlevar.filter(e => e[1].length !== 0)
         // Verificaciones
         const aventuraAEnviar = {
             ...aventura,
             materialDefault: JSON.stringify(newMaterial),
             comision: comisionVelpa,
-            estadoAventura: EstadoAventura.PENDIENTE
+            estadoAventura: EstadoAventura.PENDIENTE,
+            // _version: 0,
         }
+        // const e = {
+        //     altimetriaRecorrida: 536,
+        //     altitud: 3397,
+        //     categoria: APLINISMO,
+        //     comision: 0.2,
+        //     coordenadas: "{\"latitude\":19.587589422964793,\"longitude\":-103.59767854213713}",
+        //     dificultad: 3,
+        //     distanciaRecorrida: 96,
+        //     duracion: "1 dia",
+        //     estadoAventura: PENDIENTE,
+        //     id: "a95efc41-b75b-46fb-a2ec-80d617bf51d5",
+        //     imagenDetalle: [
+        //         "imagen-0 ave-a95efc41-b75b-46fb-a2ec-80d617bf51d5.jpg",
+        //     ],
+        //     imagenFondoIdx: 0,
+        //     materialDefault: "[[\"Obligatorio\",[\"material\"]],[\"Alimentacion\",[\"comida\"]],[\"Acampada\",[\"material\"]]]",
+        //     precioMax: 43423,
+        //     precioMin: 34,
+        //     titulo: "nevado de colima",
+        //     ubicacionId: "ChIJAAAAAAAAAAARpypMya362EY",
+        //     ubicacionLink: "https://maps.google.com/?cid=5105105801937955495",
+        //     ubicacionNombre: "Campamento La Joya",
+        // }
 
-        const ob = {
-            altitud: 5529,
-            ascenso: 900,
-            categoria: "APLINISMO",
-            comision: 0.2,
-            coordenadas: { latitude: 19.03038189999999, longitude: -97.2680761 },
-            descripcion: "Esta es el pico de orizaba",
-            dificultad: 3,
-            distancia: 32,
-            duracion: "1 a dos dias",
-            estadoAventura: "PENDIENTE",
-            id: "3cd2aa15-0db7-4860-add0-f321a2b7fbf7",
-            imagenDetalle: [
-                "imagen-0 ave-3cd2aa15-0db7-4860-add0-f321a2b7fbf7.jpg",
-            ],
-            imagenFondoIdx: 0,
-            materialALlevar: [["Obligatorio", ["material"]], ["Alimentacion", ["comida"]], ["Acampada", ["material"]]],
-            precioMax: 5000,
-            precioMin: 200,
-            titulo: "Pico de orizaba",
-            ubicacionId: "ChIJCS0aPooXxYURL818eEWJO-Q",
-            ubicacionNombre: "Pico de Orizaba",
-        }
         // Existencia de parametros
-        console.log(aventuraAEnviar.altimetriaRecorrida)
+        console.log(aventuraAEnviar)
         await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
             .then(async r => {
                 const sub = await getUserSub()
