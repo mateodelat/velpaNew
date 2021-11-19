@@ -1,9 +1,10 @@
-import React from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { Feather } from '@expo/vector-icons';
 import Flecha from './Flecha';
 import { colorFondo, moradoOscuro } from '../../assets/constants';
+import { Loading } from './Loading';
 
 
 const CuadradoImagen = ({
@@ -15,6 +16,8 @@ const CuadradoImagen = ({
 
     notAllowed
 }) => {
+
+    const [loading, setLoading] = useState(true);
     const showSelected = selected !== undefined
     return (
         <Pressable
@@ -27,13 +30,21 @@ const CuadradoImagen = ({
                 ...style
             }}>
             {/* Imagenes */}
-            <Image
-                source={{ uri: item?.imagenDetalle[item?.imagenFondoIdx] }}
-                style={{
-                    flex: 1,
-                    width: '100%',
-                    resizeMode: 'cover',
-                }} />
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                {loading && <Loading containerStyle={{ position: 'absolute', }} indicator />}
+                <Image
+                    source={{ uri: item?.imagenDetalle[item?.imagenFondoIdx] }}
+                    loadingIndicatorSource={<Loading indicator />}
+                    onLoadEnd={() => {
+                        setLoading(false)
+                    }}
+                    style={{
+                        flex: 1,
+                        width: '100%',
+                        resizeMode: 'cover',
+                    }} />
+
+            </View>
 
             <View style={{
                 backgroundColor: '#F4F6F6',

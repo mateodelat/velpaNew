@@ -74,9 +74,6 @@ export default () => {
                 }
             }))
         })
-
-        console.log(notificaciones)
-
         setNotificaciones(notificaciones)
     }
 

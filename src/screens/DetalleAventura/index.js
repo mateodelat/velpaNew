@@ -28,7 +28,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Descripcion from './components/Descripcion';
 import CuadradoImagen from '../../components/CuadradoImagen';
 import Boton from '../../components/Boton';
-import { abrirEnGoogleMaps, getAventura, listAventurasSugeridas, moradoOscuro } from '../../../assets/constants';
+import { abrirEnGoogleMaps, getAventura, listAventurasSugeridas, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
 
@@ -169,6 +169,7 @@ export default ({ navigation, route }) => {
 
 
                 <View style={styles.bodyContainer}>
+
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -190,23 +191,32 @@ export default ({ navigation, route }) => {
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
-                        }}>$ {aventura.precioMin * (aventura.comision + 1)} - {aventura.precioMax * (aventura.comision + 1)}
+                        }}>$ {redondear(aventura.precioMin * (aventura.comision + 1), 50, true)} - {redondear(aventura.precioMax * (aventura.comision + 1), 50, true)}
                         </Text>
                     </View>
+                    {/* <Text style={{
+                        fontSize: 16,
+                        color: moradoOscuro,
+                        flex: 1,
+                        textAlign: 'left',
+                        fontWeight: 'bold',
+                        marginTop: 10,
+                    }}>{aventura.categoria}</Text> */}
 
                     {/* Dificultad */}
                     <View style={{
-                        marginTop: 20,
-                        marginBottom: 10,
+                        marginVertical: 20,
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                     }}>
                         <View style={{ flexDirection: 'row', }}>
-                            <Text style={{
-                                fontSize: 16,
-                            }}>Dificultad   </Text>
-                            <Image source={dificultad[aventura.dificultad]} />
+                            <View style={{ flex: 1, flexDirection: 'row', }}>
+                                <Text style={{
+                                    fontSize: 16,
+                                }}>Dificultad   </Text>
+                                <Image source={dificultad[aventura.dificultad]} />
+                            </View>
                         </View>
                     </View>
 
@@ -261,7 +271,7 @@ export default ({ navigation, route }) => {
                         }}>
                             {/* Ubicacion aventura */}
                             <Pressable
-                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionUbicacionLink)}
+                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionLink)}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
@@ -297,9 +307,15 @@ export default ({ navigation, route }) => {
 
 
                     {/* Descripcion */}
-                    <Descripcion
+                    {!!aventura.descripcion ? <Descripcion
                         descripcion={aventura.descripcion}
-                    />
+                    /> :
+                        <View style={{
+                            marginBottom: 30,
+                        }}>
+
+                        </View>
+                    }
 
                     {/* Lugares recomendados */}
                     {

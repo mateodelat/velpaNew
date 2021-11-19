@@ -45,7 +45,7 @@ export default ({ navigation }) => {
 
 
     useEffect(() => {
-        listAventurasAutorizadas(8).then(r => {
+        listAventurasAutorizadas(8, 0).then(r => {
             setAventuras(r)
             setAventurasAMostrar(r)
         })

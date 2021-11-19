@@ -8,7 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import { categorias, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
+import { categorias, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
@@ -18,31 +18,6 @@ import { Loading } from '../../components/Loading';
 import { getLastKnownPositionAsync } from 'expo-location';
 
 
-export const obtenerAventurasParaMapa = async () => {
-    return await DataStore.query(Aventura, ave => ave.estadoAventura("eq", 'AUTORIZADO'))
-        .then(r => {
-
-            // Sortear de izquierda a derecha en el mapa
-            r = r.sort((a, b) => {
-                const {
-                    latitude: latitudeA,
-                    longitude: longitudeA
-                } = a.coordenadas
-                const {
-                    latitude: latitudeB,
-                    longitude: longitudeB
-                } = b.coordenadas
-                return (latitudeA < latitudeB)
-            })
-
-            return (r)
-        })
-        .catch(e => {
-            Alert.alert("Error obteniendo aventura")
-            console.log(e)
-        })
-
-}
 
 
 export default function ({ navigation }) {

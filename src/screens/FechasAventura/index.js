@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, formatDia, formatDiaMesCompeto, isFechaFull, isUrl, moradoClaro, msInDay, wait } from '../../../assets/constants';
+import { colorFondo, formatDia, formatDiaMesCompeto, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
@@ -200,47 +200,50 @@ export default index = ({ route, navigation }) => {
                     height: height * 0.24 + 20,
                 }} />
                 {
-                    loading ?
-                        <View style={{
-                            alignItems: 'center', justifyContent: 'center',
-                            height: height / 2,
-                        }}>
-                            <ActivityIndicator color={"black"} size={"large"} />
-                        </View> :
-                        fechas.map((e, idx) => {
+                    fechas.length === 0 ?
+                        <Text style={styles.noHayTxt}>No hay fechas disponibles pero puedes suscribirte a la aventura para cuando salga una</Text>
+                        :
+                        loading ?
+                            <View style={{
+                                alignItems: 'center', justifyContent: 'center',
+                                height: height / 2,
+                            }}>
+                                <ActivityIndicator color={"black"} size={"large"} />
+                            </View> :
+                            fechas.map((e, idx) => {
 
-                            const feInicial = new Date(e.fechaInicial)
-                            // Si es el primer elemento
-                            if (!idx) return <View key={idx.toString()}>
-                                <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
-                                <ElementoFecha
-                                    idx={idx}
-                                    fecha={e}
-                                    handleContinuar={handleContinuar}
-                                />
-                            </View>
-
-                            const feAnterior = new Date(fechas[idx - 1].fechaInicial)
-                            // Si el dia inicial es distinto al dia inicial de la siguiente fecha
-                            if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
-                                return <View key={idx.toString()}>
+                                const feInicial = new Date(e.fechaInicial)
+                                // Si es el primer elemento
+                                if (!idx) return <View key={idx.toString()}>
                                     <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
                                     <ElementoFecha
                                         idx={idx}
                                         fecha={e}
                                         handleContinuar={handleContinuar}
-
                                     />
                                 </View>
 
-                            return <ElementoFecha
-                                idx={idx}
-                                key={idx.toString()}
-                                fecha={e}
-                                handleContinuar={handleContinuar}
-                            />
+                                const feAnterior = new Date(fechas[idx - 1].fechaInicial)
+                                // Si el dia inicial es distinto al dia inicial de la siguiente fecha
+                                if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
+                                    return <View key={idx.toString()}>
+                                        <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
+                                        <ElementoFecha
+                                            idx={idx}
+                                            fecha={e}
+                                            handleContinuar={handleContinuar}
 
-                        })
+                                        />
+                                    </View>
+
+                                return <ElementoFecha
+                                    idx={idx}
+                                    key={idx.toString()}
+                                    fecha={e}
+                                    handleContinuar={handleContinuar}
+                                />
+
+                            })
                 }
             </Animated.ScrollView >
             <HeaderConImagen
@@ -261,5 +264,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontSize: 16,
         color: moradoClaro,
+    },
+    noHayTxt: {
+        fontSize: 18,
+        color: moradoOscuro,
+        textAlign: 'center',
     }
+
 })

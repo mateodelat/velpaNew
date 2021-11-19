@@ -4,7 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { Aventura, Notificacion, TipoNotificacion } from "../../src/models";
-import { DataStore } from '@aws-amplify/datastore';
+import { DataStore, Predicates } from '@aws-amplify/datastore';
 import React from "react";
 
 import { Foundation, MaterialIcons } from '@expo/vector-icons';
@@ -353,56 +353,6 @@ export async function handleGoogle() {
       console.log(e)
     })
 }
-export const listAventurasPorUsuario = /* GraphQL */ `
-  query listAventurasPorUsuario ($idGuia:ID!, $now:String){
-    listAventuras{
-        items {
-            id
-            titulo
-            imagenFondo
-            precioMin
-            precioMax
-            Fechas(filter: {guiaID: {eq: $idGuia}, fechaInicial: {gt: $now}}) {
-                items {
-                    fechaFinal
-                    fechaInicial
-                    id
-                    personasTotales
-                    precio
-                    Reservaciones {
-                        items {
-                            total
-                            id
-                            personas
-                            usuarioID
-                        }
-                    }
-                }
-            }
-        }
-    }}`
-
-export const getSolicitudesUsuario = /* GraphQL */ `
-  query GetUsuario($id: ID!) {
-    getUsuario(id: $id) {
-      solicitudes{
-        items{
-          status
-          createdAt
-          id
-          comentarios
-          AventurasAVerificar{
-            items{
-              aventura{
-                titulo
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 
 export const formatDate = (ms) => {
@@ -597,12 +547,87 @@ export const fetchAventura = (aventuraID) => {
     })
 }
 
-export const listAventurasAutorizadas = async (maxItems) => {
+export const redondear = (numero, entero, enable99) => {
+  numero = Math.round(numero / entero) * entero
+
+  if (enable99) {
+    numero = numero - 1
+  }
+  return numero
+}
+
+export const obtenerAventurasParaMapa = async () => {
+  return await DataStore.query(Aventura,
+    //  ave => ave.estadoAventura("eq", 'AUTORIZADO')
+  )
+    .then(async r => {
+
+      // Sortear de izquierda a derecha en el mapa
+      r = r.sort((a, b) => {
+        const {
+          latitude: latitudeA,
+          longitude: longitudeA
+        } = a.coordenadas
+        const {
+          latitude: latitudeB,
+          longitude: longitudeB
+        } = b.coordenadas
+        const roundA = Math.floor(latitudeA)
+        const roundB = Math.floor(latitudeB)
+
+        if (roundA === roundB) {
+          return (latitudeA < latitudeB)
+
+        } else {
+          return (longitudeA > longitudeB)
+
+        }
+      })
+
+      r = await Promise.all(r.map(async ave => {
+        // Obtener urls de Storage
+        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
+          isUrl(e) ? e : await Storage.get(e)
+        )))
+        return {
+          ...ave,
+          imagenDetalle
+        }
+      }))
+
+      return (r)
+    })
+    .catch(e => {
+      Alert.alert("Error obteniendo aventura")
+      console.log(e)
+    })
+
+}
+
+
+export const listAventurasAutorizadas = async (maxItems, page) => {
+  const sub = await getUserSub()
+  console.log("Sortear recomendaciones aventuras en funcion al usuario", sub, "por relevancia")
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
-    c => c.estadoAventura("eq", "AUTORIZADO"),
+    // c => c.estadoAventura("eq", "AUTORIZADO"),
+    Predicates.all,
     {
-      limit: maxItems
+      limit: maxItems,
+      page
+    })
+    .then(async r => {
+      r = await Promise.all(r.map(async ave => {
+        // Obtener urls de Storage
+        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
+          isUrl(e) ? e : await Storage.get(e)
+        )))
+        return {
+          ...ave,
+          imagenDetalle
+        }
+      }))
+      return r
     })
     .catch(e => {
       Alert.alert("Error", "Error obteniendo aventuras")
@@ -619,6 +644,19 @@ export const listAventurasSugeridas = async (id, maxItems) => {
     {
       limit: maxItems
     })
+    .then(async r => {
+      r = await Promise.all(r.map(async ave => {
+        // Obtener urls de Storage
+        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
+          isUrl(e) ? e : await Storage.get(e)
+        )))
+        return {
+          ...ave,
+          imagenDetalle
+        }
+      }))
+      return r
+    })
     .catch(e => {
       Alert.alert("Error", "Error obteniendo aventuras")
       console.log(e)
@@ -631,6 +669,17 @@ export const listAventurasSugeridas = async (id, maxItems) => {
 export const getAventura = async (id) => {
 
   const ave = await DataStore.query(Aventura, id)
+    .then(async ave => {
+      // Obtener urls de Storage
+      const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
+        isUrl(e) ? e : await Storage.get(e)
+      )))
+      return {
+        ...ave,
+        imagenDetalle
+      }
+
+    })
     .catch(e => {
       Alert.alert("Error", "Error obteniendo aventura")
       console.log(e)
@@ -1070,10 +1119,12 @@ export const msInDay = 86400000
 
 export const comision = .20
 
-export const abrirEnGoogleMaps = (placeId) => {
-  console.log(placeId)
-  const link = `https://maps.google.com/?cid=13884668388091519820`
+export const abrirEnGoogleMaps = (link) => {
+  if (!link) {
+    Alert.alert("Error", "No se existe link de la ubicacion")
 
+    return
+  }
 
   Linking.canOpenURL(link).then(r => {
     if (r) {
@@ -1297,7 +1348,7 @@ export const categorias = [...Object.keys(Categorias)].map(e => {
     case Categorias.APLINISMO:
       icono = (color, size) => < Foundation
         name="mountains"
-        size={size}
+        size={!size ? 25 : size}
         color={color}
       />
       titulo = "Alpinismo"
@@ -1306,7 +1357,7 @@ export const categorias = [...Object.keys(Categorias)].map(e => {
     case Categorias.CICLISMO:
       icono = (color, size) => <MaterialIcons
         name="directions-bike"
-        size={size}
+        size={!size ? 25 : size}
         color={color}
 
       />
@@ -1317,7 +1368,7 @@ export const categorias = [...Object.keys(Categorias)].map(e => {
     default:
       icono = (color, size) => <Entypo
         name="dots-three-horizontal"
-        size={size}
+        size={!size ? 25 : size}
         color={color}
 
       />

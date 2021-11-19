@@ -72,7 +72,7 @@ export default ({ navigation }) => {
     const fetchData = () => {
         fetchPublicidad()
 
-        listAventurasAutorizadas(5)
+        listAventurasAutorizadas(4, 0)
             .then(r => {
                 setAventuras(r)
             })
@@ -117,7 +117,7 @@ export default ({ navigation }) => {
     }
 
     const handleMisAventuras = async () => {
-        () => navigation.navigate("MisReservas")
+        navigation.navigate("MisReservas")
     }
 
     const onRefresh = React.useCallback(() => {
@@ -287,21 +287,33 @@ export default ({ navigation }) => {
                                             })}
                                             style={{
                                                 overflow: "hidden",
-                                                marginRight: idxAve === 4 - 1 ? 0 : 30,
+                                                marginRight: idxAve === aventuras.length - 1 ? 0 : 30,
                                                 borderRadius: 7,
                                                 width: width * 0.6,
 
                                             }}>
                                             {/* Imagenes */}
-                                            <Image
-                                                source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
-                                                style={{
-                                                    width: width * 0.6,
-                                                    height: height * 0.2,
+                                            <View style={{
+                                                width: width * 0.6,
+                                                height: height * 0.2,
 
-                                                    resizeMode: 'cover',
-                                                }} />
+                                                resizeMode: 'cover',
+                                            }}>
 
+                                                <Loading indicator
+                                                    color={moradoOscuro}
+                                                    containerStyle={{
+                                                        position: 'absolute',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                    }} />
+                                                <Image
+                                                    source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
+                                                    style={{
+                                                        flex: 1,
+                                                        resizeMode: 'cover',
+                                                    }} />
+                                            </View>
 
 
                                             {/* Footer */}

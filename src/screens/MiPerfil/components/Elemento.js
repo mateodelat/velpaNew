@@ -16,7 +16,7 @@ export default function Elemento({ icono, texto, onPress, loading }) {
         >
             <View style={{
                 width: 40,
-                alignItems: 'center', justifyContent: 'center',
+                alignItems: 'center', justifyContent: 'flex-start',
             }}>
                 {loading ? <ActivityIndicator
                     color={"black"}

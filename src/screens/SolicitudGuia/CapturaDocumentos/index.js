@@ -654,6 +654,14 @@ export default ({ navigation }) => {
                         <Text>Captura tus datos bancarios de manera segura con Stripe para hacer las transferencias</Text>
 
                     </View>
+                    <View style={styles.masContainer}>
+                        {!linkPressed ?
+                            <Icono tipo={"Mas"} /> :
+                            <Icono tipo={"Check"} />
+
+                        }
+
+                    </View>
 
                 </Pressable>
 
@@ -950,6 +958,14 @@ export default ({ navigation }) => {
                         <View style={styles.textContainer}>
                             <Text style={{ fontWeight: 'bold', fontSize: 15, }}>Datos bancarios</Text>
                             <Text>Captura tus datos bancarios de manera segura con Stripe para hacer las transferencias</Text>
+
+                        </View>
+                        <View style={styles.masContainer}>
+                            {!linkPressed ?
+                                <Icono tipo={"Mas"} /> :
+                                <Icono tipo={"Check"} />
+
+                            }
 
                         </View>
 

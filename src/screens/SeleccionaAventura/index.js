@@ -74,11 +74,10 @@ export default ({
 
 
     const fetchAventuras = async () => {
-        return await listAventurasAutorizadas(100)
+        return await listAventurasAutorizadas(8, 0)
             // Obtener aventuras ya perimitidas
             .then(async r => {
                 const { attributes: { sub } } = await Auth.currentUserInfo().catch(e => {
-                    console.log(e)
                 })
 
                 // Obtener relaciones con usuario

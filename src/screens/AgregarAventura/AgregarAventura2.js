@@ -20,13 +20,12 @@ import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons
 
 
 import Boton from '../../components/Boton';
-import { mapsAPIKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
+import { mapsAPIKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import HeaderConImagen from '../../components/HeaderConImagen';
 import { getCurrentPositionAsync, getLastKnownPositionAsync } from 'expo-location';
 import { Loading } from '../../components/Loading';
-import { obtenerAventurasParaMapa } from '../MapaAventuras';
 import { Marker } from 'react-native-maps';
 import { Categorias } from '../../models';
 
@@ -49,10 +48,19 @@ export default ({ navigation, route }) => {
 
     const [buttonLoading, setButtonLoading] = useState(false);
 
+    const [locationPermision, setLocationPermision] = useState(null);
+
     // Checar si la ubicacion esta activada
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
+                const defaultLocation = {
+                    latitude: 21.76227198730249,
+                    longitude: -104.03593288734555,
+                    latitudeDelta: 32.71611359157346,
+                    longitudeDelta: 60.73143247514963,
+                }
+
                 let latitude, longitude
 
                 const coords = (await getLastKnownPositionAsync())?.coords
@@ -60,12 +68,6 @@ export default ({ navigation, route }) => {
                 longitude = coords?.longitude
 
 
-                const defaultLocation = {
-                    latitude: 21.76227198730249,
-                    longitude: -104.03593288734555,
-                    latitudeDelta: 32.71611359157346,
-                    longitudeDelta: 60.73143247514963,
-                }
                 const location = {
                     latitude,
                     longitude,
@@ -73,7 +75,13 @@ export default ({ navigation, route }) => {
                     longitudeDelta: 10,
 
                 }
-                const region = latitude ? location : defaultLocation
+                const region = (coords || latitude) ? location : defaultLocation
+
+                // Si no hay permisos de ubicacion
+                if (!r) {
+                    setLocationPermision(false)
+                    console.log("")
+                }
 
                 // Buscar aventura por el titulo
                 handleSearchPlace(aventura.titulo, region)
@@ -220,7 +228,7 @@ export default ({ navigation, route }) => {
                     })
             })
 
-        map.current.animateToRegion(region);
+        map?.current?.animateToRegion(region);
         const {
             latitude,
             longitude,
@@ -311,15 +319,18 @@ export default ({ navigation, route }) => {
                     </ScrollView>
                 </View>
             }
+            {
+                console.log(region && locationPermision !== null)
+            }
 
             <Text style={styles.infoTxt}>Selecciona el pin de la aventura</Text>
             <View style={styles.mapContainer}>
-                {region ? <MapView
+                {region && locationPermision !== null ? <MapView
                     ref={map}
                     provider={"google"}
                     mapType={"terrain"}
 
-                    showsUserLocation={true}
+                    showsUserLocation={locationPermision ? true : false}
                     loadingEnabled={true}
 
                     initialRegion={region}

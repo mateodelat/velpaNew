@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, ActivityIndicator } from 'react-native'
-export const Loading = ({ containerStyle, valor, indicator }) => {
+export const Loading = ({ containerStyle, valor, indicator, color }) => {
     valor !== undefined ? null : valor = 1
 
     if (indicator) {
@@ -9,7 +9,7 @@ export const Loading = ({ containerStyle, valor, indicator }) => {
             alignItems: 'center', justifyContent: 'center',
             ...containerStyle
         }}>
-            <ActivityIndicator size={"large"} color={"black"} />
+            <ActivityIndicator size={"large"} color={color ? color : "black"} />
 
         </View>
     }

@@ -47,7 +47,7 @@ export default ({ route, navigation }) => {
         navigation.navigate("MisSolicitudes")
     }
 
-    function handleViajes() {
+    function handleReservas() {
         navigation.navigate("MisReservas")
     }
 
@@ -249,23 +249,51 @@ export default ({ route, navigation }) => {
                 {/* Controles de la app */}
                 <View style={styles.body}>
                     <Elemento
-                        texto={"Mis aventuras"}
-                        onPress={handleViajes}
+                        texto={"Reservaciones"}
+                        onPress={handleReservas}
                         icono={
-                            <AntDesign name="calendar" size={30} color="black" />}
+                            <AntDesign
+                                name="calendar"
+                                size={30}
+                                color="black"
+                            />}
+                    />
+
+                    <Elemento
+                        texto={"Fechas como guia"}
+                        onPress={handleReservas}
+                        icono={
+                            <Image
+                                source={require("../../../assets/icons/guia.png")}
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                }}
+                            />
+                        }
                     />
 
                     {guia && <Elemento
                         texto={"Solicitudes a aventuras"}
                         onPress={handleSolicitudes}
-                        icono={<Feather name="user-check" size={30} color="black" />
+                        icono={<Feather
+                            name="user-check"
+                            size={30}
+                            color="black"
+                        />
                         }
                     />}
 
                     {!guia && <Elemento
                         texto={"Ser guia"}
                         onPress={handleGuia}
-                        icono={<Image source={require("../../../assets/icons/guia.png")} style={{ width: 30, height: 30, }} />
+                        icono={<Image
+                            source={require("../../../assets/icons/guia.png")}
+                            style={{
+                                width: 30,
+                                height: 30,
+                            }}
+                        />
                         }
                     />}
 
@@ -275,7 +303,12 @@ export default ({ route, navigation }) => {
                         loading={buttonLoading === "saldo"}
                         texto={"Saldo"}
                         onPress={miSaldo}
-                        icono={<MaterialIcons name="account-balance-wallet" size={30} color="black" />
+                        icono={<MaterialIcons
+                            style={{ left: -2, }}
+                            name="account-balance-wallet"
+                            size={30}
+                            color="black"
+                        />
                         }
                     />}
 
@@ -283,7 +316,11 @@ export default ({ route, navigation }) => {
                         <Elemento
                             texto={"Admin UI"}
                             onPress={handleAdmin}
-                            icono={<MaterialCommunityIcons name="shield-edit" size={30} color="black" />
+                            icono={<MaterialCommunityIcons
+                                name="shield-edit"
+                                size={30}
+                                color="black"
+                            />
                             }
                         />
                     }
@@ -291,13 +328,21 @@ export default ({ route, navigation }) => {
                     <Elemento
                         texto={"Configuracion"}
                         onPress={handleConfig}
-                        icono={<FontAwesome name="gear" size={30} color="black" />
+                        icono={<FontAwesome
+                            name="gear"
+                            size={30}
+                            color="black"
+                        />
                         }
                     />
                     <Elemento
                         texto={"Cerrar sesion"}
                         onPress={cerrarSesion}
-                        icono={<Feather name="log-out" size={30} color="black" />
+                        icono={<Feather
+                            name="log-out"
+                            size={30}
+                            color="black"
+                        />
                         }
                     />
 
@@ -338,6 +383,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 20,
         padding: 20,
+        paddingRight: 15,
     },
 
     image: {
