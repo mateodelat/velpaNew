@@ -35,14 +35,14 @@ export const schema = {
                 "precioMin": {
                     "name": "precioMin",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "Float",
                     "isRequired": true,
                     "attributes": []
                 },
                 "precioMax": {
                     "name": "precioMax",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "Float",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -71,14 +71,14 @@ export const schema = {
                     "name": "ubicacionNombre",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
-                "ubicacionLink": {
-                    "name": "ubicacionLink",
+                "ubicacionId": {
+                    "name": "ubicacionId",
                     "isArray": false,
-                    "type": "AWSURL",
-                    "isRequired": false,
+                    "type": "String",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "comision": {
@@ -141,10 +141,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "puntoReunionLink": {
-                    "name": "puntoReunionLink",
+                "puntoReunionId": {
+                    "name": "puntoReunionId",
                     "isArray": false,
-                    "type": "AWSURL",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1601,8 +1601,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "puntoReunionLink": {
-                    "name": "puntoReunionLink",
+                "puntoReunionId": {
+                    "name": "puntoReunionId",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -2141,5 +2141,5 @@ export const schema = {
             }
         }
     },
-    "version": "0ffd6b9d6448bb01c669e8d75769bcc0"
+    "version": "3add1d93c15e76888d0825e8032acce2"
 };

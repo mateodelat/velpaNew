@@ -27,7 +27,7 @@ export default function ({ navigation, route }) {
         fechaInicial,
         fechaFinal,
         puntoReunionNombre: ubicacionNombre,
-        puntoReunionLink: ubicacionLink,
+        puntoReunionId: ubicacionId,
         tituloAventura,
 
         incluidoDefault,
@@ -95,7 +95,7 @@ export default function ({ navigation, route }) {
         {
             titulo: "Punto de reunion en " + ubicacionNombre,
             hora: (fechaInicial),
-            ubicacionLink,
+            ubicacionId,
             ubicacionNombre,
 
             modifiable: false,
@@ -109,7 +109,7 @@ export default function ({ navigation, route }) {
             titulo: "Punto de reunion en " + ubicacionNombre,
             hora: fechaFinal,
 
-            ubicacionLink,
+            ubicacionId,
             ubicacionNombre,
 
 
@@ -141,7 +141,7 @@ export default function ({ navigation, route }) {
             precio,
 
             puntoReunionNombre,
-            puntoReunionLink,
+            puntoReunionId,
             allowTercera,
             allowNinos,
 
@@ -182,7 +182,7 @@ export default function ({ navigation, route }) {
 
             itinerario: JSON.stringify(itinerario),
             puntoReunionNombre,
-            puntoReunionLink,
+            puntoReunionId,
             allowTercera,
             allowNinos,
             material: JSON.stringify(queLlevar),

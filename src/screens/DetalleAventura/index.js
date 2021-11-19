@@ -28,7 +28,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Descripcion from './components/Descripcion';
 import CuadradoImagen from '../../components/CuadradoImagen';
 import Boton from '../../components/Boton';
-import { getAventura, listAventurasSugeridas, moradoOscuro } from '../../../assets/constants';
+import { abrirEnGoogleMaps, getAventura, listAventurasSugeridas, moradoOscuro } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
 
@@ -112,9 +112,6 @@ export default ({ navigation, route }) => {
     }
 
 
-    function verEnGoogleMaps() {
-        Linking.openURL(aventura.ubicacionLink)
-    }
 
     function handleNavegarSugerido(id) {
         navigation.pop()
@@ -264,7 +261,7 @@ export default ({ navigation, route }) => {
                         }}>
                             {/* Ubicacion aventura */}
                             <Pressable
-                                onPress={verEnGoogleMaps}
+                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionId)}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',

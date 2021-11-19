@@ -54,7 +54,7 @@ export default ({ navigation }) => {
 
     const [aventura, setAventura] = useState({
         imagenDetalle: [],
-        imagenFondoIdx: null,
+        imagenFondoIdx: 0,
         id: uuid.v4()
     });
 
@@ -81,9 +81,8 @@ export default ({ navigation }) => {
         const precioMin = isNaN(parseFloat(aventura.precioMin, 10)) ? null : parseFloat(aventura.precioMin, 10)
         const precioMax = isNaN(parseFloat(aventura.precioMax, 10)) ? null : parseFloat(aventura.precioMax, 10)
 
-        const distancia = isNaN(parseFloat(aventura.distancia, 10)) ? null : parseFloat(aventura.distancia, 10)
-        const altitud = isNaN(parseFloat(aventura.altitud, 10)) ? null : parseFloat(aventura.altitud, 10)
-        const ascenso = isNaN(parseFloat(aventura.ascenso, 10)) ? null : parseFloat(aventura.ascenso, 10)
+        const distanciaRecorrida = isNaN(parseFloat(aventura.distanciaRecorrida, 10)) ? null : parseFloat(aventura.distanciaRecorrida, 10)
+        const altimetriaRecorrida = isNaN(parseFloat(aventura.altimetriaRecorrida, 10)) ? null : parseFloat(aventura.altimetriaRecorrida, 10)
 
         // Verificacion de index de imagen fondo
         if (aventura.imagenFondoIdx === null || aventura.imagenFondoIdx >= aventura.imagenDetalle.length) {
@@ -92,7 +91,12 @@ export default ({ navigation }) => {
         }
 
 
-        const imagenFondo = aventura.imagenDetalle[aventura.imagenFondoIdx].uri
+        // Verificacion de index de imagen fondo
+        if (aventura.imagenDetalle[aventura.imagenFondoIdx].video) {
+            Alert.alert("Error", "La imagen principal no puede ser un video")
+            return
+        }
+
 
         // Obtener la key de cada imagen
         const imagenDetalle = aventura.imagenDetalle.map(e => {
@@ -107,17 +111,13 @@ export default ({ navigation }) => {
             precioMin,
 
             // Parametros que dependen de la categoria para enviarse
-            distancia: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? distancia : null,
-            altitud: (categoria === Categorias.APLINISMO) ? altitud : null,
-            ascenso: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? ascenso : null,
+            distanciaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? distanciaRecorrida : null,
+            altimetriaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? altimetriaRecorrida : null,
 
             categoria,
 
             dificultad,
-
-            imagenFondo
         }
-
         // Existencia de parametros
         if (!aventura.titulo) {
             setErrortitulo(true)
@@ -144,7 +144,6 @@ export default ({ navigation }) => {
         }
 
         navigation.navigate("AgregarAventura2", aventuraAEnviar)
-        console.log(aventuraAEnviar)
     }
 
     function handleSelectDificultad(index) {
@@ -425,7 +424,7 @@ export default ({ navigation }) => {
                                         <MaterialCommunityIcons name="map-marker-distance" size={25} color="gray" />
                                     </View>
                                     <TextInput
-                                        value={aventura.distancia}
+                                        value={aventura.distanciaRecorrida}
                                         maxLength={5}
                                         placeholderTextColor={"#00000040"}
                                         placeholder="3.6"
@@ -433,7 +432,7 @@ export default ({ navigation }) => {
                                         onChangeText={(e) => {
                                             setAventura({
                                                 ...aventura,
-                                                distancia: e
+                                                distanciaRecorrida: e
                                             })
                                         }}
                                         style={[styles.textInput, {
@@ -461,55 +460,16 @@ export default ({ navigation }) => {
                             marginTop: 5,
                             marginBottom: 20,
                         }}>
-                            {/* Altitud aventura */}
-                            {categoria === Categorias.APLINISMO && <View>
-                                <Text style={[styles.captionTxt, { textAlign: 'left', marginLeft: 40, }]}>Altitud cima</Text>
-                                <View style={styles.row}>
-                                    <View style={{ width: 35, }}>
-                                        <FontAwesome5
-                                            name="mountain"
-                                            size={20}
-                                            color="gray"
-                                        />
-                                    </View>
-
-                                    <TextInput
-                                        value={aventura.altitud}
-                                        maxLength={4}
-                                        placeholderTextColor={"#00000040"}
-                                        placeholder="4500"
-                                        keyboardType={"numeric"}
-                                        onChangeText={(e) => {
-                                            setAventura({
-                                                ...aventura,
-                                                altitud: e
-                                            })
-                                        }}
-                                        style={[styles.textInput, {
-                                            flex: 0,
-                                            width: 60,
-                                            textAlign: 'center',
-
-                                        }]}
-                                    />
-                                    <Text style={{
-                                        color: 'gray',
-                                        fontSize: 15,
-                                    }}>  m</Text>
-                                </View>
-                            </View>}
-
-
 
                             {/* Ascenso recorrido */}
                             {(categoria === Categorias.CICLISMO || categoria === Categorias.APLINISMO) && <View>
-                                <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Ascenso recorrido</Text>
+                                <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Altimetria recorrida</Text>
                                 <View style={styles.row}>
                                     <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', marginRight: 8, }}>
                                         <Image source={require("../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
                                     </View>
                                     <TextInput
-                                        value={aventura.ascenso}
+                                        value={aventura.altimetriaRecorrida}
                                         maxLength={4}
                                         placeholderTextColor={"#00000040"}
                                         placeholder="750"
@@ -517,7 +477,7 @@ export default ({ navigation }) => {
                                         onChangeText={(e) => {
                                             setAventura({
                                                 ...aventura,
-                                                ascenso: e
+                                                altimetriaRecorrida: e
                                             })
                                         }}
                                         style={[styles.textInput, {

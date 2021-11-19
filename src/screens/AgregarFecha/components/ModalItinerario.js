@@ -43,7 +43,7 @@ const ItemItinerario = ({
         titulo,
         hora,
         ubicacionNombre,
-        ubicacionLink,
+        ubicacionId,
         tipo,
 
     } = item
@@ -140,7 +140,7 @@ const ItemItinerario = ({
             {/* Ubicacion */}
             {ubicacionNombre &&
                 <Pressable
-                    onPress={() => abrirEnGoogleMaps(ubicacionLink)}
+                    onPress={() => abrirEnGoogleMaps(ubicacionId)}
                     style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <Text style={styles.ubicacion}>{ubicacionNombre}</Text>
                     <Entypo

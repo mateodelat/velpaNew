@@ -14,7 +14,7 @@ export const onCreateAventura = /* GraphQL */ `
       descripcion
       dificultad
       ubicacionNombre
-      ubicacionLink
+      ubicacionId
       comision
       estadoAventura
       coordenadas
@@ -23,7 +23,7 @@ export const onCreateAventura = /* GraphQL */ `
       altimetriaRecorrida
       categoria
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       materialDefault
       incluidoDefault
       _version
@@ -42,7 +42,7 @@ export const onCreateAventura = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -108,7 +108,7 @@ export const onUpdateAventura = /* GraphQL */ `
       descripcion
       dificultad
       ubicacionNombre
-      ubicacionLink
+      ubicacionId
       comision
       estadoAventura
       coordenadas
@@ -117,7 +117,7 @@ export const onUpdateAventura = /* GraphQL */ `
       altimetriaRecorrida
       categoria
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       materialDefault
       incluidoDefault
       _version
@@ -136,7 +136,7 @@ export const onUpdateAventura = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -202,7 +202,7 @@ export const onDeleteAventura = /* GraphQL */ `
       descripcion
       dificultad
       ubicacionNombre
-      ubicacionLink
+      ubicacionId
       comision
       estadoAventura
       coordenadas
@@ -211,7 +211,7 @@ export const onDeleteAventura = /* GraphQL */ `
       altimetriaRecorrida
       categoria
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       materialDefault
       incluidoDefault
       _version
@@ -230,7 +230,7 @@ export const onDeleteAventura = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -357,7 +357,7 @@ export const onCreateFecha = /* GraphQL */ `
       comision
       itinerario
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       allowTercera
       allowNinos
       material
@@ -424,7 +424,7 @@ export const onUpdateFecha = /* GraphQL */ `
       comision
       itinerario
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       allowTercera
       allowNinos
       material
@@ -491,7 +491,7 @@ export const onDeleteFecha = /* GraphQL */ `
       comision
       itinerario
       puntoReunionNombre
-      puntoReunionLink
+      puntoReunionId
       allowTercera
       allowNinos
       material
@@ -606,7 +606,7 @@ export const onCreateUsuario = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -773,7 +773,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -940,7 +940,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           comision
           itinerario
           puntoReunionNombre
-          puntoReunionLink
+          puntoReunionId
           allowTercera
           allowNinos
           material
@@ -1514,7 +1514,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1523,7 +1523,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version
@@ -1587,7 +1587,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1596,7 +1596,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version
@@ -1660,7 +1660,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1669,7 +1669,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version
@@ -1733,7 +1733,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1742,7 +1742,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version
@@ -1845,7 +1845,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1854,7 +1854,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version
@@ -1957,7 +1957,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         descripcion
         dificultad
         ubicacionNombre
-        ubicacionLink
+        ubicacionId
         comision
         estadoAventura
         coordenadas
@@ -1966,7 +1966,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         altimetriaRecorrida
         categoria
         puntoReunionNombre
-        puntoReunionLink
+        puntoReunionId
         materialDefault
         incluidoDefault
         _version

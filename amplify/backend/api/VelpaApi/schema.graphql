@@ -8,13 +8,13 @@ type Aventura @model @auth(rules: [
   titulo: String!
   imagenFondoIdx: Int!
   imagenDetalle: [String]!
-  precioMin: Int!
-  precioMax: Int!
+  precioMin: Float!
+  precioMax: Float!
   duracion: String
   descripcion: String
   dificultad: Float!
-  ubicacionNombre: String
-  ubicacionLink: AWSURL
+  ubicacionNombre: String!
+  ubicacionId: String!
   comision: Float!
   estadoAventura: EstadoAventura!
   coordenadas: AWSJSON!
@@ -23,7 +23,7 @@ type Aventura @model @auth(rules: [
   altimetriaRecorrida: Float
   categoria: Categorias
   puntoReunionNombre: String
-  puntoReunionLink: AWSURL
+  puntoReunionId: String
   materialDefault: String
   incluidoDefault: [String]
 
@@ -71,7 +71,7 @@ type Fecha @model
   comision: Float!
   itinerario: String!
   puntoReunionNombre: String!
-  puntoReunionLink: String!
+  puntoReunionId: String!
   allowTercera: Boolean!
   allowNinos: Boolean!
   material: String

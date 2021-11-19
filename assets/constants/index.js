@@ -982,117 +982,6 @@ export const createFecha = /* GraphQL */ `
 `;
 
 
-export const getDetalleFecha = /* GraphQL */ `
-  query GetFecha($id: ID!) {
-    getFecha(id: $id) {
-      fechaInicial
-      fechaFinal
-      itinerario
-      ubicacionNombre
-      ubicacionLink
-      materialObligatorio
-      materialOpcional
-      materialAcampada
-      alimentacion
-      materialIncluido
-    }
-  }
-`;
-
-
-
-export const listCategorias = /* GraphQL */ `
-  query ListCategorias(
-    $filter: ModelCategoriaFilterInput
-  ) {
-    listCategorias(filter: $filter) {
-      items {
-        titulo
-        id
-        foto
-        Aventuras {
-          items{
-            id
-            titulo
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const listFechasYReservasCat = /* GraphQL */ `
-  query ListCategorias(
-    $filter: ModelCategoriaFilterInput
-  ) {
-    listCategorias(filter: $filter) {
-      items {
-        titulo
-        id
-        foto
-        Aventuras {
-          items {
-            id
-            titulo
-            Fechas {
-              items {
-                id
-                messagingID
-                fechaInicial
-                fechaFinal
-                personasTotales
-                precio
-                comision
-                Reservaciones {
-                  items {
-                    id
-                    personas
-                    total
-                    comisionPorPersona
-                  }
-                }
-                Guia {
-                  items {
-                    id
-                    nickname
-                    telefono
-                    capacidadMaxima
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const listCategoriasConGuias = /* GraphQL */ `
-  query ListCategorias(
-    $filter: ModelCategoriaFilterInput
-    $usuarioID: ID!
-  ) {
-    listCategorias(filter: $filter) {
-      items {
-        titulo
-        foto
-        Aventuras {
-          items{
-            id
-            titulo
-            usuariosAutorizados(usuarioID: {eq: $usuarioID}){
-              items{
-                usuarioID
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const createChatRoom = /* GraphQL */ `
   mutation CreateChatRoom(
     $input: CreateChatRoomInput!
@@ -1180,8 +1069,8 @@ export const msInDay = 86400000
 
 export const comision = .20
 
-export const abrirEnGoogleMaps = (linkUbicacion) => {
-
+export const abrirEnGoogleMaps = (placeId) => {
+  const link = `https://www.google.com/maps/place/?q=place_id:${placeId}`
 
 
   Linking.canOpenURL(linkUbicacion).then(r => {
@@ -1436,6 +1325,7 @@ export const verificarUbicacion = async () => {
 }
 
 export const mapsAPIKey = "AIzaSyCaRZjZvo3u_3tLCK7cOGigyfFEF6kR4Hw"
+export const comisionVelpa = 0.2
 
 
 export const shadowMedia = {

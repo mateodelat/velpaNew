@@ -34,31 +34,9 @@ import { Categorias } from '../../models';
 const { height } = Dimensions.get("screen")
 
 export default ({ navigation, route }) => {
-    const scrollY = useRef(new Animated.Value(0)).current
-
-
-    const { width, height } = Dimensions.get("screen")
 
     const map = useRef(null)
-
-    const [aventura, setAventura] = useState({
-        "altitud": 3405,
-        "ascenso": 322,
-        "categoria": "APLINISMO",
-        "descripcion": "Descripcion de la aventura",
-        "dificultad": 3,
-        "distancia": 3.5,
-        "duracion": "1 a 2 dias",
-        "id": "e496cbdb-6abd-41f8-8932-0f918162c344",
-        "imagenDetalle": [
-            "imagen-0 ave-e496cbdb-6abd-41f8-8932-0f918162c344.jpg",
-        ],
-        "imagenFondo": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540mateodelat%252FvelpaNew/ImagePicker/0a14937e-820d-46ed-a503-3c3d0c137baf.jpg",
-        "imagenFondoIdx": 0,
-        "precioMax": 43243,
-        "precioMin": 343,
-        "titulo": "Nueva aventura",
-    });
+    const aventura = route.params
 
     // Variables del mapa
     const [aventurasMapa, setAventurasMapa] = useState([]);
@@ -66,8 +44,10 @@ export default ({ navigation, route }) => {
     const [selectedPlace, setSelectedPlace] = useState(null);
 
     // Variables del buscador
-    const [buscar, setBuscar] = useState("");
+    const [buscar, setBuscar] = useState(aventura.titulo);
     const [suggestedPlace, setSuggestedPlace] = useState([]);
+
+    const [buttonLoading, setButtonLoading] = useState(false);
 
     // Checar si la ubicacion esta activada
     useEffect(() => {
@@ -88,27 +68,66 @@ export default ({ navigation, route }) => {
                     longitudeDelta: 10,
 
                 }
-                setRegion(latitude ? location : defaultLocation)
-            })
+                const region = latitude ? location : defaultLocation
 
+                // Buscar aventura por el titulo
+                handleSearchPlace(aventura.titulo, region)
+
+                setRegion(region)
+
+            })
         obtenerAventurasParaMapa().then(r => {
             setAventurasMapa(r)
         })
     }, []);
 
-    function handleContinuar() {
+    async function handleContinuar() {
+        if (!selectedPlace) {
+            Alert.alert("Error", "Selecciona la ubicacion de la aventura")
+            return
+        }
         // Verificaciones
+        const { latitude, longitude } = selectedPlace
+        let altitud = null
+
+        // Obtener la elevacion si es alpinismo
+        if (aventura.categoria === Categorias.APLINISMO) {
+            setButtonLoading(true)
+            const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`
+            altitud = Math.round(await fetch(url)
+                .then(r => {
+                    return r.json()
+                        .then(r => {
+                            if (r.status !== "OK") {
+                                console.log(r)
+                                return null
+                            } else {
+                                return r.results[0].elevation
+
+                            }
+                        })
+
+                }))
+        }
+
         const aventuraAEnviar = {
             ...aventura,
-            coordenadas: selectedPlace
+            coordenadas: JSON.stringify({
+                latitude,
+                longitude
+            }),
+            altitud,
+            ubicacionNombre: selectedPlace.ubicacionNombre,
+            ubicacionId: selectedPlace.ubicacionId
         }
-        console.log(selectedPlace)
+        navigation.navigate("AgregarAventura3", aventuraAEnviar)
+        setButtonLoading(false)
     }
 
     const handlePressPlace = (coordinate, ubicacionId, ubicacionNombre) => {
 
-        // Si ya habia elemento y es press en mapa, Dismiss el selected place
-        if (!ubicacionId && selectedPlace) {
+        // Si se presiona el mapa quitar el marcador
+        if (!ubicacionId) {
             setSelectedPlace(null)
             return
         }
@@ -120,13 +139,16 @@ export default ({ navigation, route }) => {
 
 
     }
-    const handleSearchPlace = (text) => {
+    const handleSearchPlace = (text, reg) => {
         setBuscar(text)
-        const { latitude, longitude } = region
+
+        // Ver si se le paso una region definida si no buscar por la posicion del mapa
+        const regionABuscar = reg ? reg : region
+        const { latitude, longitude } = regionABuscar
+
         const base = "https://maps.googleapis.com/maps/api/place/autocomplete/json"
         const input = `?input=${text}`
         const location = `&location=${latitude}%2C${longitude}`
-        const types = `&types=natural_feature`
         const key = `&key=${mapsAPIKey}`
         const radius = "&radius=1000"
         const language = "&language=es"
@@ -137,7 +159,6 @@ export default ({ navigation, route }) => {
             + input
             + location
             + radius
-            // + types
             + key
             + language
 
@@ -362,6 +383,7 @@ export default ({ navigation, route }) => {
                 }}
                 onPress={handleContinuar}
                 titulo={"Continuar"}
+                loading={buttonLoading}
             />
         </Pressable>
     )

@@ -8,7 +8,8 @@ import ListaEditable from './ListaEditable';
 
 export default ({
     datos,
-    setDatos
+    setDatos,
+    modify
 }) => {
 
     const vacio = datos.length === 0
@@ -57,7 +58,7 @@ export default ({
                     key={i.toString()}
                     style={styles.container}>
 
-                    <View style={{
+                    {modify ? <View style={{
                         alignItems: 'center',
                         flexDirection: 'row',
 
@@ -77,7 +78,8 @@ export default ({
                             onPress={handleRemoveTitulo}
                         />
 
-                    </View>
+                    </View> : <Text style={styles.title}>{e[0]}:</Text>
+                    }
                     {datos[i][1]?.map((item, index) => {
 
                         const submitValor = (value) => {
@@ -97,45 +99,57 @@ export default ({
                             setDatos([...newData])
                         }
 
+                        if (modify) {
+                            return (
+                                <View
+                                    key={index.toString()}
+                                    style={styles.row}>
+                                    <TextInput
+                                        autoCapitalize="sentences"
 
-                        return (
-                            <View
-                                key={index.toString()}
-                                style={styles.row}>
-                                <TextInput
-                                    autoCapitalize="sentences"
+                                        value={item}
+                                        onChangeText={submitValor}
+                                        style={styles.itemInput}
+                                    />
 
-                                    value={item}
-                                    onChangeText={submitValor}
-                                    style={styles.itemInput}
-                                />
-
-                                <Entypo
-                                    style={styles.icon}
-                                    name="minus"
-                                    size={30}
-                                    color="red"
-                                    onPress={handleRemoveItem}
-                                />
+                                    <Entypo
+                                        style={styles.icon}
+                                        name="minus"
+                                        size={30}
+                                        color="red"
+                                        onPress={handleRemoveItem}
+                                    />
 
 
-                            </View>
+                                </View>
 
-                        )
+                            )
+                        } else {
+                            return (
+                                <Text style={styles.containerItem}
+                                    key={"mo-" + index}
+                                >
+                                    <Text
+                                        style={styles.text}>{item}</Text>
+                                </Text>
+
+                            )
+
+                        }
 
                     })
                     }
-                    <ListaEditable
+                    {modify && < ListaEditable
                         lista={datos}
                         agregarALista={txt => agregarItem(txt, i)}
                         showMas
-                    />
+                    />}
 
 
 
                 </View>
             })}
-            <ListaEditable
+            {modify && <ListaEditable
                 preview={"Categoria"}
                 lista={datos}
                 colorMas={"transparent"}
@@ -144,7 +158,7 @@ export default ({
                     textAlign: 'center'
                 }}
                 agregarALista={agregarCategoria}
-            />
+            />}
         </View>
     )
 }
@@ -206,4 +220,10 @@ const styles = StyleSheet.create({
         padding: 10,
 
     },
+
+    title: {
+        fontSize: 18,
+        color: moradoOscuro,
+    },
+
 });

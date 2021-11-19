@@ -28,6 +28,7 @@ import Agregar2 from '../screens/AgregarFecha/Agregar2';
 import MisReservas from '../screens/MisReservas';
 import MisSolicitudes from '../screens/MisSolicitudes';
 import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
+import AgregarAventura3 from '../screens/AgregarAventura/AgregarAventura3';
 
 const Stack = createStackNavigator();
 
@@ -38,7 +39,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                initialRouteName={"AgregarAventura2"}
+                // initialRouteName={"AgregarAventura"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {
@@ -173,6 +174,14 @@ export default () => {
                     component={AgregarAventura2}
                     options={{
                         title: "Ubicacion aventura",
+                    }}
+                />
+
+                <Stack.Screen
+                    name="AgregarAventura3"
+                    component={AgregarAventura3}
+                    options={{
+                        headerShown: false,
                     }}
                 />
 

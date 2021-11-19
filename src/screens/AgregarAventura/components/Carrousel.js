@@ -534,25 +534,27 @@ export default ({
                                             }}
                                             style={styles.controlesImagen}>
 
-                                            {!isVideo &&
-                                                <View style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    alignItems: 'center',
-                                                    position: 'absolute',
-                                                }}>
+                                            <View style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                alignItems: 'center',
+                                                position: 'absolute',
+                                            }}>
 
-                                                    <Pressable
-                                                        onPress={() => handleSetImagenFondo(index)}
-                                                        style={{
-                                                            ...styles.setImagenFondoContainer,
-                                                            backgroundColor: aventura.imagenFondoIdx === index ? moradoOscuro : '#fff',
-                                                        }}>
-                                                        <Text style={{
-                                                            color: aventura.imagenFondoIdx === index ? '#fff' : '#000',
-                                                        }}>Imagen principal</Text>
-                                                    </Pressable>
-                                                </View>}
+                                                <Pressable
+                                                    onPress={() => {
+                                                        if (isVideo) Alert.alert("Error", "La imagen principal no puede ser un video")
+                                                        else handleSetImagenFondo(index)
+                                                    }}
+                                                    style={{
+                                                        ...styles.setImagenFondoContainer,
+                                                        backgroundColor: aventura.imagenFondoIdx === index ? moradoOscuro : '#fff',
+                                                    }}>
+                                                    <Text style={{
+                                                        color: aventura.imagenFondoIdx === index ? '#fff' : '#000',
+                                                    }}>Imagen principal</Text>
+                                                </Pressable>
+                                            </View>
 
 
                                             {/* Boton borrar imagen */}

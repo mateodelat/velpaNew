@@ -109,8 +109,8 @@ export declare class Aventura {
   readonly duracion?: string;
   readonly descripcion?: string;
   readonly dificultad: number;
-  readonly ubicacionNombre?: string;
-  readonly ubicacionLink?: string;
+  readonly ubicacionNombre: string;
+  readonly ubicacionId: string;
   readonly comision: number;
   readonly estadoAventura: EstadoAventura | keyof typeof EstadoAventura;
   readonly coordenadas: string;
@@ -119,7 +119,7 @@ export declare class Aventura {
   readonly altimetriaRecorrida?: number;
   readonly categoria?: Categorias | keyof typeof Categorias;
   readonly puntoReunionNombre?: string;
-  readonly puntoReunionLink?: string;
+  readonly puntoReunionId?: string;
   readonly materialDefault?: string;
   readonly incluidoDefault?: (string | null)[];
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
@@ -258,7 +258,7 @@ export declare class Fecha {
   readonly comision: number;
   readonly itinerario: string;
   readonly puntoReunionNombre: string;
-  readonly puntoReunionLink: string;
+  readonly puntoReunionId: string;
   readonly allowTercera: boolean;
   readonly allowNinos: boolean;
   readonly material?: string;
