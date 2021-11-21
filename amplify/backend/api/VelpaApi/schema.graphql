@@ -17,18 +17,15 @@ type Aventura @model @auth(rules: [
   ubicacionNombre: String!
   ubicacionId: String!
   ubicacionLink: String
+  coordenadas: AWSJSON!
+
   
   comision: Float!
   estadoAventura: EstadoAventura!
-  coordenadas: AWSJSON!
   altitud: Float
   distanciaRecorrida: Float
   altimetriaRecorrida: Float
   categoria: Categorias
-
-  puntoReunionNombre: String
-  puntoReunionId: String
-  puntoReunionLink:String
 
   materialDefault: String
   incluidoDefault: [String]
@@ -80,6 +77,7 @@ type Fecha @model
   puntoReunionNombre: String!
   puntoReunionId: String!
   puntoReunionLink:String
+  puntoReunionCoords:String
   
   allowTercera: Boolean!
   allowNinos: Boolean!
@@ -246,7 +244,12 @@ enum TipoNotificacion{
 
   RECORDATORIOFECHA
 
+  SOLICITUDGUIAAPROVADA
+  SOLICITUDGUIARECHAZADA
   SOLICITUDGUIA
+
+  SOLICITUDAVENTURAAPROVADA
+  SOLICITUDAVENTURARECHAZADA
   SOLICITUDAVENTURA
 
   ADMIN

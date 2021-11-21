@@ -13,7 +13,7 @@ import {
 
 import { API, Auth } from 'aws-amplify';
 
-import { formatAMPM, listSolicitudGuiasPendientes, meses, updateSolicitudGuia, createUsuarioAventura, updateUsuario, abrirStripeAccount, moradoClaro } from '../../../../assets/constants';
+import { formatAMPM, listSolicitudGuiasPendientes, meses, updateSolicitudGuia, createUsuarioAventura, updateUsuario, abrirStripeAccount, moradoClaro, colorFondo, moradoOscuro, verdeTurquesa, openLink, googleSearch, getUserSub } from '../../../../assets/constants';
 
 import { Loading } from '../../../components/Loading';
 import Boton from '../../../components/Boton';
@@ -23,9 +23,17 @@ import ModalDocs from './ModalDocs';
 
 import RadioButton from '../../../components/RadioButton';
 // import SelectorPersonas from '../../Explorar/4Logistica/SelectorPersonas';
+import { DataStore } from '@aws-amplify/datastore';
+import { StatusSolicitud, Usuario } from '../../../models';
+import Selector from '../../../components/Selector';
+import Line from '../../../components/Line';
+import { SolicitudGuia } from '../../../models';
+import { AventuraUsuario } from '../../../models';
+import { TipoNotificacion } from '../../../models';
+import { Notificacion } from '../../../models';
 
 
-export default () => {
+export default ({ navigation }) => {
 
     const [loading, setLoading] = useState(true);
     const [solicitudes, setSolicitudes] = useState([]);
@@ -51,57 +59,56 @@ export default () => {
         setBotonLoading("Aprovar")
 
         let newSolicitudes = [...solicitudes]
-        const solicitud = solicitudes[idx]
-        const sub = await Auth.currentUserInfo().then(a => a.attributes.sub).catch(e => console.log(e))
-        const idSolicitante = solicitudes[idx].Usuario.id
+        const solicitud = newSolicitudes[idx]
+        try {
+            // Obtener modelo de la solicitud
+            const modelSolicitud = await DataStore.query(SolicitudGuia, solicitud.id)
 
-        let promises = []
-        // Actualizamos al usurio con su capacidad maxima
-        promises.push(API.graphql({
-            query: updateUsuario, variables: {
-                input: {
-                    id: idSolicitante,
-                    capacidadMaxima
-                }
+            const sub = await getUserSub()
+            const usuario = solicitudes[idx].Usuario
+
+            // Actualizamos al usurio con su capacidad maxima
+            await DataStore.save(Usuario.copyOf(usuario, (up) => {
+                up.capacidadMaxima = capacidadMaxima
             }
-        }))
+            ))
 
-
-        // Primero actualizamos la solicitud con el usuario evaluador
-        promises.push(API.graphql({
-            query: updateSolicitudGuia, variables: {
-                input: {
-                    id: solicitud.id,
-                    status: "aproved",
-                    evaluadorID: sub,
-                }
+            // Actualizamos la solicitud a aprovada con el usuario evaluador
+            await DataStore.save(SolicitudGuia.copyOf(modelSolicitud, (updated) => {
+                updated.status = StatusSolicitud.APROVADA
+                updated.evaluadorID = sub
             }
-        }))
+            ))
 
-
-        // Despues agregamos el guia a cada una de las aventuras verificadas
-        promises.push(Promise.all(solicitudes[idx].AventurasAVerificar.map(av => (
-            API.graphql({
-                query: createUsuarioAventura, variables: {
-                    input: {
-                        aventuraID: av.id,
-                        usuarioID: idSolicitante
-                    }
-                }
+            // Agregar al guia a aventuras verificadas
+            await Promise.all(solicitud.Aventuras.map(async ave => {
+                DataStore.save(new AventuraUsuario({
+                    aventura: ave,
+                    usuario
+                }))
             }))
-        )))
 
-        // Finalmente esperamos que las promesas sean exitosas
-        Promise.all(promises)
-            .then(r => {
-                newSolicitudes.splice(idx, 1)
-                setSolicitudes(newSolicitudes)
-                Alert.alert("Exito", "Solicitud aceptada con exito")
-            })
-            .catch(e => {
-                console.log(e)
-                Alert.alert("Error", "Error aprovando solicitud")
-            })
+            // Mandar notificacion de solicitud aprovada
+            await DataStore.save(new Notificacion({
+                tipo: TipoNotificacion.SOLICITUDGUIAAPROVADA,
+
+                titulo: "Solicitud aprovada",
+                descripcion: "Ya puedes agregar fechas a las aventuras:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
+                    + (comentarios ? ("\ncomentarios: " + comentarios) : ""),
+
+                usuarioID: solicitud.usuarioID,
+                owner: solicitud.owner,
+
+                solicitudGuiaID: solicitud.id
+            }))
+
+            Alert.alert("Exito", "Solicitud aceptada con exito")
+
+
+        } catch (error) {
+            console.log(error)
+            Alert.alert("Error", "Error aprovando solicitud")
+        }
         setBotonLoading(false)
     }
 
@@ -161,11 +168,7 @@ export default () => {
     }
 
     const handleAbrirAventura = (titulo, id) => {
-        setTipoModal("Aventura")
-        setModalVisible(true)
-        setModalData({
-            titulo, id
-        })
+        navigation.navigate("DetalleAventura", { id, titulo })
     }
 
     const handleAbrirPerfil = (idGuia) => {
@@ -220,22 +223,30 @@ export default () => {
         return (dia + "/" + mes + "/" + año + " " + hora)
     }
 
+    const handleOpenRed = (red) => {
+        googleSearch(red)
+    }
+
+    const handleOpenWeb = (sitio) => {
+        openLink(sitio)
+
+    }
+
     const fetch = async () => {
         API.graphql({ query: listSolicitudGuiasPendientes })
-            .then(r => {
-                setLoading(false)
+            .then(async r => {
                 r = r.data.listSolicitudGuias.items
-
-                r = r.map(solicitud => {
+                r = (await Promise.all(r.map(async solicitud => {
                     return {
                         ...solicitud,
-                        AventurasAVerificar: solicitud.AventurasAVerificar.items.map(e => ({
-                            titulo: e.aventura.titulo,
-                            id: e.aventura.id
-                        }))
+                        Aventuras: solicitud.Aventuras.items.map(e => {
+                            return e.aventura
+                        }),
+                        Usuario: (await DataStore.query(Usuario, r.usuarioID))[0]
                     }
-                }).sort((a, b) => a.createdAt > b.createdAt)
-
+                })))
+                    .sort((a, b) => a.createdAt > b.createdAt)
+                setLoading(false)
                 setSolicitudes(r)
             })
             .catch(e => {
@@ -260,7 +271,7 @@ export default () => {
                     renderItem={({ item, index }) => {
                         const fechaCreacion = formatDate(item.createdAt)
                         const selected = index === itemSelected
-                        const tipo = item.Usuario.tipo
+                        const tipo = item.Usuario.tipo.toLowerCase()
                         return (
                             <Pressable
                                 onPress={() => {
@@ -276,8 +287,10 @@ export default () => {
                                                 onPress={() => {
                                                     handleAbrirPerfil(item.Usuario.id)
                                                 }}
-                                                style={styles.texto}>{item.Usuario.nickname}</Text>
-
+                                                style={{
+                                                    ...styles.texto,
+                                                    color: moradoClaro
+                                                }}>@{item.Usuario.nickname}</Text>
                                         </View>
                                         <View style={{
                                             flex: 1,
@@ -303,8 +316,8 @@ export default () => {
                                             ...styles.texto,
                                             alignSelf: 'center',
                                             borderBottomWidth: 1,
-                                            borderColor: "#fff",
-                                        }}>stripeID: {item.Usuario.stripeID}</Text>
+                                            borderColor: "#000",
+                                        }}>Datos bancarios</Text>
 
                                 </View>
                                 {
@@ -318,43 +331,43 @@ export default () => {
                                             <Text
                                                 onPress={() => handleLlamar(index)}
                                                 style={{ ...styles.cuadroTexto, marginBottom: 20, }}>Llamar</Text>
+                                            <Line />
 
                                             <Text style={{
-                                                borderBottomColor: '#fff',
+                                                borderBottomColor: '#000',
                                                 alignSelf: 'flex-start',
                                                 fontSize: 16,
-                                                color: '#fff',
+                                                color: '#000',
                                                 fontWeight: 'bold',
+                                                marginTop: 10,
                                             }}>Aventuras solicitadas:</Text>
-                                            {item.AventurasAVerificar?.map((a, i) => (
+                                            {item.Aventuras?.map((a, i) => (
                                                 <View
                                                     key={i}
-                                                    style={{
-                                                        paddingVertical: 3
-                                                    }}
                                                 >
                                                     <Text
                                                         onPress={() => handleAbrirAventura(a.titulo, a.id)}
 
                                                         style={{
-                                                            borderBottomWidth: .5,
-                                                            borderBottomColor: '#fff',
                                                             alignSelf: 'flex-start',
                                                             fontSize: 16,
-                                                            color: '#fff',
+                                                            color: moradoClaro,
+                                                            padding: 4,
                                                         }}>
                                                         {a.titulo}
                                                     </Text>
                                                 </View>
                                             ))}
 
-                                            <View style={{ marginTop: 20 }}>
+                                            <Line />
+
+                                            <View>
                                                 <Text style={{
                                                     ...styles.texto,
                                                     fontWeight: 'bold',
                                                 }}>Datos de contacto:</Text>
-                                                {item.Usuario.redSocial ? <Text style={styles.texto}>Red social: {item.Usuario.redSocial}</Text> : null}
-                                                {item.Usuario.sitioWeb ? <Text style={styles.texto}>https:\\{item.Usuario.sitioWeb}</Text> : null}
+                                                {item.Usuario.redSocial ? <Text onPress={() => handleOpenRed(item.Usuario.redSocial)} style={styles.texto}>Red social: {item.Usuario.redSocial}</Text> : null}
+                                                {item.Usuario.sitioWeb ? <Text onPress={() => handleOpenWeb(item.Usuario.sitioWeb)} style={styles.texto}>https:\\{item.Usuario.sitioWeb}</Text> : null}
                                                 {item.Usuario.telefono ? <Text style={styles.texto}>Telefono: {item.Usuario.telefono}</Text> : null}
 
                                             </View>
@@ -367,59 +380,72 @@ export default () => {
                                                 <Text style={styles.texto}>{item.Usuario.comentariosAdicionales}</Text>
                                             </View> : null}
 
-
-                                            {/* Comentarios a poner en la solicitud */}
-                                            <TextInput
-                                                multiline={true}
-                                                style={styles.textInput}
-                                                placeholderTextColor={"#c5c5c5"}
-                                                value={comentarios}
-                                                placeholder="Comentarios adicionales"
-                                                onChangeText={setComentarios}
-                                            />
+                                            <Line />
 
                                             {/* Pedir otra vez los datos */}
                                             <Pressable
                                                 onPress={() => setPedirDatos(!pedirDatos)}
                                                 style={{
-                                                    marginTop: 20,
+                                                    paddingTop: 20,
+                                                    paddingBottom: 20,
                                                     flexDirection: 'row',
                                                     alignItems: 'center',
                                                     justifyContent: 'space-between',
                                                 }}>
                                                 <Text style={{
-                                                    color: '#fff',
+                                                    color: '#000',
+                                                    fontSize: 18,
                                                 }}>Pedir otra vez los datos</Text>
                                                 <RadioButton
-                                                    color={"white"}
+                                                    color={"black"}
                                                     checked={pedirDatos}
                                                     setChecked={setPedirDatos}
                                                 />
                                             </Pressable>
 
 
-                                            {/* Personas maximas */}
-                                            <SelectorPersonas
-                                                textColor={"white"}
-                                                colorDesactivated={"#b3c8ff"}
-                                                full={false}
-                                                personas={capacidadMaxima}
-                                                setPersonas={setCapacidadMaxima}
-                                                titulo={"Personas maximas"}
+                                            <Selector
+                                                cantidad={capacidadMaxima}
+                                                setCantidad={setCapacidadMaxima}
+
+                                                // maxReached
+                                                // maxValue
+                                                // minValue
+
                                                 descripcion={"Sin contar el conductor"}
-                                                minValue={1}
+                                                titulo={"Personas maximas"}
+
                                             />
 
-                                            <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                                            <Line />
+
+
+                                            {/* Comentarios a poner en la solicitud */}
+                                            <TextInput
+                                                multiline={true}
+                                                style={styles.textInput}
+
+                                                value={comentarios}
+                                                placeholder="Comentarios adicionales"
+                                                onChangeText={setComentarios}
+                                            />
+
+
+
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                width: '100%',
+                                                marginTop: 20,
+                                            }}>
                                                 <Boton
                                                     loading={botonLoading === "Rechazar"}
-                                                    containerStyle={{ flex: 1, marginRight: 10, }}
+                                                    style={{ flex: 1, marginRight: 10, backgroundColor: '#d90936', }}
                                                     onPress={() => handleRechazar(index)}
                                                     titulo={"Rechazar"}
                                                 />
                                                 <Boton
                                                     loading={botonLoading === "Aprovar"}
-                                                    containerStyle={{ flex: 1, marginLeft: 10, backgroundColor: '#A3F154', }}
+                                                    style={{ flex: 1, marginLeft: 10, backgroundColor: verdeTurquesa, }}
                                                     onPress={() => handleAprovar(index)}
                                                     titulo={"Aprovar"}
                                                 />
@@ -440,21 +466,11 @@ export default () => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                {tipoModal === "Aventura" ? <ModalAventura
+                <ModalDocs
+                    data={modalData}
                     setModalVisible={setModalVisible}
-                    title={modalData.titulo}
-                    aventuraKey={modalData.id}
-                /> : tipoModal === "Perfil" ?
-                    <ModalGuia
-                        setModalVisible={setModalVisible}
-                        idGuia={modalData.idGuia}
-                    />
-                    :
-                    <ModalDocs
-                        data={modalData}
-                        setModalVisible={setModalVisible}
-                    />
-                }
+                />
+
 
             </Modal>
         </View>
@@ -464,7 +480,7 @@ export default () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: colorFondo,
         flex: 1,
         padding: 20,
     },
@@ -472,7 +488,7 @@ const styles = StyleSheet.create({
     elemento: {
         marginVertical: 10,
         padding: 10,
-        backgroundColor: moradoClaro,
+        backgroundColor: "#fff",
 
         shadowColor: "#000",
         shadowOffset: {
@@ -490,7 +506,7 @@ const styles = StyleSheet.create({
     },
 
     texto: {
-        color: '#fff',
+        color: '#000',
         fontSize: 16,
         padding: 4,
         paddingLeft: 0,
@@ -511,15 +527,21 @@ const styles = StyleSheet.create({
         color: '#fff',
         marginTop: 16,
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: "#fff",
+
         padding: 10,
+        backgroundColor: moradoOscuro,
     },
 
     textInput: {
         fontSize: 16,
-        color: '#fff',
-        paddingBottom: 20,
-        borderBottomWidth: 1,
+        color: '#000',
+        textAlign: 'left',
+        backgroundColor: "#f4f6f6",
+        borderRadius: 7,
+        minHeight: 100,
+        padding: 10,
+        marginBottom: 20,
+        textAlignVertical: 'top',
+
     }
 })

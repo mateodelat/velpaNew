@@ -39,7 +39,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                // initialRouteName={"AgregarAventura"}
+                initialRouteName={"AgregarFecha"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {

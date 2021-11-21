@@ -8,7 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import { categorias, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
+import { categorias, defaultLocation, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
@@ -32,12 +32,6 @@ export default function ({ navigation }) {
                 latitude = coords?.latitude
                 longitude = coords?.longitude
 
-                const defaultLocation = {
-                    latitude: 21.76227198730249,
-                    longitude: -104.03593288734555,
-                    latitudeDelta: 32.71611359157346,
-                    longitudeDelta: 60.73143247514963,
-                }
                 const location = {
                     latitude,
                     longitude,

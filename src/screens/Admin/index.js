@@ -5,19 +5,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { container, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { colorFondo, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants';
 
 
 export default ({ navigation }) => {
     return (
-        <View style={container}>
+        <View style={styles.container}>
 
             {/* Solicitudes de guia */}
             <Text style={{ ...styles.texto, marginTop: 0, }}>Solicitudes</Text>
             <Pressable
                 onPress={() => navigation.navigate("SolicitudesPendientes")}
                 style={styles.buttonContainer}>
-                <Ionicons style={styles.icon} name="ios-person-add-sharp" size={24} color="white" />
+                <Ionicons style={styles.icon} name="ios-person-add-sharp" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Solicitudes para ser guia pendientes</Text>
             </Pressable>
 
@@ -25,7 +25,7 @@ export default ({ navigation }) => {
             <Pressable
                 onPress={() => navigation.navigate("VerSolicitudes")}
                 style={styles.buttonContainer}>
-                <Feather style={styles.icon} name="list" size={24} color="white" />
+                <Feather style={styles.icon} name="list" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Solicitudes revisadas</Text>
             </Pressable>
 
@@ -34,24 +34,24 @@ export default ({ navigation }) => {
             <Pressable
                 onPress={() => navigation.navigate("GuiasAutorizados")}
                 style={styles.buttonContainer}>
-                <FontAwesome5 name="users" size={24} color="white" style={styles.icon} />
+                <FontAwesome5 name="users" size={24} color={"#fff"} style={styles.icon} />
                 <Text style={styles.textoBoton}>Guias autorizados por aventuras</Text>
             </Pressable>
 
-            {/* Ver usuarios
+            {/* Ver usuarios */}
             <Pressable
                 onPress={() => navigation.navigate("Usuarios")}
                 style={styles.buttonContainer}>
-                <Feather style={styles.icon} name="users" size={24} color="white" />
+                <Feather style={styles.icon} name="users" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Ver usuarios</Text>
-            </Pressable> */}
+            </Pressable>
 
             <Text style={styles.texto}>Datos cliente</Text>
             {/* Modificar aventuras por categorias*/}
             <Pressable
                 onPress={() => navigation.navigate("ModificarAventuras")}
                 style={styles.buttonContainer}>
-                <AntDesign style={styles.icon} name="form" size={24} color="white" />
+                <AntDesign style={styles.icon} name="form" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Modificar aventuras/categorias</Text>
             </Pressable>
 
@@ -59,7 +59,7 @@ export default ({ navigation }) => {
             <Pressable
                 onPress={() => navigation.navigate("FechasYReservas")}
                 style={styles.buttonContainer}>
-                <Fontisto style={styles.icon} name="date" size={24} color="white" />
+                <Fontisto style={styles.icon} name="date" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Fechas y reservaciones</Text>
             </Pressable>
 
@@ -72,7 +72,7 @@ export default ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: colorFondo,
         flex: 1,
         padding: 20,
     },
@@ -80,26 +80,16 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginVertical: 10,
         padding: 10,
-        backgroundColor: moradoClaro,
+        backgroundColor: moradoOscuro,
 
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.29,
-        shadowRadius: 4.65,
-        elevation: 7,
-
+        ...shadowMedia,
 
         alignItems: 'center',
         justifyContent: 'center',
-
-        borderRadius: 1,
     },
 
     textoBoton: {
-        color: '#fff',
+        color: "#fff",
         fontSize: 16,
     },
 

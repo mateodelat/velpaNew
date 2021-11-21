@@ -26,8 +26,10 @@ export default function ({ navigation, route }) {
     const {
         fechaInicial,
         fechaFinal,
+
         puntoReunionNombre: ubicacionNombre,
-        puntoReunionId: ubicacionId,
+        puntoReunionLink: ubicacionLink,
+
         tituloAventura,
 
         incluidoDefault,
@@ -95,7 +97,7 @@ export default function ({ navigation, route }) {
         {
             titulo: "Punto de reunion en " + ubicacionNombre,
             hora: (fechaInicial),
-            ubicacionId,
+            ubicacionLink,
             ubicacionNombre,
 
             modifiable: false,
@@ -109,7 +111,7 @@ export default function ({ navigation, route }) {
             titulo: "Punto de reunion en " + ubicacionNombre,
             hora: fechaFinal,
 
-            ubicacionId,
+            ubicacionLink,
             ubicacionNombre,
 
 
@@ -142,6 +144,9 @@ export default function ({ navigation, route }) {
 
             puntoReunionNombre,
             puntoReunionId,
+            puntoReunionLink,
+            puntoReunionCoords,
+
             allowTercera,
             allowNinos,
 
@@ -181,8 +186,12 @@ export default function ({ navigation, route }) {
             comision,
 
             itinerario: JSON.stringify(itinerario),
+
             puntoReunionNombre,
             puntoReunionId,
+            puntoReunionLink,
+            puntoReunionCoords,
+
             allowTercera,
             allowNinos,
             material: JSON.stringify(queLlevar),
@@ -221,7 +230,7 @@ export default function ({ navigation, route }) {
 
                 // Crear notificacion
                 DataStore.save(new Notificacion({
-                    tipo: "FECHACREADA",
+                    tipo: TipoNotificacion.FECHACREADA,
 
                     titulo: "Fecha creada",
                     descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
@@ -404,7 +413,6 @@ export default function ({ navigation, route }) {
                         itinerario={itinerario}
                         setItinerario={setItinerario}
 
-                        modifiable={true}
                     /> :
                     <ModalRuta
                         modify={true}

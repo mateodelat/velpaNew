@@ -178,10 +178,16 @@ export default ({ navigation }) => {
         }
 
         if (!linkPressed) {
-            setLinkPressed(true)
             await WebBrowser.openBrowserAsync(linkStripe)
+                .then(r => {
+                    console.log(r)
+                    setLinkPressed(true)
+                })
         } else {
-            Alert.alert("Vuelve a cargar la pagina hubo un error")
+            Alert.alert("La pagina volvera a cargar, hubo un error", [{
+                text: "OK",
+                onPress: () => navigation.pop() && navigation.navigate("CapturaDocumentos")
+            }])
         }
     }
 

@@ -12,6 +12,7 @@ import { Entypo } from '@expo/vector-icons';
 import { Fecha } from "../../src/models";
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
+import { runOnJS } from "react-native-reanimated";
 
 
 
@@ -166,35 +167,26 @@ export const createUsuarioAventura = /* GraphQL */ `
 // Solo aquellas que no estan aprovadas
 export const listSolicitudGuiasPendientes = /* GraphQL */ `
   query ListSolicitudGuias {
-    listSolicitudGuias(filter: {status: {eq:pending}}) {
+    listSolicitudGuias(filter: {status: {eq:PENDIENTE}}) {
         items {
           status
           id
           createdAt
-          AventurasAVerificar {
+          usuarioID
+          owner
+          Aventuras {
             items {
               aventura {
                 titulo
                 id
-              }
+                _deleted
+                _lastChangedAt
+                _version
+                owner
+                createdAt
+                updatedAt
             }
-        }
-        Usuario {
-          id
-          INE
-          licencia
-          placaVehiculos
-          redSocial
-          nickname
-          selfie
-          sitioWeb
-          tarjetaCirculacion
-          telefono
-          tipo
-          capacidadMaxima
-          certificaciones
-          comentariosAdicionales
-          stripeID
+          }
         }
       }
     }
@@ -1148,7 +1140,43 @@ export const abrirEnGoogleMaps = (link) => {
 
   })
 }
+export const defaultLocation = {
+  latitude: 21.76227198730249,
+  longitude: -104.03593288734555,
+  latitudeDelta: 32.71611359157346,
+  longitudeDelta: 60.73143247514963,
+}
 
+
+// Buscar un lugar por su place id o por su geometria
+export async function googleMapsSearchPlace(place_id) {
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url,name&placeid=${place_id}&key=${mapsAPIKey}`
+
+
+  return await fetch(url)
+    .then(r => {
+      return r.json()
+        .then(r => {
+          r = r.result
+          const { lat: latitude, lng: longitude } = r.geometry.location
+          const latitudeDelta = Math.abs(r.geometry.viewport.northeast.lat - r.geometry.viewport.southwest.lat)
+          const longitudeDelta = Math.abs(r.geometry.viewport.northeast.lng - r.geometry.viewport.southwest.lng)
+
+          return ({
+            ubicacionLink: r.url,
+            ubicacionNombre: r.name,
+            ubicacionId: place_id,
+
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta
+          })
+        })
+    })
+
+
+}
 
 export const formatDia = (ms) => {
   const fecha = new Date(ms)
@@ -1389,6 +1417,15 @@ export const categorias = [...Object.keys(Categorias)].map(e => {
 export const abrirStripeAccount = async (stripeID) => {
   const url = "https://dashboard.stripe.com/connect/accounts/" + stripeID
   return await WebBrowser.openBrowserAsync(url)
+}
+
+export const googleSearch = async (word) => {
+  const url = "https://www.google.com.mx/search?q=" + word
+  return await WebBrowser.openBrowserAsync(url)
+}
+
+export const openLink = async (link) => {
+  return await WebBrowser.openBrowserAsync(link)
 }
 
 // Colores

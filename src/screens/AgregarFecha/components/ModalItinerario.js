@@ -15,6 +15,7 @@ import {
 } from '../../../../assets/constants';
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import HeaderModal from './HeaderModal';
 
 
 const ItemItinerario = ({
@@ -186,7 +187,6 @@ const ModalItinerario = ({
     itinerario,
     setItinerario,
 
-    modifiable
 
 }) => {
     // Variables selector de hora
@@ -362,44 +362,15 @@ const ModalItinerario = ({
     }
     return (
         <View style={styles.container}>
+            <HeaderModal
+                titulo={"Itinerario"}
 
-            {/* Header */}
-            <View style={styles.header}>
+                handleCerrar={handleCerrar}
+                editAllowed={editAllowed}
+                modify={modify}
+                handleSave={handleSave}
 
-                <Entypo
-                    onPress={handleCerrar}
-                    name={"cross"}
-                    size={35}
-                    color={moradoOscuro}
-                />
-                <Text style={{
-                    flex: 1,
-                    fontSize: 20,
-                    color: moradoOscuro,
-                    textAlign: 'center',
-                }}>Itinerario</Text>
-
-                {
-                    modifiable && (
-                        editAllowed &&
-                            modify ? <MaterialIcons
-                            onPress={handleSave}
-                            name={"check"}
-                            size={35}
-                            color={"green"}
-                            style={styles.icon}
-                        />
-                            :
-                            <Feather
-                                onPress={handleSave}
-                                name={"edit"}
-                                size={35}
-                                color={moradoClaro}
-                                style={styles.icon}
-                            />)}
-
-
-            </View>
+            />
 
 
             <ScrollView
@@ -494,13 +465,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    header: {
-        padding: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colorFondo,
-    },
-
 
     body: {
         flex: 1,

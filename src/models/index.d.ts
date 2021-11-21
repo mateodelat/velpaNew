@@ -27,7 +27,11 @@ export enum TipoNotificacion {
   RESERVAENFECHA = "RESERVAENFECHA",
   RESERVACREADA = "RESERVACREADA",
   RECORDATORIOFECHA = "RECORDATORIOFECHA",
+  SOLICITUDGUIAAPROVADA = "SOLICITUDGUIAAPROVADA",
+  SOLICITUDGUIARECHAZADA = "SOLICITUDGUIARECHAZADA",
   SOLICITUDGUIA = "SOLICITUDGUIA",
+  SOLICITUDAVENTURAAPROVADA = "SOLICITUDAVENTURAAPROVADA",
+  SOLICITUDAVENTURARECHAZADA = "SOLICITUDAVENTURARECHAZADA",
   SOLICITUDAVENTURA = "SOLICITUDAVENTURA",
   ADMIN = "ADMIN",
   BIENVENIDA = "BIENVENIDA",
@@ -112,16 +116,13 @@ export declare class Aventura {
   readonly ubicacionNombre: string;
   readonly ubicacionId: string;
   readonly ubicacionLink?: string;
+  readonly coordenadas: string;
   readonly comision: number;
   readonly estadoAventura: EstadoAventura | keyof typeof EstadoAventura;
-  readonly coordenadas: string;
   readonly altitud?: number;
   readonly distanciaRecorrida?: number;
   readonly altimetriaRecorrida?: number;
   readonly categoria?: Categorias | keyof typeof Categorias;
-  readonly puntoReunionNombre?: string;
-  readonly puntoReunionId?: string;
-  readonly puntoReunionLink?: string;
   readonly materialDefault?: string;
   readonly incluidoDefault?: (string | null)[];
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
@@ -262,6 +263,7 @@ export declare class Fecha {
   readonly puntoReunionNombre: string;
   readonly puntoReunionId: string;
   readonly puntoReunionLink?: string;
+  readonly puntoReunionCoords?: string;
   readonly allowTercera: boolean;
   readonly allowNinos: boolean;
   readonly material?: string;

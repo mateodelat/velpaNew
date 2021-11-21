@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
-    Animated,
     Dimensions,
     StyleSheet,
     Text,
@@ -19,31 +18,45 @@ import MapView from "react-native-map-clustering";
 import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
 
 
-import Boton from '../../components/Boton';
-import { defaultLocation, mapsAPIKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
-import QueLlevar from './components/QueLlevar';
-import HeaderConImagen from '../../components/HeaderConImagen';
-import { getCurrentPositionAsync, getLastKnownPositionAsync } from 'expo-location';
-import { Loading } from '../../components/Loading';
+import { defaultLocation, googleMapsSearchPlace, mapsAPIKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../assets/constants';
+
+import { getLastKnownPositionAsync, reverseGeocodeAsync } from 'expo-location';
+
+import { Loading } from './Loading';
+import Boton from './Boton';
+
 import { Marker } from 'react-native-maps';
-import { Categorias } from '../../models';
+
+
 
 
 const { height } = Dimensions.get("screen")
 
-export default ({ navigation, route }) => {
+export default ({
+    selectedPlace, setSelectedPlace,
+
+    handleContinuar,
+
+    buscarInitial,
+    aventurasInicial,
+    onCalloutPress,
+
+    previewTxt,
+
+    denySelectPlaceInMap,
+
+    style,
+    sugestionsContainerStyle,
+
+}) => {
 
     const map = useRef(null)
-    const aventura = route.params
 
-    // Variables del mapa
-    const [aventurasMapa, setAventurasMapa] = useState([]);
     const [region, setRegion] = useState(null);
-    const [selectedPlace, setSelectedPlace] = useState(null);
 
     // Variables del buscador
-    const [buscar, setBuscar] = useState(aventura.titulo);
+    const [buscar, setBuscar] = useState(buscarInitial);
     const [suggestedPlace, setSuggestedPlace] = useState([]);
 
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -54,12 +67,27 @@ export default ({ navigation, route }) => {
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
+                // Si no hay permisos de ubicacion
+                setLocationPermision(r)
+
                 let latitude, longitude
 
                 const coords = (await getLastKnownPositionAsync())?.coords
                 latitude = coords?.latitude
                 longitude = coords?.longitude
 
+                if (selectedPlace) {
+                    const region = {
+                        latitude: selectedPlace.latitude,
+                        longitude: selectedPlace.longitude,
+                        latitudeDelta: selectedPlace.latitudeDelta ? selectedPlace.latitudeDelta : 1,
+                        longitudeDelta: selectedPlace.longitudeDelta ? selectedPlace.longitudeDelta : 1,
+
+                    }
+                    setRegion(region)
+
+                    return
+                }
 
                 const location = {
                     latitude,
@@ -70,77 +98,64 @@ export default ({ navigation, route }) => {
                 }
                 const region = (coords || latitude) ? location : defaultLocation
 
-                // Si no hay permisos de ubicacion
-                setLocationPermision(r)
-
-                // Buscar aventura por el titulo
-                handleSearchPlace(aventura.titulo, region)
+                // Buscar elemento default
+                buscarInitial ? handleSearchPlace(buscarInitial, region) : null
 
                 setRegion(region)
 
             })
-        obtenerAventurasParaMapa().then(r => {
-            setAventurasMapa(r)
-        })
     }, []);
 
-    async function handleContinuar() {
-        if (!selectedPlace) {
-            Alert.alert("Error", "Selecciona la ubicacion de la aventura")
-            return
-        }
-        // Verificaciones
-        let { latitude, longitude, ubicacionLink, ubicacionId } = selectedPlace
 
-        // Si no hay un link de ubicacion se pide
-        if (!ubicacionLink) {
-            ubicacionLink = (await handlePressSuggested({ place_id: ubicacionId }))?.ubicacionLink
-        }
+    const handlePressPlace = async (coordinate, ubicacionId, ubicacionNombre) => {
 
-        let altitud = null
-
-        // Obtener la elevacion si es alpinismo
-        if (aventura.categoria === Categorias.APLINISMO) {
-            setButtonLoading(true)
-            const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`
-            altitud = Math.round(await fetch(url)
+        // Si se presiona el mapa buscar lugares por ahi
+        if (!ubicacionId && !denySelectPlaceInMap) {
+            reverseGeocodeAsync(coordinate)
                 .then(r => {
-                    return r.json()
-                        .then(r => {
-                            if (r.status !== "OK") {
-                                console.log(r)
-                                return null
-                            } else {
-                                return r.results[0].elevation
+                    r = r[0]
+                    let ubicacionNombre
+                    if (!r) return {
+                        ...coordinate,
+                        ubicacionNombre: null
+                    }
 
-                            }
-                        })
 
-                }))
-        }
+                    const city = r?.city ? r.city : ""
+                    const country = r?.country ? r.country : ""
+                    let name = r?.name ? r.name + ", " : ""
+                    const region = r?.region ? r.region + ", " : ""
+                    const street = r?.street ? r.street : ""
 
-        const aventuraAEnviar = {
-            ...aventura,
-            coordenadas: JSON.stringify({
-                latitude,
-                longitude
-            }),
-            altitud,
-            ubicacionNombre: selectedPlace.ubicacionNombre,
-            ubicacionId: selectedPlace.ubicacionId,
-            ubicacionLink
-        }
-        navigation.navigate("AgregarAventura3", aventuraAEnviar)
-        setButtonLoading(false)
-    }
 
-    const handlePressPlace = (coordinate, ubicacionId, ubicacionNombre) => {
+                    if (!r.city) {
+                        if (r.name === r.region) {
+                            ubicacionNombre = (region + country)
 
-        // Si se presiona el mapa quitar el marcador
-        if (!ubicacionId) {
-            setSelectedPlace(null)
+                        } else {
+                            ubicacionNombre = (name + region + country)
+
+                        }
+                    } else {
+                        name = r.name
+
+                        if (r.street === r.name && r.name === r.region) {
+                            ubicacionNombre = (name + ", " + region + city)
+
+                        } else {
+
+                            ubicacionNombre = (street + " " + name + ", " + city)
+
+                        }
+                    }
+                    setSelectedPlace({
+                        ...coordinate,
+                        ubicacionNombre
+                    })
+                })
             return
         }
+
         setSelectedPlace({
             ...coordinate,
             ubicacionId: ubicacionId ? ubicacionId : null,
@@ -149,10 +164,13 @@ export default ({ navigation, route }) => {
 
 
     }
+
+    // Buscar lugares con autocomplete
     const handleSearchPlace = (text, reg) => {
+        if (!text) return
         setBuscar(text)
 
-        // Ver si se le paso una region definida si no buscar por la posicion del mapa
+        // Ver si se le paso una region definida desde el useEffect si no buscar por la posicion del mapa
         const regionABuscar = reg ? reg : region
         const { latitude, longitude } = regionABuscar
 
@@ -185,9 +203,6 @@ export default ({ navigation, route }) => {
             })
     }
 
-    const handleChangeRegionMap = (e) => {
-        setRegion(e)
-    }
     const clearSugested = () => {
         Keyboard.dismiss()
         setBuscar("")
@@ -195,50 +210,14 @@ export default ({ navigation, route }) => {
     }
 
     const handlePressSuggested = async (e) => {
-        const { place_id } = e
         clearSugested()
-        const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url&placeid=${place_id}&key=${mapsAPIKey}`
-        let ubicacionLink
+        const { place_id } = e
 
-        const region = await fetch(url)
-            .then(r => {
-                return r.json()
-                    .then(r => {
-                        r = r.result
-                        ubicacionLink = r.url
-                        const { lat: latitude, lng: longitude } = r.geometry.location
-                        const latitudeDelta = Math.abs(r.geometry.viewport.northeast.lat - r.geometry.viewport.southwest.lat)
-                        const longitudeDelta = Math.abs(r.geometry.viewport.northeast.lng - r.geometry.viewport.southwest.lng)
-
-                        return ({
-                            latitude,
-                            longitude,
-                            latitudeDelta,
-                            longitudeDelta
-                        })
-                    })
-            })
+        const region = await googleMapsSearchPlace(place_id)
 
         map?.current?.animateToRegion(region);
-        const {
-            latitude,
-            longitude,
-        } = region
-        setSelectedPlace({
-            latitude,
-            longitude,
-            ubicacionId: place_id,
-            ubicacionNombre: e.structured_formatting?.main_text,
-            ubicacionLink
-        })
 
-        return {
-            latitude,
-            longitude,
-            ubicacionId: place_id,
-            ubicacionNombre: e.structured_formatting?.main_text,
-            ubicacionLink
-        }
+        setSelectedPlace(region)
     }
 
 
@@ -247,7 +226,7 @@ export default ({ navigation, route }) => {
             onPress={() => {
                 Keyboard.dismiss()
             }}
-            style={styles.container}>
+            style={[styles.container, style]}>
             {/* Header */}
 
             <View style={{
@@ -282,9 +261,9 @@ export default ({ navigation, route }) => {
 
             </View>
             {
-                buscar.length !== 0 && (
+                !!buscar && buscar?.length !== 0 && (
                     suggestedPlace.length !== 0 ?
-                        <View style={styles.sugestionsContainer}>
+                        <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
                             <View style={styles.line} />
 
                             <ScrollView
@@ -310,7 +289,7 @@ export default ({ navigation, route }) => {
                                 })}
                             </ScrollView>
                         </View>
-                        : <View style={styles.sugestionsContainer}>
+                        : <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
                             <View style={styles.line} />
                             <View style={{
                                 ...styles.suggestedPlace,
@@ -326,7 +305,7 @@ export default ({ navigation, route }) => {
                 )
             }
 
-            <Text style={styles.infoTxt}>Selecciona el pin de la aventura</Text>
+            {previewTxt !== null && <Text style={styles.infoTxt}>{previewTxt ? previewTxt : "Selecciona el pin de la aventura"}</Text>}
             <View style={styles.mapContainer}>
                 {region && locationPermision !== null ? <MapView
                     ref={map}
@@ -353,7 +332,7 @@ export default ({ navigation, route }) => {
 
                     }}
 
-                    onRegionChangeComplete={handleChangeRegionMap}
+                    onRegionChangeComplete={setRegion}
 
                 >
                     {/* Marcador de la aventura */}
@@ -362,22 +341,12 @@ export default ({ navigation, route }) => {
                     />}
 
                     {/* Renderizar las aventuras existentes */}
-                    {aventurasMapa.map((e, i) => <Marker
+                    {aventurasInicial?.map((e, i) => <Marker
                         key={i.toString()}
                         coordinate={e.coordenadas}
                         tracksViewChanges={false}
                         title={e.titulo}
-                        onCalloutPress={() => {
-                            Alert.alert("Informacion", "Crear una fecha en esa aventura", [
-                                {
-                                    text: "cancelar"
-                                },
-                                {
-                                    text: "ok",
-                                    onPress: () => navigation.navigate("AgregarFecha", { aventura: e })
-                                },
-                            ])
-                        }}
+                        onCalloutPress={onCalloutPress}
 
                     >
                         <View style={styles.markerContainer}>
@@ -410,14 +379,14 @@ export default ({ navigation, route }) => {
                 }
             </View>
 
-            <Boton
+            {handleContinuar && <Boton
                 onPress={handleContinuar}
                 titulo={"Continuar"}
                 loading={buttonLoading}
                 style={{
                     marginTop: 30,
                 }}
-            />
+            />}
         </View>
     )
 }

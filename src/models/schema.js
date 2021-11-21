@@ -88,6 +88,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "coordenadas": {
+                    "name": "coordenadas",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "comision": {
                     "name": "comision",
                     "isArray": false,
@@ -101,13 +108,6 @@ export const schema = {
                     "type": {
                         "enum": "EstadoAventura"
                     },
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "coordenadas": {
-                    "name": "coordenadas",
-                    "isArray": false,
-                    "type": "AWSJSON",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -138,27 +138,6 @@ export const schema = {
                     "type": {
                         "enum": "Categorias"
                     },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "puntoReunionNombre": {
-                    "name": "puntoReunionNombre",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "puntoReunionId": {
-                    "name": "puntoReunionId",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "puntoReunionLink": {
-                    "name": "puntoReunionLink",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1629,6 +1608,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "puntoReunionCoords": {
+                    "name": "puntoReunionCoords",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "allowTercera": {
                     "name": "allowTercera",
                     "isArray": false,
@@ -2113,7 +2099,11 @@ export const schema = {
                 "RESERVAENFECHA",
                 "RESERVACREADA",
                 "RECORDATORIOFECHA",
+                "SOLICITUDGUIAAPROVADA",
+                "SOLICITUDGUIARECHAZADA",
                 "SOLICITUDGUIA",
+                "SOLICITUDAVENTURAAPROVADA",
+                "SOLICITUDAVENTURARECHAZADA",
                 "SOLICITUDAVENTURA",
                 "ADMIN",
                 "BIENVENIDA",
@@ -2162,5 +2152,5 @@ export const schema = {
             }
         }
     },
-    "version": "51b1c6ca008482b8afa573276d8c66f7"
+    "version": "28f079c6b3c6353f2b9ca329858fcb9d"
 };

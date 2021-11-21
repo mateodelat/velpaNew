@@ -16,16 +16,13 @@ export const onCreateAventura = /* GraphQL */ `
       ubicacionNombre
       ubicacionId
       ubicacionLink
+      coordenadas
       comision
       estadoAventura
-      coordenadas
       altitud
       distanciaRecorrida
       altimetriaRecorrida
       categoria
-      puntoReunionNombre
-      puntoReunionId
-      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -46,6 +43,7 @@ export const onCreateAventura = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -113,16 +111,13 @@ export const onUpdateAventura = /* GraphQL */ `
       ubicacionNombre
       ubicacionId
       ubicacionLink
+      coordenadas
       comision
       estadoAventura
-      coordenadas
       altitud
       distanciaRecorrida
       altimetriaRecorrida
       categoria
-      puntoReunionNombre
-      puntoReunionId
-      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -143,6 +138,7 @@ export const onUpdateAventura = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -210,16 +206,13 @@ export const onDeleteAventura = /* GraphQL */ `
       ubicacionNombre
       ubicacionId
       ubicacionLink
+      coordenadas
       comision
       estadoAventura
-      coordenadas
       altitud
       distanciaRecorrida
       altimetriaRecorrida
       categoria
-      puntoReunionNombre
-      puntoReunionId
-      puntoReunionLink
       materialDefault
       incluidoDefault
       _version
@@ -240,6 +233,7 @@ export const onDeleteAventura = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -368,6 +362,7 @@ export const onCreateFecha = /* GraphQL */ `
       puntoReunionNombre
       puntoReunionId
       puntoReunionLink
+      puntoReunionCoords
       allowTercera
       allowNinos
       material
@@ -436,6 +431,7 @@ export const onUpdateFecha = /* GraphQL */ `
       puntoReunionNombre
       puntoReunionId
       puntoReunionLink
+      puntoReunionCoords
       allowTercera
       allowNinos
       material
@@ -504,6 +500,7 @@ export const onDeleteFecha = /* GraphQL */ `
       puntoReunionNombre
       puntoReunionId
       puntoReunionLink
+      puntoReunionCoords
       allowTercera
       allowNinos
       material
@@ -620,6 +617,7 @@ export const onCreateUsuario = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -788,6 +786,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -956,6 +955,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           puntoReunionNombre
           puntoReunionId
           puntoReunionLink
+          puntoReunionCoords
           allowTercera
           allowNinos
           material
@@ -1531,16 +1531,13 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1606,16 +1603,13 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1681,16 +1675,13 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1756,16 +1747,13 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1870,16 +1858,13 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
@@ -1984,16 +1969,13 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         ubicacionNombre
         ubicacionId
         ubicacionLink
+        coordenadas
         comision
         estadoAventura
-        coordenadas
         altitud
         distanciaRecorrida
         altimetriaRecorrida
         categoria
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
         materialDefault
         incluidoDefault
         _version
