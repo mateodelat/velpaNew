@@ -41,7 +41,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                // initialRouteName={"SolicitudGuia"}
+                // initialRouteName={"Admin"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {

@@ -170,7 +170,10 @@ export default ({ navigation, route }) => {
                 {/* Cuerpo */}
                 {
                     queLlevar && <View >
-                        <View style={styles.linea} />
+                        <View style={{
+                            ...styles.linea,
+                            marginBottom: 20,
+                        }} />
 
                         <QueLlevar
                             datos={JSON.parse(material)}

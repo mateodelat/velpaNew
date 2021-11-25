@@ -34,6 +34,7 @@ import Auth from '@aws-amplify/auth';
 import { SolicitudGuia } from '../../models';
 
 
+const { height, width } = Dimensions.get("window")
 
 export default ({
     route,
@@ -99,6 +100,18 @@ export default ({
                 if (esSelector) {
                     // Filtrar solo mostrando las allowed
                     r = r.filter(ave => !ave.notAllowed)
+                    setSelectedItems([...Array(r.length + 1).keys()].map((_, row) => {
+                        return (
+                            [{
+                                selected: false,
+                            },
+                            {
+                                selected: false,
+                            },
+                            ]
+                        )
+                    }
+                    ))
                 }
 
                 return r
@@ -118,24 +131,11 @@ export default ({
     const [buttonLoading, setButtonLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
-    const rowsAventura = 2
-    const [selectedItems, setSelectedItems] = useState([...Array(rowsAventura + 1).keys()].map((_, row) => {
-        return (
-            [{
-                selected: false,
-            },
-            {
-                selected: false,
-            },
-            ]
-        )
-    }
-    ))
+    const [selectedItems, setSelectedItems] = useState(null)
     // [0,1,idAve]
     // [1,1,idAve]
 
 
-    const { height, width } = Dimensions.get("window")
 
 
     const handleBorrarBusqueda = () => {
@@ -266,7 +266,7 @@ export default ({
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
 
                 (// ALPINISMO
@@ -307,7 +307,7 @@ export default ({
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
                 ( // Dificultad facil
                     (newDificultades[0] && e.dificultad < 3) ||
@@ -381,7 +381,7 @@ export default ({
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
                 &&
                 (// ALPINISMO
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
@@ -661,7 +661,7 @@ export default ({
 
                                                 <CuadradoImagen
                                                     notAllowed={e.notAllowed}
-                                                    selected={esSelector ? selectedItems[row][column].selected : undefined}
+                                                    selected={esSelector ? selectedItems[row][column]?.selected : undefined}
                                                     tamañoCuadrado={(width / 2 - 30)}
                                                     item={e}
                                                     key={"Ave", column}
@@ -727,8 +727,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         paddingBottom: 0,
-        paddingTop: 10
-
+        paddingTop: 10,
+        position: 'absolute',
+        width,
+        height,
     },
 
     filtrar: {

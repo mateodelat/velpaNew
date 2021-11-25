@@ -65,7 +65,7 @@ export default ({ navigation }) => {
             const modelSolicitud = await DataStore.query(SolicitudGuia, solicitud.id)
 
             const sub = await getUserSub()
-            const usuario = solicitudes[idx].Usuario
+            const usuario = solicitudes[idx].usuario
 
             // Actualizamos al usurio con su capacidad maxima
             await DataStore.save(Usuario.copyOf(usuario, (up) => {
@@ -103,7 +103,7 @@ export default ({ navigation }) => {
             }))
 
             Alert.alert("Exito", "Solicitud aceptada con exito")
-            newSolicitudes.slice(idx, 1)
+            newSolicitudes.splice(idx, 1)
 
             setSolicitudes(newSolicitudes)
 
@@ -124,7 +124,7 @@ export default ({ navigation }) => {
         let promises = []
         let newSolicitudes = [...solicitudes]
         const solicitud = solicitudes[idx]
-        const idSolicitante = solicitudes[idx].Usuario.id
+        const idSolicitante = solicitudes[idx].usuario.id
 
 
         const sub = await Auth.currentUserInfo().then(a => a.attributes.sub).catch(e => console.log(e))
@@ -184,16 +184,16 @@ export default ({ navigation }) => {
     const handleVerDocs = (idx) => {
         setTipoModal("VerDocs")
         setModalVisible(true)
-        setModalData(solicitudes[idx].Usuario)
+        setModalData(solicitudes[idx].usuario)
 
     }
 
     const handleLlamar = (idx) => {
-        const tel = solicitudes[idx].Usuario.telefono
+        const tel = solicitudes[idx].usuario.telefono
         if (!tel) {
             Alert.alert("Error", "No hay numero telefonico para este usuario")
         } else {
-            Alert.alert("Llamar", ("Llamar a " + solicitudes[idx].Usuario.nickname + " al " + tel), [
+            Alert.alert("Llamar", ("Llamar a " + solicitudes[idx].usuario.nickname + " al " + tel), [
                 {
                     text: "Cancelar",
                     style: "cancel",
@@ -239,12 +239,15 @@ export default ({ navigation }) => {
             .then(async r => {
                 r = r.data.listSolicitudGuias.items
                 r = (await Promise.all(r.map(async solicitud => {
+
+                    const usuario = await DataStore.query(Usuario, solicitud.usuarioID)
+
                     return {
                         ...solicitud,
                         Aventuras: solicitud.Aventuras.items.map(e => {
                             return e.aventura
                         }),
-                        Usuario: (await DataStore.query(Usuario, r.usuarioID))[0]
+                        usuario,
                     }
                 })))
                     .sort((a, b) => a.createdAt > b.createdAt)
@@ -273,7 +276,7 @@ export default ({ navigation }) => {
                     renderItem={({ item, index }) => {
                         const fechaCreacion = formatDate(item.createdAt)
                         const selected = index === itemSelected
-                        const tipo = item.Usuario.tipo.toLowerCase()
+                        const tipo = item.usuario?.tipo?.toLowerCase()
                         return (
                             <Pressable
                                 onPress={() => {
@@ -287,12 +290,12 @@ export default ({ navigation }) => {
                                         <View>
                                             <Text
                                                 onPress={() => {
-                                                    handleAbrirPerfil(item.Usuario.id)
+                                                    handleAbrirPerfil(item.usuario.id)
                                                 }}
                                                 style={{
                                                     ...styles.texto,
                                                     color: moradoClaro
-                                                }}>@{item.Usuario.nickname}</Text>
+                                                }}>@{item.usuario.nickname}</Text>
                                         </View>
                                         <View style={{
                                             flex: 1,
@@ -313,7 +316,7 @@ export default ({ navigation }) => {
 
 
                                     <Text
-                                        onPress={() => abrirStripeAccount(item.Usuario.stripeID)}
+                                        onPress={() => abrirStripeAccount(item.usuario.stripeID)}
                                         style={{
                                             ...styles.texto,
                                             alignSelf: 'center',
@@ -368,24 +371,23 @@ export default ({ navigation }) => {
                                                     ...styles.texto,
                                                     fontWeight: 'bold',
                                                 }}>Datos de contacto:</Text>
-                                                {item.Usuario.redSocial ? <Text onPress={() => handleOpenRed(item.Usuario.redSocial)} style={styles.texto}>Red social: {item.Usuario.redSocial}</Text> : null}
-                                                {item.Usuario.sitioWeb ? <Text onPress={() => handleOpenWeb(item.Usuario.sitioWeb)} style={styles.texto}>https:\\{item.Usuario.sitioWeb}</Text> : null}
-                                                {item.Usuario.telefono ? <Text style={styles.texto}>Telefono: {item.Usuario.telefono}</Text> : null}
+                                                {item.usuario.sitioWeb ? <Text onPress={() => handleOpenWeb(item.usuario.sitioWeb)} style={{ ...styles.texto, color: moradoOscuro }}>{item.usuario.sitioWeb}</Text> : null}
+                                                {item.usuario.telefono ? <Text style={styles.texto}>Telefono: {item.usuario.telefono}</Text> : null}
 
                                             </View>
 
-                                            {item.Usuario.comentariosAdicionales ? <View style={{ marginTop: 20 }}>
+                                            {item.usuario.comentariosAdicionales ? <View style={{ marginTop: 20 }}>
                                                 <Text style={{
                                                     ...styles.texto,
                                                     fontWeight: 'bold',
                                                 }}>Comentarios:</Text>
-                                                <Text style={styles.texto}>{item.Usuario.comentariosAdicionales}</Text>
+                                                <Text style={styles.texto}>{item.usuario.comentariosAdicionales}</Text>
                                             </View> : null}
 
                                             <Line />
 
                                             {/* Pedir otra vez los datos */}
-                                            <Pressable
+                                            {/* <Pressable
                                                 onPress={() => setPedirDatos(!pedirDatos)}
                                                 style={{
                                                     paddingTop: 20,
@@ -403,16 +405,13 @@ export default ({ navigation }) => {
                                                     checked={pedirDatos}
                                                     setChecked={setPedirDatos}
                                                 />
-                                            </Pressable>
+                                            </Pressable> */}
 
 
                                             <Selector
                                                 cantidad={capacidadMaxima}
                                                 setCantidad={setCapacidadMaxima}
 
-                                                // maxReached
-                                                // maxValue
-                                                // minValue
 
                                                 descripcion={"Sin contar el conductor"}
                                                 titulo={"Personas maximas"}

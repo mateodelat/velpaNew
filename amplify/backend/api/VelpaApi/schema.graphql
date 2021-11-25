@@ -46,8 +46,11 @@ type Reserva @model
   ]) {
 
   id: ID!
+  
   total: Float!
-  comisionPorPersona: Float!
+  comision: Float!
+  pagadoAlGuia:Float!
+  
   tercera: Int!
   ninos: Int!
   adultos: Int!

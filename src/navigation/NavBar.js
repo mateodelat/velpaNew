@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import MapaAventuras from '../screens/MapaAventuras';
 import { DataStore } from '@aws-amplify/datastore';
 import { Notificacion } from '../models';
+import { Usuario } from '../models';
 
 
 const Tab = createBottomTabNavigator()
@@ -29,23 +30,18 @@ const tamañoLogo = 35
 
 
 
-const CustomPlus = ({ setModalVisible, esGuia }) => {
+const CustomPlus = ({ setModalVisible }) => {
 	const navigation = useNavigation()
 
 	function handleSolicitarGuia() {
 		navigation.navigate("SolicitudGuia")
 
 	}
-	function handlePress() {
-		if (esGuia === null) {
-			Alert.alert("Aun no puedes hacer eso")
-
-		}
-
-		else if (esGuia) {
+	async function handlePress() {
+		if (await userEsGuia()) {
 			setModalVisible(true)
-		}
 
+		}
 		else {
 			Alert.alert("No eres guia",
 				"Debes ser guia para agregar nuevas aventuras o fechas, ¿Quieres aplicar para ser guia de Velpa?", [
@@ -116,12 +112,10 @@ const { width, height } = Dimensions.get("window")
 
 export default () => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [esGuia, setEsGuia] = useState(null);
 	const [newNotificaciones, setNewNotificaciones] = useState(false);
 
 	useEffect(() => {
 		let subscripcion
-		verificarGuia()
 		verNuevasNotificaciones().
 			then(r => {
 				const sub = r
@@ -135,11 +129,6 @@ export default () => {
 
 	}, []);
 
-	async function verificarGuia() {
-		const guia = await userEsGuia()
-		setEsGuia(guia)
-
-	}
 
 	async function verNuevasNotificaciones() {
 		const sub = await getUserSub()
@@ -226,7 +215,6 @@ export default () => {
 					component={Plus}
 					options={{
 						tabBarButton: () => <CustomPlus
-							esGuia={esGuia}
 							setModalVisible={setModalVisible}
 						/>
 					}}

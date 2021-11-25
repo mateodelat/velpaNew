@@ -19,10 +19,10 @@ export default ({
 }) => {
 
     minValue = minValue ? minValue : 0
-    maxValue = maxValue ? maxValue : 10
+    maxValue = maxValue ? maxValue : false
 
     const minReached = cantidad <= minValue
-    maxReached = maxReached ? maxReached : (cantidad >= maxValue)
+    maxReached = maxReached ? maxReached : (maxValue ? cantidad >= maxValue : false)
 
 
 

@@ -66,7 +66,7 @@ export default function ({ navigation, route }) {
                 }
             ], { cancelable: false })
         } else {
-            setMaxPersonas(personasMax)
+            setMaxPersonas(capacidadMaxima)
         }
 
     }

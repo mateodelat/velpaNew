@@ -69,7 +69,7 @@ export default ({
                 modify && !imagenRuta ? <Pressable
                     onPress={handleAddImg}
                     style={styles.body}>
-                    <MaterialIcons name="add-a-photo" size={40} color="black" />
+                    <MaterialIcons name="add-a-photo" size={40} color={moradoOscuro} />
                     <Text style={styles.agregarTxt}>Agregar imagen de ruta</Text>
                 </Pressable>
                     : !!imagenRuta && modify ? <Pressable
@@ -117,8 +117,9 @@ const styles = StyleSheet.create({
 
     agregarTxt: {
         fontSize: 16,
-        color: "#000",
+        color: moradoOscuro,
         marginTop: 10,
+
     },
 
     imagen: {

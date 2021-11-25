@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, formatDia, formatDiaMesCompeto, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
+import { colorFondo, formatDia, formatDiaMesCompeto, getUserSub, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
@@ -30,10 +30,11 @@ export default index = ({ route, navigation }) => {
     useEffect(() => {
         let subscriptions = []
         fetchFechas()
-            .then(r => {
+            .then(async r => {
+                const sub = await getUserSub()
                 // Crear las subscripciones
                 r.map((f, idx) => {
-                    const subs = DataStore.observe(Reserva, res => res.fechaID("eq", f.id))
+                    const subs = DataStore.observe(Reserva, res => res.fechaID("eq", f.id).usuarioID("ne", sub))
                         .subscribe(async msg => {
                             if (msg.opType === OpType.INSERT) {
                                 const reserva = msg.element
@@ -41,7 +42,7 @@ export default index = ({ route, navigation }) => {
                                 const totalPersonas = reserva.adultos + reserva.ninos + reserva.tercera
 
                                 const usuario = await DataStore.query(Usuario, reserva.usuarioID)
-                                let nuevasFechas = fechas.length !== 0 ? [...fechas] : [...r]
+                                let nuevasFechas = fechas?.length !== 0 ? [...fechas] : [...r]
                                 nuevasFechas[idx] = {
                                     ...f,
                                     totalPersonasReservadas: nuevasFechas[idx].totalPersonasReservadas += totalPersonas,
@@ -203,7 +204,7 @@ export default index = ({ route, navigation }) => {
                 }} />
                 {
                     !fechas ? <Loading indicator /> :
-                        fechas.length === 0 ?
+                        fechas?.length === 0 ?
                             <Text style={styles.noHayTxt}>No hay fechas disponibles pero puedes suscribirte a la aventura para cuando salga una</Text>
                             :
                             loading ?

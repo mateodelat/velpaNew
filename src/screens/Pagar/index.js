@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+    ActivityIndicator,
     Alert,
     Image,
     Pressable,
@@ -278,7 +279,8 @@ export default function ({ route, navigation }) {
 
                 const datosReserva = {
                     total: precioTotal,
-                    comisionPorPersona: precioIndividualConComision - precioIndividualSinComision,
+                    comision: precioTotal * comision,
+                    pagadoAlGuia: precioTotal - (precioTotal * comision),
 
                     adultos, ninos, tercera,
 
@@ -447,7 +449,10 @@ export default function ({ route, navigation }) {
                             onPress={handleAddPaymentMethod}
                             style={{ ...styles.metodoDePago, justifyContent: 'space-between', }}>
                             <Text style={styles.titulo}>Agregar metodo de pago</Text>
-                            <Entypo name="plus" size={24} color={moradoClaro} />
+                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 24, }}>
+                                {paymentLoaded ? <Entypo name="plus" size={24} color={moradoClaro} /> : <ActivityIndicator color={moradoClaro} />}
+
+                            </View>
                         </Pressable>
                         :
 
@@ -475,7 +480,7 @@ export default function ({ route, navigation }) {
                     onPress={handleConfirm}
                 />
             </View>
-        </StripeProvider>
+        </StripeProvider >
 
     )
 }
