@@ -61,7 +61,7 @@ type Fecha @model
 @key(name: "byAventura", fields: ["aventuraID"]) 
 @key(name: "byUsuario", fields: ["usuarioID"]) 
 @auth(rules: [
-   {allow: private, operations: [read]}, 
+   {allow: private, operations: [read,update]}, 
    {allow: owner}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
@@ -75,7 +75,7 @@ type Fecha @model
   itinerario: String!
 
   puntoReunionNombre: String!
-  puntoReunionId: String!
+  puntoReunionId: String
   puntoReunionLink:String
   puntoReunionCoords:String
   
@@ -108,6 +108,9 @@ type Usuario @model
 
   nombre: String
   apellido: String
+
+  nombreAgencia:String
+  
   foto: String
   nickname: String
   calificacion: Float
@@ -115,15 +118,23 @@ type Usuario @model
   stripeID: String
   
   selfie: String
-  INE: [String]
-  licencia: [String]
-  comentariosAdicionales: String
-  telefono: String
-  capacidadMaxima: Int
-  tarjetaCirculacion: String
+  ID: [String]
   certificaciones: [String]
+
+  telefono: String
   sitioWeb: AWSURL
-  usuarioRedSocial: String
+
+  CuentaBancaria:String
+
+  fechaNacimiento:AWSJSON
+  direccion:AWSJSON
+
+  rfcIndividual:String
+  rfcCompania:String
+
+  capacidadMaxima: Int
+  comentariosAdicionales: String
+
 
   owner: String
   
@@ -190,6 +201,7 @@ type Notificacion @model
  @key(name: "byUsuario", fields: ["usuarioID"])
  @auth(rules: [
    {allow: owner, ownerField: "owner"},
+   {allow: public, operations: [create], }, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
 
@@ -311,15 +323,68 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
 ########################################################
 type Mutation {
   createPaymentIntent(amount: Float!, destinationStripeID: String!, comision: Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
-  createStripeAcount(sub: String!, email: String!, url: String!): CreateAcount! @function(name: "CreateStripeAcount-${env}")
+
+  createStripeAcount(
+    email:AWSEmail!
+    phone:AWSPhone!
+
+    first_name:String!
+    last_name:String!
+
+    # Cuenta bancaria
+    accountNumber:String!
+
+    # Sub usuario
+    userSub:ID!
+
+    # Imagenes de verificacion
+    documentIdBack:String!
+    documentIdFront:String!
+
+    # Fecha nacimiento
+    day:Int!
+    month:Int!
+    year:Int!
+
+    # Adress
+    city:String!
+    country:String!
+    line1:String!
+    postal_code:Int!
+    state:String!
+
+    # Terms of service agree
+    ip:AWSIPAddress!
+    date:AWSTimestamp!
+
+    # Datos si es compañia
+    companyName:String
+    url:AWSURL
+
+    # Cuenta individual o de compañia
+    accountType:AccountType!
+
+    # RFC infdividual que se agregara al perfil del dueño si se especifican varios
+    rfcIndividual:String
+    rfcCompania:String
+
+  ): CreateAcountResponse @function(name: "CreateStripeAcount-${env}")
 }
+
+enum AccountType {
+  INDIVIDUAL
+  COMPANY
+}
+
 
 type PaymentIntent {
   id: String
   clientSecret: String
 }
- 
-type CreateAcount {
-  url: String
+
+type CreateAcountResponse {
+  id: String
+  errors:Boolean
 }
- 
+
+

@@ -1,13 +1,13 @@
 import React from 'react'
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { Entypo } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { moradoOscuro } from '../../../../assets/constants';
 
-const ImageModal = ({ imagen, titulo, modalVisible, setModalVisible }) => {
+export default ({ imagen, titulo, modalVisible, setModalVisible }) => {
     return (
         <Modal
             animationType="slide"
-            transparent={true}
+            transparent={false}
             visible={modalVisible}
             onRequestClose={() => {
                 setModalVisible(!modalVisible);
@@ -24,7 +24,7 @@ const ImageModal = ({ imagen, titulo, modalVisible, setModalVisible }) => {
                         }}
                         style={styles.button}
                     >
-                        <Entypo name="cross" size={24} color="black" />
+                        <Feather name="x" size={30} color="#fff" />
                     </Pressable>
                 </View>
                 <View style={styles.innerContainer}>
@@ -39,28 +39,15 @@ const ImageModal = ({ imagen, titulo, modalVisible, setModalVisible }) => {
     )
 }
 
-export default ImageModal
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 15,
-        borderRadius: 20,
         backgroundColor: '#fff',
-        overflow: "hidden",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 7,
     },
 
     innerContainer: {
         flex: 1,
-        margin: 10,
+        // margin: 10,
         marginTop: 0,
         borderRadius: 20,
         overflow: "hidden"
@@ -68,10 +55,10 @@ const styles = StyleSheet.create({
 
     header: {
         alignItems: 'center',
-        // justifyContent: 'center',
-        margin: 5,
-        marginLeft: 10,
         flexDirection: 'row',
+        backgroundColor: moradoOscuro,
+        height: 60,
+
     },
 
     button: {
@@ -84,7 +71,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         position: 'absolute',
         fontWeight: 'bold',
-        color: moradoOscuro,
+        color: "#fff",
         textAlign: 'center',
         width: '100%',
     }

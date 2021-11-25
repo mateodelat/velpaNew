@@ -5,7 +5,7 @@ import MapWithSearch from '../../../components/MapWithSearch'
 import HeaderModal from './HeaderModal'
 
 export default function ({ setModalVisible,
-    setPuntoReunion,
+    handleGuardar,
     puntoReunion
 }) {
     const { width, height } = Dimensions.get("window")
@@ -14,16 +14,6 @@ export default function ({ setModalVisible,
 
     const handleCerrar = () => {
         setModalVisible(false)
-    }
-
-    const handleGuardar = () => {
-        setPuntoReunion({
-            ...selectedPlace
-        })
-
-
-        setModalVisible(false)
-        Alert.alert("Exito", "Punto de reunion guardado con exito")
     }
 
 
@@ -45,7 +35,7 @@ export default function ({ setModalVisible,
 
                 modify={true}
 
-                handleSave={handleGuardar}
+                handleSave={() => handleGuardar(selectedPlace)}
             />
             <View style={styles.container}>
                 <MapWithSearch
@@ -57,7 +47,9 @@ export default function ({ setModalVisible,
                     selectedPlace={selectedPlace}
                 />
                 {!!selectedPlace && <Text
+                    onPress={() => handleGuardar(selectedPlace)}
                     style={styles.nameLocationContainer}>{selectedPlace.ubicacionNombre}</Text>
+
                 }
             </View>
         </View>
@@ -72,10 +64,7 @@ const styles = StyleSheet.create({
     },
 
     nameLocationContainer: {
-        position: 'absolute',
-        bottom: 10,
         width: '100%',
-        left: 10,
         fontSize: 20,
         paddingVertical: 10,
         paddingHorizontal: 10,

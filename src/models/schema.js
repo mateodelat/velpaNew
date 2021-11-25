@@ -722,6 +722,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "nombreAgencia": {
+                    "name": "nombreAgencia",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "foto": {
                     "name": "foto",
                     "isArray": false,
@@ -757,31 +764,66 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "INE": {
-                    "name": "INE",
+                "ID": {
+                    "name": "ID",
                     "isArray": true,
                     "type": "String",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "licencia": {
-                    "name": "licencia",
+                "certificaciones": {
+                    "name": "certificaciones",
                     "isArray": true,
                     "type": "String",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "comentariosAdicionales": {
-                    "name": "comentariosAdicionales",
+                "telefono": {
+                    "name": "telefono",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "telefono": {
-                    "name": "telefono",
+                "sitioWeb": {
+                    "name": "sitioWeb",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "CuentaBancaria": {
+                    "name": "CuentaBancaria",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaNacimiento": {
+                    "name": "fechaNacimiento",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "direccion": {
+                    "name": "direccion",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "rfcIndividual": {
+                    "name": "rfcIndividual",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "rfcCompania": {
+                    "name": "rfcCompania",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -794,30 +836,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "tarjetaCirculacion": {
-                    "name": "tarjetaCirculacion",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "certificaciones": {
-                    "name": "certificaciones",
-                    "isArray": true,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "sitioWeb": {
-                    "name": "sitioWeb",
-                    "isArray": false,
-                    "type": "AWSURL",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "usuarioRedSocial": {
-                    "name": "usuarioRedSocial",
+                "comentariosAdicionales": {
+                    "name": "comentariosAdicionales",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1598,7 +1618,7 @@ export const schema = {
                     "name": "puntoReunionId",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "puntoReunionLink": {
@@ -1755,7 +1775,8 @@ export const schema = {
                             {
                                 "allow": "private",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ]
                             },
                             {
@@ -1928,6 +1949,12 @@ export const schema = {
                                 ]
                             },
                             {
+                                "allow": "public",
+                                "operations": [
+                                    "create"
+                                ]
+                            },
+                            {
                                 "groupClaim": "cognito:groups",
                                 "provider": "userPools",
                                 "allow": "groups",
@@ -2062,6 +2089,13 @@ export const schema = {
         }
     },
     "enums": {
+        "AccountType": {
+            "name": "AccountType",
+            "values": [
+                "INDIVIDUAL",
+                "COMPANY"
+            ]
+        },
         "EstadoAventura": {
             "name": "EstadoAventura",
             "values": [
@@ -2139,18 +2173,25 @@ export const schema = {
                 }
             }
         },
-        "CreateAcount": {
-            "name": "CreateAcount",
+        "CreateAcountResponse": {
+            "name": "CreateAcountResponse",
             "fields": {
-                "url": {
-                    "name": "url",
+                "id": {
+                    "name": "id",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "errors": {
+                    "name": "errors",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 }
             }
         }
     },
-    "version": "28f079c6b3c6353f2b9ca329858fcb9d"
+    "version": "3e5552111e7a367fc621bbc1fa756e6f"
 };

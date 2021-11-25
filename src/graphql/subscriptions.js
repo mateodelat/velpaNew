@@ -564,20 +564,23 @@ export const onCreateUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -733,20 +736,23 @@ export const onUpdateUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -902,20 +908,23 @@ export const onDeleteUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -1781,20 +1790,23 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -1892,20 +1904,23 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2003,20 +2018,23 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2073,20 +2091,23 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2175,20 +2196,23 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2277,20 +2301,23 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted

@@ -139,7 +139,7 @@ export default ({
                     } else {
                         name = r.name
 
-                        if (r.street === r.name && r.name === r.region) {
+                        if (r.street === r.name) {
                             ubicacionNombre = (name + ", " + region + city)
 
                         } else {
@@ -167,8 +167,8 @@ export default ({
 
     // Buscar lugares con autocomplete
     const handleSearchPlace = (text, reg) => {
-        if (!text) return
         setBuscar(text)
+        if (!text) return
 
         // Ver si se le paso una region definida desde el useEffect si no buscar por la posicion del mapa
         const regionABuscar = reg ? reg : region
@@ -248,7 +248,6 @@ export default ({
                     }}
                     value={buscar}
                     placeholder="Buscar lugar"
-                    underlineColorAndroid={false}
                     onChangeText={handleSearchPlace}
                 />
                 {!!buscar && <Feather

@@ -1,260 +1,79 @@
-import React, { useState } from 'react'
-import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, formatDateShort, getBlob, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import React, { useEffect, useState } from 'react'
+import { Alert, Animated, Dimensions, Image, ImageBackground, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { abrirEnGoogleMaps, colorFondo, formatAMPM, formatDate, formatDateShort, formatDia, getCapacidadUsuario, getUserSub, moradoClaro, moradoOscuro, msInMinute, redondear, shadowMedia } from '../../../assets/constants'
 
 
-import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
-
+import SelectorInput from '../../components/SelectorInput'
 import HeaderConImagen from '../../components/HeaderConImagen';
 import Boton from '../../components/Boton';
-import ModalItinerario from './components/ModalItinerario';
-import ModalRuta from '../FechasAventura/components/ModalRuta';
-import QueLlevar from './components/QueLlevar';
-import Incluido from './components/Incluido';
-import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoomUsuario, Fecha, Notificacion, TipoNotificacion } from '../../models';
 
-import { ChatRoom } from '../../models';
-import { Usuario } from '../../models';
+import RadioButton from '../../components/RadioButton';
 
-import uuid from 'react-native-uuid';
-import Storage from '@aws-amplify/storage';
+
 
 const { height } = Dimensions.get("screen")
 
 export default function ({ navigation, route }) {
+
     const {
         fechaInicial,
-        fechaFinal,
+        fechaFinal
+    } = route?.params?.fecha
 
-        puntoReunionNombre: ubicacionNombre,
-        puntoReunionLink: ubicacionLink,
-
+    const {
+        precioMin,
+        precioMax,
         tituloAventura,
+        maxPersonas,
 
-        incluidoDefault,
-        materialDefault
     } = route.params
 
     const scrollY = React.useRef(new Animated.Value(0)).current
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [tipoModal, setTipoModal] = useState("");
-
-    const [incluido, setIncluido] = useState({
-        default: incluidoDefault,
-        agregado: []
-    })
-
-    const formatDateShortLogistica = (msInicial, msFinal) => {
-        const dateInicial = new Date(msInicial)
-
-        var ddInicial = String(dateInicial.getUTCDate())
-        var mmInicial = String(dateInicial.getUTCMonth())
-
-        if (msFinal) {
-            const dateFinal = new Date(msFinal)
-
-            var ddFinal = String(dateFinal.getUTCDate())
-            var mmFinal = String(dateFinal.getUTCMonth())
-
-            // Si es de un solo dia se regresa un numero
-            if (ddFinal === ddInicial && mmInicial === mmFinal) {
-                return ("Logistica " + ddInicial + " " + meses[mmInicial]);
-
-            }
-
-            // Si los meses son iguales se pone sin 2 veces un mes
-            if (mmInicial === mmInicial) {
-                return ("Logistica " + ddInicial + " - " + ddFinal + " " + meses[mmInicial]);
-
-            } else {
-                return (ddInicial + " " + meses[mmInicial] + " - " + ddFinal + " " + meses[mmFinal]);
-
-            }
-
-        } else {
-            return (ddInicial + " " + meses[mmInicial]);
-        }
-
-
-    }
 
 
 
-    const [queLlevar, setQueLlevar] = useState(JSON.parse(materialDefault));
+
+    // Titulo y descripcion
+    const [titulo, setTitulo] = useState(null);
+    const [descripcion, setDescripcion] = useState(null);
+
+    // Selectores personasTotales/precio
+    const [precio, setPrecio] = useState(redondear(precioMin, 50));
+    const [personasTotales, setPersonas] = useState(maxPersonas);
+
+    // Permitir tercera edad / niños
+    const [allowNinos, setAllowNinos] = useState(true);
+    const [allowTercera, setAllowTercera] = useState(true);
 
 
-    const [buttonLoading, setButtonLoading] = useState(false);
-    const [modificarQueLlevar, setModificarQueLlevar] = useState(false);
-    const [modificarIncluido, setModificarIncluido] = useState(false);
 
 
-    const [imagenRuta, setImagenRuta] = useState("");
-
-    // Itinerario
-    const [itinerario, setItinerario] = useState([
-        {
-            titulo: "Punto de reunion en " + ubicacionNombre,
-            hora: (fechaInicial),
-            ubicacionLink,
-            ubicacionNombre,
-
-            modifiable: false,
-            tipo: "inicio"
-        },
-        {
-            titulo: "Aventura en " + tituloAventura,
-            hora: (fechaInicial + msInMinute),
-        },
-        {
-            titulo: "Punto de reunion en " + ubicacionNombre,
-            hora: fechaFinal,
-
-            ubicacionLink,
-            ubicacionNombre,
+    const handleContinuar = () => {
+        const { incluidoDefault, materialDefault } = route.params
 
 
-            modifiable: false,
-            tipo: "fin"
-        },
-    ]);
-
-    const handleVerItinerario = () => {
-        if (!fechaInicial) {
-            Alert.alert("Error", "No hay fecha")
-            return
-        }
-
-        setTipoModal("itinerario")
-        setModalVisible(true)
-    }
-
-    const handleAgregarRuta = () => {
-        setTipoModal("ruta")
-        setModalVisible(true)
-    }
-
-    const handleContinuar = async () => {
-        const {
+        navigation.navigate("AgregarFecha3", {
             personasTotales,
-            fechaInicial,
-            fechaFinal,
             precio,
-
-            puntoReunionNombre,
-            puntoReunionId,
-            puntoReunionLink,
-            puntoReunionCoords,
 
             allowTercera,
             allowNinos,
 
-            titulo,
-            descripcion,
-
-            aventuraID,
-            comision,
-            imagenFondo
-        } = route.params
-
-
-
-        setButtonLoading(true)
-        const sub = await getUserSub()
-        let imagenRutaKey
-
-        if (imagenRuta) {
-            // Subir la imagen de la ruta a S3
-            const key = "fecha-imagenRuta " + uuid.v4() + ".jpg"
-            const blobImagenRuta = await getBlob(imagenRuta)
-
-
-            await Storage.put(key, blobImagenRuta).then(r => {
-                imagenRutaKey = r.key
-            })
-
-        }
-
-        const fecha = {
-            personasTotales,
-
-            fechaInicial,
-            fechaFinal,
-
-            precio,
-            comision,
-
-            itinerario: JSON.stringify(itinerario),
-
-            puntoReunionNombre,
-            puntoReunionId,
-            puntoReunionLink,
-            puntoReunionCoords,
-
-            allowTercera,
-            allowNinos,
-            material: JSON.stringify(queLlevar),
-            incluido: JSON.stringify(incluido),
-            aventuraID,
-
-            usuarioID: sub,
+            incluidoDefault,
+            materialDefault,
 
             titulo,
             descripcion,
-            imagenRuta: imagenRutaKey ? imagenRutaKey : null,
-        }
 
+            ...route.params.fecha,
+            ...route.params
+        })
 
-        // Subir todos los datos a la database 
-        DataStore.save(
-            new Fecha(fecha)
-        )
-            .then(async fecha => {
-                // Crear chatRoom
-                const chatroom = await DataStore.save(new ChatRoom({
-                    name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
-                    newMessages: 0,
-                    picture: imagenFondo,
-                    fechaID: fecha.id,
-                }))
-
-                // Obtener usuario del guia
-                const usuario = await DataStore.query(Usuario, sub)
-
-                // Agregar guia al chat
-                await DataStore.save(new ChatRoomUsuario({
-                    chatroom,
-                    usuario
-                }))
-
-                // Crear notificacion
-                DataStore.save(new Notificacion({
-                    tipo: TipoNotificacion.FECHACREADA,
-
-                    titulo: "Fecha creada",
-                    descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
-
-                    usuarioID: sub,
-                    imagen: imagenFondo,
-
-                    fechaID: fecha.id,
-                }))
-                // Navegar a exitoso
-                setButtonLoading(false)
-                navigation.navigate("ExitoScreen", {
-                    txtExito: "Fecha agregada con exito!!"
-                })
-            })
-            .catch(e => {
-                Alert.alert("Error", "Error agregando la fecha")
-                console.log(e)
-            })
     }
 
     return (
         <View style={styles.container}>
-
 
             {/* Fechas */}
             <Animated.ScrollView
@@ -272,156 +91,138 @@ export default function ({ navigation, route }) {
 
                 <View style={{ height: height * 0.24 }} />
 
-                {/* Material incluido */}
-                <View style={[styles.item, styles.queLlevar]}>
-                    <Pressable
-                        style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                        <Text style={styles.captionTxt}>Incluido</Text>
-                        {
-                            modificarIncluido ?
-                                <Feather
-                                    onPress={() => setModificarIncluido(!modificarIncluido)}
-                                    style={styles.modificar}
-                                    name="check"
-                                    size={24}
-                                    color="green"
-                                />
-                                :
-                                <Feather
-                                    onPress={() => setModificarIncluido(!modificarIncluido)}
-                                    style={styles.modificar}
-                                    name="edit"
-                                    size={24}
-                                    color="black"
-                                />
-                        }
-                    </Pressable>
-
-                    <View style={styles.linea} />
-
-                    <Incluido
-                        datos={incluido}
-                        modify={modificarIncluido}
-                        setDatos={setIncluido}
+                {/* Texto de titulo */}
+                <View style={styles.item}>
+                    <Text style={styles.captionTxt}>Titulo fecha (opcional)</Text>
+                    <TextInput
+                        maxLength={30}
+                        style={styles.textInput}
+                        value={titulo}
+                        onChangeText={setTitulo}
                     />
-
                 </View>
 
-                <View style={[styles.item, styles.queLlevar]}>
-
-                    <Pressable
-                        style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                        <Text style={styles.captionTxt}>Material a llevar</Text>
-                        {
-                            modificarQueLlevar ?
-                                <Feather
-                                    onPress={() => setModificarQueLlevar(!modificarQueLlevar)}
-                                    style={styles.modificar}
-                                    onPress={() => setModificarQueLlevar(!modificarQueLlevar)}
-                                    name="check"
-                                    size={24}
-                                    color="green"
-                                />
-                                :
-                                <Feather
-                                    onPress={() => setModificarQueLlevar(!modificarQueLlevar)}
-                                    style={styles.modificar}
-                                    name="edit"
-                                    size={24}
-                                    color="black"
-                                />
-                        }
-                    </Pressable>
-
-                    <View style={styles.linea} />
-
-                    <QueLlevar
-                        datos={queLlevar}
-                        modify={modificarQueLlevar}
-                        setDatos={setQueLlevar}
-                    />
-
+                {/* Texto de descripcion */}
+                <View style={styles.item}>
+                    <Text style={styles.captionTxt}>Descripcion fecha (opcional)</Text>
+                    <TextInput
+                        style={{ ...styles.textInput, textAlignVertical: 'top', }}
+                        multiline={true}
+                        numberOfLines={3}
+                        value={descripcion}
+                        onChangeText={setDescripcion} />
                 </View>
 
 
-                {/* Agregar itinerario */}
-                <Pressable
-                    onPress={handleVerItinerario}
-                    style={styles.row}>
-                    <View style={styles.agregar}>
-                        <FontAwesome5 style={styles.icono} name="tasks" size={16} color="white" />
+                <View style={styles.linea} />
 
-                        <Text style={styles.tituloAgregar}>Ver itinerario</Text>
-                        <Entypo name="plus" size={30} color={"transparent"} />
-                    </View>
+                {/* Cantidad de personas */}
+                <View style={{
+                    ...styles.item,
+                    flexDirection: 'row',
+                    alignItems: 'center',
 
-                </Pressable>
+                }}>
+                    <View style={styles.contenedorSelector}>
+                        <SelectorInput
+                            cantidad={personasTotales}
+                            setCantidad={setPersonas}
+                            minValue={1}
+                            maxValue={maxPersonas}
 
 
-                {/* Agregar imagen ruta */}
-                <Pressable
-                    onPress={handleAgregarRuta}
-                    style={styles.agregar}>
-                    <View style={styles.icono}>
-                        <Image
-                            source={require("../../../assets/icons/distance.png")}
-                            style={{
-                                width: 16,
-                                height: 16,
-                                tintColor: "white"
-                            }} />
+                            titulo={"Personas maximas"}
+
+                            cambio={1}
+                        />
 
                     </View>
+                </View>
 
-                    <Text style={styles.tituloAgregar}>{imagenRuta ? "Ver imagen ruta" : "Agregar imagen ruta"}</Text>
-                    <Entypo name={"plus"} size={30} color={imagenRuta ? "transparent" : moradoOscuro} />
-                </Pressable>
+
+                {/* Precio por persona */}
+                <View style={{
+                    ...styles.item,
+                    // marginTop: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+
+                }}>
+
+
+                    <View style={styles.contenedorSelector}>
+                        <SelectorInput
+                            cantidad={precio}
+                            setCantidad={setPrecio}
+                            minValue={precioMin}
+                            maxValue={precioMax}
+
+                            titulo={"Precio min /persona"}
+
+                            cambio={50}
+                            showSigno={true}
+                        />
+
+                    </View>
+                </View>
+
+                {/* Permitir/negar tercera edad y niños */}
+                <View style={styles.allowContainer}>
+                    {/* Tercera edad */}
+                    <Pressable
+                        onPress={() => setAllowTercera(!allowTercera)}
+                        style={styles.allowInnerContainer}>
+                        <Text style={styles.textAllow}>Permitir tercera edad</Text>
+                        <RadioButton
+                            checked={allowTercera}
+                            setChecked={setAllowTercera}
+                        />
+
+                    </Pressable>
+                    <View style={{
+                        ...styles.linea,
+                        marginBottom: 5,
+                        marginTop: 5,
+                    }}>
+
+                    </View>
+
+                    {/* Niños */}
+                    <Pressable
+                        onPress={() => setAllowNinos(!allowNinos)}
+                        style={styles.allowInnerContainer}>
+                        <Text style={styles.textAllow}>Permitir niños</Text>
+                        <RadioButton
+                            checked={allowNinos}
+                            setChecked={setAllowNinos}
+                        />
+
+                    </Pressable>
+
+                </View>
+
+
+
 
                 <Boton
                     style={{
                         marginBottom: 40,
+                        marginTop: 20,
                     }}
                     titulo={"Continuar"}
                     onPress={handleContinuar}
-                    loading={false}
                 />
 
             </Animated.ScrollView >
 
             <HeaderConImagen
-                titulo={`${formatDateShortLogistica(fechaInicial, fechaFinal)}`}
+                titulo={tituloAventura + " " + formatDia(fechaInicial)}
                 imagen={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
             />
 
-            <Modal
-                animationType="slide"
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                {tipoModal === "itinerario" ?
-                    <ModalItinerario
-                        editAllowed={true}
-                        setModalVisible={setModalVisible}
-
-                        fechaInicial={new Date(fechaInicial)}
-                        fechaFinal={fechaFinal ? new Date(fechaFinal) : new Date(fechaInicial)}
-
-                        itinerario={itinerario}
-                        setItinerario={setItinerario}
-
-                    /> :
-                    <ModalRuta
-                        modify={true}
-                        setModalVisible={setModalVisible}
-                        img={imagenRuta}
-                        setImg={setImagenRuta}
-                    />}
-            </Modal>
-        </View>
+        </View >
     )
 }
 
@@ -436,17 +237,17 @@ const styles = StyleSheet.create({
     },
 
     captionTxt: {
-        fontSize: 18,
+        fontSize: 15,
         marginBottom: 15,
-        fontWeight: 'bold',
-        color: moradoClaro,
+        marginLeft: 5,
 
     },
 
-    queLlevar: {
+    textInput: {
         // flex: 1,
         backgroundColor: '#fff',
-        padding: 20,
+        padding: 5,
+        paddingHorizontal: 10,
 
     },
 
@@ -455,9 +256,8 @@ const styles = StyleSheet.create({
     },
 
     question: {
-        marginHorizontal: 10,
-
-        backgroundColor: moradoClaro + "99",
+        position: 'absolute',
+        backgroundColor: moradoClaro,
         borderRadius: 100,
 
         width: 25,
@@ -497,21 +297,26 @@ const styles = StyleSheet.create({
         fontSize: 15,
         flex: 1,
         textAlign: 'center',
-        color: moradoOscuro,
     },
 
     icono: {
         // ...shadowMedia,
-        backgroundColor: moradoOscuro,
-        padding: 10,
-        borderRadius: 100,
-        alignItems: 'center', justifyContent: 'center',
+        // backgroundColor: moradoOscuro,
+        // padding: 10,
+        // borderRadius: 100,
+        // alignItems: 'center', justifyContent: 'center',
+
+        position: 'absolute',
+        left: 10,
+
     },
+
 
     linea: {
         borderBottomWidth: 0.5,
         marginHorizontal: 20,
-        marginBottom: 20,
+        marginTop: 20,
+        marginBottom: 40,
     },
     row: {
         flexDirection: 'row',
@@ -520,7 +325,9 @@ const styles = StyleSheet.create({
 
     puntoDeReunion: {
         padding: 10,
+        // paddingLeft: 0,
         backgroundColor: '#fff',
+        borderColor: "red",
     },
 
     txtLocation: {
@@ -528,11 +335,26 @@ const styles = StyleSheet.create({
         fontSize: 16,
         flex: 1,
         textAlign: 'center',
+
         marginLeft: 10,
+
+
     },
 
-    modificar: {
-
+    allowContainer: {
+        backgroundColor: '#fff',
+        padding: 10,
         marginBottom: 10,
+    },
+
+    allowInnerContainer: {
+        flexDirection: 'row',
+        paddingVertical: 15,
+        paddingRight: 2.5,
+    },
+
+    textAllow: {
+        fontSize: 16,
+        flex: 1,
     }
 })

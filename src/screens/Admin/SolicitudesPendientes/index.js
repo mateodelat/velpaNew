@@ -103,7 +103,9 @@ export default ({ navigation }) => {
             }))
 
             Alert.alert("Exito", "Solicitud aceptada con exito")
+            newSolicitudes.slice(idx, 1)
 
+            setSolicitudes(newSolicitudes)
 
         } catch (error) {
             console.log(error)

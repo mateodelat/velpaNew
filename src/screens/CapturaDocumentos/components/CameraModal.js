@@ -18,14 +18,14 @@ import {
 import { Entypo } from '@expo/vector-icons';
 
 
-import ModalInfo from "./ModalInfo"
+import ModalInfo from "../ModalInfo"
 import * as ImageManipulator from 'expo-image-manipulator';
 
 let { width, height } = Dimensions.get('window');
 
 
 
-const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
+export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
     const [condicionesInfo, setCondicionesInfo] = useState(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"]);
     const [imagenEjemplo, setImagenEjemplo] = useState(require("../../../../assets/IMG/INE-Frente.png"));
     const [mensajeDetalleCamara, setMensajeDetalleCamara] = useState("");
@@ -47,7 +47,7 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
 
     async function handlePicture() {
         let image = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png"
-        let fotosLocal = fotos
+        let fotosLocal = { ...fotos }
 
         if (loaded) {
             image = await camaraRef.current.takePictureAsync()
@@ -95,52 +95,26 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
                 setModalVisible(false)
                 break;
 
-            case "INE":
-                fotosLocal.INE[0] = image
+            case "ID":
+                fotosLocal.ID[0] = {
+                    uri: image
+                }
                 setFotos(
                     fotosLocal
                 )
-                setCondicionesInfo(["INE reverso", "Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
-                setMensajeTituloCamara("INE/IFE reverso")
+                setCondicionesInfo(["Identificacion reverso", "Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
+                setMensajeTituloCamara("Identificacion oficial reverso")
                 setImagenEjemplo(require("../../../../assets/IMG/INE-Reverso.png"))
                 setModalInfoVisible(true)
 
-                setTipoLocal("INEReverso")
+                setTipoLocal("IDReverso")
 
                 break;
 
-            case "licencia":
-                fotosLocal.licencia[0] = image
-                setFotos(
-                    fotosLocal
-                )
-                setCondicionesInfo(["Licencia reverso", "Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
-                setMensajeTituloCamara("Licencia atras")
-                setImagenEjemplo(require("../../../../assets/IMG/Licencia-Reverso.png"))
-                setModalInfoVisible(true)
-
-                setTipoLocal("licenciaReverso")
-
-                break;
-
-            case "tarjeta":
-                fotosLocal.tarjeta = image
-                setFotos(
-                    fotosLocal
-                )
-                setModalVisible(false)
-                break;
-
-            case "licenciaReverso":
-                fotosLocal.licencia[1] = image
-                setFotos(
-                    fotosLocal
-                )
-                setModalVisible(false)
-                break;
-
-            case "INEReverso":
-                fotosLocal.INE[1] = image
+            case "IDReverso":
+                fotosLocal.ID[1] = {
+                    uri: image
+                }
                 setFotos(
                     fotosLocal
                 )
@@ -153,6 +127,7 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
     }
 
     useEffect(() => {
+        if (!modalVisible) return
         (async () => {
             if (modalVisible) {
                 setTipoLocal(tipo)
@@ -164,25 +139,11 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
                         setImagenEjemplo(require("../../../../assets/IMG/Selfie.png"))
                         break;
 
-                    case "INE":
-                        setMensajeTituloCamara("INE/IFE frente")
+                    case "ID":
+                        setMensajeTituloCamara("Identificacion frente")
                         setCondicionesInfo(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
-                        setMensajeDetalleCamara("Asegurate que tu INE/IFE encaje en el marco")
+                        setMensajeDetalleCamara("Asegurate que tu identificacion encaje en el marco")
                         setImagenEjemplo(require("../../../../assets/IMG/INE-Frente.png"))
-                        break;
-
-                    case "licencia":
-                        setMensajeDetalleCamara("Asegurate que tu licencia encaje en el marco")
-                        setCondicionesInfo(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
-                        setMensajeTituloCamara("Licencia frente")
-                        setImagenEjemplo(require("../../../../assets/IMG/Licencia-Frente.png"))
-                        break;
-
-                    case "tarjeta":
-                        setMensajeDetalleCamara("Asegurate que la tarjeta encaje en el marco")
-                        setCondicionesInfo(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
-                        setMensajeTituloCamara("Tarjeta de circulacion")
-                        setImagenEjemplo(require("../../../../assets/IMG/tarjeta-circulacion.png"))
                         break;
 
                     default:
@@ -224,7 +185,6 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
 
     return (
         <Modal
-            statusBarTranslucent={true}
             animationType="none"
             transparent={true}
             visible={modalVisible}
@@ -350,26 +310,24 @@ const CameraModal = ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) =
                         </View>
 
 
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalInfoVisible}
-                            onRequestClose={() => {
-                                setModalInfoVisible(false);
-                            }}
-
-                        >
-                            <ModalInfo condiciones={condicionesInfo} image={imagenEjemplo} setModalVisible={setModalInfoVisible} />
-                        </Modal>
                     </View>
                 </View>
             </View>
 
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={modalInfoVisible}
+                onRequestClose={() => {
+                    setModalInfoVisible(false);
+                }}
+
+            >
+                <ModalInfo condiciones={condicionesInfo} image={imagenEjemplo} setModalVisible={setModalInfoVisible} />
+            </Modal>
         </Modal >
     )
 }
-
-export default CameraModal
 
 const styles = StyleSheet.create({
     camera: {
@@ -404,7 +362,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        paddingTop: 10,
     },
 
 

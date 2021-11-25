@@ -96,13 +96,7 @@ const ItemItinerario = ({
                         </View>
                         :
                         <Text
-                            onPress={() => {
-                                if (item.tipo === "inicio") {
-                                    Alert.alert("Error", "No se puede modificar el punto de partida")
-                                } else {
-                                    Alert.alert("Error", "No se puede modificar el punto de llegada")
-                                }
-                            }}
+
                             numberOfLines={2}
                             style={styles.title}>{titulo}</Text>
 
@@ -143,7 +137,9 @@ const ItemItinerario = ({
                 <Pressable
                     onPress={() => abrirEnGoogleMaps(ubicacionLink)}
                     style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <Text style={styles.ubicacion}>{ubicacionNombre}</Text>
+                    <Text
+                        numberOfLines={1}
+                        style={styles.ubicacion}>{ubicacionNombre}</Text>
                     <Entypo
                         name="location-pin"
                         size={30}
@@ -307,6 +303,7 @@ const ModalItinerario = ({
             if (!redFlag) {
                 Alert.alert("Exito", "Itinerario modificado con exito")
                 setModify(!modify)
+                setModalVisible(false)
             }
         } else {
             setModify(!modify)

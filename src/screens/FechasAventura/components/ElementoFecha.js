@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { diffDays, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { colorFondo, diffDays, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -21,6 +21,7 @@ import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../../models';
 import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
+import { Feather } from '@expo/vector-icons';
 
 export default function ({ fecha, handleContinuar, idx }) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -51,6 +52,7 @@ export default function ({ fecha, handleContinuar, idx }) {
         usuarioID
     } = fecha
     precio *= (fecha.comision + 1)
+    precio = Math.round(precio)
 
     const handleNavigateGuia = () => {
         navigation.navigate("PerfilScreen", { id: usuarioID })
@@ -147,8 +149,17 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                         >
 
-                            <Image
+                            {guia.foto ? <Image
                                 source={{ uri: guia?.foto }} style={styles.foto} />
+                                : <Feather
+                                    style={{
+                                        backgroundColor: "#f4f4f4",
+                                        borderRadius: 15,
+                                    }}
+                                    name="user"
+                                    size={50}
+                                    color="black"
+                                />}
                         </Pressable>
 
                     </View>

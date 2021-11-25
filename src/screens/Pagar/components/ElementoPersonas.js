@@ -13,7 +13,7 @@ export default ({
             {/* Titulos */}
             <View style={{ width: '50%', }}>
                 <Text style={styles.titulo}>{titulo}</Text>
-                <Text style={styles.descripcion}>{`($ ${precio}/persona)`}</Text>
+                <Text style={styles.descripcion}>{`($ ${Math.round(precio)}/persona)`}</Text>
             </View>
 
 

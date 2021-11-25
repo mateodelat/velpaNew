@@ -25,10 +25,12 @@ import AgregarFecha from '../screens/AgregarFecha';
 import SeleccionaAventura from '../screens/SeleccionaAventura';
 import SolicitudAventura from '../screens/SolicitudAventura';
 import Agregar2 from '../screens/AgregarFecha/Agregar2';
+import Agregar3 from '../screens/AgregarFecha/Agregar3';
 import MisReservas from '../screens/MisReservas';
 import MisSolicitudes from '../screens/MisSolicitudes';
 import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
 import AgregarAventura3 from '../screens/AgregarAventura/AgregarAventura3';
+import Configuracion from '../screens/Configuracion';
 
 const Stack = createStackNavigator();
 
@@ -39,7 +41,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                initialRouteName={"AgregarFecha"}
+                // initialRouteName={"SolicitudGuia"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {
@@ -202,6 +204,14 @@ export default () => {
                 />
 
                 <Stack.Screen
+                    name="AgregarFecha3"
+                    component={Agregar3}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+
+                <Stack.Screen
                     name="SeleccionaAventura"
                     component={SeleccionaAventura}
                     options={{
@@ -243,6 +253,14 @@ export default () => {
                 />
 
                 <Stack.Screen
+                    name="Configuracion"
+                    component={Configuracion}
+                    options={{
+                        // headerShown: false
+                    }}
+                />
+
+                <Stack.Screen
                     options={{
                         headerShown: false
                     }}
@@ -252,6 +270,6 @@ export default () => {
                 />
 
             </Stack.Navigator>
-        </NavigationContainer>
+        </NavigationContainer >
     )
 }

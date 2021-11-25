@@ -18,9 +18,58 @@ export const createPaymentIntent = /* GraphQL */ `
   }
 `;
 export const createStripeAcount = /* GraphQL */ `
-  mutation CreateStripeAcount($sub: String!, $email: String!, $url: String!) {
-    createStripeAcount(sub: $sub, email: $email, url: $url) {
-      url
+  mutation CreateStripeAcount(
+    $email: AWSEmail!
+    $phone: AWSPhone!
+    $first_name: String!
+    $last_name: String!
+    $accountNumber: String!
+    $userSub: ID!
+    $documentIdBack: String!
+    $documentIdFront: String!
+    $day: Int!
+    $month: Int!
+    $year: Int!
+    $city: String!
+    $country: String!
+    $line1: String!
+    $postal_code: Int!
+    $state: String!
+    $ip: AWSIPAddress!
+    $date: AWSTimestamp!
+    $companyName: String
+    $url: AWSURL
+    $accountType: AccountType!
+    $rfcIndividual: String
+    $rfcCompania: String
+  ) {
+    createStripeAcount(
+      email: $email
+      phone: $phone
+      first_name: $first_name
+      last_name: $last_name
+      accountNumber: $accountNumber
+      userSub: $userSub
+      documentIdBack: $documentIdBack
+      documentIdFront: $documentIdFront
+      day: $day
+      month: $month
+      year: $year
+      city: $city
+      country: $country
+      line1: $line1
+      postal_code: $postal_code
+      state: $state
+      ip: $ip
+      date: $date
+      companyName: $companyName
+      url: $url
+      accountType: $accountType
+      rfcIndividual: $rfcIndividual
+      rfcCompania: $rfcCompania
+    ) {
+      id
+      errors
     }
   }
 `;
@@ -617,20 +666,23 @@ export const createUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -789,20 +841,23 @@ export const updateUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -961,20 +1016,23 @@ export const deleteUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -1897,20 +1955,23 @@ export const createAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2011,20 +2072,23 @@ export const updateAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2125,20 +2189,23 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2198,20 +2265,23 @@ export const createChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2303,20 +2373,23 @@ export const updateChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -2408,20 +2481,23 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted

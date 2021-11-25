@@ -472,20 +472,23 @@ export const getUsuario = /* GraphQL */ `
       guia
       nombre
       apellido
+      nombreAgencia
       foto
       nickname
       calificacion
       stripeID
       selfie
-      INE
-      licencia
-      comentariosAdicionales
-      telefono
-      capacidadMaxima
-      tarjetaCirculacion
+      ID
       certificaciones
+      telefono
       sitioWeb
-      usuarioRedSocial
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
       owner
       _version
       _deleted
@@ -646,20 +649,23 @@ export const listUsuarios = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -719,20 +725,23 @@ export const syncUsuarios = /* GraphQL */ `
         guia
         nombre
         apellido
+        nombreAgencia
         foto
         nickname
         calificacion
         stripeID
         selfie
-        INE
-        licencia
-        comentariosAdicionales
-        telefono
-        capacidadMaxima
-        tarjetaCirculacion
+        ID
         certificaciones
+        telefono
         sitioWeb
-        usuarioRedSocial
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
         owner
         _version
         _deleted
@@ -1386,20 +1395,23 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           guia
           nombre
           apellido
+          nombreAgencia
           foto
           nickname
           calificacion
           stripeID
           selfie
-          INE
-          licencia
-          comentariosAdicionales
-          telefono
-          capacidadMaxima
-          tarjetaCirculacion
+          ID
           certificaciones
+          telefono
           sitioWeb
-          usuarioRedSocial
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
           owner
           _version
           _deleted
@@ -1442,20 +1454,23 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           guia
           nombre
           apellido
+          nombreAgencia
           foto
           nickname
           calificacion
           stripeID
           selfie
-          INE
-          licencia
-          comentariosAdicionales
-          telefono
-          capacidadMaxima
-          tarjetaCirculacion
+          ID
           certificaciones
+          telefono
           sitioWeb
-          usuarioRedSocial
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
           owner
           _version
           _deleted

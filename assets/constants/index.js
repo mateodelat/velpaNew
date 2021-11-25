@@ -283,25 +283,20 @@ export const mayusFirstLetter = (string) => {
 
 export const createUsuario = async (attributes, unathenticated, username) => {
   // Si no esta autenticado se crea con api key y el ownerfield se asigna para poder modificar
-  const inputUsuario = unathenticated ? {
+  const inputUsuario = {
     nombre: attributes.name ? attributes.name : attributes.nickname,
     apellido: attributes.family_name ? attributes.family_name : null,
     id: attributes.sub,
     foto: attributes.picture ? attributes.picture : null,
     nickname: attributes.nickname,
-    owner: attributes.sub
-  } : {
-    nombre: attributes.name ? attributes.name : attributes.nickname,
-    apellido: attributes.family_name ? attributes.family_name : null,
-    id: attributes.sub,
-    foto: attributes.picture ? attributes.picture : null,
-    nickname: attributes.nickname,
+    owner: username ? username : attributes.sub,
   }
+
   await API.graphql({
     query: crearUsr, variables: {
       input: inputUsuario
     }
-    , authMode: unathenticated ? 'API_KEY' : 'AMAZON_COGNITO_USER_POOLS'
+    , authMode: 'API_KEY'
   }).then(r => {
 
 
@@ -321,7 +316,7 @@ export const createUsuario = async (attributes, unathenticated, username) => {
       , authMode: 'API_KEY'
     })
       .then(r => {
-        console.log(r)
+        // console.log("Resultado notificacion bienvenida:", r)
       })
       .catch(e => {
         console.log("Error creando notificacion bienvenida", e)
@@ -432,7 +427,7 @@ export const listChatRooms = /* GraphQL */ `
 export const getBlob = async (uri) => {
   return (await fetch(uri)).blob()
     .then(response => {
-      console.log("Tamaño: ", JSON.parse(JSON.stringify(response))._data.size / 1000000, "mb")
+      console.log(JSON.parse(JSON.stringify(response))._data.size / 1000000, "mb")
       return response
     })
     .catch(e => {
@@ -516,6 +511,19 @@ export function isUrl(str) {
   return regexp.test(str);
 }
 
+export function RFCValido(str) {
+  var regexp = /^(([ÑA-Z|ña-z|&amp;]{3}|[A-Z|a-z]{4})\d{2}((0[1-9]|1[012])(0[1-9]|1\d|2[0-8])|(0[13456789]|1[012])(29|30)|(0[13578]|1[02])31)(\w{2})([A|a|0-9]{1}))$|^(([ÑA-Z|ña-z|&amp;]{3}|[A-Z|a-z]{4})([02468][048]|[13579][26])0229)(\w{2})([A|a|0-9]{1})$/
+  return regexp.test(str);
+}
+
+export function emailValido(email) {
+  const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  return re.test(String(email).toLowerCase());
+
+
+
+}
+
 
 export const fetchAventura = (aventuraID) => {
   return API.graphql({ query: getAventura, variables: { id: aventuraID } })
@@ -547,6 +555,51 @@ export const redondear = (numero, entero, enable99) => {
   }
   return numero
 }
+
+export function formatTelefono(input) {
+  // Strip all characters from the input except digits
+  input = input.replace(/\D/g, '');
+
+  // Trim the remaining input to ten characters, to preserve phone number format
+  input = input.substring(0, 10);
+
+  // Based upon the length of the string, we add formatting as necessary
+  var size = input.length;
+  if (size == 0) {
+    input = input;
+  } else if (size < 4) {
+    input = input;
+  } else if (size < 7) {
+    input = input.substring(0, 3) + ' ' + input.substring(3, 6);
+  } else {
+    input = input.substring(0, 3) + ' ' + input.substring(3, 6) + ' ' + input.substring(6, 10);
+  }
+  return input;
+}
+
+export function formatCuentaCLABE(input) {
+  // Strip all characters from the input except digits
+  input = input.replace(/\D/g, '');
+
+  // Trim the remaining input to eighteen characters
+  input = input.substring(0, 18);
+
+  // Based upon the length of the string, we add formatting as necessary
+  var size = input.length;
+  if (size == 0) {
+    input = input;
+  } else if (size < 4) {
+    input = input;
+  } else if (size < 7) {
+    input = input.substring(0, 3) + ' ' + input.substring(3, 6);
+  } else if (size < 18) {
+    input = input.substring(0, 3) + ' ' + input.substring(3, 6) + ' ' + input.substring(6, 17);
+  } else {
+    input = input.substring(0, 3) + ' ' + input.substring(3, 6) + ' ' + input.substring(6, 17) + " " + input.substring(17, 18)
+  }
+  return input;
+}
+
 
 export const obtenerAventurasParaMapa = async () => {
   return await DataStore.query(Aventura,
@@ -930,13 +983,6 @@ export const listFechasConReservacionPorUsuario = /* GraphQL */ `
   }
 `;
 
-export const getCapacidadUsuario = /* GraphQL */ `
-  query GetUsuario($id: ID!) {
-    getUsuario(id: $id) {
-      capacidadMaxima
-    }
-  }
-`;
 export const getNicknameUsuario = /* GraphQL */ `
   query GetUsuario($id: ID!) {
     getUsuario(id: $id) {
@@ -1289,19 +1335,19 @@ export async function obtenerUriImagenesGuia(data) {
 
   let promises = []
   // Obtener INE
-  if (data.INE) {
-    const promisesINE = data.INE?.map(e => {
+  if (data.ID) {
+    const promisesID = data.ID?.map(e => {
       return (
         Storage.get(e)
       )
     })
     promises.push(
-      Promise.all(promisesINE)
+      Promise.all(promisesID)
         .then(r => {
           r.map((e, i) => {
             fotos.push({
               url: e,
-              titulo: ("INE" + (i ? " reverso" : " frente"))
+              titulo: ("Identificacion" + (i ? " reverso" : " frente"))
             })
           })
         }))
@@ -1315,35 +1361,6 @@ export async function obtenerUriImagenesGuia(data) {
         titulo: "Selfie"
       }))
       .catch(e => console.log(e)))
-  }
-
-  // Tarjeta de circulacion
-  if (data.tarjetaCirculacion) {
-    promises.push(Storage.get(data.tarjetaCirculacion)
-      .then(r => fotos.push({
-        url: r,
-        titulo: "Tarjeta circulacion"
-      }))
-      .catch(e => console.log(e)))
-  }
-
-  // Licencia
-  if (data.licencia) {
-    const promisesLicencia = data.licencia?.map(e => {
-      return (
-        Storage.get(e)
-      )
-    })
-
-    promises.push(Promise.all(promisesLicencia).then(r => {
-      r.map((e, i) => {
-        fotos.push({
-          url: e,
-          titulo: ("Licencia" + (i ? " reverso" : " frente"))
-        })
-      })
-    }))
-
   }
 
   // Certificaciones
@@ -1524,6 +1541,48 @@ export const makeUsrGuide = async () => {
   })
 
 }
+
+export async function uploadImageToStripe(uri) {
+  // Check selected image is not null
+  if (!!uri) {
+
+    const data = new FormData();
+    data.append("purpose", "identity_document");
+    data.append("file", {
+      name: "image",
+      type: "image/jpg",
+      uri:
+        Platform.OS === "android"
+          ? uri
+          : uri.replace("file://", "")
+    });
+
+    // Change file upload URL
+    var url = "https://files.stripe.com/v1/files";
+
+    let res = await fetch(url, {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Accept": "application/json",
+        "Authorization": "Bearer " + "pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd",
+      }
+    })
+    let responseJson = await res.json()
+
+    if (!responseJson?.error) {
+      return responseJson.id
+    } else {
+      console.log(responseJson)
+    }
+  } else {
+    // Validation Alert
+    console.log("Selecciona una imagen");
+  }
+};
+
+
 
 export const userEsGuia = async () => {
   const sub = await getUserSub()

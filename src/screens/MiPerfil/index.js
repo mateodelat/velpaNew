@@ -95,7 +95,7 @@ export default ({ route, navigation }) => {
     }
 
     async function miSaldo() {
-        setButtonLoading("saldo")
+        // setButtonLoading("saldo")
         Alert.alert("Ir a pantalla de saldo")
         return
         // Obtener el sub
@@ -259,7 +259,7 @@ export default ({ route, navigation }) => {
                             />}
                     />
 
-                    <Elemento
+                    {guia && <Elemento
                         texto={"Fechas como guia"}
                         onPress={handleReservas}
                         icono={
@@ -271,7 +271,7 @@ export default ({ route, navigation }) => {
                                 }}
                             />
                         }
-                    />
+                    />}
 
                     {guia && <Elemento
                         texto={"Solicitudes a aventuras"}

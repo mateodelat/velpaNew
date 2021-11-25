@@ -22,7 +22,7 @@
         },
         "CreateStripeAcount": {
           "deploymentBucketName": "amplify-velpa-dev-100617-deployment",
-          "s3Key": "amplify-builds/CreateStripeAcount-4a3739364f4759443959-build.zip"
+          "s3Key": "amplify-builds/CreateStripeAcount-4371497a334e2f38324d-build.zip"
         }
       }
     }

@@ -11,6 +11,7 @@ import { Reserva } from '../../models';
 import { Usuario } from '../../models';
 import { useNavigation } from '@react-navigation/core';
 import Storage from '@aws-amplify/storage';
+import { Loading } from '../../components/Loading';
 
 export default index = ({ route, navigation }) => {
     const { height, width } = Dimensions.get("screen")
@@ -24,7 +25,7 @@ export default index = ({ route, navigation }) => {
     const [indexPresionado, setIndexPresionado] = useState(null);
 
     // fechas
-    const [fechas, setFechas] = useState([]);
+    const [fechas, setFechas] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         let subscriptions = []
@@ -156,6 +157,7 @@ export default index = ({ route, navigation }) => {
 
     const handleContinuar = (fecha, guia, idx) => {
         setIndexPresionado(idx)
+
         navigation.navigate("Logistica", {
             ...fecha,
             imagenFondo,
@@ -200,50 +202,51 @@ export default index = ({ route, navigation }) => {
                     height: height * 0.24 + 20,
                 }} />
                 {
-                    fechas.length === 0 ?
-                        <Text style={styles.noHayTxt}>No hay fechas disponibles pero puedes suscribirte a la aventura para cuando salga una</Text>
-                        :
-                        loading ?
-                            <View style={{
-                                alignItems: 'center', justifyContent: 'center',
-                                height: height / 2,
-                            }}>
-                                <ActivityIndicator color={"black"} size={"large"} />
-                            </View> :
-                            fechas.map((e, idx) => {
+                    !fechas ? <Loading indicator /> :
+                        fechas.length === 0 ?
+                            <Text style={styles.noHayTxt}>No hay fechas disponibles pero puedes suscribirte a la aventura para cuando salga una</Text>
+                            :
+                            loading ?
+                                <View style={{
+                                    alignItems: 'center', justifyContent: 'center',
+                                    height: height / 2,
+                                }}>
+                                    <ActivityIndicator color={"black"} size={"large"} />
+                                </View> :
+                                fechas.map((e, idx) => {
 
-                                const feInicial = new Date(e.fechaInicial)
-                                // Si es el primer elemento
-                                if (!idx) return <View key={idx.toString()}>
-                                    <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
-                                    <ElementoFecha
-                                        idx={idx}
-                                        fecha={e}
-                                        handleContinuar={handleContinuar}
-                                    />
-                                </View>
-
-                                const feAnterior = new Date(fechas[idx - 1].fechaInicial)
-                                // Si el dia inicial es distinto al dia inicial de la siguiente fecha
-                                if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
-                                    return <View key={idx.toString()}>
+                                    const feInicial = new Date(e.fechaInicial)
+                                    // Si es el primer elemento
+                                    if (!idx) return <View key={idx.toString()}>
                                         <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
                                         <ElementoFecha
                                             idx={idx}
                                             fecha={e}
                                             handleContinuar={handleContinuar}
-
                                         />
                                     </View>
 
-                                return <ElementoFecha
-                                    idx={idx}
-                                    key={idx.toString()}
-                                    fecha={e}
-                                    handleContinuar={handleContinuar}
-                                />
+                                    const feAnterior = new Date(fechas[idx - 1].fechaInicial)
+                                    // Si el dia inicial es distinto al dia inicial de la siguiente fecha
+                                    if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
+                                        return <View key={idx.toString()}>
+                                            <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
+                                            <ElementoFecha
+                                                idx={idx}
+                                                fecha={e}
+                                                handleContinuar={handleContinuar}
 
-                            })
+                                            />
+                                        </View>
+
+                                    return <ElementoFecha
+                                        idx={idx}
+                                        key={idx.toString()}
+                                        fecha={e}
+                                        handleContinuar={handleContinuar}
+                                    />
+
+                                })
                 }
             </Animated.ScrollView >
             <HeaderConImagen

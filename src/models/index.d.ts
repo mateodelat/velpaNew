@@ -1,5 +1,10 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
+export enum AccountType {
+  INDIVIDUAL = "INDIVIDUAL",
+  COMPANY = "COMPANY"
+}
+
 export enum EstadoAventura {
   AUTORIZADO = "AUTORIZADO",
   PENDIENTE = "PENDIENTE",
@@ -50,9 +55,10 @@ export declare class PaymentIntent {
   constructor(init: ModelInit<PaymentIntent>);
 }
 
-export declare class CreateAcount {
-  readonly url?: string;
-  constructor(init: ModelInit<CreateAcount>);
+export declare class CreateAcountResponse {
+  readonly id?: string;
+  readonly errors?: boolean;
+  constructor(init: ModelInit<CreateAcountResponse>);
 }
 
 type AventuraMetaData = {
@@ -172,20 +178,23 @@ export declare class Usuario {
   readonly guia?: boolean;
   readonly nombre?: string;
   readonly apellido?: string;
+  readonly nombreAgencia?: string;
   readonly foto?: string;
   readonly nickname?: string;
   readonly calificacion?: number;
   readonly stripeID?: string;
   readonly selfie?: string;
-  readonly INE?: (string | null)[];
-  readonly licencia?: (string | null)[];
-  readonly comentariosAdicionales?: string;
-  readonly telefono?: string;
-  readonly capacidadMaxima?: number;
-  readonly tarjetaCirculacion?: string;
+  readonly ID?: (string | null)[];
   readonly certificaciones?: (string | null)[];
+  readonly telefono?: string;
   readonly sitioWeb?: string;
-  readonly usuarioRedSocial?: string;
+  readonly CuentaBancaria?: string;
+  readonly fechaNacimiento?: string;
+  readonly direccion?: string;
+  readonly rfcIndividual?: string;
+  readonly rfcCompania?: string;
+  readonly capacidadMaxima?: number;
+  readonly comentariosAdicionales?: string;
   readonly owner?: string;
   readonly AventurasAutorizadas?: (AventuraUsuario | null)[];
   readonly Mensajes?: (Mensaje | null)[];
@@ -261,7 +270,7 @@ export declare class Fecha {
   readonly comision: number;
   readonly itinerario: string;
   readonly puntoReunionNombre: string;
-  readonly puntoReunionId: string;
+  readonly puntoReunionId?: string;
   readonly puntoReunionLink?: string;
   readonly puntoReunionCoords?: string;
   readonly allowTercera: boolean;

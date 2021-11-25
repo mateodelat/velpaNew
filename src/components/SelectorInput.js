@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 import { Entypo } from '@expo/vector-icons';
+import { redondear } from '../../assets/constants';
 
 export default ({
     cantidad,
@@ -24,11 +25,11 @@ export default ({
 
 
     function handleSuma() {
-        setCantidad(cantidad + cambio <= maxValue ? cantidad + cambio : maxValue)
+        setCantidad(redondear(cantidad + cambio <= maxValue ? cantidad + cambio : maxValue, cambio))
     }
 
     function handleResta() {
-        setCantidad(cantidad - cambio >= minValue ? cantidad - cambio : minValue)
+        setCantidad(cantidad - cambio >= minValue ? redondear(cantidad - cambio, cambio) : minValue)
 
     }
 

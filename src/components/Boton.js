@@ -3,14 +3,14 @@ import { TouchableOpacity, StyleSheet, Text, ActivityIndicator } from 'react-nat
 import { Entypo } from '@expo/vector-icons';
 import { moradoOscuro } from '../../assets/constants';
 
-export default ({ onPress, titulo, loading, done, style }) => {
+export default ({ onPress, titulo, loading, done, style, disabled }) => {
     if (loading !== undefined) {
         return (
 
             <TouchableOpacity
-                disabled={
+                disabled={disabled !== undefined ? disabled : (
                     done ||
-                    loading
+                    loading)
                 }
                 style={[styles.boton, style]}
                 onPress={onPress}>

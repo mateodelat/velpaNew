@@ -143,8 +143,8 @@ export default ({ navigation, route }) => {
 
                 {/* Precios */}
                 <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <Text style={{ color: '#aaa', }}>(${precioIndividual}/persona)</Text>
-                    <Text style={styles.precio}>${Math.floor(precioIndividual * total)}</Text>
+                    <Text style={{ color: '#aaa', }}>(${Math.round(precioIndividual)}/persona)</Text>
+                    <Text style={styles.precio}>${Math.round(precioIndividual * total)}</Text>
                 </View>
                 <Text style={{ color: '#aaa', marginTop: 10, textAlign: 'center', }}>*El precio individual depende de las personas totales en el grupo</Text>
             </View>
@@ -183,15 +183,14 @@ export default ({ navigation, route }) => {
             {/* Material incluido */}
             <View
                 style={styles.innerContainer}>
-
                 {/* Header */}
                 <View style={styles.header}>
                     <Text style={styles.titulos}>Incluido</Text>
-                    <MaterialIcons
+                    {incluido.length !== 0 && <MaterialIcons
                         name={"check"}
                         size={30}
                         color={moradoClaro}
-                    />
+                    />}
                 </View>
 
                 <View style={styles.linea} />
@@ -199,16 +198,19 @@ export default ({ navigation, route }) => {
                 {/* Cuerpo */}
                 <View style={{ marginTop: 10, marginLeft: 10, }}>
                     {
-                        incluido.map((el, idx) => {
-                            return (
-                                < Text
-                                    style={styles.incluido}
-                                    key={idx.toString()}
-                                > {el}</Text>
+                        incluido.length === 0 ?
+                            null
+                            :
+                            incluido.map((el, idx) => {
+                                return (
+                                    < Text
+                                        style={styles.incluido}
+                                        key={idx.toString()}
+                                    > {el}</Text>
 
+                                )
+                            }
                             )
-                        }
-                        )
                     }
 
                 </View>
@@ -313,6 +315,7 @@ const styles = StyleSheet.create({
         padding: 3,
         paddingLeft: 0,
     },
+
 
     titulos: {
         fontSize: 18,
