@@ -26,6 +26,7 @@ import { ChatRoom, Usuario } from '../../models';
 import API from '@aws-amplify/api';
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
+import { Loading } from '../../components/Loading';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -323,55 +324,42 @@ export default ({ navigation, route }) => {
 
 
                     {/* Aventuras sugeridas del guia */}
-                    {guia?.AventurasAutorizadas?.length > 0 && <View style={{ flex: 1, height: 180, flexDirection: 'row', }}>
-                        <Pressable
-                            onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[0]?.id)}
-                            style={{ flex: 1, marginRight: 5, }}>
-                            <Image
-                                source={{ uri: guia.AventurasAutorizadas[0]?.imagenFondo }}
-                                style={{ flex: 1, }}
-                            />
+                    {!guia.AventurasAutorizadas ?
+                        <View style={{ height: 180, }}>
+                            <Loading indicator />
 
-                            <Text style={styles.titleAventura}
-                                numberOfLines={1}
-                            >{guia.AventurasAutorizadas[0]?.titulo}</Text>
-
-                            <LinearGradient
-                                colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, .7)',]}
-                                style={styles.linearGradient}
-                            />
-                        </Pressable>
-                        {guia?.AventurasAutorizadas[1]?.imagenFondo && <View style={{ flex: 2, marginLeft: 5, }}>
+                        </View>
+                        :
+                        guia.AventurasAutorizadas?.length > 0 && <View style={{ flex: 1, height: 180, flexDirection: 'row', }}>
                             <Pressable
-                                onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[1]?.id)}
-                                style={{ flex: 1, marginBottom: 5, }}>
+                                onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[0]?.id)}
+                                style={{ flex: 1, marginRight: 5, }}>
                                 <Image
-                                    source={{ uri: guia.AventurasAutorizadas[1]?.imagenFondo }}
+                                    source={{ uri: guia.AventurasAutorizadas[0]?.imagenFondo }}
                                     style={{ flex: 1, }}
                                 />
 
                                 <Text style={styles.titleAventura}
                                     numberOfLines={1}
-                                >{guia.AventurasAutorizadas[1]?.titulo}</Text>
+                                >{guia.AventurasAutorizadas[0]?.titulo}</Text>
 
                                 <LinearGradient
-                                    colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, 1)',]}
+                                    colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, .7)',]}
                                     style={styles.linearGradient}
                                 />
-
                             </Pressable>
-                            {guia?.AventurasAutorizadas[2]?.imagenFondo && <View style={{ flex: 1, marginTop: 5, flexDirection: 'row', }}>
+                            {guia?.AventurasAutorizadas[1]?.imagenFondo && <View style={{ flex: 2, marginLeft: 5, }}>
                                 <Pressable
-                                    onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[2]?.id)}
-                                    style={{ flex: 1, marginRight: 5, }}>
+                                    onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[1]?.id)}
+                                    style={{ flex: 1, marginBottom: 5, }}>
                                     <Image
-                                        source={{ uri: guia.AventurasAutorizadas[2]?.imagenFondo }}
+                                        source={{ uri: guia.AventurasAutorizadas[1]?.imagenFondo }}
                                         style={{ flex: 1, }}
                                     />
 
                                     <Text style={styles.titleAventura}
                                         numberOfLines={1}
-                                    >{guia.AventurasAutorizadas[2]?.titulo}</Text>
+                                    >{guia.AventurasAutorizadas[1]?.titulo}</Text>
 
                                     <LinearGradient
                                         colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, 1)',]}
@@ -379,28 +367,47 @@ export default ({ navigation, route }) => {
                                     />
 
                                 </Pressable>
-                                {guia?.AventurasAutorizadas[3]?.imagenFondo && <Pressable
-                                    onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[3]?.id)}
-                                    style={{ flex: 1, marginLeft: 5, }}>
-                                    <Image
-                                        source={{ uri: guia.AventurasAutorizadas[3]?.imagenFondo }}
-                                        style={{ flex: 1, }}
-                                    />
+                                {guia?.AventurasAutorizadas[2]?.imagenFondo && <View style={{ flex: 1, marginTop: 5, flexDirection: 'row', }}>
+                                    <Pressable
+                                        onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[2]?.id)}
+                                        style={{ flex: 1, marginRight: 5, }}>
+                                        <Image
+                                            source={{ uri: guia.AventurasAutorizadas[2]?.imagenFondo }}
+                                            style={{ flex: 1, }}
+                                        />
 
-                                    <Text style={styles.titleAventura}
-                                        numberOfLines={1}
-                                    >{guia.AventurasAutorizadas[3]?.titulo}</Text>
+                                        <Text style={styles.titleAventura}
+                                            numberOfLines={1}
+                                        >{guia.AventurasAutorizadas[2]?.titulo}</Text>
 
-                                    <LinearGradient
-                                        colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, 1)',]}
-                                        style={styles.linearGradient}
-                                    />
+                                        <LinearGradient
+                                            colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, 1)',]}
+                                            style={styles.linearGradient}
+                                        />
+
+                                    </Pressable>
+                                    {guia?.AventurasAutorizadas[3]?.imagenFondo && <Pressable
+                                        onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[3]?.id)}
+                                        style={{ flex: 1, marginLeft: 5, }}>
+                                        <Image
+                                            source={{ uri: guia.AventurasAutorizadas[3]?.imagenFondo }}
+                                            style={{ flex: 1, }}
+                                        />
+
+                                        <Text style={styles.titleAventura}
+                                            numberOfLines={1}
+                                        >{guia.AventurasAutorizadas[3]?.titulo}</Text>
+
+                                        <LinearGradient
+                                            colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, 1)',]}
+                                            style={styles.linearGradient}
+                                        />
 
 
-                                </Pressable>}
+                                    </Pressable>}
+                                </View>}
                             </View>}
                         </View>}
-                    </View>}
 
                     <View style={{ marginTop: 40, }} />
 
@@ -412,7 +419,6 @@ export default ({ navigation, route }) => {
                     <View style={{ marginTop: 40, }} />
 
                     {/* Que llevar */}
-                    {/* <Text>Material a llevar</Text> */}
                     {
                         fecha.material.map((e, idxCat) => {
                             return <View

@@ -256,6 +256,7 @@ export declare class Reserva {
   readonly pagoID: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
+  readonly guiaID?: string;
   readonly materialChecked?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;

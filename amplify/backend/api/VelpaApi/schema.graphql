@@ -58,6 +58,7 @@ type Reserva @model
 
   fechaID: ID
   usuarioID: ID
+  guiaID: ID
 
   materialChecked:String
 }

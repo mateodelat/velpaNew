@@ -49,6 +49,7 @@ export default function ({ route, navigation }) {
         stripeID,
 
         fechaID,
+        guiaID
     } = route.params
     // Variables de stripe
     const { initPaymentSheet, presentPaymentSheet } = useStripe()
@@ -291,6 +292,7 @@ export default function ({ route, navigation }) {
                     pagoID: idPago,
 
                     fechaID,
+                    guiaID,
                     usuarioID: sub
                 }
 

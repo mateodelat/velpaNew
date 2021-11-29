@@ -50,7 +50,6 @@ export default ({ navigation, route }) => {
         }
 
         // Existencia de parametros
-        console.log(aventuraAEnviar)
         await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
             .then(async r => {
                 const sub = await getUserSub()

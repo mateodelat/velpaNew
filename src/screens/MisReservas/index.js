@@ -118,13 +118,13 @@ export default function () {
                             }
                         })
 
-                    const now = Date()
+                    const now = new Date()
 
                     return ({
                         ...res,
                         reserva: res,
                         fecha,
-                        pasada: fecha.fechaInicial > now
+                        pasada: fecha.fechaInicial < now
                     })
                 }))
             })

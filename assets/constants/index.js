@@ -582,12 +582,9 @@ export const fetchAventura = (aventuraID) => {
     })
 }
 
-export const redondear = (numero, entero, enable99) => {
+export const redondear = (numero, entero) => {
   numero = Math.round(numero / entero) * entero
 
-  if (enable99) {
-    numero = numero - 1
-  }
   return numero
 }
 
@@ -613,6 +610,7 @@ export function formatTelefono(input) {
 }
 
 export function formatCuentaCLABE(input) {
+  if (!input) return
   // Strip all characters from the input except digits
   input = input.replace(/\D/g, '');
 
@@ -717,16 +715,47 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
   return ave
 
 }
+export const distancia2Puntos = function (lat1, lon1, lat2, lon2) {
+  const rad = (x) => { return x * Math.PI / 180; }
+  var R = 6378.137; //Radio de la tierra en km
+  var dLat = rad(lat2 - lat1);
+  var dLong = rad(lon2 - lon1);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d.toFixed(3); //Retorna tres decimales
+}
+
+
 export const listAventurasSugeridas = async (id, maxItems) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c
-      // .estadoAventura("eq", "AUTORIZADO")
-      .id("ne", id),
-    {
-      limit: maxItems
-    })
+    // .estadoAventura("eq", "AUTORIZADO")
+    // .id("ne", id),
+  )
     .then(async r => {
+      const aventuraBase = r.find(r => r.id === id)
+      const { coordenadas: { latitude: latBase, longitude: longBase } } = aventuraBase
+
+      r = r
+        // Agregar distancia a la aventura base
+        .map(e => {
+          const { coordenadas: { latitude: lat, longitude: long } } = e
+          const distanceToOrigin = distancia2Puntos(lat, long, latBase, longBase)
+          return {
+            ...e,
+            distanceToOrigin
+          }
+
+        })
+        // Filtrar si es la aventura base
+        .filter(e => e.id !== id)
+        .sort((a, b) => a.distanceToOrigin - b.distanceToOrigin)
+        // Primeros max items+1 por la aventura base
+        .slice(0, maxItems)
+
+
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
         const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
@@ -1636,7 +1665,6 @@ export const userEsGuia = async () => {
 
   const user = await DataStore.query(Usuario, sub)
   if (!!user?.guia) {
-    console.log("Usuario es guia")
     return true
   } else {
     return false

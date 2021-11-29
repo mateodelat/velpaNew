@@ -123,7 +123,7 @@ export default ({
     const [buscar, setBuscar] = useState("");
 
     // Variables del filtro
-    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, false, false]);
+    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, true, true]);
     const [dificultad, setDificultad] = useState([true, true, true]);
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 

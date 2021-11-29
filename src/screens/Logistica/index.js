@@ -28,6 +28,7 @@ export default ({ navigation, route }) => {
         fechaInicial,
         fechaFinal,
         fechaID,
+        guiaID,
 
         totalPersonasReservadas,
         personasTotales,
@@ -86,7 +87,8 @@ export default ({ navigation, route }) => {
             fechaInicial,
             stripeID,
 
-            fechaID
+            fechaID,
+            guiaID
         })
     }
 

@@ -393,6 +393,7 @@ export const createReserva = /* GraphQL */ `
       pagoID
       fechaID
       usuarioID
+      guiaID
       materialChecked
       _version
       _deleted
@@ -419,6 +420,7 @@ export const updateReserva = /* GraphQL */ `
       pagoID
       fechaID
       usuarioID
+      guiaID
       materialChecked
       _version
       _deleted
@@ -445,6 +447,7 @@ export const deleteReserva = /* GraphQL */ `
       pagoID
       fechaID
       usuarioID
+      guiaID
       materialChecked
       _version
       _deleted
@@ -500,6 +503,7 @@ export const createFecha = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted
@@ -576,6 +580,7 @@ export const updateFecha = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted
@@ -652,6 +657,7 @@ export const deleteFecha = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted
@@ -729,6 +735,7 @@ export const createUsuario = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted
@@ -908,6 +915,7 @@ export const updateUsuario = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted
@@ -1087,6 +1095,7 @@ export const deleteUsuario = /* GraphQL */ `
           pagoID
           fechaID
           usuarioID
+          guiaID
           materialChecked
           _version
           _deleted

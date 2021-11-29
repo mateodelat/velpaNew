@@ -5,6 +5,7 @@ import { Loading } from '../../components/Loading';
 import { Feather } from '@expo/vector-icons';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../models';
+import { Reserva } from '../../models';
 
 export default function () {
 
@@ -39,25 +40,27 @@ export default function () {
                 "Authorization": "Bearer " + "rk_test_51J7OwUFIERW56TAE2Af9n7pLq9RrCk5ABDR6EoPFdHzPIM9v3kkxCAt12wdBIvV6b9QKLxMlsPlkK2fmX9SO1MtX00H16Ba1De",
                 "Stripe-Account": "acct_1Jzmuz2V1EJMOgyd"
             }
-        }).then(r => r.json()).then(r => {
-            if (r.has_more) {
-                Alert.alert("Faltan", "Faltan transferencias a mostrar, avisa al desarrollador")
-            }
-            if (r.error) {
-                Alert.alert("Error", "Ocurrio un error obteniendo las transferencias")
-                setTransacciones([])
-                return
-            }
-            r = r.data
+        }).then(r => r.json())
+            .then(r => {
+                if (r.has_more) {
+                    Alert.alert("Faltan", "Faltan transferencias a mostrar, avisa al desarrollador")
+                }
+                if (r.error) {
+                    Alert.alert("Error", "Ocurrio un error obteniendo las transferencias")
+                    setTransacciones([])
+                    return
+                }
+                r = r.data
+                const transferencias = r?.map(e => ({
+                    status: e.status,
+                    amount: (e.net / 100),
+                    creado: new Date(e.created * 1000)
+                })).sort((a, b) => a.creado < b.creado)
 
-            const transferencias = r?.map(e => ({
-                status: e.status,
-                amount: (e.net / 100),
-                creado: new Date(e.created * 1000)
-            })).sort((a, b) => a.creado < b.creado)
-            setTransacciones(transferencias)
-            return
-        })
+
+                setTransacciones(transferencias)
+                return
+            })
     }
 
     function formatDate(input) {
@@ -82,66 +85,71 @@ export default function () {
 
 
     return (
-        <ScrollView
-            refreshControl={
-                <RefreshControl
-                    style={{
-                        position: 'absolute',
-                        elevation: 20
-                    }}
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-            }
+        <View style={container}>
 
-            style={container}>
-            <ImageBackground style={styles.card} source={require("../../../assets/IMG/Card.png")}>
-
-                <View style={styles.insideCard}>
-                    <Text style={styles.balanceTxt}>Saldo por enviar a cuenta</Text>
-                    <Text style={styles.numberBalance}>{formatMoney(saldo)}</Text>
-
-                    <View style={{ flex: 1, }} />
-
-                    <Text style={styles.accountNumber}>{formatCuentaCLABE(usuarioActual.CuentaBancaria)}</Text>
-
-                </View>
-            </ImageBackground>
-            <Text style={styles.aviso}>El pago tarda 7 dias en aparecer en tu cuenta bancaria</Text>
-
-            <View style={styles.transaccionesContainer}>
-                <Text style={styles.transaccionesTitle}>Pagos</Text>
-
-                {!transacciones ?
-                    <Loading indicator /> :
-                    transacciones.map((e, i) => (
-                        <Pressable
-                            onPress={() => Alert.alert("Navgar a detalle de fecha")}
-                            key={i.toString()}
-                            style={styles.transaccion}>
-
-                            <Image source={require("../../../assets/IMG/Persona.png")} style={styles.profileImage} />
-
-                            <View style={styles.dataPerson}>
-                                <View>
-                                    <Text style={styles.nickname}>@mateo delat</Text>
-                                    <Text style={styles.transaccionDate}>{formatDate(e.creado)}</Text>
-
-                                </View>
-
-                                <View style={{ alignItems: 'flex-end' }}>
-                                    <Text style={styles.monney}>{formatMoney(e.amount)}</Text>
-                                    <Text style={[styles.status, { color: e.status === "pending" ? "orange" : "green", }]}>{e.status === "pending" ? "en camino" : "depositado"}</Text>
-
-                                </View>
-
-                            </View>
-                        </Pressable>
-
-                    ))
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        style={{
+                            position: 'absolute',
+                            elevation: 20
+                        }}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
                 }
-            </View>
-        </ScrollView>
+                showsVerticalScrollIndicator={false}
+
+            >
+                <ImageBackground style={styles.card} source={require("../../../assets/IMG/Card.png")}>
+
+                    <View style={styles.insideCard}>
+                        <Text style={styles.balanceTxt}>Saldo por enviar a cuenta</Text>
+                        <Text style={styles.numberBalance}>{formatMoney(saldo)}</Text>
+
+                        <View style={{ flex: 1, }} />
+
+                        <Text style={styles.accountNumber}>{formatCuentaCLABE(usuarioActual.CuentaBancaria)}</Text>
+
+                    </View>
+                </ImageBackground>
+                <Text style={styles.aviso}>El pago tarda 7 dias en aparecer en tu cuenta bancaria</Text>
+
+                <View style={styles.transaccionesContainer}>
+                    <Text style={styles.transaccionesTitle}>Pagos</Text>
+
+                    {!transacciones ?
+                        <Loading indicator /> :
+                        transacciones.map((e, i) => (
+                            <Pressable
+                                onPress={() => Alert.alert("Navgar a detalle de fecha")}
+                                key={i.toString()}
+                                style={styles.transaccion}>
+
+                                {/* <Image source={require("../../../assets/IMG/Persona.png")} style={styles.profileImage} /> */}
+
+                                <View style={styles.dataPerson}>
+                                    <View>
+                                        {/* <Text style={styles.nickname}>@mateo delat</Text> */}
+                                        <Text style={styles.transaccionDate}>{formatDate(e.creado)}</Text>
+
+                                    </View>
+
+                                    <View style={{ alignItems: 'flex-end' }}>
+                                        <Text style={styles.monney}>{formatMoney(e.amount)}</Text>
+                                        <Text style={[styles.status, { color: e.status === "pending" ? "orange" : "green", }]}>{e.status === "pending" ? "en camino" : "depositado"}</Text>
+
+                                    </View>
+
+                                </View>
+                            </Pressable>
+
+                        ))
+                    }
+                </View>
+            </ScrollView>
+        </View>
+
     )
 }
 
@@ -221,7 +229,7 @@ const styles = StyleSheet.create({
     },
 
     transaccionDate: {
-        color: '#888',
+        color: '#000',
     },
 
     monney: {

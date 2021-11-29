@@ -51,6 +51,8 @@ const CuadradoImagen = ({
                 justifyContent: 'flex-end',
                 padding: 7,
                 paddingBottom: 10,
+                height: 60,
+                justifyContent: 'center',
             }}>
 
                 <View style={{
@@ -74,7 +76,7 @@ const CuadradoImagen = ({
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}>
-                    <View style={{ flexDirection: 'row', }}>
+                    {!!item?.duracion && <View style={{ flexDirection: 'row', }}>
                         <Feather name="clock" size={15} color="gray" />
                         <Text
                             numberOfLines={1}
@@ -83,9 +85,9 @@ const CuadradoImagen = ({
                                 fontSize: 12,
                             }}> {item?.duracion}</Text>
 
-                    </View>
+                    </View>}
 
-                    <View style={{ flexDirection: 'row', }}>
+                    {!!item?.altimetriaRecorrida && <View style={{ flexDirection: 'row', }}>
                         <Image
                             source={require("../../assets/icons/elevation.png")}
                             style={{
@@ -101,7 +103,7 @@ const CuadradoImagen = ({
                                 fontSize: 12,
                             }}> {item?.altimetriaRecorrida}m</Text>
 
-                    </View>
+                    </View>}
 
 
                 </View>

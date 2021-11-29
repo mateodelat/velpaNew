@@ -168,6 +168,7 @@ export default index = ({ route, navigation }) => {
             precio: fecha.precio,
 
             fechaID: fecha.id,
+            guiaID: fecha.usuarioID
         })
     }
 

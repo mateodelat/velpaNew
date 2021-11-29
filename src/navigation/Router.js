@@ -169,7 +169,7 @@ export default () => {
                     name="AgregarAventura"
                     component={AgregarAventura}
                     options={{
-                        title: "Solicitar aventura",
+                        title: "Agregar aventura",
                     }}
                 />
 

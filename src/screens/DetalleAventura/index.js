@@ -173,7 +173,7 @@ export default ({ navigation, route }) => {
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
-                        }}>$ {redondear(aventura.precioMin * (aventura.comision + 1), 50, true)} - {redondear(aventura.precioMax * (aventura.comision + 1), 50, true)}
+                        }}>$ {redondear(aventura.precioMin * (aventura.comision + 1), 50)} - {redondear(aventura.precioMax * (aventura.comision + 1), 50, true)}
                         </Text>
                     </View>
                     {/* <Text style={{
@@ -308,7 +308,7 @@ export default ({ navigation, route }) => {
                                 fontSize: 20,
                                 marginTop: 30,
                                 marginBottom: 20,
-                            }}>Lugares similares</Text>
+                            }}>Aventuras cercanas</Text>
 
                             {
                                 aventurasSugeridas === null ?

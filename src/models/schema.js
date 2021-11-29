@@ -1479,6 +1479,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "guiaID": {
+                    "name": "guiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "materialChecked": {
                     "name": "materialChecked",
                     "isArray": false,
@@ -2221,5 +2228,5 @@ export const schema = {
             }
         }
     },
-    "version": "e4e87286f4d571d00088624252a7ab97"
+    "version": "aaa3639b9e89691f54cde9980882b78b"
 };

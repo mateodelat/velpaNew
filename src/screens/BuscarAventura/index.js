@@ -34,7 +34,7 @@ export default ({ navigation }) => {
 
     const [buscar, setBuscar] = useState("");
 
-    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, false, false]);
+    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, true, true]);
     const [dificultad, setDificultad] = useState([true, true, true]);
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
@@ -80,7 +80,7 @@ export default ({ navigation }) => {
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
 
                 (// ALPINISMO
@@ -121,7 +121,7 @@ export default ({ navigation }) => {
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
                 ( // Dificultad facil
                     (newDificultades[0] && e.dificultad < 3) ||
@@ -195,7 +195,7 @@ export default ({ navigation }) => {
                     ||
 
                     // Es igual a la descripcion
-                    e.descripcion.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
+                    e.descripcion?.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
                 &&
                 (// ALPINISMO
                     (categorias[0] && e.categoria === Categorias.APLINISMO) ||
