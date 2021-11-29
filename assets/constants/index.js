@@ -386,9 +386,44 @@ export const formatDateShort = (msInicial, msFinal) => {
   } else {
     return (ddInicial + " " + meses[mmInicial]);
   }
-
-
 }
+
+export const formatDateWithHour = (msInicial, msFinal) => {
+  const dateInicial = new Date(msInicial)
+
+  const ddInicial = String(dateInicial.getUTCDate())
+  const mmInicial = String(dateInicial.getUTCMonth())
+
+
+  // Fecha final
+  const dateFinal = new Date(msFinal)
+
+  const ddFinal = String(dateFinal.getUTCDate())
+  const mmFinal = String(dateFinal.getUTCMonth())
+
+
+
+  // Si es de un solo dia se regresa un numero con su hora inicial y final
+  if (ddFinal === ddInicial && mmInicial === mmFinal) {
+    return {
+      txt: (ddInicial + " " + meses[mmInicial] + " de " + formatAMPM(msInicial, false, true) + " a " + formatAMPM(msFinal, false, true)),
+      mismoDia: true
+    }
+
+  }
+
+  else {
+    return {
+      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, true),
+      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, true),
+      mismoDia: false
+
+    }
+  }
+}
+
+
+
 export const listChatRooms = /* GraphQL */ `
   query ListChatRooms(
     $filter: ModelChatRoomFilterInput
@@ -1154,6 +1189,18 @@ export function formatAMPM(dateInMs, hideAMPM, localTime) {
 
   return strTime;
 }
+
+export async function getImageUrl(data) {
+  return data ? isUrl(data) ? data : await Storage.get(data) : null
+
+}
+
+export function formatMoney(num, hideCents) {
+  return '$' + num.toFixed(hideCents ? 0 : 2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+
+
+}
+
 
 export const msInDay = 86400000
 

@@ -18,7 +18,7 @@
       "function": {
         "CreatePaymentIntent": {
           "deploymentBucketName": "amplify-velpa-dev-100617-deployment",
-          "s3Key": "amplify-builds/CreatePaymentIntent-794e4d6d5a2f6635572b-build.zip"
+          "s3Key": "amplify-builds/CreatePaymentIntent-2b7a48646b39632f6544-build.zip"
         },
         "CreateStripeAcount": {
           "deploymentBucketName": "amplify-velpa-dev-100617-deployment",

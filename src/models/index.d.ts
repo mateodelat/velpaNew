@@ -248,13 +248,15 @@ export declare class ChatRoom {
 export declare class Reserva {
   readonly id: string;
   readonly total: number;
-  readonly comisionPorPersona: number;
+  readonly comision: number;
+  readonly pagadoAlGuia: number;
   readonly tercera: number;
   readonly ninos: number;
   readonly adultos: number;
   readonly pagoID: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
+  readonly materialChecked?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);
@@ -280,6 +282,8 @@ export declare class Fecha {
   readonly titulo?: string;
   readonly descripcion?: string;
   readonly imagenRuta?: string;
+  readonly imagenFondo?: string;
+  readonly tituloAventura?: string;
   readonly aventuraID: string;
   readonly usuarioID: string;
   readonly Reservas?: (Reserva | null)[];

@@ -13,6 +13,9 @@ import { colorFondo, diffDays, formatDateShort, isUrl, moradoClaro, moradoOscuro
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
 
 import ListaPersonas from './ListaPersonas';
 import ModalRuta from './ModalRuta';
@@ -21,7 +24,8 @@ import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../../models';
 import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
-import { Feather } from '@expo/vector-icons';
+import Storage from '@aws-amplify/storage';
+import { reverseGeocodeAsync } from 'expo-location';
 
 export default function ({ fecha, handleContinuar, idx }) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -63,16 +67,13 @@ export default function ({ fecha, handleContinuar, idx }) {
     useEffect(() => {
         (async () => {
             const perfil = await DataStore.query(Usuario, usuarioID)
-                .then(r => {
+                .then(async r => {
                     return {
                         ...r,
-                        foto: isUrl(r.foto) ? r.foto :
-                            //Obtener uri de S3
-                            null
+                        foto: !r.foto ? null : isUrl(r.foto) ? r.foto : await Storage.get(r.foto),
+                        superGuia: r.superGuia
                     }
                 })
-
-
             setGuia(perfil)
         })()
     }, []);
@@ -89,6 +90,11 @@ export default function ({ fecha, handleContinuar, idx }) {
                 onPress={() => setOpenDetails(!openDetails)}
 
                 style={styles.container}>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'center', }}>
+                    <Text style={{ color: '#fff', backgroundColor: moradoOscuro, marginBottom: 5, padding: 4, paddingHorizontal: 9, borderRadius: 20, }}>SuperGuia</Text>
+
+                </View>
 
 
                 {/* Titulo y precio */}
@@ -114,6 +120,8 @@ export default function ({ fecha, handleContinuar, idx }) {
                     </View>
 
                 </View>
+
+
 
 
                 {/* Descripcion */}
@@ -163,6 +171,18 @@ export default function ({ fecha, handleContinuar, idx }) {
                         </Pressable>
 
                     </View>
+                    {/* ubicacion */}
+                    <View style={{
+                        ...styles.row,
+                        marginTop: 40,
+                    }}>
+                        <View style={{ width: 30, alignItems: 'center', justifyContent: 'center', }}>
+                            <Ionicons name="location-sharp" size={24} color={moradoOscuro} />
+
+                        </View>
+                        <Text numberOfLines={1} style={styles.ubicacionTxt}>{fecha.puntoReunionNombre}</Text>
+                    </View>
+
 
                     {/* Iconos presionables */}
                     <View style={{ ...styles.row }}>
@@ -208,7 +228,6 @@ export default function ({ fecha, handleContinuar, idx }) {
                     </View>
 
 
-
                 </View>}
 
 
@@ -218,10 +237,9 @@ export default function ({ fecha, handleContinuar, idx }) {
                     {!openDetails && <MaterialIcons
                         name={"keyboard-arrow-down"}
                         size={20}
-                        color={"lightgray"}
-                        style={{ bottom: 10, backgroundColor: '#fff', }}
+                        color={gris}
+                        style={{ backgroundColor: '#fff', position: 'absolute', }}
                     />}
-
                 </View>
 
 
@@ -276,6 +294,14 @@ const styles = StyleSheet.create({
         paddingBottom: 0,
     },
 
+    superGuiaContainer: {
+        right: 0,
+
+        backgroundColor: '#fff',
+        paddingHorizontal: 5,
+        position: 'absolute',
+    },
+
     row: {
         flexDirection: 'row',
         marginBottom: 10,
@@ -312,8 +338,10 @@ const styles = StyleSheet.create({
         height: 1,
         width: '100%',
         marginBottom: 20,
+        marginTop: 10,
         backgroundColor: gris,
         alignItems: 'center',
+        justifyContent: 'center',
     },
 
     nickname: {
@@ -393,4 +421,8 @@ const styles = StyleSheet.create({
     },
 
 
+    ubicacionTxt: {
+        color: moradoOscuro,
+        maxWidth: "50%"
+    }
 })

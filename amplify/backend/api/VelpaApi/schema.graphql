@@ -58,6 +58,8 @@ type Reserva @model
 
   fechaID: ID
   usuarioID: ID
+
+  materialChecked:String
 }
 
 type Fecha @model 
@@ -89,6 +91,9 @@ type Fecha @model
   titulo: String
   descripcion: String
   imagenRuta: String
+
+  imagenFondo:String
+  tituloAventura:String
 
   aventuraID: ID!
   usuarioID: ID!
@@ -325,7 +330,7 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
 ########################FUNCIONES#######################
 ########################################################
 type Mutation {
-  createPaymentIntent(amount: Float!, destinationStripeID: String!, comision: Float!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+  createPaymentIntent(amount: Float!, destinationStripeID: String!, comision: Float!,fechaID:String!,usuarioID:String!): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
 
   createStripeAcount(
     email:AWSEmail!

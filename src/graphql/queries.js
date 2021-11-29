@@ -51,6 +51,8 @@ export const getAventura = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -213,13 +215,15 @@ export const getReserva = /* GraphQL */ `
     getReserva(id: $id) {
       id
       total
-      comisionPorPersona
+      comision
+      pagadoAlGuia
       tercera
       ninos
       adultos
       pagoID
       fechaID
       usuarioID
+      materialChecked
       _version
       _deleted
       _lastChangedAt
@@ -239,13 +243,15 @@ export const listReservas = /* GraphQL */ `
       items {
         id
         total
-        comisionPorPersona
+        comision
+        pagadoAlGuia
         tercera
         ninos
         adultos
         pagoID
         fechaID
         usuarioID
+        materialChecked
         _version
         _deleted
         _lastChangedAt
@@ -274,13 +280,15 @@ export const syncReservas = /* GraphQL */ `
       items {
         id
         total
-        comisionPorPersona
+        comision
+        pagadoAlGuia
         tercera
         ninos
         adultos
         pagoID
         fechaID
         usuarioID
+        materialChecked
         _version
         _deleted
         _lastChangedAt
@@ -314,6 +322,8 @@ export const getFecha = /* GraphQL */ `
       titulo
       descripcion
       imagenRuta
+      imagenFondo
+      tituloAventura
       aventuraID
       usuarioID
       _version
@@ -325,13 +335,15 @@ export const getFecha = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -388,6 +400,8 @@ export const listFechas = /* GraphQL */ `
         titulo
         descripcion
         imagenRuta
+        imagenFondo
+        tituloAventura
         aventuraID
         usuarioID
         _version
@@ -442,6 +456,8 @@ export const syncFechas = /* GraphQL */ `
         titulo
         descripcion
         imagenRuta
+        imagenFondo
+        tituloAventura
         aventuraID
         usuarioID
         _version
@@ -499,13 +515,15 @@ export const getUsuario = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -536,6 +554,8 @@ export const getUsuario = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version

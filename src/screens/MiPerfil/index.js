@@ -95,51 +95,7 @@ export default ({ route, navigation }) => {
     }
 
     async function miSaldo() {
-        // setButtonLoading("saldo")
-        Alert.alert("Ir a pantalla de saldo")
-        return
-        // Obtener el sub
-
-        try {
-
-            const sub = await Auth.currentUserInfo().then((r) => {
-                return r?.attributes?.sub
-            })
-                .catch(e => {
-                    console.log(r)
-                    return e
-                })
-
-            API.graphql({
-                query: getStripeIDUsuario,
-                variables: { id: sub }
-            }).then(async r => {
-                const stripeID = r.data.getUsuario.stripeID
-
-                const link = await API.graphql({
-                    query: loginLinkStripe,
-                    variables: {
-                        stripeID
-                    }
-                }).then(r => r.data.loginLinkStripe.url)
-
-                await openBrowserAsync(link).then(r => {
-                    setButtonLoading(false)
-
-                })
-            })
-                .catch(e => {
-                    console.log(e)
-                    return e
-                })
-
-        } catch (error) {
-            console.log(error)
-            setButtonLoading(false)
-            Alert.alert("Error", "Hubo un error abriendo el saldo")
-        }
-
-
+        navigation.navigate("Saldo")
     }
 
     async function setCurrentUserData() {
@@ -300,7 +256,6 @@ export default ({ route, navigation }) => {
 
 
                     {guia && <Elemento
-                        loading={buttonLoading === "saldo"}
                         texto={"Saldo"}
                         onPress={miSaldo}
                         icono={<MaterialIcons

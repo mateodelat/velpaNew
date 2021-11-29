@@ -68,6 +68,7 @@ export default function ({ route, navigation }) {
 
     // Fecha
     const [fecha, setFecha] = useState(null);
+    const [sub, setSub] = useState("");
 
 
     const personasTotales = adultos + ninos + tercera
@@ -117,6 +118,8 @@ export default function ({ route, navigation }) {
 
     // Obtener el clientSecret del backend
     const fetchPaymentIntent = async () => {
+        const sub = await getUserSub()
+        setSub(sub)
 
         if (!stripeID) {
             Alert.alert("Error",
@@ -138,7 +141,9 @@ export default function ({ route, navigation }) {
             {
                 amount: Math.round(precioTotal),
                 destinationStripeID: stripeID,
-                comision
+                comision,
+                fechaID,
+                usuarioID: sub
             }
         })
 
@@ -257,7 +262,6 @@ export default function ({ route, navigation }) {
                 //////////////////////////////////////////////////////////////////////////////
                 ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
                 //////////////////////////////////////////////////////////////////////////////
-                const sub = await getUserSub()
                 // Obtener id del chatroom correspondiente a la aventura
                 const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID("eq", fechaID)))[0]
 

@@ -1423,8 +1423,15 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "comisionPorPersona": {
-                    "name": "comisionPorPersona",
+                "comision": {
+                    "name": "comision",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pagadoAlGuia": {
+                    "name": "pagadoAlGuia",
                     "isArray": false,
                     "type": "Float",
                     "isRequired": true,
@@ -1469,6 +1476,13 @@ export const schema = {
                     "name": "usuarioID",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "materialChecked": {
+                    "name": "materialChecked",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1679,6 +1693,20 @@ export const schema = {
                 },
                 "imagenRuta": {
                     "name": "imagenRuta",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "imagenFondo": {
+                    "name": "imagenFondo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tituloAventura": {
+                    "name": "tituloAventura",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -2193,5 +2221,5 @@ export const schema = {
             }
         }
     },
-    "version": "3e5552111e7a367fc621bbc1fa756e6f"
+    "version": "e4e87286f4d571d00088624252a7ab97"
 };

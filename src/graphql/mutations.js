@@ -6,11 +6,15 @@ export const createPaymentIntent = /* GraphQL */ `
     $amount: Float!
     $destinationStripeID: String!
     $comision: Float!
+    $fechaID: String!
+    $usuarioID: String!
   ) {
     createPaymentIntent(
       amount: $amount
       destinationStripeID: $destinationStripeID
       comision: $comision
+      fechaID: $fechaID
+      usuarioID: $usuarioID
     ) {
       id
       clientSecret
@@ -126,6 +130,8 @@ export const createAventura = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -224,6 +230,8 @@ export const updateAventura = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -322,6 +330,8 @@ export const deleteAventura = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -375,13 +385,15 @@ export const createReserva = /* GraphQL */ `
     createReserva(input: $input, condition: $condition) {
       id
       total
-      comisionPorPersona
+      comision
+      pagadoAlGuia
       tercera
       ninos
       adultos
       pagoID
       fechaID
       usuarioID
+      materialChecked
       _version
       _deleted
       _lastChangedAt
@@ -399,13 +411,15 @@ export const updateReserva = /* GraphQL */ `
     updateReserva(input: $input, condition: $condition) {
       id
       total
-      comisionPorPersona
+      comision
+      pagadoAlGuia
       tercera
       ninos
       adultos
       pagoID
       fechaID
       usuarioID
+      materialChecked
       _version
       _deleted
       _lastChangedAt
@@ -423,13 +437,15 @@ export const deleteReserva = /* GraphQL */ `
     deleteReserva(input: $input, condition: $condition) {
       id
       total
-      comisionPorPersona
+      comision
+      pagadoAlGuia
       tercera
       ninos
       adultos
       pagoID
       fechaID
       usuarioID
+      materialChecked
       _version
       _deleted
       _lastChangedAt
@@ -463,6 +479,8 @@ export const createFecha = /* GraphQL */ `
       titulo
       descripcion
       imagenRuta
+      imagenFondo
+      tituloAventura
       aventuraID
       usuarioID
       _version
@@ -474,13 +492,15 @@ export const createFecha = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -535,6 +555,8 @@ export const updateFecha = /* GraphQL */ `
       titulo
       descripcion
       imagenRuta
+      imagenFondo
+      tituloAventura
       aventuraID
       usuarioID
       _version
@@ -546,13 +568,15 @@ export const updateFecha = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -607,6 +631,8 @@ export const deleteFecha = /* GraphQL */ `
       titulo
       descripcion
       imagenRuta
+      imagenFondo
+      tituloAventura
       aventuraID
       usuarioID
       _version
@@ -618,13 +644,15 @@ export const deleteFecha = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -693,13 +721,15 @@ export const createUsuario = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -730,6 +760,8 @@ export const createUsuario = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -868,13 +900,15 @@ export const updateUsuario = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -905,6 +939,8 @@ export const updateUsuario = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version
@@ -1043,13 +1079,15 @@ export const deleteUsuario = /* GraphQL */ `
         items {
           id
           total
-          comisionPorPersona
+          comision
+          pagadoAlGuia
           tercera
           ninos
           adultos
           pagoID
           fechaID
           usuarioID
+          materialChecked
           _version
           _deleted
           _lastChangedAt
@@ -1080,6 +1118,8 @@ export const deleteUsuario = /* GraphQL */ `
           titulo
           descripcion
           imagenRuta
+          imagenFondo
+          tituloAventura
           aventuraID
           usuarioID
           _version

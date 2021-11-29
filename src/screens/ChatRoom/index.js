@@ -57,12 +57,15 @@ export default ({ route }) => {
 
         setMessage("")
     }
-
+    let readedMessageId = null
     useEffect(() => {
         fectchData()
         const subscription = DataStore.observe(Mensaje, msg => msg.chatroomID("eq", chatroomID))
             .subscribe((msg) => {
-                if (msg.opType === OpType.UPDATE) {
+
+                // Subir solo si es la primera solicitud
+                if (msg.opType === OpType.UPDATE && readedMessageId !== msg.element.id) {
+                    readedMessageId = msg.element.id
                     setChatMessages((existingMessages) => [msg.element, ...existingMessages])
                 }
             })

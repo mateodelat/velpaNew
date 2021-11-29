@@ -142,7 +142,6 @@ export default index = ({ route, navigation }) => {
                     }
                 }))
                 r = r.filter(e => e)
-
                 setFechas(r)
                 setLoading(false)
                 const f = new Date()

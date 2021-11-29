@@ -1,0 +1,15 @@
+{
+    "_meta": {
+        "template_version": 0,
+        "exclude_metadata": false
+    },
+    "fixtures": [
+        {
+            "name": "obtener balance",
+            "path": "/v1/payment_intents",
+            "method": "POST",
+            "Stripe-Account": "acct_1Jzmuz2V1EJMOgyd"
+        }
+    ],
+    "env": null
+}

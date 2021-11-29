@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default ({ scrollY, height, titulo, modalActive }) => {
+export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
     const navigation = useNavigation()
 
     const inputRange = [
@@ -48,7 +48,7 @@ export default ({ scrollY, height, titulo, modalActive }) => {
 
             <View style={styles.rowJustify}>
                 <Pressable
-                    onPress={() => navigation.pop()}
+                    onPress={handleBack ? handleBack : () => navigation.pop()}
                     style={styles.backContainer}>
                     <MaterialIcons
                         name={"keyboard-arrow-left"}

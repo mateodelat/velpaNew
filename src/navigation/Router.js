@@ -31,6 +31,8 @@ import MisSolicitudes from '../screens/MisSolicitudes';
 import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
 import AgregarAventura3 from '../screens/AgregarAventura/AgregarAventura3';
 import Configuracion from '../screens/Configuracion';
+import Saldo from '../screens/Saldo';
+import DetalleReserva from '../screens/DetalleReserva';
 
 const Stack = createStackNavigator();
 
@@ -41,7 +43,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                // initialRouteName={"Admin"}
+                // initialRouteName={"MisReservas"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {
@@ -240,8 +242,14 @@ export default () => {
                     name="MisReservas"
                     component={MisReservas}
                     options={{
-                        // headerShown: false
+                        title: "Mis reservaciones"
                     }}
+                />
+
+                <Stack.Screen
+                    name="DetalleReserva"
+                    component={DetalleReserva}
+                    options={{ headerShown: false }}
                 />
 
                 <Stack.Screen
@@ -255,6 +263,14 @@ export default () => {
                 <Stack.Screen
                     name="Configuracion"
                     component={Configuracion}
+                    options={{
+                        // headerShown: false
+                    }}
+                />
+
+                <Stack.Screen
+                    name="Saldo"
+                    component={Saldo}
                     options={{
                         // headerShown: false
                     }}

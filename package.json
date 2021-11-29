@@ -25,6 +25,7 @@
     "expo-haptics": "~11.0.3",
     "expo-image-manipulator": "~10.1.2",
     "expo-image-picker": "~11.0.3",
+    "expo-linear-gradient": "~10.0.3",
     "expo-location": "~13.0.4",
     "expo-status-bar": "~1.1.0",
     "expo-web-browser": "~10.0.3",

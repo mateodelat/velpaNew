@@ -166,6 +166,9 @@ export default function ({ navigation, route }) {
 
             usuarioID: sub,
 
+            tituloAventura,
+            imagenFondo,
+
             titulo,
             descripcion,
             imagenRuta: imagenRutaKey ? imagenRutaKey : null,

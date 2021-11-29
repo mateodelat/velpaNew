@@ -16,16 +16,16 @@ exports.handler = async (event) => {
 
     const appFee = amount * arguments.comision
 
-    console.log("total amount:", amount)
-    console.log("Comision", arguments.comision, "%-------------total comision:", appFee)
-    console.log("Cuenta destinataria:", arguments.destinationStripeID)
-
     // Create payment intent
     // Conviene obtener un id y desde aqui fetchear el precio de la reserva
     const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency: "mxn",
         application_fee_amount: appFee,
+        metadata: {
+            fechaID: arguments.fechaID,
+            usuarioID: arguments.usuarioID,
+        },
         transfer_data: {
             destination: arguments.destinationStripeID,
         },
