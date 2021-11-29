@@ -51,6 +51,10 @@ export default ({ route, navigation }) => {
         navigation.navigate("MisReservas")
     }
 
+    function handleFechas() {
+        navigation.navigate("MisFechas")
+    }
+
 
     function handlePerfil() {
         navigation.navigate("PerfilScreen", {
@@ -217,7 +221,7 @@ export default ({ route, navigation }) => {
 
                     {guia && <Elemento
                         texto={"Fechas como guia"}
-                        onPress={handleReservas}
+                        onPress={handleFechas}
                         icono={
                             <Image
                                 source={require("../../../assets/icons/guia.png")}

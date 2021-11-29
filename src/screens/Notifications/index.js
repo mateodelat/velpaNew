@@ -10,7 +10,9 @@ import { TipoNotificacion } from '../../models'
 
 import moment from "moment";
 import Storage from '@aws-amplify/storage'
-// import 'moment/locale/es'
+import 'moment/locale/es'
+
+
 moment.locale('es')
 
 
@@ -29,25 +31,20 @@ export default () => {
 
 
     const handleIrAReserva = (idReserva) => {
-        console.log({
-            idReserva
-        })
-
-        Alert.alert("Ir a la reservacion")
-        // navigation.navigate("MisReservas")
+        navigation.navigate("MisReservas")
     }
 
     const handleIrAReservaEnFecha = (idFecha, idReserva) => {
-        console.log({
-            idFecha,
-            idReserva
-        })
-        Alert.alert("Ir a la fecha con reservacion seleccionada",)
-        // navigation.navigate("MisReservas")
+        navigation.navigate("MisFechas")
     }
 
     const handleVerTutorial = () => {
         Alert.alert("Mostrar tutorial velpa")
+
+    }
+
+    const handleVerSolicitud = () => {
+        navigation.navigate("MisSolicitudes")
 
     }
     const [notificaciones, setNotificaciones] = useState(null);
@@ -100,8 +97,13 @@ export default () => {
         handleVerNotificacion(index)
 
         const { tipo } = item
+
         switch (tipo) {
             case TipoNotificacion.RESERVAENFECHA:
+                handleIrAReservaEnFecha(item.fechaID, item.reservaID)
+                break;
+
+            case TipoNotificacion.FECHACREADA:
                 handleIrAReservaEnFecha(item.fechaID, item.reservaID)
                 break;
 
@@ -112,6 +114,20 @@ export default () => {
             case TipoNotificacion.BIENVENIDA:
                 handleVerTutorial()
                 break;
+
+            case TipoNotificacion.SOLICITUDGUIAAPROVADA:
+                handleVerSolicitud()
+                break;
+
+            case TipoNotificacion.SOLICITUDGUIA:
+                handleVerSolicitud()
+                break;
+
+            case TipoNotificacion.SOLICITUDAVENTURA:
+                handleVerSolicitud()
+                break;
+
+
 
             default:
                 console.log("otro tipo de notificacion")
@@ -150,7 +166,7 @@ export default () => {
                 const { tipo } = item
                 return <View style={{ flex: 1, marginBottom: index === notificaciones.length - 1 ? 40 : 0, }}>
                     <Element
-                        image={tipo === "BIENVENIDA" ? require("../../../assets/VELPA.png") : { uri: item.imagen?.url }}
+                        tipo={tipo}
                         titulo={item.titulo}
                         descripcion={item.descripcion}
                         tiempo={moment(item.createdAt).from(moment())}
