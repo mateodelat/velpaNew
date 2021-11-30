@@ -20,7 +20,7 @@ import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons
 
 
 import Boton from '../../components/Boton';
-import { defaultLocation, mapsAPIKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
+import { defaultLocation, getPlaceElevation, mapsAPIKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import HeaderConImagen from '../../components/HeaderConImagen';
@@ -102,21 +102,7 @@ export default ({ navigation, route }) => {
         // Obtener la elevacion si es alpinismo
         if (aventura.categoria === Categorias.APLINISMO) {
             setButtonLoading(true)
-            const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`
-            altitud = Math.round(await fetch(url)
-                .then(r => {
-                    return r.json()
-                        .then(r => {
-                            if (r.status !== "OK") {
-                                console.log(r)
-                                return null
-                            } else {
-                                return r.results[0].elevation
-
-                            }
-                        })
-
-                }))
+            altitud = await getPlaceElevation(latitude, longitude)
         }
 
         const aventuraAEnviar = {

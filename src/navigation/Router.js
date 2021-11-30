@@ -23,7 +23,6 @@ import Perfil from '../screens/Perfil';
 import AgregarAventura from '../screens/AgregarAventura';
 import AgregarFecha from '../screens/AgregarFecha';
 import SeleccionaAventura from '../screens/SeleccionaAventura';
-import SolicitudAventura from '../screens/SolicitudAventura';
 import Agregar2 from '../screens/AgregarFecha/Agregar2';
 import Agregar3 from '../screens/AgregarFecha/Agregar3';
 import MisReservas from '../screens/MisReservas';
@@ -45,7 +44,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                initialRouteName={"Admin"}
+                // initialRouteName={"Admin"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {
@@ -220,15 +219,6 @@ export default () => {
                     component={SeleccionaAventura}
                     options={{
                         headerShown: false
-                    }}
-                />
-
-                <Stack.Screen
-                    name="SolicitudAventuraScreen"
-                    component={SolicitudAventura}
-                    options={{
-                        title: "Solicitar aventura",
-
                     }}
                 />
 

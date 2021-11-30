@@ -4,12 +4,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from '../screens/Admin'
 import SolicitudesPendientes from '../screens/Admin/SolicitudesPendientes';
-import ModificarAventuras from '../screens/Admin/ModificarAventuras';
+
 import FechasYReservas from '../screens/Admin/FechasYReservas';
-import Usuarios from '../screens/Admin/Usuarios';
+
 import Header from '../components/header';
 import VerSolicitudes from '../screens/Admin/VerSolicitudes';
 import GuiasAutorizados from '../screens/Admin/GuiasAutorizados';
+import ModificarAventuras from '../screens/Admin/ModificarAventuras';
+
+import EditarAventura1 from '../screens/Admin/EditarAventura/EditarAventura1';
+import { mayusFirstLetter } from '../../assets/constants';
+
 
 const Stack = createStackNavigator()
 
@@ -55,15 +60,6 @@ export default function AdminStack() {
                 }}
             />
 
-            <Stack.Screen
-                name={"ModificarAventuras"}
-                component={ModificarAventuras}
-                options={{
-                    headerShown: true,
-                    headerTitleAlign: "center",
-                    headerTitle: "Modificar aventuras"
-                }}
-            />
 
             <Stack.Screen
                 name={"FechasYReservas"}
@@ -94,6 +90,23 @@ export default function AdminStack() {
                     headerTitle: "Guias autorizados por aventura"
                 }}
             />
+
+            <Stack.Screen
+                name={"ModificarAventuras"}
+                component={ModificarAventuras}
+                options={{
+                    headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name={"EditarAventura1"}
+                component={EditarAventura1}
+                options={({ route }) => ({
+                    headerShown: false
+                })}
+            />
+
 
         </Stack.Navigator>
     )

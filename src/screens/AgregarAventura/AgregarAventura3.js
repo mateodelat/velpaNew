@@ -50,7 +50,7 @@ export default ({ navigation, route }) => {
             usuarioID: sub,
         }
 
-        // Existencia de parametros
+        // Nueva aventura con graphql para poder agregad el id de storage personalizado
         await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
             .then(async r => {
                 // Notificacion de nueva aventura

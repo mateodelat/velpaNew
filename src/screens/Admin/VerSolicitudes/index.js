@@ -7,33 +7,11 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Loading } from '../../../components/Loading';
-import { getSolicitudesUsuario, listSolicitudGuias, listSolicitudGuiasVerificadas } from '../../../../assets/constants';
+import { colorFondo, getImageUrl, getSolicitudesUsuario, listSolicitudGuias, listSolicitudGuiasVerificadas } from '../../../../assets/constants';
 import ImageFullScreen from '../../../components/ImageFullScreen';
+import { StatusSolicitud, Usuario } from '../../../models';
+import { DataStore, DataStoreClass } from '@aws-amplify/datastore';
 
-const deleteSolicitudGuia = /* GraphQL */ `
-  mutation DeleteSolicitudGuia(
-    $input: DeleteSolicitudGuiaInput!
-  ) {
-    deleteSolicitudGuia(input: $input) {
-      id
-      AventurasAVerificar {
-            items {
-                id
-            }
-        }
-    }
-  }
-`;
-
-export const deleteSolicitudAventura = /* GraphQL */ `
-  mutation DeleteSolicitudAventura(
-    $input: DeleteSolicitudAventuraInput!
-  ) {
-    deleteSolicitudAventura(input: $input) {
-      id
-    }
-  }
-`;
 
 
 
@@ -58,28 +36,28 @@ const index = ({ navigation }) => {
         API.graphql({ query: listSolicitudGuiasVerificadas })
             .then(async r => {
                 r = r.data.listSolicitudGuias.items
+                r = await Promise.all(r.map(async e => {
+                    const Aventuras = e.Aventuras.items.map(e => e.aventura)
 
-                const newArray = (await Promise.all(r.map(async e => {
-                    const aventuras = e.AventurasAVerificar.items.map(i => i.aventura.titulo).sort()
+                    const usuario = await DataStore.query(Usuario, e.usuarioID)
 
-                    const selfie = e.Usuario.selfie.startsWith("usr-") ? await Storage.get(e.Usuario.selfie) : e.Usuario.selfie
+                    const selfie = await getImageUrl(usuario.selfie)
+
+                    const evaluador = await DataStore.query(Usuario, e.evaluadorID)
 
                     return {
-                        comentarios: e.comentarios,
-                        aproved: e.status,
-                        id: e.id,
+                        ...e,
+                        Aventuras,
                         fechaCreacion: new Date(e.createdAt),
-                        aventuras,
                         usuario: {
-                            ...e.Usuario,
-                            selfie,
+                            ...usuario,
+                            selfie
                         },
-                        evaluador: e.evaluador
+                        evaluador
                     }
-                }))).sort((a, b) => a.fechaCreacion > b.fechaCreacion)
+                }))
 
-
-                setSolicitudes(newArray)
+                setSolicitudes(r)
                 setLoading(false)
             })
             .catch(e => {
@@ -98,7 +76,9 @@ const index = ({ navigation }) => {
 
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.container}>
             {
                 solicitudes.length === 0 ?
                     <Text style={styles.texto}>No hay solicitudes para ser guia</Text> :
@@ -109,17 +89,17 @@ const index = ({ navigation }) => {
                             <View style={styles.bodyContainer}>
 
                                 <View style={{ justifyContent: 'center', }}>
-                                    {e.aproved === "pending" ? <Text style={{
+                                    {e.status === StatusSolicitud.PENDIENTE ? <Text style={{
                                         color: 'orange',
                                     }}>Pendiente...</Text> :
-                                        e.aproved === "aproved" ? <Text style={{
+                                        e.status === StatusSolicitud.APROVADA ? <Text style={{
                                             color: 'green',
                                         }}>Aprovada por {e.evaluador.nickname}</Text> :
                                             <Text style={{
                                                 color: 'red',
                                             }}>Rechazada por {e.evaluador.nickname}</Text>}
                                     {
-                                        e.aproved === "pending" ?
+                                        e.status === StatusSolicitud.PENDIENTE ?
                                             <Feather
                                                 style={styles.icon}
                                                 name="clock"
@@ -127,7 +107,7 @@ const index = ({ navigation }) => {
                                                 color="orange"
                                             />
                                             :
-                                            e.aproved === "rejected" ? <Entypo
+                                            e.status === StatusSolicitud.RECHAZADA ? <Entypo
                                                 style={styles.icon}
                                                 name="cross"
                                                 size={24}
@@ -178,28 +158,29 @@ const index = ({ navigation }) => {
                                             }}>{e.usuario.nickname}</Text>
                                         <Text>Capacidad: {e.usuario.capacidadMaxima} personas</Text>
                                         <Text>Telefono: <Text
-                                            onPress={() => Linking.openURL("tel:52" + e.usuario.telefono)}
+                                            onPress={() => Linking.openURL("tel:" + e.usuario.telefono)}
                                             style={{
                                                 textDecorationLine: "underline",
                                             }}
-                                        >+52 1 {e.usuario.telefono}</Text></Text>
+                                        >{e.usuario.telefono}</Text></Text>
 
                                     </View>
 
                                 </View>
                                 <View style={styles.line} />
 
-                                {e.aventuras?.map((e, i) => {
+                                {e.Aventuras?.map((e, i) => {
+
                                     return <View
                                         key={"Aventura", i}
                                         style={styles.aventuraContainer}>
-                                        <Text>{i + 1}-  {e}</Text>
+                                        <Text>{i + 1}-  {e.titulo}</Text>
                                     </View>
                                 })}
-                                {e.comentarios &&
+                                {e.mensaje &&
                                     <View style={{}}>
                                         <View style={styles.line} />
-                                        <Text>{e.comentarios}</Text>
+                                        <Text>{e.mensaje}</Text>
                                     </View>}
                             </View>
 
@@ -235,7 +216,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: colorFondo,
     },
 
     texto: {
@@ -245,14 +226,6 @@ const styles = StyleSheet.create({
 
     solicitudContainer: {
 
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.29,
-        shadowRadius: 4.65,
-        elevation: 7,
 
 
         marginVertical: 10,
@@ -263,9 +236,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
         backgroundColor: '#fff',
-        borderColor: "gray",
-        borderWidth: .5,
-        borderRadius: 20,
+        borderRadius: 7,
 
         flexDirection: 'row',
 

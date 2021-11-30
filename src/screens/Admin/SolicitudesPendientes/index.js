@@ -46,7 +46,7 @@ export default ({ navigation }) => {
     const [modalData, setModalData] = useState({});
 
     const [comentarios, setComentarios] = useState("");
-    const [pedirDatos, setPedirDatos] = useState(false);
+
 
     const [capacidadMaxima, setCapacidadMaxima] = useState(1);
 
@@ -119,39 +119,29 @@ export default ({ navigation }) => {
             Alert.alert("Error", "Escribe las razones por el rechazo")
             return
         }
+
         setBotonLoading("Rechazar")
 
-        let promises = []
         let newSolicitudes = [...solicitudes]
-        const solicitud = solicitudes[idx]
+        try {
+            const solicitud = await DataStore.query(SolicitudGuia, solicitudes[idx].id)
 
+            const sub = await getUserSub()
+            // Rechazar la solicitud con el usuario evaluador y el comentario
+            await DataStore.save(SolicitudGuia.copyOf(solicitud, nuevo => {
+                nuevo.evaluadorID = sub
+                nuevo.mensaje = comentarios
+                nuevo.status = StatusSolicitud.RECHAZADA
+            }))
+            Alert.alert("Exito", "Solicitud rechazada con exito")
 
-        const sub = await getUserSub()
+            newSolicitudes.splice(idx, 1)
+            setSolicitudes(newSolicitudes)
 
-
-        // Rechazar la solicitud con el usuario evaluador y el comentario
-        promises.push(API.graphql({
-            query: updateSolicitudGuia, variables: {
-                input: {
-                    id: solicitud.id,
-                    status: "rejected",
-                    evaluadorID: sub,
-                    comentario: comentarios,
-                }
-            }
-        }))
-
-        Promise.all(promises)
-            .then(r => {
-                newSolicitudes.splice(idx, 1)
-                setSolicitudes(newSolicitudes)
-                Alert.alert("Exito", "Solicitud rechazada con exito")
-            })
-            .catch(e => {
-                console.log(e)
-                Alert.alert("Error", "Error rechazando solicitud")
-            })
-
+        } catch (e) {
+            Alert.alert("Error", "Error rechazando solicitud")
+            console.log(e)
+        }
         setBotonLoading(false)
     }
 
@@ -221,7 +211,6 @@ export default ({ navigation }) => {
             .then(async r => {
                 r = r.data.listSolicitudGuias.items
                 r = (await Promise.all(r.filter(e => !e._deleted).map(async solicitud => {
-
                     const usuario = await DataStore.query(Usuario, solicitud.usuarioID)
 
                     return {

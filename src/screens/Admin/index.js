@@ -52,7 +52,7 @@ export default ({ navigation }) => {
                 onPress={() => navigation.navigate("ModificarAventuras")}
                 style={styles.buttonContainer}>
                 <AntDesign style={styles.icon} name="form" size={24} color={"#fff"} />
-                <Text style={styles.textoBoton}>Modificar aventuras/categorias</Text>
+                <Text style={styles.textoBoton}>Ver aventuras</Text>
             </Pressable>
 
             {/* Modificar fechas por aventuras y reservaciones*/}
@@ -72,7 +72,7 @@ export default ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colorFondo,
+        backgroundColor: "#ffff",
         flex: 1,
         padding: 20,
     },

@@ -170,6 +170,8 @@ export const listSolicitudGuiasPendientes = /* GraphQL */ `
     listSolicitudGuias(filter: {status: {eq:PENDIENTE}}) {
         items {
           _deleted
+          _version
+          _lastChangedAt
           status
           id
           createdAt
@@ -193,30 +195,21 @@ export const listSolicitudGuiasPendientes = /* GraphQL */ `
 
 export const listSolicitudGuiasVerificadas = /* GraphQL */ `
   query ListSolicitudGuias {
-    listSolicitudGuias(filter: {status: {ne:pending}}) {
+    listSolicitudGuias(filter: {status: {ne:PENDIENTE}}) {
         items {
           status
           id
           createdAt
-          AventurasAVerificar {
+          usuarioID
+          evaluadorID
+          mensaje
+          Aventuras {
             items {
               aventura {
                 titulo
                 id
               }
             }
-        }
-        Usuario {
-          id
-          nickname
-          selfie
-          telefono
-          tipo
-          capacidadMaxima
-        }
-        evaluador {
-          id
-          nickname
         }
       }
     }
@@ -634,7 +627,7 @@ export function formatCuentaCLABE(input) {
 
 export const obtenerAventurasParaMapa = async () => {
   return await DataStore.query(Aventura,
-    //  ave => ave.estadoAventura("eq", 'AUTORIZADO')
+    ave => ave.estadoAventura("eq", 'AUTORIZADO')
   )
     .then(async r => {
 
@@ -712,7 +705,7 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
   console.log("Sortear recomendaciones aventuras en funcion al usuario", sub, "por relevancia")
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
-    // c => c.estadoAventura("eq", "AUTORIZADO"),
+    c => c.estadoAventura("eq", "AUTORIZADO"),
     Predicates.all,
     {
       limit: maxItems,
@@ -739,6 +732,11 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
   return ave
 
 }
+
+export const isVideo = (e) => {
+  return e.endsWith(".mp4")
+
+}
 export const distancia2Puntos = function (lat1, lon1, lat2, lon2) {
   const rad = (x) => { return x * Math.PI / 180; }
   var R = 6378.137; //Radio de la tierra en km
@@ -755,7 +753,7 @@ export const listAventurasSugeridas = async (id, maxItems) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c
-    // .estadoAventura("eq", "AUTORIZADO")
+      .estadoAventura("eq", "AUTORIZADO")
     // .id("ne", id),
   )
     .then(async r => {
@@ -1254,6 +1252,25 @@ export function formatMoney(num, hideCents) {
 
 }
 
+
+export async function getPlaceElevation(latitude, longitude) {
+  const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`
+  return Math.round(await fetch(url)
+    .then(r => {
+      return r.json()
+        .then(r => {
+          if (r.status !== "OK") {
+            console.log(r)
+            return null
+          } else {
+            return r.results[0].elevation
+
+          }
+        })
+
+    }))
+
+}
 
 export const msInDay = 86400000
 
