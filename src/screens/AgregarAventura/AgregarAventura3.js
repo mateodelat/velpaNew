@@ -34,6 +34,7 @@ export default ({ navigation, route }) => {
     const [modify, setModify] = useState(true);
 
     async function handleContinuar() {
+        const sub = await getUserSub()
 
 
         setButtonLoading(true)
@@ -46,13 +47,12 @@ export default ({ navigation, route }) => {
             materialDefault: JSON.stringify(newMaterial),
             comision: comisionVelpa,
             estadoAventura: EstadoAventura.PENDIENTE,
-            // _version: 0,
+            usuarioID: sub,
         }
 
         // Existencia de parametros
         await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
             .then(async r => {
-                const sub = await getUserSub()
                 // Notificacion de nueva aventura
                 await DataStore.save(new Notificacion({
                     tipo: TipoNotificacion.SOLICITUDAVENTURA,

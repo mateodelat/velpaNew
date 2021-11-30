@@ -232,7 +232,40 @@ export default ({
         }
     }
 
-    const handleAventuraNoAutorizado = (index) => {
+    const handleAventuraNoAutorizado = (aventura) => {
+        async function handleSendSolicitud() {
+            const sub = await getUserSub()
+
+            const solicitudguia = await DataStore.save(new SolicitudGuia({
+                status: StatusSolicitud.PENDIENTE,
+                usuarioID: sub
+            }))
+
+            // Crear relaciones a aventura para cada una
+            await DataStore.save(new AventuraSolicitudGuia({
+                aventura,
+                solicitudguia
+            }))
+
+
+
+            // Mandar notificacion
+            await DataStore.save(new Notificacion({
+                tipo: TipoNotificacion.SOLICITUDGUIA,
+
+                titulo: "Nueva solicitud",
+                descripcion: "Se ha creado una solicitud de guia para" + aventura.titulo + ", espera nuestra llamada!!",
+
+                usuarioID: sub,
+
+            }))
+
+            navigation.navigate("ExitoScreen", {
+                txtExito: "Solicitud enviada con exito, espera nuestra llamada!!",
+                txtOnPress: "Volver al incio",
+            })
+        }
+
         Alert.alert("Error", "No estas autorizado a esta aventura, deseas enviar una solicitud?",
             [{
                 text: "Cancelar",
@@ -240,12 +273,8 @@ export default ({
             },
             {
                 text: "OK",
-                onPress: () => navigation.navigate("SolicitudAventuraScreen", {
-                    aventura: {
-                        titulo: "El nevado de colima"
-                    }
-                })
-            },]
+                onPress: handleSendSolicitud
+            }]
         )
 
     }
@@ -665,7 +694,7 @@ export default ({
                                                     tamañoCuadrado={(width / 2 - 30)}
                                                     item={e}
                                                     key={"Ave", column}
-                                                    onPress={() => e.notAllowed ? handleAventuraNoAutorizado() : handlePressAventura(e, row, column)}
+                                                    onPress={() => e.notAllowed ? handleAventuraNoAutorizado(e) : handlePressAventura(e, row, column)}
                                                 />
                                             )
                                         })

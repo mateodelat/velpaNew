@@ -682,6 +682,32 @@ export const obtenerAventurasParaMapa = async () => {
 
 }
 
+export const listSolicitudes = /* GraphQL */ `
+  query listSolicitudGuias(
+    $sub:ID
+  ){
+    listSolicitudGuias (filter: {usuarioID: {eq: $sub}}){
+      items {
+        id
+        status
+        mensaje
+        evaluadorID
+        _deleted
+        Aventuras {
+          items {
+            aventura {
+              id
+              titulo
+              imagenDetalle
+              imagenFondoIdx
+            }
+          }
+        }
+        createdAt
+      }
+    }
+  }
+`;
 
 export const listAventurasAutorizadas = async (maxItems, page) => {
   const sub = await getUserSub()

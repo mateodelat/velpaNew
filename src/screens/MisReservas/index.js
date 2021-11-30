@@ -1,6 +1,6 @@
 import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useState } from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { container, formatDateShort, formatMoney, getImageUrl, getUserSub, isUrl, moradoOscuro } from '../../../assets/constants'
 import { Loading } from '../../components/Loading';
 import { Reserva } from '../../models';
@@ -136,7 +136,9 @@ export default function () {
     const pastReservations = reservas?.filter(e => e.pasada)
 
     return (
-        <View style={container}>
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={container}>
             <View style={styles.selectorContainer}>
                 <Pressable
                     onPress={() => setReservasProximas(true)}
@@ -200,7 +202,7 @@ export default function () {
                                 })
                         )}
 
-        </View>
+        </ScrollView>
     )
 }
 

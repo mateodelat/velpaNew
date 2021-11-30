@@ -104,6 +104,7 @@ export const createAventura = /* GraphQL */ `
       categoria
       materialDefault
       incluidoDefault
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -204,6 +205,7 @@ export const updateAventura = /* GraphQL */ `
       categoria
       materialDefault
       incluidoDefault
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -304,6 +306,7 @@ export const deleteAventura = /* GraphQL */ `
       categoria
       materialDefault
       incluidoDefault
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -803,6 +806,7 @@ export const createUsuario = /* GraphQL */ `
           status
           evaluadorID
           usuarioID
+          mensaje
           _version
           _deleted
           _lastChangedAt
@@ -983,6 +987,7 @@ export const updateUsuario = /* GraphQL */ `
           status
           evaluadorID
           usuarioID
+          mensaje
           _version
           _deleted
           _lastChangedAt
@@ -1163,6 +1168,7 @@ export const deleteUsuario = /* GraphQL */ `
           status
           evaluadorID
           usuarioID
+          mensaje
           _version
           _deleted
           _lastChangedAt
@@ -1482,6 +1488,7 @@ export const createSolicitudGuia = /* GraphQL */ `
       status
       evaluadorID
       usuarioID
+      mensaje
       _version
       _deleted
       _lastChangedAt
@@ -1516,6 +1523,7 @@ export const updateSolicitudGuia = /* GraphQL */ `
       status
       evaluadorID
       usuarioID
+      mensaje
       _version
       _deleted
       _lastChangedAt
@@ -1550,6 +1558,7 @@ export const deleteSolicitudGuia = /* GraphQL */ `
       status
       evaluadorID
       usuarioID
+      mensaje
       _version
       _deleted
       _lastChangedAt
@@ -1754,6 +1763,7 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -1778,6 +1788,7 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
         status
         evaluadorID
         usuarioID
+        mensaje
         _version
         _deleted
         _lastChangedAt
@@ -1829,6 +1840,7 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -1853,6 +1865,7 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
         status
         evaluadorID
         usuarioID
+        mensaje
         _version
         _deleted
         _lastChangedAt
@@ -1904,6 +1917,7 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -1928,6 +1942,7 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
         status
         evaluadorID
         usuarioID
+        mensaje
         _version
         _deleted
         _lastChangedAt
@@ -1979,6 +1994,7 @@ export const createAventuraUsuario = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -2096,6 +2112,7 @@ export const updateAventuraUsuario = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -2213,6 +2230,7 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt

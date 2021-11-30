@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { moradoOscuro } from '../../assets/constants';
 
 
-const Flecha = () => {
+const Flecha = ({ style }) => {
     return (
         <View
             style={{
@@ -13,6 +13,7 @@ const Flecha = () => {
                 width: 20,
                 backgroundColor: moradoOscuro,
                 alignItems: 'center', justifyContent: 'center',
+                ...style
             }}
         >
             <Feather

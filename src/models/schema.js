@@ -156,6 +156,13 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": true
                 },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "SolicitudGuias": {
                     "name": "SolicitudGuias",
                     "isArray": true,
@@ -442,6 +449,13 @@ export const schema = {
                     "name": "usuarioID",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "mensaje": {
+                    "name": "mensaje",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -2228,5 +2242,5 @@ export const schema = {
             }
         }
     },
-    "version": "aaa3639b9e89691f54cde9980882b78b"
+    "version": "1a25c5393c0fcf422ae3961a42e47ab4"
 };

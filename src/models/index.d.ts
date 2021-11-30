@@ -131,6 +131,7 @@ export declare class Aventura {
   readonly categoria?: Categorias | keyof typeof Categorias;
   readonly materialDefault?: string;
   readonly incluidoDefault?: (string | null)[];
+  readonly usuarioID?: string;
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
   readonly Fechas?: (Fecha | null)[];
@@ -155,6 +156,7 @@ export declare class SolicitudGuia {
   readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
   readonly evaluadorID?: string;
   readonly usuarioID?: string;
+  readonly mensaje?: string;
   readonly Aventuras?: (AventuraSolicitudGuia | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;

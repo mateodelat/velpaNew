@@ -145,32 +145,22 @@ export default ({ navigation, route }) => {
                     </View>
                     }
 
+                    <View style={{
+                        flexDirection: 'row',
+                        marginTop: 20,
+                    }}>
+                        <Text style={{ ...styles.title, flex: 1, }}>Total:</Text>
+                        <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precioAcomulado, true)}</Text>
+
+                    </View>
+
                     <Line />
-
-
-                    {formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).mismoDia ?
-                        <View style={{ ...styles.fechaContainer, marginBottom: 30, }}>
-                            <MaterialCommunityIcons style={{ position: 'absolute', left: 0, }} name="calendar-today" size={24} color={moradoOscuro} />
-                            <Text style={{ ...styles.fechaTxt, flex: 1, textAlign: 'center', }}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txt}</Text>
-                        </View>
-                        :
-                        <View style={{ marginBottom: 10, }}>
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Inicio: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtInicial}</Text>
-                            </View>
-
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Fin: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtFinal}</Text>
-                            </View>
-                        </View>}
 
                     {/* Personas reservadas en la fecha */}
                     {fecha.personasReservadas.lenght !== 0 ? <View >
 
                         {/* Imagenes personas y chat */}
-                        <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', }}>
+                        <View style={{ marginBottom: 40, flexDirection: 'row', alignItems: 'center', }}>
                             {fecha.personasReservadas.map((persona, i) => {
                                 return <Image
                                     key={i.toString()}
@@ -195,25 +185,34 @@ export default ({ navigation, route }) => {
                                 onPress={navigateChat}
                                 style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" />
                         </View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            marginTop: 20,
-                            marginBottom: 20,
-                        }}>
-                            <Text style={{ ...styles.title, flex: 1, }}>Total:</Text>
-                            <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precioAcomulado, true)}</Text>
-
-                        </View>
                     </View>
                         :
                         <Text style={{
-                            marginTop: 20,
+                            marginBottom: 40,
                             height: 30,
                             alignItems: 'center', justifyContent: 'center',
 
                         }}>No hay personas reservadas</Text>
                     }
+                    {formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).mismoDia ?
+                        <View style={{ ...styles.fechaContainer, marginBottom: 30, }}>
+                            <MaterialCommunityIcons style={{ position: 'absolute', left: 0, }} name="calendar-today" size={24} color={moradoOscuro} />
+                            <Text style={{ ...styles.fechaTxt, flex: 1, textAlign: 'center', }}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txt}</Text>
+                        </View>
+                        :
+                        <View style={{ marginBottom: 10, }}>
+                            <View style={styles.fechaContainer}>
+                                <Text style={styles.fechaTitle}>Inicio: </Text>
+                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtInicial}</Text>
+                            </View>
+
+                            <View style={styles.fechaContainer}>
+                                <Text style={styles.fechaTitle}>Fin: </Text>
+                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtFinal}</Text>
+                            </View>
+                        </View>}
+
+
 
                     <Line />
 

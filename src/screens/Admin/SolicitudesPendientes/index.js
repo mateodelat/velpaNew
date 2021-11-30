@@ -150,7 +150,7 @@ export default ({ navigation }) => {
                     id: solicitud.id,
                     status: "rejected",
                     evaluadorID: sub,
-                    comentarios,
+                    comentario: comentarios,
                 }
             }
         }))

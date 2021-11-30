@@ -45,7 +45,7 @@ export default () => {
         <NavigationContainer>
 
             <Stack.Navigator
-                // initialRouteName={"MisFechas"}
+                // initialRouteName={"MisSolicitudes"}
                 screenOptions={{
 
                     header: ({ scene, previous, navigation }) => {
@@ -274,7 +274,7 @@ export default () => {
                     name="MisSolicitudes"
                     component={MisSolicitudes}
                     options={{
-                        // headerShown: false
+                        title: "Mis solicitudes"
                     }}
                 />
 

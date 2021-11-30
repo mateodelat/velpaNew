@@ -30,6 +30,8 @@ type Aventura @model @auth(rules: [
   materialDefault: String
   incluidoDefault: [String]
 
+  usuarioID:String
+
 
   SolicitudGuias: [AventuraSolicitudGuia] @connection(keyName: "byAventura", fields: ["id"])
   UsuariosAutorizados: [AventuraUsuario] @connection(keyName: "byAventura", fields: ["id"])
@@ -203,6 +205,7 @@ type SolicitudGuia @model
   status: StatusSolicitud!
   evaluadorID: ID
   usuarioID:ID
+  mensaje:String
   Aventuras: [AventuraSolicitudGuia] @connection(keyName: "bySolicitudGuia", fields: ["id"])
 }
 

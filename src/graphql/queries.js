@@ -25,6 +25,7 @@ export const getAventura = /* GraphQL */ `
       categoria
       materialDefault
       incluidoDefault
+      usuarioID
       _version
       _deleted
       _lastChangedAt
@@ -127,6 +128,7 @@ export const listAventuras = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -186,6 +188,7 @@ export const syncAventuras = /* GraphQL */ `
         categoria
         materialDefault
         incluidoDefault
+        usuarioID
         _version
         _deleted
         _lastChangedAt
@@ -595,6 +598,7 @@ export const getUsuario = /* GraphQL */ `
           status
           evaluadorID
           usuarioID
+          mensaje
           _version
           _deleted
           _lastChangedAt
@@ -1037,6 +1041,7 @@ export const getSolicitudGuia = /* GraphQL */ `
       status
       evaluadorID
       usuarioID
+      mensaje
       _version
       _deleted
       _lastChangedAt
@@ -1073,6 +1078,7 @@ export const listSolicitudGuias = /* GraphQL */ `
         status
         evaluadorID
         usuarioID
+        mensaje
         _version
         _deleted
         _lastChangedAt
@@ -1107,6 +1113,7 @@ export const syncSolicitudGuias = /* GraphQL */ `
         status
         evaluadorID
         usuarioID
+        mensaje
         _version
         _deleted
         _lastChangedAt
@@ -1337,6 +1344,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           categoria
           materialDefault
           incluidoDefault
+          usuarioID
           _version
           _deleted
           _lastChangedAt
@@ -1349,6 +1357,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           status
           evaluadorID
           usuarioID
+          mensaje
           _version
           _deleted
           _lastChangedAt
@@ -1407,6 +1416,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           categoria
           materialDefault
           incluidoDefault
+          usuarioID
           _version
           _deleted
           _lastChangedAt
