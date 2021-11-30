@@ -27,13 +27,14 @@ export default ({ setModalVisible, data }) => {
     }, []);
 
     const fetch = async () => {
-        const fotos = await obtenerUriImagenesGuia(data).catch(e => {
-            console.log(e)
-            Alert.alert("Error", "Error cargando las fotos", [{
-                text: "OK",
-                onPress: () => setModalVisible(false)
-            }])
-        })
+        const fotos = await obtenerUriImagenesGuia(data)
+            .catch(e => {
+                console.log(e)
+                Alert.alert("Error", "Error cargando las fotos", [{
+                    text: "OK",
+                    onPress: () => setModalVisible(false)
+                }])
+            })
 
         setImages(fotos)
         setLoading(false)
@@ -45,7 +46,7 @@ export default ({ setModalVisible, data }) => {
 
                 <ImageViewer
                     renderHeader={(e) => {
-                        const titulo = images[e].titulo
+                        const titulo = images[e]?.titulo
                         return (
                             <View style={{
                                 flexDirection: 'row',

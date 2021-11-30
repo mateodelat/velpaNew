@@ -169,6 +169,7 @@ export const listSolicitudGuiasPendientes = /* GraphQL */ `
   query ListSolicitudGuias {
     listSolicitudGuias(filter: {status: {eq:PENDIENTE}}) {
         items {
+          _deleted
           status
           id
           createdAt
@@ -179,9 +180,6 @@ export const listSolicitudGuiasPendientes = /* GraphQL */ `
               aventura {
                 titulo
                 id
-                _deleted
-                _lastChangedAt
-                _version
                 owner
                 createdAt
                 updatedAt
@@ -1435,58 +1433,41 @@ export async function obtenerUriImagenesGuia(data) {
   let fotos
   fotos = []
 
-  let promises = []
-  // Obtener INE
+
+  // Obtener ID
   if (data.ID) {
-    const promisesID = data.ID?.map(e => {
-      return (
-        Storage.get(e)
-      )
-    })
-    promises.push(
-      Promise.all(promisesID)
-        .then(r => {
-          r.map((e, i) => {
-            fotos.push({
-              url: e,
-              titulo: ("Identificacion" + (i ? " reverso" : " frente"))
-            })
-          })
-        }))
+    await Promise.all(
+      data.ID.map(async (foto, i) => {
+        fotos.push({
+          url: await getImageUrl(foto),
+          titulo: ("Identificacion" + (i ? " reverso" : " frente"))
+        })
+      })
+    )
   }
 
   // Obtener selfie
   if (data.selfie) {
-    promises.push(Storage.get(data.selfie)
-      .then(r => fotos.push({
-        url: r,
-        titulo: "Selfie"
-      }))
-      .catch(e => console.log(e)))
+    fotos.push({
+      url: await getImageUrl(data.selfie),
+      titulo: ("Selfie")
+    })
   }
 
   // Certificaciones
   if (data.certificaciones) {
-    const promisesCerts = data.certificaciones?.map(e => {
-      return (
-        Storage.get(e)
-      )
-    })
+    await Promise.all(data.certificaciones.map(async (e, i) => {
 
-    promises.push(Promise.all(promisesCerts).then(r => {
-      r.map((e, i) => {
-        fotos.push({
-          url: e,
-          titulo: ("Certificacion " + (i + 1))
-        })
+      fotos.push({
+        url: await getImageUrl(e),
+        titulo: ("Certificacion " + (i + 1))
       })
+
     }))
 
-    return Promise.all(promises)
-      .then(r => {
-        return fotos
-      })
   }
+
+  return fotos
 }
 
 export const categorias = [...Object.keys(Categorias)].map(e => {

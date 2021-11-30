@@ -124,23 +124,9 @@ export default ({ navigation }) => {
         let promises = []
         let newSolicitudes = [...solicitudes]
         const solicitud = solicitudes[idx]
-        const idSolicitante = solicitudes[idx].usuario.id
 
 
-        const sub = await Auth.currentUserInfo().then(a => a.attributes.sub).catch(e => console.log(e))
-
-        if (pedirDatos) {
-            promises.push(
-                API.graphql({
-                    query: updateUsuario, variables: {
-                        input: {
-                            id: idSolicitante,
-                            tipo: null,
-                        }
-                    }
-                })
-            )
-        }
+        const sub = await getUserSub()
 
 
         // Rechazar la solicitud con el usuario evaluador y el comentario
@@ -225,10 +211,6 @@ export default ({ navigation }) => {
         return (dia + "/" + mes + "/" + año + " " + hora)
     }
 
-    const handleOpenRed = (red) => {
-        googleSearch(red)
-    }
-
     const handleOpenWeb = (sitio) => {
         openLink(sitio)
 
@@ -238,7 +220,7 @@ export default ({ navigation }) => {
         API.graphql({ query: listSolicitudGuiasPendientes })
             .then(async r => {
                 r = r.data.listSolicitudGuias.items
-                r = (await Promise.all(r.map(async solicitud => {
+                r = (await Promise.all(r.filter(e => !e._deleted).map(async solicitud => {
 
                     const usuario = await DataStore.query(Usuario, solicitud.usuarioID)
 
