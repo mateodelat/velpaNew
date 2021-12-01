@@ -33,7 +33,7 @@ const CuadradoImagen = ({
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                 {loading && <Loading containerStyle={{ position: 'absolute', }} indicator />}
                 <Image
-                    source={{ uri: item?.imagenDetalle[item?.imagenFondoIdx] }}
+                    source={{ uri: item?.imagenDetalle[item?.imagenFondoIdx].uri }}
                     loadingIndicatorSource={<Loading indicator />}
                     onLoadEnd={() => {
                         setLoading(false)

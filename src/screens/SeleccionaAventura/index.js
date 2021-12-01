@@ -192,7 +192,6 @@ export default ({
 
             titulo: "Nueva solicitud",
             descripcion: "Se ha creado una solicitud de guia para" + listaAventuras.map(e => (" " + e.titulo)) + ", espera nuestra llamada!!",
-            imagen: listaAventuras[0].imagenDetalle[listaAventuras[0].imagenFondoIdx],
 
             usuarioID: sub,
 

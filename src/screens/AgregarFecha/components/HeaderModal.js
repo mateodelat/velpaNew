@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { colorFondo, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 
@@ -11,7 +11,9 @@ export default function ({
     style,
     modify,
 
-    color
+    color,
+
+    buttonLoading
 }) {
 
     return (
@@ -32,14 +34,22 @@ export default function ({
                 style={styles.iconLeft}
             />
             {
-                modify !== undefined && (modify ? <MaterialIcons
-                    onPress={handleSave}
-                    name={"check"}
-                    size={35}
-                    color={color ? color : "green"}
-                    style={styles.iconRight}
+                modify !== undefined && (modify ?
 
-                />
+                    buttonLoading ?
+                        <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
+                            <ActivityIndicator color={"#fff"} />
+
+                        </View>
+                        :
+                        <MaterialIcons
+                            onPress={handleSave}
+                            name={"check"}
+                            size={35}
+                            color={color ? color : "green"}
+                            style={styles.iconRight}
+
+                        />
                     :
                     <Feather
                         onPress={handleSave}
@@ -56,10 +66,10 @@ export default function ({
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colorFondo,
+        height: 60,
     },
 
     iconLeft: {

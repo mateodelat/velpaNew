@@ -14,6 +14,7 @@ import ModificarAventuras from '../screens/Admin/ModificarAventuras';
 
 import EditarAventura1 from '../screens/Admin/EditarAventura/EditarAventura1';
 import { mayusFirstLetter } from '../../assets/constants';
+import Publicidad from '../screens/Admin/Publicidad';
 
 
 const Stack = createStackNavigator()
@@ -45,7 +46,6 @@ export default function AdminStack() {
                 component={Home}
                 options={{
                     headerShown: true,
-                    headerTitleAlign: "center",
                     headerTitle: "Administrar app"
                 }}
             />
@@ -55,7 +55,6 @@ export default function AdminStack() {
                 component={SolicitudesPendientes}
                 options={{
                     headerShown: true,
-                    headerTitleAlign: "center",
                     headerTitle: "Solicitudes pendientes"
                 }}
             />
@@ -66,7 +65,6 @@ export default function AdminStack() {
                 component={FechasYReservas}
                 options={{
                     headerShown: true,
-                    headerTitleAlign: "center",
                     headerTitle: "Fechas y reservas"
                 }}
             />
@@ -76,7 +74,6 @@ export default function AdminStack() {
                 component={VerSolicitudes}
                 options={{
                     headerShown: true,
-                    headerTitleAlign: "center",
                     headerTitle: "Ver solicitudes"
                 }}
             />
@@ -86,7 +83,6 @@ export default function AdminStack() {
                 component={GuiasAutorizados}
                 options={{
                     headerShown: true,
-                    headerTitleAlign: "center",
                     headerTitle: "Guias autorizados por aventura"
                 }}
             />
@@ -105,6 +101,14 @@ export default function AdminStack() {
                 options={({ route }) => ({
                     headerShown: false
                 })}
+            />
+
+            <Stack.Screen
+                name={"Publicidad"}
+                component={Publicidad}
+                options={{
+                    headerShown: false
+                }}
             />
 
 

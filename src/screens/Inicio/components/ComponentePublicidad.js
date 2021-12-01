@@ -12,11 +12,12 @@ const { height, width } = Dimensions.get("window")
 
 export default ({
     onPress,
-    item
+    item,
+    style
 }) => {
     const {
         imagenFondo,
-        videoUrl,
+        video,
         titulo,
         descripcion,
         tipo
@@ -24,11 +25,11 @@ export default ({
 
     return (
         <View
-            style={styles.container}
+            style={[styles.container, style]}
         >
 
             <Image
-                source={{ uri: imagenFondo }}
+                source={{ uri: imagenFondo.uri }}
                 style={styles.imagenFondo} />
 
             {/* Filtro negro */}
@@ -57,7 +58,7 @@ export default ({
                     </Pressable>
 
                 </View>
-                {videoUrl && <Pressable
+                {video?.uri && <Pressable
                     onPress={() => Alert.alert("Reproducir video en pantalla completa")}
                     style={{
                         flex: 1,
@@ -69,7 +70,7 @@ export default ({
                             height: 90,
                             borderRadius: 7,
                         }}
-                        source={{ uri: videoUrl }}
+                        source={{ uri: video?.uri }}
                     />
                     <FontAwesome5 style={{
                         position: 'absolute',

@@ -2,7 +2,7 @@ import React from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { Fontisto } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { colorFondo, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants';
@@ -30,21 +30,21 @@ export default ({ navigation }) => {
             </Pressable>
 
             {/* Guias autorizados por aventuras */}
-            <Text style={styles.texto}>Usuarios</Text>
+            {/* <Text style={styles.texto}>Usuarios</Text>
             <Pressable
                 onPress={() => navigation.navigate("GuiasAutorizados")}
                 style={styles.buttonContainer}>
                 <FontAwesome5 name="users" size={24} color={"#fff"} style={styles.icon} />
                 <Text style={styles.textoBoton}>Guias autorizados por aventuras</Text>
-            </Pressable>
+            </Pressable> */}
 
             {/* Ver usuarios */}
-            <Pressable
+            {/* <Pressable
                 onPress={() => navigation.navigate("Usuarios")}
                 style={styles.buttonContainer}>
                 <Feather style={styles.icon} name="users" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Ver usuarios</Text>
-            </Pressable>
+            </Pressable> */}
 
             <Text style={styles.texto}>Datos cliente</Text>
             {/* Modificar aventuras por categorias*/}
@@ -55,13 +55,28 @@ export default ({ navigation }) => {
                 <Text style={styles.textoBoton}>Ver aventuras</Text>
             </Pressable>
 
-            {/* Modificar fechas por aventuras y reservaciones*/}
+            {/* Ver publicidades*/}
             <Pressable
+                onPress={() => navigation.navigate("Publicidad")}
+                style={styles.buttonContainer}>
+                <View style={styles.icon}>
+                    {/* <AntDesign name="form" size={24} color={"#fff"} /> */}
+                    <AntDesign name="laptop" size={24} color="#fff" />
+                    <Entypo
+                        style={{ position: 'absolute', bottom: 9, }}
+                        name="megaphone" size={11} color="#fff" />
+                </View>
+                <Text style={styles.textoBoton}>Anuncios</Text>
+            </Pressable>
+
+
+            {/* Modificar fechas por aventuras y reservaciones*/}
+            {/* <Pressable
                 onPress={() => navigation.navigate("FechasYReservas")}
                 style={styles.buttonContainer}>
                 <Fontisto style={styles.icon} name="date" size={24} color={"#fff"} />
                 <Text style={styles.textoBoton}>Fechas y reservaciones</Text>
-            </Pressable>
+            </Pressable> */}
 
 
 
@@ -96,6 +111,7 @@ const styles = StyleSheet.create({
     icon: {
         position: 'absolute',
         left: 20,
+        alignItems: 'center', justifyContent: 'center',
     },
 
     texto: {

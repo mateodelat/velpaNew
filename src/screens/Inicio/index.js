@@ -80,7 +80,21 @@ export default ({ navigation }) => {
     }
     const fetchPublicidad = async () => {
         const publicidades = await DataStore.query(Publicidad)
-        setPublicidad(publicidades)
+        async (r) => {
+            r = await Promise.all(r.map(async publi => ({
+                ...publi,
+                imagenFondo: {
+                    uri: await getImageUrl(publi.imagenFondo),
+                    key: publi.imagenFondo
+                },
+                video: {
+                    uri: await getImageUrl(publi.video),
+                    key: publi.video
+                },
+                selected: false
+            })))
+            setPublicidad(publicidades)
+        }
     }
 
 
@@ -308,7 +322,7 @@ export default ({ navigation }) => {
                                                         height: '100%',
                                                     }} />
                                                 <Image
-                                                    source={{ uri: e.imagenDetalle[e.imagenFondoIdx] }}
+                                                    source={{ uri: e.imagenDetalle[e.imagenFondoIdx].uri }}
                                                     style={{
                                                         flex: 1,
                                                         resizeMode: 'cover',

@@ -20,17 +20,15 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { categorias, colorFondo, getImageUrl, getUserSub, isVideo, listAventurasAutorizadas, moradoClaro, moradoOscuro, verdeTurquesa } from '../../../../assets/constants';
+import { categorias, colorFondo, getImageUrl, isVideo, moradoClaro, moradoOscuro, verdeTurquesa } from '../../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from './components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import AddElemento from './components/AddElemento';
-import { Aventura, AventuraSolicitudGuia, Categorias, Notificacion, StatusSolicitud, TipoNotificacion, Usuario } from '../../../models';
+import { Aventura, Categorias, Usuario } from '../../../models';
 import { DataStore } from '@aws-amplify/datastore';
-import { AventuraUsuario } from '../../../models';
-import Auth from '@aws-amplify/auth';
-import { SolicitudGuia } from '../../../models';
+
 import Boton from '../../../components/Boton';
 import { EstadoAventura } from '../../../models';
 
@@ -548,7 +546,6 @@ export default ({
                     flex: 1,
                 }}>
 
-                    <Text style={styles.textInfo}>{descripcion}</Text>
                     {/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/}
                     {/* $$$$$$$$$$     BUSCAR   $$$$$$$$$$$*/}
                     {/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/}
@@ -831,7 +828,6 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
         justifyContent: 'space-between',
         height: 50,
     },

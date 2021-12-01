@@ -28,7 +28,7 @@ import CuadradoImagen from '../../components/CuadradoImagen';
 
 import { Categorias } from '../../models';
 
-export default ({ navigation }) => {
+export default ({ navigation, onPress, handleBack }) => {
 
     // Mostrar solo aventuras que tengan minimo una fecha futura sin llenarse y cumpla los filtros
 
@@ -236,7 +236,7 @@ export default ({ navigation }) => {
                     style={{
                         padding: 5,
                     }}
-                    onPress={() => navigation.pop()}
+                    onPress={handleBack ? handleBack : () => navigation.pop()}
                     name={"keyboard-arrow-left"}
                     size={35}
                     color={moradoOscuro}
@@ -433,7 +433,7 @@ export default ({ navigation }) => {
                                                         tamañoCuadrado={(width / 2 - 30)}
                                                         item={e}
                                                         key={"Ave", idxAve}
-                                                        onPress={() => handleNavigateAventura(e.id)}
+                                                        onPress={() => onPress ? onPress(e) : handleNavigateAventura(e.id)}
                                                     />
                                                 )
                                             })}
