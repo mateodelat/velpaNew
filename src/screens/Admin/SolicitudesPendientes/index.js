@@ -88,6 +88,18 @@ export default ({ navigation }) => {
                 }))
             }))
 
+            const tokenGuia = usuario?.notificationToken
+
+            if (tokenGuia) {
+                sendPushNotification({
+                    title: "Solicitud aprovada",
+                    descripcion: "Ya puedes agregar fechas a las aventuras:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
+                        + (comentarios ? ("\ncomentarios: " + comentarios) : ""),
+                    token: tokenGuia
+                })
+            }
+
+
             // Mandar notificacion de solicitud aprovada
             await DataStore.save(new Notificacion({
                 tipo: TipoNotificacion.SOLICITUDGUIAAPROVADA,

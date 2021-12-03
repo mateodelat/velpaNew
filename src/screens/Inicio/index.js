@@ -18,11 +18,10 @@ import {
     View
 } from 'react-native'
 
-import { listAventurasAutorizadas, moradoClaro, moradoOscuro, wait } from '../../../assets/constants';
+import { getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
-import { Aventura } from '../../models';
 import { Publicidad } from '../../models';
 import ComponentePublicidad from './components/ComponentePublicidad';
 import Indicador from './components/Indicador';
@@ -49,7 +48,7 @@ export default ({ navigation }) => {
 
         timer = setTimeout(() => {
             flatList?.current?.scrollToIndex({
-                index: actualIdx
+                index: actualIdx < (publicidad?.length - 1) ? actualIdx : 0
             })
             setActualIdx(actualIdx < (publicidad?.length - 1) ? actualIdx + 1 : 0)
         }, duration);
@@ -79,22 +78,25 @@ export default ({ navigation }) => {
 
     }
     const fetchPublicidad = async () => {
-        const publicidades = await DataStore.query(Publicidad)
-        async (r) => {
-            r = await Promise.all(r.map(async publi => ({
-                ...publi,
-                imagenFondo: {
-                    uri: await getImageUrl(publi.imagenFondo),
-                    key: publi.imagenFondo
-                },
-                video: {
-                    uri: await getImageUrl(publi.video),
-                    key: publi.video
-                },
-                selected: false
-            })))
-            setPublicidad(publicidades)
-        }
+        DataStore.query(Publicidad)
+            .then(async r => {
+                r = await Promise.all(r.map(async publi => ({
+                    ...publi,
+                    imagenFondo: {
+                        uri: await getImageUrl(publi.imagenFondo),
+                        key: publi.imagenFondo
+                    },
+                    video: {
+                        uri: await getImageUrl(publi.video),
+                        key: publi.video
+                    },
+                    selected: false
+                })
+                ))
+                setPublicidad(r)
+            }
+            )
+
     }
 
 

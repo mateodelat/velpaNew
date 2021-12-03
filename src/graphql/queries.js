@@ -512,6 +512,7 @@ export const getUsuario = /* GraphQL */ `
       rfcCompania
       capacidadMaxima
       comentariosAdicionales
+      notificationToken
       owner
       _version
       _deleted
@@ -695,6 +696,7 @@ export const listUsuarios = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -771,6 +773,7 @@ export const syncUsuarios = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -1447,6 +1450,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           rfcCompania
           capacidadMaxima
           comentariosAdicionales
+          notificationToken
           owner
           _version
           _deleted
@@ -1506,6 +1510,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           rfcCompania
           capacidadMaxima
           comentariosAdicionales
+          notificationToken
           owner
           _version
           _deleted

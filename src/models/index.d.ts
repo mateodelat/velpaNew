@@ -197,6 +197,7 @@ export declare class Usuario {
   readonly rfcCompania?: string;
   readonly capacidadMaxima?: number;
   readonly comentariosAdicionales?: string;
+  readonly notificationToken?: string;
   readonly owner?: string;
   readonly AventurasAutorizadas?: (AventuraUsuario | null)[];
   readonly Mensajes?: (Mensaje | null)[];

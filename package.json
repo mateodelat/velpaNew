@@ -27,6 +27,8 @@
     "expo-image-picker": "~11.0.3",
     "expo-linear-gradient": "~10.0.3",
     "expo-location": "~13.0.4",
+    "expo-notifications": "~0.13.3",
+    "expo-permissions": "~13.0.3",
     "expo-status-bar": "~1.1.0",
     "expo-web-browser": "~10.0.3",
     "faker": "^5.5.3",

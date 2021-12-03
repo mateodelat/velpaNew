@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 
 
-import MapView from "react-native-map-clustering";
+import MapView from "react-native-maps";
 
 
 import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
@@ -41,7 +41,6 @@ export default ({
     modalVisible,
     setModalVisible
 }) => {
-
 
     const [region, setRegion] = useState(null);
 

@@ -614,6 +614,7 @@ export const onCreateUsuario = /* GraphQL */ `
       rfcCompania
       capacidadMaxima
       comentariosAdicionales
+      notificationToken
       owner
       _version
       _deleted
@@ -792,6 +793,7 @@ export const onUpdateUsuario = /* GraphQL */ `
       rfcCompania
       capacidadMaxima
       comentariosAdicionales
+      notificationToken
       owner
       _version
       _deleted
@@ -970,6 +972,7 @@ export const onDeleteUsuario = /* GraphQL */ `
       rfcCompania
       capacidadMaxima
       comentariosAdicionales
+      notificationToken
       owner
       _version
       _deleted
@@ -1868,6 +1871,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -1983,6 +1987,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -2098,6 +2103,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -2171,6 +2177,7 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -2276,6 +2283,7 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted
@@ -2381,6 +2389,7 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         rfcCompania
         capacidadMaxima
         comentariosAdicionales
+        notificationToken
         owner
         _version
         _deleted

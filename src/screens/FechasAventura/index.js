@@ -205,7 +205,7 @@ export default index = ({ route, navigation }) => {
                 {
                     !fechas ? <Loading indicator /> :
                         fechas?.length === 0 ?
-                            <Text style={styles.noHayTxt}>No hay fechas disponibles pero puedes suscribirte a la aventura para cuando salga una</Text>
+                            <Text style={styles.noHayTxt}>No hay fechas disponibles</Text>
                             :
                             loading ?
                                 <View style={{

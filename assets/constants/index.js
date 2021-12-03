@@ -701,8 +701,6 @@ export const listSolicitudes = /* GraphQL */ `
 `;
 
 export const listAventurasAutorizadas = async (maxItems, page) => {
-  const sub = await getUserSub()
-  console.log("Sortear recomendaciones aventuras en funcion al usuario", sub, "por relevancia")
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c.estadoAventura("eq", "AUTORIZADO"),
@@ -782,9 +780,12 @@ export const listAventurasSugeridas = async (id, maxItems) => {
 
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
-        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
-          isUrl(e) ? e : await Storage.get(e)
+        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
+          uri: isUrl(e) ? e : await Storage.get(e),
+          key: e
+        }
         )))
+
         return {
           ...ave,
           imagenDetalle

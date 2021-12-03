@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Dimensions, Image, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { colorFondo, container, getBlob, getImageUrl, isUrl, moradoOscuro, openImagePickerAsync } from '../../../../../assets/constants'
-import HeaderModal from '../../../AgregarFecha/components/HeaderModal'
 
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
+import { DataStore } from '@aws-amplify/datastore';
+import Storage from '@aws-amplify/storage';
+
 import { TipoPublicidad } from '../../../../models';
+import { Aventura } from '../../../../models';
+import { Publicidad } from '../../../../models';
+
 import BuscarAventura from '../../../BuscarAventura';
 import ModalTipoImagen from './ModalTipoImagen';
-import { DataStore } from '@aws-amplify/datastore';
-import { Aventura } from '../../../../models';
-import Storage from '@aws-amplify/storage';
-import { Publicidad } from '../../../../models';
+import HeaderModal from '../../../AgregarFecha/components/HeaderModal'
+
+
+
+import uuid from 'react-native-uuid';
+
 
 const { height } = Dimensions.get("window")
 
@@ -30,6 +37,7 @@ export default function ({
     const [showTipoAnuncio, setShowTipoAnuncio] = useState(false);
 
     async function handleGuardar(e) {
+
         // Validaciones
         if (!e.titulo) {
             Alert.alert("Error", "Agrega el titulo")
@@ -56,25 +64,40 @@ export default function ({
             return
         }
 
+        // Si hay id es que existe la publicidad y si no se genera uno aleatorio
+        const id = e.id ? e.id : uuid.v4()
+
         // Si la imagen de fondo se selecciono del celular se sube a S3
         if (!e.imagenFondo.key) {
             setButtonLoading(true)
             const blob = await getBlob(e.imagenFondo.uri)
-            const key = "pub-" + e.id + ".jpg"
+            const key = "pub-" + id + ".jpg"
             await Storage.put(key, blob)
             e.imagenFondo.key = key
         }
 
-        const modelPublicidad = await DataStore.query(Publicidad, e.id)
-        await DataStore.save(Publicidad.copyOf(modelPublicidad, pub => {
-            pub.aventuraID = e.aventuraID
-            pub.createdAt = e.createdAt
-            pub.descripcion = e.descripcion
-            pub.imagenFondo = e.imagenFondo.key
-            pub.linkAnuncio = e.linkAnuncio
-            pub.tipo = e.tipo
-            pub.titulo = e.titulo
-        }))
+        // Subir datos o crear dependiendo de si existe el id
+        if (e.id) {
+            const modelPublicidad = await DataStore.query(Publicidad, e.id)
+            await DataStore.save(Publicidad.copyOf(modelPublicidad, pub => {
+                pub.aventuraID = e.aventuraID
+                pub.descripcion = e.descripcion
+                pub.imagenFondo = e.imagenFondo.key
+                pub.linkAnuncio = e.linkAnuncio
+                pub.tipo = e.tipo
+                pub.titulo = e.titulo
+            }))
+        } else {
+            await DataStore.save(new Publicidad({
+                aventuraID: e.aventuraID,
+                descripcion: e.descripcion,
+                imagenFondo: e.imagenFondo.key,
+                linkAnuncio: e.linkAnuncio,
+                tipo: e.tipo,
+                titulo: e.titulo,
+            }))
+
+        }
 
         setButtonLoading(false)
         handleSave(e)
@@ -185,7 +208,7 @@ export default function ({
 
                 <Text style={[styles.placeHolder, { marginTop: 0, }]}>Imagen de fondo*</Text>
                 {/* Imagen de fondo */}
-                {item.imagenFondo ?
+                {!!elemento.imagenFondo ?
 
                     <Pressable
                         onPress={handleAddImage}
@@ -200,7 +223,7 @@ export default function ({
                         <Pressable
                             onPress={handleAddVideo}
                             style={styles.videoContainer}>
-                            {item.videoUrl ?
+                            {elemento.videoUrl ?
                                 <View >
                                     <Image
                                         style={styles.imagenVideo}

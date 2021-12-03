@@ -28,6 +28,10 @@ import { DataStore } from '@aws-amplify/datastore';
 import { ChatRoom, ChatRoomUsuario, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
+import { scheduleNotificationAsync } from 'expo-notifications';
+import { sendPushNotification } from '../../../assets/constants/constant';
+
+
 
 
 export default function ({ route, navigation }) {
@@ -305,6 +309,17 @@ export default function ({ route, navigation }) {
                 //////////////////////////////////////////////////////////////////////////////
 
                 // Notificacion a el guia
+                const tokenGuia = (await DataStore.query(Usuario, fecha.usuarioID))?.notificationToken
+
+                if (tokenGuia) {
+                    sendPushNotification({
+                        title: "Nueva reserva",
+                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+                        token: tokenGuia
+                    })
+                }
+
+
                 await DataStore.save(new Notificacion({
                     tipo: TipoNotificacion.RESERVAENFECHA,
 

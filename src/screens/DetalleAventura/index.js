@@ -31,6 +31,7 @@ import Boton from '../../components/Boton';
 import { abrirEnGoogleMaps, getAventura, listAventurasSugeridas, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
+import ModalMap from '../../components/ModalMap';
 
 
 
@@ -44,6 +45,9 @@ export default ({ navigation, route }) => {
     // Variables del visor imagenes
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState([]);
+
+    // Variables del mapa
+    const [tipoModal, setTipoModal] = useState("map");
 
     // Variables para animaciones (Carrousel fotos y header transparencia)
     const scrollX = useRef(new Animated.Value(0)).current
@@ -66,7 +70,6 @@ export default ({ navigation, route }) => {
         if (id) {
             getAventura(id)
                 .then(r => {
-
                     // Formatear las imagen detalle
                     r = {
                         ...r,
@@ -253,7 +256,7 @@ export default ({ navigation, route }) => {
                         }}>
                             {/* Ubicacion aventura */}
                             <Pressable
-                                onPress={() => abrirEnGoogleMaps(aventura.ubicacionLink)}
+                                onPress={() => setModalVisible(true)}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
@@ -360,21 +363,35 @@ export default ({ navigation, route }) => {
 
 
             {/* Mostrar imagenes */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <ImageFullScreen
-                    initialImageIdx={initialImageIdx}
-                    setModalVisible={setModalVisible}
-                    images={images}
-                    titulo={"El nevado de colima"}
-                />
-            </Modal>
+            {
+                tipoModal === "map" ?
+                    aventura ? <ModalMap
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+
+                        selectedPlace={{
+                            latitude: aventura.coordenadas.latitude,
+                            longitude: aventura.coordenadas.longitude,
+                            titulo: aventura.ubicacionNombre,
+                        }}
+
+                    /> : null :
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <ImageFullScreen
+                            initialImageIdx={initialImageIdx}
+                            setModalVisible={setModalVisible}
+                            images={images}
+                            titulo={"El nevado de colima"}
+                        />
+                    </Modal>
+            }
 
 
         </View >

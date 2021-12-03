@@ -16,6 +16,7 @@ import EditarPublicidad from './components/EditarPublicidad';
 
 
 
+
 export default ({ navigation }) => {
     const [publicidades, setPublicidades] = useState(null);
     const [selecting, setSelecting] = useState(false);
@@ -95,6 +96,12 @@ export default ({ navigation }) => {
 
     }
 
+    function handleAddPublicidad() {
+        setIndexSelected(null)
+        setModalVisible(true)
+
+    }
+
     function handleSelecting(idx) {
         setSelecting(true)
         publicidades[idx].selected = true
@@ -103,7 +110,14 @@ export default ({ navigation }) => {
 
     function handleSavePublicidad(item) {
         setModalVisible(false)
-        publicidades[indexSelected] = item
+
+        // Si no hay ningun index selected significa que es nuevo anuncio
+        if (!indexSelected) {
+            publicidades.push(item)
+        } else {
+            publicidades[indexSelected] = item
+
+        }
         setPublicidades([...publicidades])
     }
 
@@ -155,11 +169,11 @@ export default ({ navigation }) => {
                                 publicidades.map((item, i) => {
                                     const selected = item.selected
                                     return <Pressable
+                                        key={i.toString()}
                                         onLongPress={() => handleSelecting(i)}
                                         onPress={() => selecting ? handleSelectItem(i) : handlePressItem(i)}
                                         style={{ marginBottom: 20, }}>
                                         <ComponentePublicidad
-                                            key={i.toString()}
                                             onPress={
                                                 item.tipo === TipoPublicidad.AVENTURA ?
                                                     () => navigation.navigate("DetalleAventura", { id: item.aventuraID }) :
@@ -193,6 +207,16 @@ export default ({ navigation }) => {
                                 })
                         }
 
+                        <Pressable
+                            onPress={handleAddPublicidad}
+                            style={styles.plusContainer}>
+                            <Entypo
+                                name="plus"
+                                size={30}
+                                color={moradoOscuro} />
+
+                        </Pressable>
+
                     </ScrollView>
             }
             <Modal
@@ -206,7 +230,7 @@ export default ({ navigation }) => {
                 <EditarPublicidad
                     handleCerrar={() => setModalVisible(false)}
                     handleSave={handleSavePublicidad}
-                    item={publicidades ? publicidades[indexSelected] : null}
+                    item={publicidades && indexSelected ? publicidades[indexSelected] : {}}
                 />
 
             </Modal>
@@ -253,4 +277,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: "#fff",
     },
+
+    plusContainer: {
+        alignSelf: 'center',
+        padding: 10,
+        backgroundColor: '#fff',
+        borderRadius: 40,
+        marginTop: 10,
+        marginBottom: 50,
+    }
 })

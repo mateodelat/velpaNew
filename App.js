@@ -58,13 +58,12 @@ let publicidadLoaded
 let aventuraLoaded
 
 const App = () => {
-  const [imageLink, setImageLink] = useState(null);
-
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cargandoModelos, setCargandoModelos] = useState(false);
 
   useEffect(() => {
+    // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
         setLoading(false)
@@ -79,6 +78,7 @@ const App = () => {
         console.log("Error getting credentials", err)
       })
 
+    // Escuchar a actualizaciones de auth
     const auth = Hub.listen("auth", (data) => {
       const { event, message } = data.payload
       switch (event) {
@@ -112,7 +112,7 @@ const App = () => {
     });
 
 
-    // Crear listener para datastore
+    // Crear listener para cuando se acaben de obtener los modelos de datastore
     const listener = Hub.listen("datastore", async hubData => {
       const { event, data } = hubData.payload;
       if (event === "modelSynced" && data?.model === Aventura) {
@@ -137,8 +137,6 @@ const App = () => {
   }, []);
 
 
-
-
   if (loading || cargandoModelos) return (
     <Loading valor={0} />
   )
@@ -154,31 +152,6 @@ const App = () => {
     )
   }
 
-
-  /*
-  email: "mateodelat@gmail.com", 
-  rfcIndividual: "mateodmksdmfs", 
-  first_name: "Matoe", 
-  last_name: "de la torre", 
-  phone: "+523324963705", 
-  city: "guadalajara", 
-  country: "MX", 
-  line1: "Tomas mann", 
-  postal_code: 52334, 
-  state: "jal", 
-  day: 30, 
-  month: 8, 
-  year: 2002, 
-  userSub: "fdsfsfdsf", 
-  accountNumber: "000000001234567897", 
-  ip: "8.8.8.8", 
-  date: 1637636841, 
-  documentIdBack: "file_1Jyr2vFIERW56TAEd3zlMMjI", 
-  documentIdFront: "file_1Jyr55FIERW56TAEDXjEAdg0", 
-  accountType: INDIVIDUAL, 
-  rfcCompania: "la torreFDSFSF", 
-  companyName: "Velpa adventures"
-  */
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <StatusBar hidden={true} />

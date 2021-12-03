@@ -122,103 +122,106 @@ export default function ({ navigation, route }) {
 
             aventuraID,
             comision,
-            imagenFondo,
+            imagenFondo: { key: imagenFondo },
 
         } = route.params
+        try {
 
-        setButtonLoading(true)
-        const sub = await getUserSub()
-        let imagenRutaKey
+            setButtonLoading(true)
+            const sub = await getUserSub()
+            let imagenRutaKey
 
-        if (imagenRuta) {
-            // Subir la imagen de la ruta a S3
-            const key = "fecha-imagenRuta " + uuid.v4() + ".jpg"
-            const blobImagenRuta = await getBlob(imagenRuta)
-
-
-            await Storage.put(key, blobImagenRuta).then(r => {
-                imagenRutaKey = r.key
-            })
-
-        }
-
-        const fecha = {
-            personasTotales,
-
-            fechaInicial,
-            fechaFinal,
-
-            precio,
-            comision,
-
-            itinerario: JSON.stringify(itinerario),
-
-            puntoReunionNombre,
-            puntoReunionId,
-            puntoReunionLink,
-            puntoReunionCoords: JSON.stringify(puntoReunionCoords),
-
-            allowTercera,
-            allowNinos,
-            material: JSON.stringify(queLlevar),
-            incluido: JSON.stringify(incluido),
-            aventuraID,
-
-            usuarioID: sub,
-
-            tituloAventura,
-            imagenFondo,
-
-            titulo,
-            descripcion,
-            imagenRuta: imagenRutaKey ? imagenRutaKey : null,
-        }
+            if (imagenRuta) {
+                // Subir la imagen de la ruta a S3
+                const key = "fecha-imagenRuta " + uuid.v4() + ".jpg"
+                const blobImagenRuta = await getBlob(imagenRuta)
 
 
-        // Subir todos los datos a la database 
-        DataStore.save(
-            new Fecha(fecha)
-        )
-            .then(async fecha => {
-                // Crear chatRoom
-                const chatroom = await DataStore.save(new ChatRoom({
-                    name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
-                    newMessages: 0,
-                    picture: imagenFondo,
-                    fechaID: fecha.id,
-                }))
-
-                // Obtener usuario del guia
-                const usuario = await DataStore.query(Usuario, sub)
-
-                // Agregar guia al chat
-                await DataStore.save(new ChatRoomUsuario({
-                    chatroom,
-                    usuario
-                }))
-
-                // Crear notificacion
-                DataStore.save(new Notificacion({
-                    tipo: TipoNotificacion.FECHACREADA,
-
-                    titulo: "Fecha creada",
-                    descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
-
-                    usuarioID: sub,
-                    imagen: imagenFondo,
-
-                    fechaID: fecha.id,
-                }))
-                // Navegar a exitoso
-                setButtonLoading(false)
-                navigation.navigate("ExitoScreen", {
-                    txtExito: "Fecha agregada con exito!!"
+                await Storage.put(key, blobImagenRuta).then(r => {
+                    imagenRutaKey = r.key
                 })
-            })
-            .catch(e => {
-                Alert.alert("Error", "Error agregando la fecha")
-                console.log(e)
-            })
+
+            }
+
+            const fecha = {
+                personasTotales,
+
+                fechaInicial,
+                fechaFinal,
+
+                precio,
+                comision,
+
+                itinerario: JSON.stringify(itinerario),
+
+                puntoReunionNombre,
+                puntoReunionId,
+                puntoReunionLink,
+                puntoReunionCoords: JSON.stringify(puntoReunionCoords),
+
+                allowTercera,
+                allowNinos,
+                material: JSON.stringify(queLlevar),
+                incluido: JSON.stringify(incluido),
+                aventuraID,
+
+                usuarioID: sub,
+
+                tituloAventura,
+                imagenFondo,
+
+                titulo,
+                descripcion,
+                imagenRuta: imagenRutaKey ? imagenRutaKey : null,
+            }
+
+
+            // Subir todos los datos a la database 
+            DataStore.save(
+                new Fecha(fecha)
+            )
+                .then(async fecha => {
+                    // Crear chatRoom
+                    const chatroom = await DataStore.save(new ChatRoom({
+                        name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
+                        newMessages: 0,
+                        picture: imagenFondo,
+                        fechaID: fecha.id,
+                    }))
+
+                    // Obtener usuario del guia
+                    const usuario = await DataStore.query(Usuario, sub)
+
+                    // Agregar guia al chat
+                    await DataStore.save(new ChatRoomUsuario({
+                        chatroom,
+                        usuario
+                    }))
+
+                    // Crear notificacion
+                    DataStore.save(new Notificacion({
+                        tipo: TipoNotificacion.FECHACREADA,
+
+                        titulo: "Fecha creada",
+                        descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
+
+                        usuarioID: sub,
+                        imagen: imagenFondo,
+
+                        fechaID: fecha.id,
+                    }))
+                    // Navegar a exitoso
+                    setButtonLoading(false)
+                    navigation.navigate("ExitoScreen", {
+                        txtExito: "Fecha agregada con exito!!"
+                    })
+                })
+        } catch (e) {
+            setButtonLoading(false)
+
+            Alert.alert("Error", "Error agregando la fecha")
+            console.log(e)
+        }
     }
 
     return (

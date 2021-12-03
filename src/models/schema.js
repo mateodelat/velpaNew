@@ -857,6 +857,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "notificationToken": {
+                    "name": "notificationToken",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "owner": {
                     "name": "owner",
                     "isArray": false,
@@ -2242,5 +2249,5 @@ export const schema = {
             }
         }
     },
-    "version": "1a25c5393c0fcf422ae3961a42e47ab4"
+    "version": "5ba92661ccbbace7704b6b425df17075"
 };
