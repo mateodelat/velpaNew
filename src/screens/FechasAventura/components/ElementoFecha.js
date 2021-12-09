@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { colorFondo, diffDays, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { colorFondo, diffDays, formatAMPM, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -26,6 +26,9 @@ import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
 import Storage from '@aws-amplify/storage';
 import { reverseGeocodeAsync } from 'expo-location';
+import ModalMap from '../../../components/ModalMap';
+import { Foundation } from '@expo/vector-icons';
+
 
 export default function ({ fecha, handleContinuar, idx }) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -46,6 +49,11 @@ export default function ({ fecha, handleContinuar, idx }) {
         setTipoModal("ruta")
     }
 
+    const abrirMapa = () => {
+        setModalVisible(true)
+        setTipoModal("map")
+    }
+
 
     let {
         titulo,
@@ -59,7 +67,7 @@ export default function ({ fecha, handleContinuar, idx }) {
     precio = Math.round(precio)
 
     const handleNavigateGuia = () => {
-        navigation.navigate("PerfilScreen", { id: usuarioID })
+        // navigation.navigate("PerfilScreen", { id: usuarioID })
     }
 
     // Obtener el guia
@@ -80,6 +88,13 @@ export default function ({ fecha, handleContinuar, idx }) {
 
     // Personas reservadas
 
+    const coords = JSON.parse(fecha.puntoReunionCoords)
+    const puntoReunion = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        titulo: fecha.puntoReunionNombre,
+    }
+
     return (
         <View style={{
             marginLeft: 10,
@@ -91,8 +106,10 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                 style={styles.container}>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'center', }}>
-                    <Text style={{ color: '#fff', backgroundColor: moradoOscuro, marginBottom: 5, padding: 4, paddingHorizontal: 9, borderRadius: 20, }}>SuperGuia</Text>
+                {/* Hora y superguia */}
+                <View style={styles.superGuiaContainer}>
+                    <Text style={styles.superGuiaTxt}>{formatAMPM(fecha.fechaInicial, false)}</Text>
+                    <Text style={styles.superGuiaTxt}>SuperGuia</Text>
 
                 </View>
 
@@ -139,10 +156,27 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                 {/* Elementos de detalle */}
                 {openDetails && <View >
+                    {fecha.dificultad !== null && fecha.dificultad !== undefined && <View style={{ flexDirection: 'row', marginVertical: 10, }}>
+                        {
+                            [...Array(fecha.dificultad).keys()].map(e => {
+                                return <Foundation
+                                    style={{
+                                        paddingHorizontal: 2
+
+                                    }}
+                                    key={e}
+                                    name="mountains"
+                                    size={25}
+                                    color={3 > e ? "black" : "gray"}
+                                />
+                            })
+                        }
+                    </View>}
+
                     {/* Perfil del guia */}
                     <View
                         style={{
-                            marginTop: 20,
+                            marginTop: 10,
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
@@ -172,16 +206,22 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                     </View>
                     {/* ubicacion */}
-                    <View style={{
-                        ...styles.row,
-                        marginTop: 40,
-                    }}>
-                        <View style={{ width: 30, alignItems: 'center', justifyContent: 'center', }}>
-                            <Ionicons name="location-sharp" size={24} color={moradoOscuro} />
+                    <Pressable
+                        onPress={abrirMapa}
+                        style={{
+                            marginTop: 40,
+                        }}>
+                        <Text style={{ marginBottom: 10, }}>Punto de reunion:</Text>
 
+                        <View style={{ ...styles.row }}>
+
+                            <View style={{ width: 30, alignItems: 'center', justifyContent: 'center', }}>
+                                <Ionicons name="location-sharp" size={24} color={moradoOscuro} />
+                            </View>
+                            <Text numberOfLines={1} style={styles.ubicacionTxt}>{fecha.puntoReunionNombre}</Text>
                         </View>
-                        <Text numberOfLines={1} style={styles.ubicacionTxt}>{fecha.puntoReunionNombre}</Text>
-                    </View>
+
+                    </Pressable>
 
 
                     {/* Iconos presionables */}
@@ -261,25 +301,33 @@ export default function ({ fecha, handleContinuar, idx }) {
 
             </Pressable >
 
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                {tipoModal === "itinerario" ?
-                    <ModalItinerario
-                        editAllowed={false}
-                        setModalVisible={setModalVisible}
-                        itinerario={JSON.parse(fecha.itinerario)}
-                    /> :
-                    <ModalRuta
-                        img={fecha?.imagenRuta?.url}
-                        setModalVisible={setModalVisible}
-                    />}
-            </Modal>
+            {tipoModal === "map" ?
+                <ModalMap
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+
+                    selectedPlace={puntoReunion}
+
+                /> :
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    {tipoModal === "itinerario" ?
+                        <ModalItinerario
+                            editAllowed={false}
+                            setModalVisible={setModalVisible}
+                            itinerario={JSON.parse(fecha.itinerario)}
+                        /> :
+                        <ModalRuta
+                            img={fecha?.imagenRuta?.url}
+                            setModalVisible={setModalVisible}
+                        />}
+                </Modal>}
         </View >)
 }
 
@@ -295,11 +343,15 @@ const styles = StyleSheet.create({
     },
 
     superGuiaContainer: {
-        right: 0,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 30,
+    },
 
-        backgroundColor: '#fff',
-        paddingHorizontal: 5,
-        position: 'absolute',
+    superGuiaTxt: {
+        fontWeight: 'bold',
+        color: moradoOscuro,
     },
 
     row: {
@@ -325,7 +377,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         marginLeft: 10,
-        color: moradoClaro,
+        color: moradoOscuro,
     },
 
     foto: {
@@ -423,6 +475,6 @@ const styles = StyleSheet.create({
 
     ubicacionTxt: {
         color: moradoOscuro,
-        maxWidth: "50%"
+        maxWidth: "80%"
     }
 })

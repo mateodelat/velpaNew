@@ -34,17 +34,19 @@ export default () => {
         navigation.navigate("MisReservas")
     }
 
-    const handleIrAReservaEnFecha = (idFecha, idReserva) => {
+    const handleIrAReservaEnFecha = (fechaID, reservaID) => {
+        // Navegar a fechas y a la fecha especifica
         navigation.navigate("MisFechas")
+        navigation.navigate("DetalleFecha", { fechaID, reservaID })
     }
 
     const handleVerTutorial = () => {
-        Alert.alert("Mostrar tutorial velpa")
+        // Alert.alert("Mostrar tutorial velpa")
 
     }
 
-    const handleVerSolicitud = () => {
-        navigation.navigate("MisSolicitudes")
+    const handleVerSolicitud = (aventura) => {
+        navigation.navigate("MisSolicitudes", aventura ? true : undefined)
 
     }
     const [notificaciones, setNotificaciones] = useState(null);
@@ -124,7 +126,7 @@ export default () => {
                 break;
 
             case TipoNotificacion.SOLICITUDAVENTURA:
-                handleVerSolicitud()
+                handleVerSolicitud(true)
                 break;
 
 
@@ -169,7 +171,7 @@ export default () => {
                         tipo={tipo}
                         titulo={item.titulo}
                         descripcion={item.descripcion}
-                        tiempo={moment(item.createdAt).from(moment())}
+                        tiempo={item.createdAt}
                         leido={!!item.leido}
 
                         onPress={() => handlePressItem(item, index)}

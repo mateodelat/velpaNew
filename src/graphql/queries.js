@@ -56,6 +56,7 @@ export const getAventura = /* GraphQL */ `
           tituloAventura
           aventuraID
           usuarioID
+          dificultad
           _version
           _deleted
           _lastChangedAt
@@ -332,6 +333,7 @@ export const getFecha = /* GraphQL */ `
       tituloAventura
       aventuraID
       usuarioID
+      dificultad
       _version
       _deleted
       _lastChangedAt
@@ -367,8 +369,8 @@ export const getFecha = /* GraphQL */ `
           id
           name
           picture
-          newMessages
           fechaID
+          guiaID
           _version
           _deleted
           _lastChangedAt
@@ -411,6 +413,7 @@ export const listFechas = /* GraphQL */ `
         tituloAventura
         aventuraID
         usuarioID
+        dificultad
         _version
         _deleted
         _lastChangedAt
@@ -467,6 +470,7 @@ export const syncFechas = /* GraphQL */ `
         tituloAventura
         aventuraID
         usuarioID
+        dificultad
         _version
         _deleted
         _lastChangedAt
@@ -514,6 +518,7 @@ export const getUsuario = /* GraphQL */ `
       comentariosAdicionales
       notificationToken
       owner
+      newMessages
       _version
       _deleted
       _lastChangedAt
@@ -567,6 +572,7 @@ export const getUsuario = /* GraphQL */ `
           tituloAventura
           aventuraID
           usuarioID
+          dificultad
           _version
           _deleted
           _lastChangedAt
@@ -653,6 +659,7 @@ export const getUsuario = /* GraphQL */ `
           id
           chatroomID
           usuarioID
+          newMessages
           _version
           _deleted
           _lastChangedAt
@@ -698,6 +705,7 @@ export const listUsuarios = /* GraphQL */ `
         comentariosAdicionales
         notificationToken
         owner
+        newMessages
         _version
         _deleted
         _lastChangedAt
@@ -775,6 +783,7 @@ export const syncUsuarios = /* GraphQL */ `
         comentariosAdicionales
         notificationToken
         owner
+        newMessages
         _version
         _deleted
         _lastChangedAt
@@ -820,8 +829,8 @@ export const getChatRoom = /* GraphQL */ `
       id
       name
       picture
-      newMessages
       fechaID
+      guiaID
       _version
       _deleted
       _lastChangedAt
@@ -860,6 +869,7 @@ export const getChatRoom = /* GraphQL */ `
           id
           chatroomID
           usuarioID
+          newMessages
           _version
           _deleted
           _lastChangedAt
@@ -884,8 +894,8 @@ export const listChatRooms = /* GraphQL */ `
         id
         name
         picture
-        newMessages
         fechaID
+        guiaID
         _version
         _deleted
         _lastChangedAt
@@ -934,8 +944,8 @@ export const syncChatRooms = /* GraphQL */ `
         id
         name
         picture
-        newMessages
         fechaID
+        guiaID
         _version
         _deleted
         _lastChangedAt
@@ -1452,6 +1462,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           comentariosAdicionales
           notificationToken
           owner
+          newMessages
           _version
           _deleted
           _lastChangedAt
@@ -1482,6 +1493,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
         id
         chatroomID
         usuarioID
+        newMessages
         _version
         _deleted
         _lastChangedAt
@@ -1512,6 +1524,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           comentariosAdicionales
           notificationToken
           owner
+          newMessages
           _version
           _deleted
           _lastChangedAt
@@ -1522,8 +1535,8 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           id
           name
           picture
-          newMessages
           fechaID
+          guiaID
           _version
           _deleted
           _lastChangedAt

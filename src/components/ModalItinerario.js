@@ -14,6 +14,7 @@ import {
     abrirEnGoogleMaps
 } from '../../assets/constants';
 import HeaderModal from '../screens/AgregarFecha/components/HeaderModal';
+import ModalMap from './ModalMap';
 
 
 
@@ -21,8 +22,9 @@ const ItemItinerario = ({
 
     item,
     idx,
-    nuevoDia
+    nuevoDia,
 
+    abrirUbicacion
 
 }) => {
     const {
@@ -67,7 +69,7 @@ const ItemItinerario = ({
             {/* Ubicacion */}
             {ubicacionNombre &&
                 <Pressable
-                    onPress={() => abrirEnGoogleMaps(ubicacionLink)}
+                    onPress={abrirUbicacion}
                     style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <Text
                         numberOfLines={1}
@@ -91,12 +93,17 @@ const ModalItinerario = ({
     itinerario,
     modalVisible,
 
+    puntoReunion
 
 }) => {
+    // Variable del mapa
+    const [modalMapVisible, setModalMapVisible] = useState(false);
 
     const handleCerrar = () => {
         setModalVisible(false)
     }
+
+
 
     return (
         <Modal
@@ -148,6 +155,8 @@ const ModalItinerario = ({
                                         item={elemento}
                                         key={idx.toString()}
 
+                                        abrirUbicacion={() => setModalMapVisible(true)}
+
                                         idx={idx}
                                         nuevoDia={nuevoDia}
                                     />
@@ -167,6 +176,11 @@ const ModalItinerario = ({
                     </View>
                 </ScrollView>
 
+                <ModalMap
+                    setModalVisible={setModalMapVisible}
+                    modalVisible={modalMapVisible}
+                    selectedPlace={puntoReunion}
+                />
             </View>
         </Modal>
 

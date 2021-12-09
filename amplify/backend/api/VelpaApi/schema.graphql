@@ -8,11 +8,13 @@ type Aventura @model @auth(rules: [
   titulo: String!
   imagenFondoIdx: Int!
   imagenDetalle: [String]!
-  precioMin: Float!
-  precioMax: Float!
+
+  precioMin: Float
+  precioMax: Float
+
   duracion: String
   descripcion: String
-  dificultad: Float!
+  dificultad: Float
 
   ubicacionNombre: String!
   ubicacionId: String!
@@ -101,6 +103,8 @@ type Fecha @model
   aventuraID: ID!
   usuarioID: ID!
 
+  dificultad:Int
+
   Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
   ChatRoom: [ChatRoom] @connection(keyName: "byFecha", fields: ["id"])
 }
@@ -149,6 +153,8 @@ type Usuario @model
   notificationToken:String
 
   owner: String
+
+  newMessages:Int
   
   AventurasAutorizadas: [AventuraUsuario] @connection(keyName: "byUsuario", fields: ["id"])
   Mensajes: [Mensaje] @connection(keyName: "byUsuario", fields: ["id"])
@@ -169,10 +175,10 @@ type ChatRoom @model
   id: ID!
   name: String!
   picture: String
-  newMessages: Int!
   lastMessage: Mensaje @connection
 
   fechaID: ID
+  guiaID: ID
 
   Mensajes: [Mensaje] @connection(keyName: "byChatRoom", fields: ["id"])
   Participantes: [ChatRoomUsuario] @connection(keyName: "byChatRoom", fields: ["id"])
@@ -325,6 +331,7 @@ type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["ch
   id: ID!
   chatroomID: ID!
   usuarioID: ID!
+  newMessages:Int
   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }

@@ -122,6 +122,9 @@ export default function ({ navigation, route }) {
 
             aventuraID,
             comision,
+
+            dificultad,
+
             imagenFondo: { key: imagenFondo },
 
         } = route.params
@@ -165,6 +168,8 @@ export default function ({ navigation, route }) {
                 incluido: JSON.stringify(incluido),
                 aventuraID,
 
+                dificultad,
+
                 usuarioID: sub,
 
                 tituloAventura,
@@ -184,9 +189,9 @@ export default function ({ navigation, route }) {
                     // Crear chatRoom
                     const chatroom = await DataStore.save(new ChatRoom({
                         name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
-                        newMessages: 0,
                         picture: imagenFondo,
                         fechaID: fecha.id,
+                        guiaID: sub
                     }))
 
                     // Obtener usuario del guia
@@ -364,6 +369,8 @@ export default function ({ navigation, route }) {
             >
                 {tipoModal === "itinerario" ?
                     <ModalItinerario
+
+
                         editAllowed={true}
                         setModalVisible={setModalVisible}
 

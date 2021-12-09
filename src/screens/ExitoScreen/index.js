@@ -1,11 +1,16 @@
-import React from 'react'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colorFondo, moradoOscuro } from '../../../assets/constants'
+import { vibrar } from '../../../assets/constants/constant'
 
 export default ({ navigation,
     route
 }) => {
+
+    useEffect(() => {
+        vibrar('sucess')
+    }, []);
 
     let txtExito = route.params?.txtExito
     let onPress = route.params?.onPress

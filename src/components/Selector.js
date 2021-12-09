@@ -27,10 +27,12 @@ export default ({
 
 
     function handleSuma() {
+        vibrar('light')
         setCantidad(cantidad + 1)
     }
 
     function handleResta() {
+        vibrar('light')
         setCantidad(cantidad - 1)
 
     }

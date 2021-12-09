@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 
 import { Entypo } from '@expo/vector-icons';
 import { redondear } from '../../assets/constants';
+import { vibrar } from '../../assets/constants/constant';
 
 export default ({
     cantidad,
@@ -18,6 +19,7 @@ export default ({
 }) => {
 
     minValue = minValue ? minValue : 0
+    maxValue = maxValue ? maxValue : 10000000
 
     const minReached = cantidad <= minValue
     const maxReached = (cantidad >= maxValue)
@@ -25,10 +27,12 @@ export default ({
 
 
     function handleSuma() {
+        vibrar('light')
         setCantidad(redondear(cantidad + cambio <= maxValue ? cantidad + cambio : maxValue, cambio))
     }
 
     function handleResta() {
+        vibrar('light')
         setCantidad(cantidad - cambio >= minValue ? redondear(cantidad - cambio, cambio) : minValue)
 
     }

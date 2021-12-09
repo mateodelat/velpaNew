@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { vibrar } from '../../../../assets/constants/constant';
 
 const Descripcion = ({ descripcion }) => {
 
@@ -7,6 +8,7 @@ const Descripcion = ({ descripcion }) => {
 
     const handleMas = () => {
         if (!detallesAbierto) {
+            vibrar('light')
             setDetallesAbierto(true)
 
         }

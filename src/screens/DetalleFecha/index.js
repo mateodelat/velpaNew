@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
+import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -29,6 +29,7 @@ import ModalItinerario from '../../components/ModalItinerario';
 import { Loading } from '../../components/Loading';
 import MapView, { Marker } from 'react-native-maps';
 import ListaPersonas from '../FechasAventura/components/ListaPersonas';
+import { Fecha } from '../../models';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -62,16 +63,79 @@ export default ({ navigation, route }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
 
-    const fecha = route.params
+    const { fecha: fechaGotten, fechaID, reservaID } = route.params
+
+    const [fecha, setFecha] = useState(null);
+
+    // Detectar si se manda directamente la fecha de la ruta, si no obtenerla
+    useEffect(() => {
+        if (fechaGotten) {
+            setFecha(fechaGotten)
+        } else {
+            getFecha()
+        }
+    }, []);
+
+    async function getFecha() {
+        if (!fechaID) return
+
+        const fecha = await DataStore.query(Fecha, fechaID)
+
+        const now = new Date()
+        const reservas = await DataStore.query(Reserva, res => res.fechaID("eq", fechaID))
+        let personasReservadas = []
+
+        await Promise.all(reservas.map(async res => {
+            const totalPersonas = res.adultos + res.ninos + res.tercera
+
+            const usuario = await DataStore.query(Usuario, res.usuarioID)
+            personasReservadas.push({
+                foto: await getImageUrl(usuario.foto),
+                nickname: usuario.nickname,
+                personasReservadas: totalPersonas,
+                precioPagado: res.pagadoAlGuia,
+                total: res.total
+            })
+        }))
+
+        let personasReservadasNum = 0
+        let precioAcomulado = 0
+        reservas.map(e => {
+            precioAcomulado += e.pagadoAlGuia
+            personasReservadasNum += (e.adultos + e.ninos + e.tercera)
+        })
+
+
+        setFecha({
+            // Obtener reservas y personas reservadas en la fecha
+            ...fecha,
+            reservas,
+            personasReservadas,
+
+            personasReservadasNum,
+            precioAcomulado,
+
+            imagenFondo: await getImageUrl(fecha.imagenFondo),
+            material: JSON.parse(fecha.material),
+            incluido: [...(JSON.parse(fecha.incluido)).default.map(e => e),
+            ...(JSON.parse(fecha.incluido)).agregado.map(e => e)
+            ],
+            pasada: fecha.fechaInicial < now
+
+        })
+
+    }
 
     // Variables para animaciones (Carrousel fotos y header transparencia)
     const scrollY = useRef(new Animated.Value(0)).current
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalType, setModalType] = useState("map");
+
+    if (!fecha) {
+        return <Loading />
+    }
 
     // Estado del material a llevar ya empacado
-
     const itinerario = JSON.parse(fecha.itinerario)
 
     const inicioItinerario = itinerario[0]
@@ -99,13 +163,7 @@ export default ({ navigation, route }) => {
 
     }
 
-    function handleOpenMap() {
-        setModalType("map")
-        setModalVisible(true)
-    }
-
     function handleOpenItinerario() {
-        setModalType("itinerario")
         setModalVisible(true)
     }
 
@@ -156,34 +214,71 @@ export default ({ navigation, route }) => {
 
                     <Line />
 
+
                     {/* Personas reservadas en la fecha */}
-                    {fecha.personasReservadas.lenght !== 0 ? <View >
-
-                        {/* Imagenes personas y chat */}
-                        <View style={{ marginBottom: 40, flexDirection: 'row', alignItems: 'center', }}>
-                            {fecha.personasReservadas.map((persona, i) => {
-                                return <Image
-                                    key={i.toString()}
-                                    source={{ uri: persona.foto }}
-                                    style={{
-                                        backgroundColor: colorFondo,
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 30,
-                                        left: !i ? 0 : -5 * i,
-                                    }}
-                                />
-
-                            })}
-
+                    {fecha.personasReservadas.length !== 0 ? <View >
+                        {/* Titulo */}
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            marginBottom: 10,
+                        }}>
                             <Text style={{
                                 marginLeft: 10,
                                 flex: 1,
-                            }}>+{fecha.personasReservadasNum} personas</Text>
+                                fontSize: 16,
+                                color: '#000',
+                            }}>{fecha.personasReservadasNum}/{fecha.personasTotales} personas reservadas:</Text>
 
                             <Ionicons
                                 onPress={navigateChat}
                                 style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" />
+
+                        </View>
+
+                        {/* Imagenes personas y chat */}
+                        <View style={{ marginBottom: 50, marginTop: 10, }}>
+                            {fecha.personasReservadas.map((persona, i) => {
+                                return <View
+                                    key={i.toString()}
+                                    style={{
+                                        marginBottom: 20,
+                                        alignItems: 'center',
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Image
+                                        source={persona.foto ? { uri: persona.foto } : require("../../../assets/user.png")}
+                                        style={{
+                                            width: 30,
+                                            height: 30,
+                                            borderRadius: 30,
+
+                                            marginRight: 10,
+                                        }}
+                                    />
+                                    <Text style={{
+                                        flex: 1,
+                                        color: "gray",
+                                    }}>@{persona.nickname}</Text>
+
+                                    <View style={{ alignItems: 'flex-end', }}>
+                                        <View style={{ flexDirection: 'row', marginBottom: 5, }}>
+                                            <Text style={{
+                                                color: "gray",
+                                            }}>{persona.personasReservadas} </Text>
+                                            <Ionicons name="ios-person" size={20} color={"lightgray"} />
+                                        </View>
+                                        <Text style={{
+                                            color: moradoOscuro,
+                                        }}>{formatMoney(persona.precioPagado, true)}</Text>
+                                    </View>
+
+
+                                </View>
+
+                            })}
+
                         </View>
                     </View>
                         :
@@ -191,9 +286,12 @@ export default ({ navigation, route }) => {
                             marginBottom: 40,
                             height: 30,
                             alignItems: 'center', justifyContent: 'center',
-
+                            fontWeight: 'bold',
+                            fontSize: 16,
                         }}>No hay personas reservadas</Text>
                     }
+
+
                     {formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).mismoDia ?
                         <View style={{ ...styles.fechaContainer, marginBottom: 30, }}>
                             <MaterialCommunityIcons style={{ position: 'absolute', left: 0, }} name="calendar-today" size={24} color={moradoOscuro} />
@@ -349,6 +447,14 @@ export default ({ navigation, route }) => {
             />
 
             <ModalItinerario
+                puntoReunion={{
+                    latitude: JSON.parse(fecha.puntoReunionCoords).latitude,
+                    longitude: JSON.parse(fecha.puntoReunionCoords).longitude,
+                    titulo: fecha.puntoReunionNombre
+                }}
+
+
+
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
 
@@ -498,5 +604,14 @@ const styles = StyleSheet.create({
     captionTxt: {
         fontWeight: 'bold',
         marginVertical: 10,
+    },
+
+    personaRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+        flex: 1,
+        marginHorizontal: 10,
+
     }
 })

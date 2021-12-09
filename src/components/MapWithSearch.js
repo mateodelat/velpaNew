@@ -321,6 +321,10 @@ export default ({
                         const { coordinate } = nativeEvent
                         handlePressPlace(coordinate)
                     }}
+                    onLongPress={({ nativeEvent }) => {
+                        const { coordinate } = nativeEvent
+                        handlePressPlace(coordinate)
+                    }}
                     onPoiClick={({ nativeEvent }) => {
                         const { coordinate, placeId, name } = nativeEvent
                         handlePressPlace(coordinate, placeId, name)

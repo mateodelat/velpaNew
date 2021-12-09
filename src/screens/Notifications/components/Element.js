@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { AntDesign } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 
 import { moradoOscuro } from '../../../../assets/constants';
 import { TipoNotificacion } from '../../../models';
+import moment from 'moment';
 
 const sizeIcon = 30
 const Icon = ({ tipo }) => {
@@ -120,12 +121,24 @@ const Icon = ({ tipo }) => {
 export default ({
     titulo,
     descripcion,
-    tiempo,
+    tiempo: time,
     onPress,
     leido,
     tipo
 }) => {
 
+    const [tiempo, setTiempo] = useState(moment(time).from(moment()));
+
+    useEffect(() => {
+        const i = setInterval(() => {
+            setTiempo(moment(time).from(moment()))
+        }, 1000)
+
+        return () => {
+
+            clearTimeout(i)
+        }
+    }, [tiempo]);
     return (
         <Pressable
             onPress={onPress}

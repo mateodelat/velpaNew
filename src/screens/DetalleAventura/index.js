@@ -92,16 +92,19 @@ export default ({ navigation, route }) => {
 
                     // Imagenes del visor
                     setImages(imagenesVisor)
+                    return r
+                })
+                .then(ave => {
+                    // Obtener aventuras sugeridas
+                    listAventurasSugeridas(id, 4, ave).then(r => {
+                        setAventurasSugeridas(r)
+                        setLoading(false)
+
+                    })
 
                 })
         }
 
-        // Obtener aventuras sugeridas
-        listAventurasSugeridas(id, 4).then(r => {
-            setAventurasSugeridas(r)
-            setLoading(false)
-
-        })
     }, []);
 
 
@@ -154,6 +157,15 @@ export default ({ navigation, route }) => {
                 />
 
                 <View style={styles.bodyContainer}>
+                    {/* <Text style={{
+                        marginBottom: 10,
+                        fontSize: 16,
+                        color: moradoOscuro,
+                        flex: 1,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                    }}>{aventura.categoria}</Text>
+ */}
 
                     <View style={{
                         flexDirection: 'row',
@@ -171,46 +183,21 @@ export default ({ navigation, route }) => {
                                     fontSize: 18,
 
                                 }}>({aventura.altitud}m)</Text>}</Text>
-
-                        <Text style={{
+                        {aventura.precioMin && <Text style={{
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
                         }}>$ {redondear(aventura.precioMin * (aventura.comision + 1), 50)} - {redondear(aventura.precioMax * (aventura.comision + 1), 50, true)}
-                        </Text>
+                        </Text>}
                     </View>
-                    {/* <Text style={{
-                        fontSize: 16,
-                        color: moradoOscuro,
-                        flex: 1,
-                        textAlign: 'left',
-                        fontWeight: 'bold',
-                        marginTop: 10,
-                    }}>{aventura.categoria}</Text> */}
 
-                    {/* Dificultad */}
-                    <View style={{
-                        marginVertical: 20,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}>
-                        <View style={{ flexDirection: 'row', }}>
-                            <View style={{ flex: 1, flexDirection: 'row', }}>
-                                <Text style={{
-                                    fontSize: 16,
-                                }}>Dificultad   </Text>
-                                <Image source={dificultad[aventura.dificultad]} />
-                            </View>
-                        </View>
-                    </View>
 
 
 
                     {/* Iconos informativos */}
                     <View style={{
                         marginHorizontal: 4,
-                        marginTop: 10,
+                        marginTop: 20,
                     }}>
                         {/* Contenedor dist y dur */}
                         <View style={{
@@ -219,7 +206,7 @@ export default ({ navigation, route }) => {
                             justifyContent: 'space-between',
                         }}>
                             {/* Duracion */}
-                            {aventura.distanciaRecorrida && <View style={{
+                            {aventura.duracion ? <View style={{
                                 flexDirection: 'row',
                             }}>
                                 <View style={{ width: 35, }}>
@@ -229,7 +216,8 @@ export default ({ navigation, route }) => {
                                     fontSize: 16,
                                     color: 'gray',
                                 }}>{aventura.duracion}</Text>
-                            </View>}
+                            </View> : <View />
+                            }
 
                             {/* Distancia */}
                             {aventura.distanciaRecorrida && <View style={{
@@ -304,14 +292,14 @@ export default ({ navigation, route }) => {
 
                     {/* Lugares recomendados */}
                     {
-                        aventurasSugeridas.length !== 0 && <View>
+                        aventurasSugeridas?.length !== 0 && <View>
 
                             <Text style={{
                                 fontWeight: 'bold',
                                 fontSize: 20,
                                 marginTop: 30,
                                 marginBottom: 20,
-                            }}>Aventuras cercanas</Text>
+                            }}>Experiencias cercanas</Text>
 
                             {
                                 aventurasSugeridas === null ?
@@ -356,7 +344,7 @@ export default ({ navigation, route }) => {
             </Animated.ScrollView >
             <HeaderDetalleAventura
                 scrollY={scrollY}
-                height={height * 1.4}
+                height={height * 0.9}
                 titulo={aventura.titulo}
                 modalActive={modalVisible}
             />

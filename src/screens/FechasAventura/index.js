@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, formatDia, formatDiaMesCompeto, getUserSub, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
+import { colorFondo, formatDia, formatDiaMesCompeto, getImageUrl, getUserSub, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
@@ -47,7 +47,7 @@ export default index = ({ route, navigation }) => {
                                     ...f,
                                     totalPersonasReservadas: nuevasFechas[idx].totalPersonasReservadas += totalPersonas,
                                     personasReservadas: [...nuevasFechas[idx].personasReservadas, {
-                                        foto: usuario.foto,
+                                        foto: await getImageUrl(usuario.foto),
                                         nickname: usuario.nickname,
                                         personasReservadas: totalPersonas
                                     }]
@@ -122,7 +122,7 @@ export default index = ({ route, navigation }) => {
 
                         const usuario = await DataStore.query(Usuario, res.usuarioID)
                         personasReservadas.push({
-                            foto: isUrl(usuario.foto) ? usuario.foto : await Storage.get(usuario.foto),
+                            foto: await getImageUrl(usuario.foto),
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas
                         })

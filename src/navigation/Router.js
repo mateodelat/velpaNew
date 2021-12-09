@@ -89,7 +89,6 @@ async function registerForPushNotificationsAsync() {
 
 
 export default () => {
-    const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
@@ -121,10 +120,10 @@ export default () => {
             <NavigationContainer>
 
                 <Stack.Navigator
-                    initialRouteName={"AgregarFecha"}
+                    // initialRouteName={"AgregarFecha"}
                     screenOptions={{
 
-                        header: ({ scene, previous, navigation }) => {
+                        header: ({ scene, }) => {
                             const { options } = scene.descriptor;
                             const title =
                                 options.headerTitle !== undefined
@@ -247,7 +246,7 @@ export default () => {
                         name="AgregarAventura"
                         component={AgregarAventura}
                         options={{
-                            title: "Agregar aventura",
+                            title: "Agregar Experiencia",
                         }}
                     />
 
@@ -255,7 +254,7 @@ export default () => {
                         name="AgregarAventura2"
                         component={AgregarAventura2}
                         options={{
-                            title: "Ubicacion aventura",
+                            title: "Ubicacion experiencia",
                         }}
                     />
 

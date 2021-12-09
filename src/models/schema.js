@@ -36,14 +36,14 @@ export const schema = {
                     "name": "precioMin",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "precioMax": {
                     "name": "precioMax",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "duracion": {
@@ -64,7 +64,7 @@ export const schema = {
                     "name": "dificultad",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "ubicacionNombre": {
@@ -871,6 +871,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "newMessages": {
+                    "name": "newMessages",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "AventurasAutorizadas": {
                     "name": "AventurasAutorizadas",
                     "isArray": true,
@@ -1163,6 +1170,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "newMessages": {
+                    "name": "newMessages",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "chatroom": {
                     "name": "chatroom",
                     "isArray": false,
@@ -1315,13 +1329,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "newMessages": {
-                    "name": "newMessages",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "lastMessage": {
                     "name": "lastMessage",
                     "isArray": false,
@@ -1337,6 +1344,13 @@ export const schema = {
                 },
                 "fechaID": {
                     "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "guiaID": {
+                    "name": "guiaID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -1752,6 +1766,13 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "dificultad": {
+                    "name": "dificultad",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "Reservas": {
@@ -2249,5 +2270,5 @@ export const schema = {
             }
         }
     },
-    "version": "5ba92661ccbbace7704b6b425df17075"
+    "version": "b6091bb395f197c11bb1f23046e700b3"
 };

@@ -34,7 +34,7 @@ export default ({ id, titulo, image }) => {
 
 
     const handleNavigate = () => {
-        Alert.alert("Navegar a detalles de participantes")
+        // Alert.alert("Navegar a detalles de participantes")
     }
 
     const [listaUsuarios, setListaUsuarios] = useState(null);

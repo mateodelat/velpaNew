@@ -18,12 +18,15 @@ export default function ({
 
     return (
         <View style={[styles.container, style]}>
-            <Text style={{
-                flex: 1,
-                fontSize: 20,
-                color: color ? color : moradoOscuro,
-                textAlign: 'center',
-            }}>{titulo}</Text>
+            <Text
+                numberOfLines={1}
+                style={{
+                    flex: 1,
+                    fontSize: 20,
+                    color: color ? color : moradoOscuro,
+                    textAlign: 'center',
+                    marginHorizontal: 50,
+                }}>{titulo}</Text>
 
 
             <Entypo

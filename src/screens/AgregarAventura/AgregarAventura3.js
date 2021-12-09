@@ -36,7 +36,6 @@ export default ({ navigation, route }) => {
     async function handleContinuar() {
         const sub = await getUserSub()
 
-
         setButtonLoading(true)
 
         // Filtrar a material con titulo
@@ -50,31 +49,33 @@ export default ({ navigation, route }) => {
             usuarioID: sub,
         }
 
-        // Nueva aventura con graphql para poder agregad el id de storage personalizado
-        await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
-            .then(async r => {
-                // Notificacion de nueva aventura
-                await DataStore.save(new Notificacion({
-                    tipo: TipoNotificacion.SOLICITUDAVENTURA,
+        try {
 
-                    titulo: "Nueva solicitud",
-                    descripcion: "Se ha creado una solicitud de aventura para " + aventura.titulo + " ,en breve nuestro equipo la revisara",
-                    imagen: aventuraAEnviar.imagenDetalle[aventuraAEnviar.imagenFondoIdx],
+            // Nueva aventura con graphql para poder agregad el id de storage personalizado
+            await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
+                .then(async r => {
+                    // Notificacion de nueva aventura
+                    await DataStore.save(new Notificacion({
+                        tipo: TipoNotificacion.SOLICITUDAVENTURA,
 
-                    usuarioID: sub,
+                        titulo: "Nueva solicitud",
+                        descripcion: "Se ha creado una solicitud de experiencia para " + aventura.titulo + " ,en breve nuestro equipo la revisara",
+                        imagen: aventuraAEnviar.imagenDetalle[aventuraAEnviar.imagenFondoIdx],
 
-                }))
+                        usuarioID: sub,
 
-                setButtonLoading(false)
-                navigation.navigate("ExitoScreen", {
-                    txtExito: "Solicitud enviada con exito, espera nuestra respuesta!!",
+                    }))
+
+                    setButtonLoading(false)
+                    navigation.navigate("ExitoScreen", {
+                        txtExito: "Solicitud enviada con exito, espera nuestra respuesta!!",
+                    })
+
                 })
+        } catch (error) {
+            Alert.alert("Error creando aventura", error)
 
-            })
-            .catch(e => {
-                console.log(e)
-                Alert.alert("Error", "Ocurrio un error creando la aventura")
-            })
+        }
     }
 
     const handleModify = () => {

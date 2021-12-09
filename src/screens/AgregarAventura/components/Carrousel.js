@@ -8,6 +8,7 @@ import {
     ActivityIndicator,
     Text,
     Alert,
+    Modal,
 } from 'react-native';
 import { Video } from 'expo-av';
 
@@ -19,6 +20,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DoubleClick from '../../../components/DoubleClick.js';
 import { openImagePickerAsync, colorFondo, moradoOscuro, getBlob } from '../../../../assets/constants/index.js';
 import Storage from '@aws-amplify/storage';
+import ModalTipoImagen from '../../../components/ModalTipoImagen.js';
 
 
 
@@ -76,7 +78,11 @@ export default ({
     setAventura,
 
     images,
-    setImages
+    setImages,
+
+    uploading,
+    setUploading
+
 }) => {
 
     const data = aventura.imagenDetalle
@@ -105,7 +111,6 @@ export default ({
     }, []);
 
     const [errorImagenes, setErrorImagenes] = useState([...Array(data?.length ? data.length - 1 : 0).keys()].map(() => false))
-    const [uploading, setUploading] = useState(false);
 
     /////////////VIDEO//////////////////
     // Variables para los videos
@@ -118,6 +123,11 @@ export default ({
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 10,
     })
+
+    // Seleccionar el tipo de imagen
+    const [modalTipoVisible, setModalTipoVisible] = useState(false);
+    const [imageIdxSelected, setImageIdxSelected] = useState(null);
+    const [addImage, setAddImage] = useState(false);
 
     // Cada que se cambia de elemento
     const onViewChange = useRef((props) => {
@@ -196,61 +206,10 @@ export default ({
 
 
         } else {
-            // Modificar imagen
-            let newImagenDetalle
-            newImagenDetalle = [...aventura.imagenDetalle]
-
-            openImagePickerAsync()
-                .then(async r => {
-                    if (r) {
-                        const isVideo = r.type === "video"
-                        const key = "imagen-" + index + " ave-" + aventura.id + (isVideo ? ".mp4" : ".jpg")
-
-                        if (isVideo) {
-                            // Revisar que sea formato .mp4
-                            if (!r.uri.endsWith(".mp4")) {
-                                Alert.alert("Error", "Actualmente solo soportamos videos mp4")
-                                return
-                            }
-
-                            if (!!newImagenDetalle.find(e => e.video)) {
-                                // Revisar que sea el unico video
-                                Alert.alert("Error", "Actualmente solo soportamos un solo video por aventura")
-                                return
-                            }
-                        }
-
-                        // Subir al bucket
-                        setUploading(index)
-                        const blobImagen = await getBlob(r.uri)
-                        await Storage.put(key, blobImagen)
-
-                        newImagenDetalle.splice(index, 1, {
-                            uri: r.uri,
-                            video: isVideo,
-                            key
-                        })
-
-                        // Quitar errores
-                        let newArray = [...errorImagenes]
-                        newArray[index] = false
-                        setErrorImagenes([...newArray])
-
-                        setAventura({
-
-                            ...aventura,
-                            imagenDetalle: newImagenDetalle
-                        })
-
-                        agregarImagenesAlVisor(newImagenDetalle)
-
-                        setUploading(null)
-                    }
-                })
-                .catch(e => {
-                    Alert.alert("Error", "Error subiendo el archivo")
-                    console.log(e)
-                })
+            // Se cambia la imagen por la nueva
+            setAddImage(false)
+            setImageIdxSelected(index)
+            setModalTipoVisible(true)
         }
     }
 
@@ -279,66 +238,100 @@ export default ({
     ////////////Agregar imagen a los lados///////////////
     /////////////////////////////////////////////////////
     const handleAddImage = (index, side) => {
+        // Se agrega imagen al index seleccionado
+        setAddImage(true)
+        setImageIdxSelected(index + (side === "left" ? 0 : 1))
+        setModalTipoVisible(true)
+    }
+
+
+    async function handleSaveImage(img) {
+        if (!img) return
+
         let newImagenDetalle
         newImagenDetalle = [...aventura.imagenDetalle]
 
         // Revisar que sean menos de 7 archivos
         if (newImagenDetalle.length > 7) {
             Alert.alert("Error", "Puedes agregar maximo 7 archivos,\n ¡Escoge las mejores fotos!")
-
             return
         }
 
-        openImagePickerAsync()
-            .then(async r => {
-                if (r) {
-                    const isVideo = r.type === "video"
-                    if (isVideo) {
-                        // Revisar que sea formato .mp4
-                        if (!r.uri.endsWith(".mp4")) {
-                            Alert.alert("Error", "Actualmente solo soportamos videos mp4")
-                            return
-                        }
-
-                        // Revisar que sea el unico video
-                        if (!!newImagenDetalle.find(e => e.video)) {
-                            Alert.alert("Error", "Actualmente solo soportamos un solo video por aventura")
-                            return
-                        }
-                    }
-
-                    // Subir imagen a S3
-                    const key = "imagen-" + index + " ave-" + aventura.id + (isVideo ? ".mp4" : ".jpg")
-
-
-                    setAventura({
-                        ...aventura,
-                        imagenDetalle: newImagenDetalle
-                    })
-
-                    newImagenDetalle.splice(index + (side === "left" ? 0 : 1), 0, {
-                        key,
-                        uri: r.uri,
-                        video: isVideo,
-                    })
-
-                    setUploading(index + (side === "left" ? 0 : 1))
-                    const blobImagen = await getBlob(r.uri)
-                    await Storage.put(key, blobImagen)
-
-                    // Limpiar errores
-                    let newArray = [...errorImagenes]
-                    newArray[index + (side === "left" ? 0 : 1)] = false
-                    setErrorImagenes([...newArray])
-
-                    agregarImagenesAlVisor(newImagenDetalle)
-                    setUploading(null)
+        // Si no hay llave de la imagen significa que es blob y hay que subirla a S3
+        if (!img.key) {
+            const isVideo = img.type === "video"
+            if (isVideo) {
+                // Revisar que sea formato .mp4
+                if (!img.uri.endsWith(".mp4")) {
+                    Alert.alert("Error", "Actualmente solo soportamos videos mp4")
+                    return
                 }
+
+                // Revisar que sea el unico video
+                if (!!newImagenDetalle.find(e => e.video)) {
+                    Alert.alert("Error", "Actualmente solo soportamos un solo video por aventura")
+                    return
+                }
+            }
+
+
+            // Subir imagen a S3
+            const key = "imagen-" + imageIdxSelected + " ave-" + aventura.id + (isVideo ? ".mp4" : ".jpg")
+
+            setAventura({
+                ...aventura,
+                imagenDetalle: newImagenDetalle
             })
-            .catch(e => {
-                Alert.alert("Error", "Error abriendo selector de imagenes, vuelve a intentarlo")
-                console.log(e)
+
+            addImage ? newImagenDetalle.splice(imageIdxSelected, 0, {
+                key,
+                uri: img.uri,
+                video: isVideo,
+            }) : newImagenDetalle[imageIdxSelected] = {
+                key,
+                uri: img.uri,
+                video: isVideo,
+            }
+
+            setUploading(imageIdxSelected)
+            const blobImagen = await getBlob(img.uri)
+            await Storage.put(key, blobImagen)
+
+            // Limpiar errores
+            let newArray = [...errorImagenes]
+            newArray[imageIdxSelected] = false
+            setErrorImagenes([...newArray])
+
+            agregarImagenesAlVisor(newImagenDetalle)
+            setUploading(null)
+        }
+
+        // Si hay key es porque es un link
+        else {
+            const isVideo = img.uri.endsWith(".mp4")
+
+            addImage ? newImagenDetalle.splice(imageIdxSelected, 0, {
+                uri: img.uri,
+                video: isVideo,
+            }) : newImagenDetalle[imageIdxSelected] = {
+                uri: img.uri,
+                video: isVideo,
+            }
+
+            setAventura({
+                ...aventura,
+                imagenDetalle: newImagenDetalle
             })
+
+            // Limpiar errores
+            let newArray = [...errorImagenes]
+            newArray[imageIdxSelected] = false
+            setErrorImagenes([...newArray])
+
+            agregarImagenesAlVisor(newImagenDetalle)
+            setUploading(null)
+        }
+
     }
 
 
@@ -579,7 +572,7 @@ export default ({
                                             {/* Boton de agregar imagen izquierda*/}
                                             <Pressable
                                                 onPress={() => handleAddImage(index, "left")}
-                                                style={styles.iconContainer}>
+                                                style={{ ...styles.iconContainer, left: 10, }}>
                                                 <Entypo
                                                     name="plus"
                                                     size={35}
@@ -590,7 +583,7 @@ export default ({
                                             {/* Boton de agregar imagen derecha*/}
                                             <Pressable
                                                 onPress={() => handleAddImage(index, "right")}
-                                                style={styles.iconContainer}>
+                                                style={{ ...styles.iconContainer, right: 10, }}>
                                                 <Entypo
                                                     name="plus"
                                                     size={35}
@@ -625,6 +618,23 @@ export default ({
                             width={width}
                         />
                     </>}
+
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={modalTipoVisible}
+                onRequestClose={() => {
+                    setModalTipoVisible(!modalTipoVisible);
+                }}
+            >
+                <ModalTipoImagen
+                    setImage={data => {
+                        handleSaveImage(data)
+                    }}
+                    setModalVisible={setModalTipoVisible}
+
+                />
+            </Modal>
         </View >
     );
 }
@@ -669,7 +679,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: 10,
     },
 
     setImagenFondoContainer: {

@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
-import { container, formatAMPM, getUserSub, moradoOscuro } from '../../../assets/constants'
+import { container, formatDateShort, getUserSub, moradoOscuro } from '../../../assets/constants'
 import MessageComponent from './components/Message';
 
 import { Ionicons } from '@expo/vector-icons';
 import { DataStore, OpType } from '@aws-amplify/datastore';
 import { ChatRoom, Mensaje } from '../../models';
 import { Loading } from '../../components/Loading';
-import { ChatRoomUsuario } from '../../models';
-import API from '@aws-amplify/api';
 
-export const getUsersInChat = /* GraphQL */ `
+import API from '@aws-amplify/api';
+import { sendPushNotification } from '../../../assets/constants/constant';
+import { ChatRoomUsuario } from '../../models';
+import { Usuario } from '../../models';
+
+const getUsersInChat = /* GraphQL */ `
     query getChatRoom($id: ID!) {
         getChatRoom(id: $id) {
             Participantes {
                 items {
+                    id
+                    newMessages
                     usuario {
                         id
                         nickname
                         foto
+                        notificationToken
                     }
                 }
             }
@@ -42,21 +48,52 @@ export default ({ route }) => {
         if (message.length === 0 || !usuarioID) return
 
         // Guardar el mensaje
-        const lastMessage = await DataStore.save(new Mensaje({
+        await DataStore.save(new Mensaje({
             content: message,
             chatroomID,
             usuarioID
-        }))
-
-        // Configurar cambiar el chat para que el mensaje sea el ultimo
-        const chatroom = await DataStore.query(ChatRoom, chatroomID)
-        await DataStore.save(ChatRoom.copyOf(chatroom, chat => {
-            chat.lastMessage = lastMessage
-        }))
+        })).then(async lastMessage => {
+            setMessage("")
 
 
-        setMessage("")
+            // Configurar cambiar el chat para que el mensaje sea el ultimo
+            const chatroom = await DataStore.query(ChatRoom, chatroomID)
+            DataStore.save(ChatRoom.copyOf(chatroom, chat => {
+                chat.lastMessage = lastMessage
+            }))
+
+            // Mandar notificaciones de nuevo mensaje a todos los participantes del grupo
+            // Agregar 1 a cada newMessages chatRoomUsuario de los participantes
+            listaUsuarios.filter(e => e.id !== usuarioID).map(async e => {
+                // Actualizar nuevos mensajes del Chat
+                const model = await DataStore.query(ChatRoomUsuario, e.usuarioChatRoomId)
+                const newMessages = !model.newMessages ? 0 : model.newMessages
+                DataStore.save(ChatRoomUsuario.copyOf(model, n => {
+                    n.newMessages = newMessages + 1
+                }))
+
+                // Actualizar nuevos mensajes del usuario
+                const userModel = await DataStore.query(Usuario, e.id)
+                const newUserMessages = userModel.newMessages
+                DataStore.save(Usuario.copyOf(userModel, n => {
+                    n.newMessages = newUserMessages + 1
+                }))
+
+
+                sendPushNotification({
+                    title: "Nuevo mensaje en " + chatroom.name,
+                    descripcion: "@" + listaUsuarios.find(e => e.id === usuarioID)?.nickname + ": " + lastMessage.content,
+
+                    token: e.notificationToken
+                })
+
+            })
+
+        })
+
+
     }
+
     let readedMessageId = null
     useEffect(() => {
         fectchData()
@@ -80,12 +117,21 @@ export default ({ route }) => {
             {
                 sort: e => e.createdAt("DESCENDING")
             })
+            .then(async r => {
+                return r
+            })
 
 
-        // Obtener participantes del chat
+        // Obtener chatrooms usuario en el chat para nombres y mensajes nuevos
         await API.graphql({ query: getUsersInChat, variables: { id: chatroomID } })
             .then(r => {
-                r = r.data.getChatRoom.Participantes.items.map(e => e.usuario)
+
+                r = r.data.getChatRoom.Participantes.items.map(e => ({
+                    ...e.usuario,
+                    usuarioChatRoomId: e.id,
+                    newMessages: e.newMessages
+                }))
+
                 setListaUsuarios(r)
             })
 
@@ -93,6 +139,26 @@ export default ({ route }) => {
         setChatMessages(mensajes)
 
     }
+
+    function formatAMPM(dateInMs, hideAMPM, localTime) {
+
+        const date = new Date(dateInMs)
+        var hours = date[localTime ? "getHours" : "getUTCHours"]();
+        var minutes = date[localTime ? "getMinutes" : "getUTCMinutes"]();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+
+        var strTime = hours + ':' + minutes;
+
+        !hideAMPM ? strTime += " " + ampm : null
+
+
+        return strTime;
+    }
+
 
     return (
         <View style={{ ...container, paddingLeft: 10, }}>
@@ -105,23 +171,31 @@ export default ({ route }) => {
                     renderItem={({ item, index }) => {
 
                         const isMe = item.usuarioID === usuarioID
-                        let hora = new Date(item.createdAt)
-                        hora = formatAMPM(hora, false, true)
 
+                        const date = new Date(item.createdAt)
+                        const prevDate = index !== chatMessages.length - 1 ? new Date(chatMessages[index + 1]?.createdAt) : null
+
+                        const hora = formatAMPM(date, false, true)
 
                         const lastMessagePerson = !index ? true : item.usuarioID !== chatMessages[index - 1].usuarioID
                         const firstMessagePerson = index === chatMessages.length - 1 ? true : item.usuarioID !== chatMessages[index + 1].usuarioID
 
                         // Ver si renderizar otro de hora
-                        const horaAnteriorMsg = !index ? null : formatAMPM(chatMessages[index - 1].createdAt, false, true)
-                        const diferentToPreviousTime = !index ? true : horaAnteriorMsg !== hora
+                        const horaAnteriorMsg = index !== chatMessages.length - 1 ? formatAMPM(chatMessages[index + 1]?.createdAt, false, true) : null
+                        const diferentToPreviousTime = horaAnteriorMsg !== hora
 
+                        const newDay = index !== chatMessages.length - 1 ? date.getDate() !== prevDate.getDate() || date.getMonth() !== prevDate.getMonth() : true
 
                         const usuarioMsg = listaUsuarios.find(usr => {
                             return usr.id === item.usuarioID
                         })
 
+
+
                         return <MessageComponent
+
+                            newDay={newDay ? formatDateShort(date) : false}
+
                             key={index.toString()}
                             content={item.content}
                             person={"@" + usuarioMsg?.nickname}

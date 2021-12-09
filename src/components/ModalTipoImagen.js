@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { colorFondo, isUrl, openImagePickerAsync } from '../../../../../assets/constants';
+import { colorFondo, isUrl, openImagePickerAsync } from '../../assets/constants';
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -41,9 +41,7 @@ export default function ({
     async function handleDeviceImage() {
         const image = await openImagePickerAsync(video ? true : false)
         if (!image) return
-        setImage({
-            uri: image.uri,
-        })
+        setImage(image)
         handleCloseModal()
 
     }

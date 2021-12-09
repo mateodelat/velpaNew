@@ -15,9 +15,9 @@ import { Feather } from '@expo/vector-icons';
 
 const { height } = Dimensions.get("screen")
 
-export default function ({ navigation }) {
+export default function ({ navigation, route }) {
 
-    const [solicitudesGuia, setSolicitudesGuia] = useState(true);
+    const [solicitudesGuia, setSolicitudesGuia] = useState(!route.params);
     const [requestGuia, setRequestGuia] = useState(null);
     const [aventuras, setAventuras] = useState(null);
 
@@ -135,7 +135,7 @@ export default function ({ navigation }) {
                         backgroundColor: !solicitudesGuia ? moradoOscuro : '#fff',
 
                     }}>
-                    <Text style={{ color: !solicitudesGuia ? "#fff" : "#444", }}>Aventuras</Text>
+                    <Text style={{ color: !solicitudesGuia ? "#fff" : "#444", }}>Experiencias</Text>
                 </Pressable>
 
 

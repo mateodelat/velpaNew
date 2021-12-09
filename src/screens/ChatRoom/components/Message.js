@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { moradoClaro, moradoOscuro } from '../../../../assets/constants'
 
 const { width } = Dimensions.get("screen")
@@ -16,11 +16,20 @@ export default function ({
     lastMessagePerson,
     firstMessagePerson,
 
-    diferentToPreviousTime
+    diferentToPreviousTime,
+
+    onPress,
+
+    newDay
 }) {
+
     // SI EL EMISOR ES EL USUARIO
     if (isMe) return (
-        <View style={{ ...styles.container, marginBottom: lastMessagePerson ? 25 : 5, }}>
+        <View
+            style={{
+                ...styles.container, marginBottom: lastMessagePerson ? 25 : 5,
+                marginTop: newDay && !firstMessagePerson ? 10 : 0,
+            }}>
             {/* Mensaje */}
             <View style={{ alignItems: 'flex-end', }}>
 
@@ -37,8 +46,9 @@ export default function ({
                             <View style={styles.infoContainer}>
                                 <Text
                                     numberOfLines={1}
-                                    style={styles.headerMe}>
+                                    style={{ ...styles.headerMe, right: 0 }}>
                                     <Text>{person}, </Text>
+                                    {newDay && <Text>{newDay} </Text>}
                                     <Text>{time}</Text>
                                 </Text>
 
@@ -53,6 +63,11 @@ export default function ({
                             alignItems: 'flex-end',
                         }}>
                             <View style={styles.infoContainer}>
+                                {newDay && <Text style={{
+                                    ...styles.headerMe,
+                                    right: 0,
+                                }}>{newDay} </Text>}
+
                                 <Text style={{
                                     ...styles.headerMe,
                                     right: 0,
@@ -64,7 +79,7 @@ export default function ({
                 </View>
 
                 {/* Contenedor de mensaje */}
-                <View style={{ ...styles.content, borderBottomRightRadius: lastMessagePerson || diferentToPreviousTime ? 4 : 15, backgroundColor: moradoClaro, }}>
+                <View style={{ ...styles.content, borderBottomRightRadius: lastMessagePerson ? 4 : 15, backgroundColor: moradoClaro, }}>
                     <Text style={{ ...styles.contentTxt, color: '#fff', }}>{content}</Text>
                 </View>
             </View>
@@ -77,7 +92,11 @@ export default function ({
 
     // Si el emisor es alguien mas
     return (
-        <View style={{ ...styles.container, marginBottom: lastMessagePerson ? 25 : 5, }}>
+        <View style={{
+            ...styles.container,
+            marginTop: newDay && !firstMessagePerson ? 10 : 0,
+            marginBottom: lastMessagePerson ? 25 : 5,
+        }}>
             {/* Emisor y hora */}
 
 
@@ -101,17 +120,16 @@ export default function ({
                                 numberOfLines={1}
                                 style={styles.header}>
                                 <Text>{person}, </Text>
+                                {newDay && <Text>{newDay} </Text>}
                                 <Text>{time}</Text>
                             </Text>
-                            {guia && <Text style={{
-                                ...styles.guia,
-                                marginLeft: 20,
-                            }}>Guia</Text>}
+                            {guia && <Text style={styles.guia}>Guia</Text>}
 
                         </View>
                         :
                         diferentToPreviousTime && <View style={styles.infoContainer}>
                             <Text style={styles.header}>
+                                {newDay && <Text>{newDay} </Text>}
                                 {time}
                             </Text>
                         </View>
@@ -121,7 +139,7 @@ export default function ({
                     <Text style={{
                         ...styles.contentTxt,
                         ...styles.content,
-                        borderBottomLeftRadius: lastMessagePerson || diferentToPreviousTime ? 4 : 15
+                        borderBottomLeftRadius: lastMessagePerson ? 4 : 15
                     }}>{content}</Text>
                 </View>
                 <View style={{ flex: 1, }} />
@@ -186,6 +204,6 @@ const styles = StyleSheet.create({
     guia: {
         color: moradoOscuro,
         fontWeight: 'bold',
-        marginRight: 10,
+        marginLeft: 10,
     }
 })

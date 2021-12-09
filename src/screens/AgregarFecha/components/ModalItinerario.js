@@ -187,7 +187,7 @@ const ModalItinerario = ({
 }) => {
     // Variables selector de hora
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [modify, setModify] = useState(false);
+    const [modify, setModify] = useState(editAllowed ? false : undefined);
 
     const [fechaMin, setFechaMin] = useState(fechaInicial);
     const [fechaMax, setFechaMax] = useState(fechaFinal);
@@ -207,6 +207,7 @@ const ModalItinerario = ({
     const handleConfirmHour = (date) => {
         hideDatePicker()
 
+        date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
         const horaEnMs = date.getTime()
 
         const index = horaSeleccionada
@@ -357,6 +358,10 @@ const ModalItinerario = ({
         setErrorHora(null)
 
     }
+
+    let dateSelected = new Date(itinerario[horaSeleccionada]?.hora)
+    dateSelected.setTime(dateSelected.getTime() + dateSelected.getTimezoneOffset() * 60 * 1000)
+
     return (
         <View style={styles.container}>
             <HeaderModal
@@ -435,7 +440,7 @@ const ModalItinerario = ({
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="datetime"
-                    date={new Date(itinerario[horaSeleccionada]?.hora)}
+                    date={dateSelected}
                     minimumDate={fechaMin}
                     maximumDate={fechaMax}
                     onConfirm={handleConfirmHour}

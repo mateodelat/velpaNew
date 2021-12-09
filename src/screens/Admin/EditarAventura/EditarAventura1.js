@@ -134,8 +134,6 @@ export default ({ navigation, route }) => {
             titulo: aventura.titulo,
             descripcion: aventura.descripcion,
 
-            dificultad: aventura.dificultad,
-
             coordenadas: aventura.coordenadas,
             ubicacionId: aventura.ubicacionId,
             ubicacionLink: aventura.ubicacionLink,
@@ -190,8 +188,6 @@ export default ({ navigation, route }) => {
                 av.categoria = aventuraAEnviar.categoria
                 av.titulo = aventuraAEnviar.titulo
                 av.descripcion = aventuraAEnviar.descripcion
-
-                av.dificultad = aventuraAEnviar.dificultad
 
                 av.coordenadas = aventuraAEnviar.coordenadas
                 av.ubicacionId = aventuraAEnviar.ubicacionId
@@ -409,30 +405,6 @@ export default ({ navigation, route }) => {
                             ...styles.row,
                             marginVertical: 30,
                         }}>
-
-                            {/* Dificultad */}
-                            <View style={styles.dificultad}>
-                                <Text style={styles.captionTxt}>Dificultad*</Text>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    height: 45,
-                                    alignItems: 'center',
-                                }}>
-                                    {[...Array(5).keys()].map((e, i) => {
-
-                                        return (
-                                            <Pressable
-                                                key={i}
-                                                onPress={() => handleSelectDificultad(i + 1)}
-                                                style={styles.dificultadIconContainer}
-                                            >
-                                                <Foundation name="mountains" size={28} color={i < aventura.dificultad ? "black" : "#00000077"} />
-                                            </Pressable>
-                                        )
-                                    })}
-
-                                </View>
-                            </View>
 
                             {/* Categoria */}
                             <View style={styles.categoriaContainer}>
@@ -729,7 +701,7 @@ export default ({ navigation, route }) => {
                             numberOfLines={6}
                             multiline={true}
                             placeholderTextColor={"#00000040"}
-                            placeholder="Esta aventura contiene pedazos con alto nivel tecnico pero al final de cuentas se disfruta mucho..."
+                            placeholder="Esta experiencia contiene pedazos con alto nivel tecnico pero al final de cuentas se disfruta mucho..."
                             onChangeText={(e) => {
                                 setAventura({
                                     ...aventura,

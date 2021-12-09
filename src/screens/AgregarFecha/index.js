@@ -18,88 +18,18 @@ import RadioButton from '../../components/RadioButton';
 import ModalItinerario from './components/ModalItinerario';
 import ModalPuntoReunion from './components/ModalPuntoReunion';
 import { Usuario } from '../../models';
+import { vibrar } from '../../../assets/constants/constant';
 
 
 
 const { height } = Dimensions.get("screen")
 
 export default function ({ navigation, route }) {
-    const { aventura } =
-    {
-        aventura: {
-            _deleted: null,
-            _lastChangedAt: 1638313118797,
-            _version: 12,
-            altimetriaRecorrida: 1000,
-            altitud: 5230,
-            categoria: "APLINISMO",
-            comision: 0.2,
-            coordenadas: {
-                latitude: 19.178481,
-                longitude: -98.642455,
-            },
-            createdAt: "2021-11-11T17:55:38.692Z",
-            descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion.",
-            dificultad: 5,
-            distanciaRecorrida: 7.4,
-            duracion: "1-2 dias",
-            estadoAventura: "AUTORIZADO",
-            id: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
-            imagenDetalle: [
-                {
-                    key: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
-                    uri: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
-                },
-                {
-                    key: "https://picsum.photos/400?random=103.jpg",
-                    uri: "https://picsum.photos/400?random=103.jpg",
-                },
-                {
-                    key: "imagen-2 ave-5b10a5bf-5374-4a4a-b179-7b9e0209dd96.jpg",
-                    uri: "https://velpabuckets3100617-dev.s3.us-east-1.amazonaws.com/public/imagen-2%20ave-5b10a5bf-5374-4a4a-b179-7b9e0209dd96.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIA4D2FQFF7LTAH6FMT%2F20211203%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211203T220141Z&X-Amz-Expires=900&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLWVhc3QtMSJHMEUCIQD7OB989Jb4dY2f4NrbSUCo6VbmkajQdjznz0XyPvvSYQIgKqinL2XuDA8rSeQdIlygzOU7fWP948kgdODU99GAQRAqxAQITxACGgw4MzI4MzI1NDcxOTgiDLFAoxqjY3GszGuktSqhBB3dQ4IaScFI9eGzoLWPvz%2FDNh%2BC11ZOTGr29e3QHCaSsKtD%2FsLDC1GFfe1GAiw70Z4pNlrGN4KIpXmj8qb3gAIDNYta2qLMvb%2Fdn%2ByYGsSQCeKIQUz3gX9cbjwuw01n%2B3kWeeizyWhXhVJcYfMUXZVLvekXVNzUBBkhn5xeXNikks9uR0AueCAK5g3jeBcQAPAbTIq7I7xI8uS%2F4uUfuOxHrK7fyKadm7u31RyUpphwyO7CXPFz8KHZS%2FmbyuTqSZq0WWmXUIhg6H1sqt%2FXi7XHDjzZ4rW%2B9al0mcypsqPT2iSMW108QOWKCGbW02R7CGRMDo91Mv8kKTIpF9NdaGv%2F0xcy59jeZvxTv9gwg7VD6jpoMGjzU8dniO8xMsiEDtcoHeyUOF9kUGLrJYKZALWlBzfG8uSqzJnqx3lgT6vIblDJvh9KZlSchyl7OkDCjeEyuB9D864ORssRz9oJX6HSclpFinA0VOXdgfLIbC1vpwzBFhTW8Nwe6UG1pXCsvQty2c9VrNSRqDTYp0%2Bgdb3g%2FBMVGyu%2BBKgYt2GAjQJ0Tf0wo9uHeDMe8mpwy3TjFBeRriOjs4JuisyGH6P%2BBGO26%2FCjVx3MWenU8qRL9JLun4UZrcmnW3XjG8Dr%2BIyGz02d0BlNK%2BPGpvo0y6clRsKs8E9Mhisy1RCSEKJ4DrZhzhiWuolbEBOwargQm5doNoP%2FGMLI7UAaQ1oxvBuvrqm4MLunqo0GOoUCcf5WbO69Rt1zeHM2SJVySQ2TMfriWq8JkLj1AJ2NiW1qm8jDTicYO7C%2BSYqA1U2Nc1zOVu8zmYufG3s7MFdfZzNzcOa2K1WSfh0cOjgYkthUAFDmKvQqOv%2Bz5k0dozCvMLpLDPcBPYr9s0DLzfkE8JT4EPhU4RM%2BV598leM37O8K6zmicK6BffcrTFcuv7wMPEXNIjjaa%2BYND7PG%2B47oIYv6ae1LmCN1gBUgSDfgVKM7oGoaW6Kjxl0K3dOKHLVy%2BK%2BM3TxZU%2BfoM8%2BHXTTvzHctQhLLpSG6WAwHe1IzTVvLwAu%2Bd14VSt4dTee0Ah0JOucJKVp4D71dZGGfBcrCvalj5%2FwD&X-Amz-Signature=7fe29084222ace808a8ac52c4b823ed0d585b3753af9d4bc05507e6315bfdaee&X-Amz-SignedHeaders=host&x-amz-user-agent=aws-sdk-js%2F3.6.1%20os%2Fother%20lang%2Fjs%20md%2Fbrowser%2Funknown_unknown%20api%2Fs3%2F3.6.1%20aws-amplify%2F4.3.6_react-native&x-id=Get",
-                },
-                {
-                    key: "https://picsum.photos/400?random=101.jpg",
-                    uri: "https://picsum.photos/400?random=101.jpg",
-                },
-                {
-                    key: "https://picsum.photos/400?random=394.jpg",
-                    uri: "https://picsum.photos/400?random=394.jpg",
-                },
-            ],
-            imagenFondoIdx: 0,
-            incluidoDefault: [
-                "Electrolit",
-            ],
-            materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
-            notAllowed: false,
-            owner: "939aadbe-55d5-45a0-9628-654049e8a682",
-            precioMax: 1000,
-            precioMin: 500,
-            titulo: "Iztacihuatl",
-            ubicacionId: "ChIJEfm5R3OuKIQRTGNKuFVAsMA",
-            ubicacionLink: null,
-            ubicacionNombre: "Puebla",
-            updatedAt: "2021-11-30T22:58:38.770Z",
-            usuarioID: "2ebd46eb-b627-4bd9-a158-ee23ad738130",
-        },
-    }
-
-
-
-
-
-
-
-
-
-
-
+    const { aventura } = route.params
 
 
     const {
-        precioMin,
-        precioMax,
+        precioMin, precioMax,
         titulo: tituloAventura } = aventura
 
     const scrollY = React.useRef(new Animated.Value(0)).current
@@ -355,7 +285,7 @@ export default function ({ navigation, route }) {
         updateItinerario(null, null, selectedPlace)
 
         setModalVisible(false)
-        Alert.alert("Exito", "Punto de reunion guardado con exito")
+        vibrar('sucess')
     }
 
     function updateItinerario(time, horaInicial, selectedPlace) {

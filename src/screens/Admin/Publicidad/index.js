@@ -13,6 +13,7 @@ import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import EditarPublicidad from './components/EditarPublicidad';
+import { vibrar } from '../../../../assets/constants/constant';
 
 
 
@@ -68,6 +69,11 @@ export default ({ navigation }) => {
 
     function handleSelectItem(idx) {
         publicidades[idx].selected = !publicidades[idx].selected
+
+        if (!publicidades.filter(e => e.selected).length) {
+            setSelecting(false)
+        }
+
         setPublicidades([...publicidades])
 
     }
@@ -170,11 +176,11 @@ export default ({ navigation }) => {
                                     const selected = item.selected
                                     return <Pressable
                                         key={i.toString()}
-                                        onLongPress={() => handleSelecting(i)}
+                                        onLongPress={() => handleSelecting(i) && vibrar('select')}
                                         onPress={() => selecting ? handleSelectItem(i) : handlePressItem(i)}
                                         style={{ marginBottom: 20, }}>
                                         <ComponentePublicidad
-                                            onPress={
+                                            onPress={selecting ? () => handleSelectItem(i) :
                                                 item.tipo === TipoPublicidad.AVENTURA ?
                                                     () => navigation.navigate("DetalleAventura", { id: item.aventuraID }) :
 

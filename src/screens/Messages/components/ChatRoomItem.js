@@ -25,8 +25,20 @@ export default ({
         lastMessage
     } = item
 
-    // Subscribirse a actualizaciones
+    const [timeAgo, setTimeAgo] = useState(moment(lastMessage?.createdAt).from(moment()));
+
     useEffect(() => {
+        const i = setInterval(() => {
+            setTimeAgo(moment(lastMessage?.createdAt).from(moment()))
+        }, 1000)
+
+        return () => {
+            clearTimeout(i)
+        }
+    }, [timeAgo]);
+
+    useEffect(() => {
+        // Subscribirse a actualizaciones de mensajes nuevos
         const subscription = DataStore.observe(ChatRoom, item.id)
             .subscribe(async (msg) => {
                 const newElement = msg.element
@@ -38,6 +50,7 @@ export default ({
 
 
                         newChats[index] = {
+                            ...newChats[index],
                             ...newElement,
                             lastMessage
                         }
@@ -72,7 +85,7 @@ export default ({
                     style={styles.descripcion}>{lastMessage.content}</Text>}
             </View>
 
-            {!!lastMessage?.createdAt && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{moment(lastMessage?.createdAt).from(moment())}</Text>}
+            {!!lastMessage?.createdAt && <Text style={{ ...styles.titulo, color: moradoClaro, }}>{timeAgo}</Text>}
         </Pressable>
     )
 }
@@ -112,13 +125,13 @@ const styles = StyleSheet.create({
         alignItems: 'center', justifyContent: 'center',
 
         top: 10,
-        left: -4,
+        left: 30,
 
         backgroundColor: 'red',
     },
 
     badgeTxt: {
-        fontSize: 10,
+        fontSize: 9,
         fontWeight: 'bold',
         color: '#fff',
     }

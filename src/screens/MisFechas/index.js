@@ -25,7 +25,7 @@ function Item({ e }) {
     }
 
     function handleNavigate() {
-        navigation.navigate("DetalleFecha", e)
+        navigation.navigate("DetalleFecha", { fecha: e })
     }
 
 
@@ -121,7 +121,10 @@ export default function () {
                         personasReservadas.push({
                             foto: await getImageUrl(usuario.foto),
                             nickname: usuario.nickname,
-                            personasReservadas: totalPersonas
+                            personasReservadas: totalPersonas,
+
+                            precioPagado: res.pagadoAlGuia,
+                            total: res.total
                         })
                     }))
 

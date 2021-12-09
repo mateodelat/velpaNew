@@ -92,6 +92,10 @@ export default ({ navigation, route }) => {
         })
     }
 
+    function navigateTerms() {
+        // Alert.alert("", "*Link a nuestros terminos y condiciones*")
+
+    }
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -243,7 +247,7 @@ export default ({ navigation, route }) => {
                     <Text style={styles.textoTerminos}>
                         Acepto los
                         <Text
-                            onPress={() => Alert.alert("", "*Link a nuestros terminos y condiciones*")}
+                            onPress={navigateTerms}
                             style={{ color: 'blue', }}> terminos y condiciones </Text>
                         de Velpa
                     </Text>

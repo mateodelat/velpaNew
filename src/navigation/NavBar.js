@@ -113,20 +113,35 @@ const { width, height } = Dimensions.get("window")
 export default () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [newNotificaciones, setNewNotificaciones] = useState(false);
+	const [newMessages, setNewMessages] = useState(false);
 
 	useEffect(() => {
-		let subscripcion
-		verNuevasNotificaciones().
-			then(r => {
-				const sub = r
-				subscripcion = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
-					.subscribe(msg => {
-						setNewNotificaciones(true)
-					})
-			})
+		let subscripcionNotificaciones
+		let subscripcionMensajes
+		(async () => {
+			const sub = await getUserSub()
 
-		return () => subscripcion?.unsubscribe()
+			verNuevasNotificaciones(sub)
+			subscripcionNotificaciones = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+				.subscribe(msg => {
+					setNewNotificaciones(true)
+				})
 
+			verNuevosMensajes(sub)
+			subscripcionMensajes = DataStore.observe(Usuario,
+				e => e.id("eq", sub))
+				.subscribe(msg => {
+					// Si hay nuevos mensajes en el usuario
+					if (!!msg.element.newMessages) {
+						setNewMessages(true)
+
+					}
+				})
+		})()
+		return () => {
+			subscripcionNotificaciones?.unsubscribe()
+			subscripcionMensajes?.unsubscribe()
+		}
 	}, []);
 
 
@@ -140,6 +155,16 @@ export default () => {
 			setNewNotificaciones(true)
 		}
 		return sub
+	}
+
+	const verNuevosMensajes = async (sub) => {
+		// Obtener todas las notificaciones no vistas
+		const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
+
+		if (!!usr.newMessages) {
+			setNewMessages(true)
+		}
+
 	}
 
 	return (
@@ -231,6 +256,7 @@ export default () => {
 							const handlePress = () => {
 								navigation.navigate("Notificaciones")
 								setNewNotificaciones(false)
+								setNewMessages(false)
 							}
 
 
@@ -249,7 +275,7 @@ export default () => {
 										}}>Notificaciones</Text>
 
 									{/* Indicador mensajes nuevos */}
-									{newNotificaciones && <View style={{
+									{newNotificaciones || newMessages && <View style={{
 										height: 10,
 										width: 10,
 										borderRadius: 10,

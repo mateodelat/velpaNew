@@ -60,6 +60,7 @@ export default ({ navigation }) => {
             empezarTimer()
         }
         empezarTimer(6000)
+        return () => clearTimeout(timer)
     }, [actualIdx]);
 
 
@@ -249,7 +250,7 @@ export default ({ navigation }) => {
                     <Text style={{
                         fontSize: 18,
                         fontWeight: 'bold',
-                    }}>Aventuras recomendadas</Text>
+                    }}>Experiencias recomendadas</Text>
 
                     <Text
                         onPress={() => navigation.navigate("Busqueda")}
@@ -367,7 +368,7 @@ export default ({ navigation }) => {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                 }}>
-                                                    <Text
+                                                    {e.precioMax ? <Text
                                                         style={{
                                                             color: '#000',
                                                             fontWeight: 'bold',
@@ -375,6 +376,7 @@ export default ({ navigation }) => {
                                                             marginBottom: 5,
                                                         }}
                                                     >$ {promedioPrecios(e.precioMin, e.precioMax)}</Text>
+                                                        : <View style={{ flex: 1, }} />}
 
 
                                                     <Flecha />
@@ -414,7 +416,7 @@ export default ({ navigation }) => {
                     style={{
                         color: '#fff',
                         fontSize: 16,
-                    }}>Mis aventuras</Text>
+                    }}>Mis experiencias</Text>
             </Pressable>
         </ScrollView >
     )

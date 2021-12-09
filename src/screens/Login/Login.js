@@ -182,6 +182,7 @@ export default function Register({ navigation, route }) {
                 }}>{error}</Text> : <View style={{ paddingTop: 20, }} />}
 
                 <Boton
+
                     onPress={handleLogin}
                     titulo={"Iniciar sesion"}
                     backgroundColor={moradoOscuro}

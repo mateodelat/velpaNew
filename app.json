@@ -23,7 +23,7 @@
     "ios": {
       "supportsTablet": false,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription ": "Velpa utiliza tu ubicacion para buscar aventuras cerca de ti"
+        "NSLocationWhenInUseUsageDescription ": "Velpa utiliza tu ubicacion para buscar experiencias cerca de ti"
       }
     },
     "android": {

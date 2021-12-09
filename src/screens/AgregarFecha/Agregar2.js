@@ -10,6 +10,8 @@ import Boton from '../../components/Boton';
 import RadioButton from '../../components/RadioButton';
 
 
+import { Foundation } from '@expo/vector-icons';
+
 
 const { height } = Dimensions.get("screen")
 
@@ -46,6 +48,8 @@ export default function ({ navigation, route }) {
     const [allowNinos, setAllowNinos] = useState(true);
     const [allowTercera, setAllowTercera] = useState(true);
 
+    // Dificultad de la fecha
+    const [dificuldad, setDificuldad] = useState(3);
 
 
 
@@ -66,10 +70,16 @@ export default function ({ navigation, route }) {
             titulo,
             descripcion,
 
+            dificuldad,
+
             ...route.params.fecha,
             ...route.params
         })
 
+    }
+
+    const handleClickDificultad = (index) => {
+        setDificuldad(index)
     }
 
     return (
@@ -111,6 +121,27 @@ export default function ({ navigation, route }) {
                         numberOfLines={3}
                         value={descripcion}
                         onChangeText={setDescripcion} />
+                </View>
+
+                <View style={styles.item}>
+                    <Text style={styles.captionTxt}>Dificultad*</Text>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        {
+                            [...Array(5).keys()].map(e => {
+                                return <Foundation
+                                    onPress={() => handleClickDificultad(e + 1)}
+                                    style={{
+                                        paddingHorizontal: 5,
+                                    }}
+                                    key={e}
+                                    name="mountains"
+                                    size={35}
+                                    color={dificuldad > e ? "black" : "gray"}
+                                />
+                            })
+                        }
+                    </View>
                 </View>
 
 
@@ -157,7 +188,7 @@ export default function ({ navigation, route }) {
                             minValue={precioMin}
                             maxValue={precioMax}
 
-                            titulo={"Precio min /persona"}
+                            titulo={"Precio /persona"}
 
                             cambio={50}
                             showSigno={true}

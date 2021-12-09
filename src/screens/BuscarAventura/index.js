@@ -91,60 +91,10 @@ export default ({ navigation, onPress, handleBack }) => {
 
                     // Dificultad dificil
                     (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
-
-
                 )
             )
         })
         setAventurasAMostrar(nuevasAve)
-    }
-
-    const handleClickDificultad = (index) => {
-        let newDificultades = [...dificultad]
-        newDificultades[index] = !newDificultades[index]
-
-        setDificultad(newDificultades)
-
-        const nuevasAve = aventuras.filter(e => {
-            return (
-                (// Es igual al titulo en minusculas
-                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
-                    ||
-
-                    // Es igual a la descripcion
-                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
-                &&
-                ( // Dificultad facil
-                    (newDificultades[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (newDificultades[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (newDificultades[2] && e.dificultad > 3)) &&
-                (// ALPINISMO
-                    (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (categoriasSeleccionadas[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
-                )
-
-            )
-        })
-        setAventurasAMostrar(nuevasAve)
-
     }
 
     const handleChangeText = (text) => {
@@ -174,15 +124,6 @@ export default ({ navigation, onPress, handleBack }) => {
 
                     // OTROS
                     (categorias[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
                 ))
         })
     }
@@ -205,18 +146,7 @@ export default ({ navigation, onPress, handleBack }) => {
 
                     // Dificultad dificil
                     (categorias[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
-                )
-
-            )
+                ))
         })
     }
 
@@ -252,7 +182,7 @@ export default ({ navigation, onPress, handleBack }) => {
                     <TextInput
                         style={{ padding: 0, flex: 1, padding: 10, paddingLeft: 40, }}
                         value={buscar}
-                        placeholder="Buscar aventuras"
+                        placeholder="Buscar experiencias"
                         placeholderTextColor={"#7E7F84"}
                         onChangeText={handleChangeText}
                     />
@@ -311,35 +241,6 @@ export default ({ navigation, onPress, handleBack }) => {
                         {
                             filtrarAbierto ? <View
                             >
-
-                                {/* $$$$$$$$$$  DIFICULTAD  $$$$$$$$$$$*/}
-                                <View style={{
-                                    flexDirection: 'row',
-                                    height: 45,
-                                    marginTop: 15,
-                                    justifyContent: 'space-between',
-                                }}>
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(0)}
-                                        texto={"Facil"}
-                                        selected={dificultad[0]}
-                                    />
-
-
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(1)}
-                                        texto={"Medio"}
-                                        selected={dificultad[1]}
-                                    />
-
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(2)}
-                                        texto={"Dificil"}
-                                        selected={dificultad[2]}
-                                    />
-                                </View>
-
-
 
                                 {/* Categorias*/}
                                 <View style={{

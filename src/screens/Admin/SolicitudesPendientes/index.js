@@ -93,7 +93,7 @@ export default ({ navigation }) => {
             if (tokenGuia) {
                 sendPushNotification({
                     title: "Solicitud aprovada",
-                    descripcion: "Ya puedes agregar fechas a las aventuras:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
+                    descripcion: "Ya puedes agregar fechas a las experiencias:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
                         + (comentarios ? ("\ncomentarios: " + comentarios) : ""),
                     token: tokenGuia
                 })
@@ -105,7 +105,7 @@ export default ({ navigation }) => {
                 tipo: TipoNotificacion.SOLICITUDGUIAAPROVADA,
 
                 titulo: "Solicitud aprovada",
-                descripcion: "Ya puedes agregar fechas a las aventuras:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
+                descripcion: "Ya puedes agregar fechas a las experiencias:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
                     + (comentarios ? ("\ncomentarios: " + comentarios) : ""),
 
                 usuarioID: solicitud.usuarioID,

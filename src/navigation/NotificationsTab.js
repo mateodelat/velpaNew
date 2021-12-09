@@ -6,6 +6,7 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colorFondo, getUserSub, moradoOscuro } from '../../assets/constants';
 import { DataStore } from '@aws-amplify/datastore';
 import { Notificacion } from '../models';
+import { Usuario } from '../models';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -30,38 +31,64 @@ const Texto = ({ showBadge, color, texto }) => {
 }
 export default function () {
     const { width } = Dimensions.get("screen")
+
     const [newNotificaciones, setNewNotificaciones] = useState(false);
+    const [newMessages, setNewMessages] = useState(false);
 
     useEffect(() => {
-        let subscripcion
-        verNuevasNotificaciones()
-            .then(r => {
-                const sub = r
-                subscripcion = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
-                    .subscribe(msg => {
-                        setNewNotificaciones(true)
-                    })
-            })
+        let subscripcionNotificaciones
+        let subscripcionMensajes
+        (async () => {
+            const sub = await getUserSub()
 
-        return () => subscripcion?.unsubscribe()
+            verNuevasNotificaciones(sub)
+            subscripcionNotificaciones = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+                .subscribe(msg => {
+                    setNewNotificaciones(true)
+                })
+
+            verNuevosMensajes(sub)
+            subscripcionMensajes = DataStore.observe(Usuario,
+                e => e.id("eq", sub))
+                .subscribe(msg => {
+                    // Si hay nuevos mensajes en el usuario
+                    if (!!msg.element.newMessages) {
+                        setNewMessages(true)
+
+                    }
+                })
+        })()
+        return () => {
+            subscripcionNotificaciones?.unsubscribe()
+            subscripcionMensajes?.unsubscribe()
+        }
     }, []);
 
-    const verNuevasNotificaciones = async () => {
-        const sub = await getUserSub()
-
+    const verNuevasNotificaciones = async (sub) => {
         // Obtener todas las notificaciones no vistas
         const unread = await DataStore.query(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
 
         if (unread.length !== 0) {
             setNewNotificaciones(true)
         }
+    }
 
+    const verNuevosMensajes = async (sub) => {
+        // Obtener todas las notificaciones no vistas
+        const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
+
+        if (!!usr.newMessages) {
+            setNewMessages(true)
+        }
 
     }
 
     return (
         <Pressable
-            onTouchStart={() => setNewNotificaciones(false)}
+            onTouchStart={() => {
+                setNewNotificaciones(false)
+                setNewMessages(false)
+            }}
             style={{ flex: 1, }}>
 
             <Tab.Navigator
@@ -98,9 +125,10 @@ export default function () {
                     }}
                     component={Notifications} />
                 <Tab.Screen
+
                     options={{
                         tabBarLabel: ({ color, focused }) => {
-                            return <Texto color={color} showBadge={false} texto={"MENSAJES"} />
+                            return <Texto color={color} showBadge={newMessages} texto={"MENSAJES"} />
                         }
                     }}
                     name="Mensajes" component={Messages} />

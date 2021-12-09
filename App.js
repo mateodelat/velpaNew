@@ -70,9 +70,10 @@ const App = () => {
         if (user.authenticated) {
           DataStore.start()
           setAuthenticated(true)
-        } else {
-          Auth.signOut()
         }
+        //  else {
+        //   Auth.signOut()
+        // }
       }).catch(err => {
         setLoading(false)
         console.log("Error getting credentials", err)
@@ -81,6 +82,7 @@ const App = () => {
     // Escuchar a actualizaciones de auth
     const auth = Hub.listen("auth", (data) => {
       const { event, message } = data.payload
+      console.log(event, message)
       switch (event) {
         case "signIn":
           setCargandoModelos(true)
@@ -94,7 +96,6 @@ const App = () => {
           break;
         case "cognitoHostedUI":
           setLoading(false)
-          // Tras iniciar sesion con Google se intenta crear el usr y solo se corre una vez
           if (message.startsWith("A user google")) {
             Auth.currentUserInfo()
               .then(r => {
@@ -102,7 +103,6 @@ const App = () => {
                 createUsuario(r.attributes, false, r.username)
                 setAuthenticated(true)
               })
-
           }
           break;
 
@@ -128,9 +128,9 @@ const App = () => {
 
 
     return () => {
-      Hub.remove("auth", () => console.log("fin del hub"))
+      Hub.remove("auth")
 
-      Hub.remove("datastore", () => console.log("fin del hub"))
+      Hub.remove("datastore")
       listener()
       auth()
     }

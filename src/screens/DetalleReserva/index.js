@@ -35,7 +35,7 @@ export const getUsuario = /* GraphQL */ `
       id
       foto
       nickname
-      AventurasAutorizadas(limit:4) {
+      AventurasAutorizadas(limit:2) {
         items {
             aventura {
                 titulo
@@ -311,7 +311,7 @@ export default ({ navigation, route }) => {
                     {/* Guia de la aventura */}
                     <View style={styles.guiaContainer}>
                         <Image
-                            source={{ uri: guia.foto }}
+                            source={guia.foto ? { uri: guia.foto } : require("../../../assets/user.png")}
                             style={styles.imagenGuia}
                         />
 
@@ -341,7 +341,7 @@ export default ({ navigation, route }) => {
 
                                 <Text style={styles.titleAventura}
                                     numberOfLines={1}
-                                >{guia.AventurasAutorizadas[0]?.titulo}</Text>
+                                >{guia.AventurasAutorizadas[0]?.titulo} fds fsdfds s sad</Text>
 
                                 <LinearGradient
                                     colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, .7)',]}
@@ -351,7 +351,7 @@ export default ({ navigation, route }) => {
                             {guia?.AventurasAutorizadas[1]?.imagenFondo && <View style={{ flex: 2, marginLeft: 5, }}>
                                 <Pressable
                                     onPress={() => handleNavigateAventura(guia.AventurasAutorizadas[1]?.id)}
-                                    style={{ flex: 1, marginBottom: 5, }}>
+                                    style={{ flex: 1, marginBottom: guia?.AventurasAutorizadas[2]?.imagenFondo ? 5 : 0, }}>
                                     <Image
                                         source={{ uri: guia.AventurasAutorizadas[1]?.imagenFondo }}
                                         style={{ flex: 1, }}
@@ -470,6 +470,12 @@ export default ({ navigation, route }) => {
                     />
                     :
                     <ModalItinerario
+                        puntoReunion={{
+                            latitude: JSON.parse(fecha.puntoReunionCoords).latitude,
+                            longitude: JSON.parse(fecha.puntoReunionCoords).longitude,
+                            titulo: fecha.puntoReunionNombre
+                        }}
+
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
 
@@ -638,12 +644,13 @@ const styles = StyleSheet.create({
     titleAventura: {
         zIndex: 1,
         position: 'absolute',
-        bottom: 0,
-        width: '100%',
+        bottom: 5,
+        width: '90%',
         // fontSize: 16,
         color: '#fff',
         flex: 1,
-        marginLeft: 20,
+        alignSelf: 'center',
+        textAlign: 'center',
     },
 
     queLlevarContainer: {

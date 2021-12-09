@@ -9,10 +9,8 @@ import React from "react";
 
 import { Foundation, MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { Fecha } from "../../src/models";
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
-import { runOnJS } from "react-native-reanimated";
 
 
 
@@ -298,7 +296,7 @@ export const createUsuario = async (attributes, unathenticated, username) => {
           tipo: TipoNotificacion.BIENVENIDA,
 
           titulo: "Velpa adventures",
-          descripcion: (attributes.name ? attributes.name : attributes.nickname) + " gracias por registrarte en Velpa, ve un breve tutorial de como usar la app",
+          descripcion: (attributes.name ? attributes.name : attributes.nickname) + " gracias por registrarte en Velpa.\nAqui vas a encontrar experiencias increibles",
 
           usuarioID: attributes.sub,
           owner: username ? username : attributes.sub,
@@ -397,7 +395,7 @@ export const formatDateWithHour = (msInicial, msFinal) => {
   // Si es de un solo dia se regresa un numero con su hora inicial y final
   if (ddFinal === ddInicial && mmInicial === mmFinal) {
     return {
-      txt: (ddInicial + " " + meses[mmInicial] + " de " + formatAMPM(msInicial, false, true) + " a " + formatAMPM(msFinal, false, true)),
+      txt: (ddInicial + " " + meses + [mmInicial] + " de " + formatAMPM(msInicial, false, false) + " a " + formatAMPM(msFinal, false, true)),
       mismoDia: true
     }
 
@@ -405,10 +403,9 @@ export const formatDateWithHour = (msInicial, msFinal) => {
 
   else {
     return {
-      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, true),
-      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, true),
+      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, false),
+      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, false),
       mismoDia: false
-
     }
   }
 }
@@ -574,6 +571,7 @@ export const fetchAventura = (aventuraID) => {
 }
 
 export const redondear = (numero, entero) => {
+  if (!numero) return 0
   numero = Math.round(numero / entero) * entero
 
   return numero
@@ -704,7 +702,6 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c.estadoAventura("eq", "AUTORIZADO"),
-    Predicates.all,
     {
       limit: maxItems,
       page
@@ -749,15 +746,14 @@ export const distancia2Puntos = function (lat1, lon1, lat2, lon2) {
 }
 
 
-export const listAventurasSugeridas = async (id, maxItems) => {
+export const listAventurasSugeridas = async (id, maxItems, aventuraBase) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
     c => c
       .estadoAventura("eq", "AUTORIZADO")
-    // .id("ne", id),
+      .id("ne", id),
   )
     .then(async r => {
-      const aventuraBase = r.find(r => r.id === id)
       const { coordenadas: { latitude: latBase, longitude: longBase } } = aventuraBase
 
       r = r
@@ -1227,6 +1223,7 @@ export function calculatePrice(precioIndividual, total, personasReservadas) {
 }
 
 export function formatAMPM(dateInMs, hideAMPM, localTime) {
+
   const date = new Date(dateInMs)
   var hours = date[localTime ? "getHours" : "getUTCHours"]();
   var minutes = date[localTime ? "getMinutes" : "getUTCMinutes"]();

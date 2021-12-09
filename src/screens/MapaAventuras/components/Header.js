@@ -38,7 +38,7 @@ export default function ({
             <TextInput
                 style={{ padding: 5, flex: 1, paddingLeft: 55, }}
                 value={buscar}
-                placeholder="Buscar aventuras"
+                placeholder="Buscar experiencias"
                 placeholderTextColor={"#7E7F84"}
                 onChangeText={(value) => setBuscar(value)}
             />

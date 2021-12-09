@@ -29,7 +29,6 @@ import Boton from '../../components/Boton';
 import { colorFondo, moradoClaro, moradoOscuro, verificarUbicacion } from '../../../assets/constants';
 
 import uuid from 'react-native-uuid';
-import QueLlevar from './components/QueLlevar';
 import { Categorias } from '../../models';
 
 
@@ -58,13 +57,12 @@ export default ({ navigation }) => {
         id: uuid.v4()
     });
 
+    const [uploadingImage, setUploadingImage] = useState(null);
+
     const [initialImageIdx, setInitialImageIdx] = useState(0);
-    const [dificultad, setDificultad] = useState(3);
 
     // Manejador de erorres
     const [errorTitulo, setErrortitulo] = useState(false);
-    const [errorPrecioMin, setErrorprecioMin] = useState(false);
-    const [errorPrecioMax, setErrorprecioMax] = useState(false);
 
 
     const handleShowCategoria = () => {
@@ -78,11 +76,16 @@ export default ({ navigation }) => {
 
 
     function handleContinuar() {
-        const precioMin = isNaN(parseFloat(aventura.precioMin, 10)) ? null : parseFloat(aventura.precioMin, 10)
-        const precioMax = isNaN(parseFloat(aventura.precioMax, 10)) ? null : parseFloat(aventura.precioMax, 10)
-
         const distanciaRecorrida = isNaN(parseFloat(aventura.distanciaRecorrida, 10)) ? null : parseFloat(aventura.distanciaRecorrida, 10)
         const altimetriaRecorrida = isNaN(parseFloat(aventura.altimetriaRecorrida, 10)) ? null : parseFloat(aventura.altimetriaRecorrida, 10)
+
+        // Si se esta subiendo no poder continuar
+        if (uploadingImage !== null) {
+            Alert.alert("Espera", "Espera a que se suban todas las imagenes")
+            return
+
+        }
+        console.log(aventura.imagenDetalle)
 
         // Verificacion de index de imagen fondo
         if (aventura.imagenFondoIdx === null || aventura.imagenFondoIdx >= aventura.imagenDetalle.length) {
@@ -107,16 +110,12 @@ export default ({ navigation }) => {
         const aventuraAEnviar = {
             ...aventura,
             imagenDetalle,
-            precioMax,
-            precioMin,
 
             // Parametros que dependen de la categoria para enviarse
             distanciaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? distanciaRecorrida : null,
             altimetriaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? altimetriaRecorrida : null,
 
             categoria,
-
-            dificultad,
         }
         // Existencia de parametros
         if (!aventura.titulo) {
@@ -138,17 +137,7 @@ export default ({ navigation }) => {
         }
 
 
-        if ((!!aventura.precioMax) && precioMin > precioMax) {
-            setErrorprecioMax(true)
-            Alert.alert("Error", "El precio maximo debe ser mayor que el precio minimo")
-            return
-        }
-
         navigation.navigate("AgregarAventura2", aventuraAEnviar)
-    }
-
-    function handleSelectDificultad(index) {
-        setDificultad(index)
     }
 
 
@@ -160,6 +149,9 @@ export default ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 style={styles.container}>
                 <Carrousel
+                    uploading={uploadingImage}
+                    setUploading={setUploadingImage}
+
                     aventura={aventura}
                     setAventura={setAventura}
 
@@ -178,199 +170,107 @@ export default ({ navigation }) => {
                 <View style={styles.bodyContainer}>
 
                     {/* Primer grupo */}
-                    <View>
+                    <View style={{
+                        ...styles.row,
+                        marginBottom: 30,
+                    }}>
+                        {/* Titulo */}
+                        <View style={{ flex: 1, }}>
+                            <Text style={styles.captionTxt}>Titulo*</Text>
 
-                        <View style={{
-                            ...styles.row,
-                        }}>
-                            {/* Titulo */}
-                            <View style={{ flex: 1, }}>
-                                <Text style={styles.captionTxt}>Titulo*</Text>
-
-                                <TextInput
-                                    value={aventura.titulo}
-                                    maxLength={25}
-                                    placeholderTextColor={"#00000035"}
-                                    placeholder="Nevado de Colima"
-                                    onPressIn={() => {
-                                        setErrortitulo(false)
-                                    }}
-                                    onChangeText={(e) => {
-                                        setAventura({
-                                            ...aventura,
-                                            titulo: e
-                                        })
-                                    }}
-                                    style={{
-                                        ...styles.textInput,
-                                        borderColor: errorTitulo ? "red" : "transparent",
-                                        marginRight: 10,
-                                    }}
-                                />
-                            </View>
-
-
-                            <View style={{ flex: 1, }}>
-                                <Text style={{
-                                    ...styles.captionTxt,
-
-                                    textAlign: 'left',
-                                }}>Rango precio /persona</Text>
-
-                                <View style={{
-                                    ...styles.row,
-                                    marginLeft: 10
-                                }}>
-                                    <Text style={styles.precioIndicadores}>$ </Text>
-
-                                    {/* PrecioMin */}
-                                    <TextInput
-                                        value={aventura.precioMin}
-                                        maxLength={5}
-                                        placeholderTextColor={"#00000040"}
-                                        placeholder="1800"
-                                        onPressIn={() => {
-                                            setErrorprecioMin(false)
-                                        }}
-                                        onChangeText={(e) => {
-                                            setAventura({
-                                                ...aventura,
-                                                precioMin: e
-                                            })
-                                        }}
-                                        style={[styles.textInput, {
-                                            borderColor: errorPrecioMin ? "red" : "transparent",
-                                            fontWeight: 'bold',
-                                        }]}
-                                        keyboardType={"numeric"}
-                                    />
-                                    <Text style={styles.precioIndicadores}> - </Text>
-
-                                    {/* PrecioMax */}
-                                    <TextInput
-                                        keyboardType={"numeric"}
-                                        value={aventura.precioMax}
-                                        maxLength={5}
-                                        placeholderTextColor={"#00000040"}
-                                        placeholder="3500"
-                                        onPressIn={() => {
-                                            setErrorprecioMax(false)
-                                        }}
-                                        onChangeText={(e) => {
-                                            setAventura({
-                                                ...aventura,
-                                                precioMax: e
-                                            })
-                                        }}
-                                        style={[styles.textInput, {
-                                            borderColor: errorPrecioMax ? "red" : "transparent",
-                                            fontWeight: 'bold',
-                                        }]}
-                                    />
-                                </View>
-                            </View>
+                            <TextInput
+                                value={aventura.titulo}
+                                maxLength={25}
+                                placeholderTextColor={"#00000035"}
+                                placeholder="Nevado de Colima"
+                                onPressIn={() => {
+                                    setErrortitulo(false)
+                                }}
+                                onChangeText={(e) => {
+                                    setAventura({
+                                        ...aventura,
+                                        titulo: e
+                                    })
+                                }}
+                                style={{
+                                    ...styles.textInput,
+                                    borderColor: errorTitulo ? "red" : "transparent",
+                                    marginRight: 10,
+                                }}
+                            />
                         </View>
 
-                        <View style={{
-                            ...styles.row,
-                            marginVertical: 30,
-                        }}>
 
-                            {/* Dificultad */}
-                            <View style={styles.dificultad}>
-                                <Text style={styles.captionTxt}>Dificultad*</Text>
-                                <View style={{
-                                    flexDirection: 'row',
+                        <View style={{ flex: 1, }}>
+                            <Text style={{
+                                ...styles.captionTxt,
+                                textAlign: 'left',
+                            }}>Categoria*</Text>
+                            <Pressable
+                                onPress={handleShowCategoria}
+                                style={{
                                     height: 45,
+                                }}>
+
+                                <View style={{
+                                    paddingHorizontal: 15,
+                                    flexDirection: 'row',
                                     alignItems: 'center',
-                                }}>
-                                    {[...Array(5).keys()].map((e, i) => {
 
-                                        return (
-                                            <Pressable
-                                                key={i}
-                                                onPress={() => handleSelectDificultad(i + 1)}
-                                                style={styles.dificultadIconContainer}
-                                            >
-                                                <Foundation name="mountains" size={28} color={i < dificultad ? "black" : "#00000077"} />
-                                            </Pressable>
-                                        )
-                                    })}
-
-                                </View>
-                            </View>
-
-                            {/* Categoria */}
-                            <View style={styles.categoriaContainer}>
-                                <Text style={{
-                                    ...styles.captionTxt,
-                                    textAlign: 'left',
-                                }}>Categoria*</Text>
-                                <Pressable
-                                    onPress={handleShowCategoria}
-                                    style={{
-                                        height: 45,
-                                    }}>
-
-                                    <View style={{
-                                        paddingHorizontal: 15,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-
-                                        backgroundColor: colorInput,
-                                        flex: 1,
-
-                                    }}>
-
-                                        <Text style={styles.categoriaTxt}>{categoria}</Text>
-                                        <MaterialIcons
-                                            name={showCategorias ? "keyboard-arrow-up" : "keyboard-arrow-down"}
-                                            size={30}
-                                            color={moradoClaro}
-                                        />
-                                    </View>
-
-                                </Pressable>
-                                {showCategorias && <View style={{
-                                    width: '100%',
-                                    zIndex: 1,
-                                    position: 'absolute',
                                     backgroundColor: colorInput,
-                                    top: 65,
-                                    paddingTop: 5,
+                                    flex: 1,
+
+                                    borderRadius: 7,
+
                                 }}>
-                                    {
-                                        listCategorias.map((e, idx) => (
-                                            <Pressable
-                                                key={idx.toString()}
-                                                style={{
-                                                    paddingHorizontal: 15,
-                                                    paddingVertical: 10,
-                                                    backgroundColor: categoria === e ? moradoClaro : "transparent",
-                                                }}
-                                                onPress={() => handleSelectCategoria(idx)}
 
-                                            >
-
-                                                <Text
-                                                    style={{
-                                                        ...styles.categoriaTxt,
-                                                        color: categoria !== e ? moradoClaro : "#fff",
-                                                    }}
-                                                >{e}</Text>
-                                            </Pressable>
-                                        ))
-                                    }
-
+                                    <Text style={styles.categoriaTxt}>{categoria}</Text>
+                                    <MaterialIcons
+                                        name={showCategorias ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+                                        size={30}
+                                        color={moradoClaro}
+                                    />
                                 </View>
+
+                            </Pressable>
+                            {showCategorias && <View style={{
+                                width: '100%',
+                                zIndex: 1,
+                                position: 'absolute',
+                                backgroundColor: colorInput,
+                                top: 65,
+                                paddingTop: 5,
+                                borderBottomLeftRadius: 7,
+                                borderBottomRightRadius: 7,
+                            }}>
+                                {
+                                    listCategorias.map((e, idx) => (
+                                        <Pressable
+                                            key={idx.toString()}
+                                            style={{
+                                                paddingHorizontal: 15,
+                                                paddingVertical: 10,
+                                                backgroundColor: categoria === e ? moradoClaro : "transparent",
+                                            }}
+                                            onPress={() => handleSelectCategoria(idx)}
+
+                                        >
+
+                                            <Text
+                                                style={{
+                                                    ...styles.categoriaTxt,
+                                                    color: categoria !== e ? moradoClaro : "#fff",
+                                                }}
+                                            >{e}</Text>
+                                        </Pressable>
+                                    ))
                                 }
 
                             </View>
+                            }
+
                         </View>
-
-
                     </View>
-
 
 
                     <View style={styles.line} />
@@ -515,7 +415,7 @@ export default ({ navigation }) => {
                             numberOfLines={6}
                             multiline={true}
                             placeholderTextColor={"#00000040"}
-                            placeholder="Esta aventura contiene pedazos con alto nivel tecnico pero al final de cuentas se disfruta mucho..."
+                            placeholder="Esta experiencia contiene pedazos con alto nivel tecnico pero al final de cuentas se disfruta mucho..."
                             onChangeText={(e) => {
                                 setAventura({
                                     ...aventura,

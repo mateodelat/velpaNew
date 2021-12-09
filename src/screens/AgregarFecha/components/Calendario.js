@@ -7,6 +7,9 @@ import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, mor
 import { Loading } from '../../../components/Loading';
 import { Fecha } from '../../../models';
 
+import * as Haptics from 'expo-haptics';
+import { vibrar } from '../../../../assets/constants/constant';
+
 
 // Personalizar idiomas
 LocaleConfig.locales['es'] = {
@@ -143,6 +146,7 @@ export default ({
     // Si la segunda fecha es menor a la primera, se convierte en la primera
     // Si no entonces la segunda fecha se hace el ultimo dia
     const handleDayPress = (fecha) => {
+        vibrar('light')
         // Dia inicial
         const { dateString, timestamp } = fecha
 

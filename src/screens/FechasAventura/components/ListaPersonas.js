@@ -34,9 +34,10 @@ export default ({ personasReservadas, personasTotales }) => {
                         return (
                             <Image
                                 key={idx.toString()}
-                                source={{ uri: persona.foto }}
+                                source={persona.foto ? { uri: persona.foto } : require("../../../../assets/user.png")}
                                 style={{
                                     ...styles.imagenPersonas,
+                                    borderWidth: persona.foto ? 3 : 0,
                                     left: tamañoFotos * idx,
                                 }}
                             />
@@ -91,9 +92,10 @@ export default ({ personasReservadas, personasTotales }) => {
                                     flexDirection: 'row',
                                 }}>
                                 <Image
-                                    source={{ uri: persona.foto }}
+                                    source={persona.foto ? { uri: persona.foto } : require("../../../../assets/user.png")}
                                     style={{
                                         ...styles.imagenPersonas,
+                                        borderWidth: persona.foto ? 3 : 0,
                                         position: 'relative',
                                         marginRight: 10,
                                     }}

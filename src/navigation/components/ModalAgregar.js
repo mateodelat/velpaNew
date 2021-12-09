@@ -69,7 +69,7 @@ export default function ({ setModalVisible }) {
                             name="calendar-plus-o"
                             size={20}
                             color={colorLogo} />
-                        <Text style={styles.subTitle}>Nueva fecha en aventura</Text>
+                        <Text style={styles.subTitle}>Nueva fecha en experiencia</Text>
 
                     </Pressable>
 
@@ -90,7 +90,7 @@ export default function ({ setModalVisible }) {
                             color={colorLogo}
                         />
 
-                        <Text style={styles.subTitle}>Solicitar aventura</Text>
+                        <Text style={styles.subTitle}>Solicitar experiencias</Text>
 
                     </Pressable>
 

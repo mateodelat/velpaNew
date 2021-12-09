@@ -234,7 +234,7 @@ export default ({ route, navigation }) => {
                     />}
 
                     {guia && <Elemento
-                        texto={"Solicitudes a aventuras"}
+                        texto={"Solicitudes a experiencias"}
                         onPress={handleSolicitudes}
                         icono={<Feather
                             name="user-check"

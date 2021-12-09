@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
 import ChatRoomItem from './components/ChatRoomItem';
@@ -11,6 +11,7 @@ import { DataStore, Predicates } from '@aws-amplify/datastore';
 import { ChatRoomUsuario } from '../../models';
 import { Loading } from '../../components/Loading';
 import { Mensaje } from '../../models';
+import { Usuario } from '../../models';
 
 export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
@@ -38,11 +39,18 @@ export default ({ navigation }) => {
             .filter(e => e.usuario.id === sub)
             .sort((a, b) => a.chatroom.updatedAt < b.chatroom.updatedAt)
             .map(async e => {
+
+                // Mensajes nuevos en la relacion de usuario chat
+                const { newMessages } = e
+
+                const chatRoomUsuario = e
                 e = e.chatroom
                 // Obtener el ultimo mensaje
                 e = {
                     ...e,
-                    lastMessage: await DataStore.query(Mensaje, e.chatRoomLastMessageId)
+                    chatRoomUsuario,
+                    newMessages,
+                    lastMessage: e.chatRoomLastMessageId ? await DataStore.query(Mensaje, e.chatRoomLastMessageId) : null
                 }
 
                 return e
@@ -52,7 +60,39 @@ export default ({ navigation }) => {
         return chatRooms
     }
 
-    const handleChat = (chat) => {
+    const handleChat = async (chat, index) => {
+        const sub = chat?.chatRoomUsuario?.usuario?.id
+
+        try {
+            // Si el chat presionado tiene nuevos mensajes restarselos a los unread del usuario
+            DataStore.query(Usuario, sub)
+                .then(usuario => {
+                    const newMessagesUsuario = usuario?.newMessages
+                    const messagesInChat = chats.newMessages
+
+                    // Si los usuarios tienen nuevos mensajes actualizarlos
+                    if (!!newMessagesUsuario && usuario) {
+                        DataStore.save(Usuario.copyOf(usuario, n => {
+                            n.newMessages = newMessagesUsuario - messagesInChat
+                        }))
+                    }
+
+                })
+
+
+
+            // Poner en leido los mensajes del chat para esa persona
+            let newChats = [...chats]
+            newChats[index].newMessages = 0
+            setChats(newChats)
+
+            DataStore.save(ChatRoomUsuario.copyOf(chat.chatRoomUsuario, n => {
+                n.newMessages = 0
+            }))
+        } catch (e) {
+            Alert.alert("Error", "Error actualizando notificaciones del chat")
+            console.log(e)
+        }
         const {
             id,
             name: titulo,
@@ -122,34 +162,24 @@ export default ({ navigation }) => {
                                 style={{ width: '100%', }}
                                 data={chats}
                                 renderItem={({ item, index }) => {
-                                    // Ver si se pone la linea al final
-                                    if (index === chats.length - 1) {
-                                        return <ChatRoomItem
+                                    return <View
+                                        key={index.toString()}
+                                        style={{
+                                            width: '100%',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <ChatRoomItem
                                             index={index}
                                             setChatRooms={setChats}
-                                            key={index.toString()}
-                                            onPress={() => handleChat(item)}
+                                            onPress={() => handleChat(item, index)}
                                             item={item}
                                         />
 
-                                    } else {
-                                        return <View
-                                            key={index.toString()}
-                                            style={{
-                                                width: '100%',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <ChatRoomItem
-                                                index={index}
-                                                setChatRooms={setChats}
-                                                onPress={() => handleChat(item)}
-                                                item={item}
-                                            />
+                                        {/* Ver si se pone la linea al final */}
+                                        {index !== chats.length - 1 && <View style={styles.line} />}
+                                    </View>
 
-                                            <View style={styles.line} />
-                                        </View>
-                                    }
                                 }}
                             />
                         </View>

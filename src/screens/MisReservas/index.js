@@ -101,7 +101,8 @@ export default function () {
 
         // Obtener reservas y fechas para cada una
         const reservas = await DataStore.query(Reserva, r => r.usuarioID("eq", sub), {
-            sort: e => e.createdAt("DESCENDING")
+            sort: e => e.createdAt("DESCENDING"),
+            limit: 4
         })
             .then(async r => {
                 return await Promise.all(r.map(async res => {

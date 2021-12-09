@@ -15,7 +15,7 @@ import { Aventura } from '../../../../models';
 import { Publicidad } from '../../../../models';
 
 import BuscarAventura from '../../../BuscarAventura';
-import ModalTipoImagen from './ModalTipoImagen';
+import ModalTipoImagen from '../../../../components/ModalTipoImagen';
 import HeaderModal from '../../../AgregarFecha/components/HeaderModal'
 
 
@@ -150,12 +150,12 @@ export default function ({
     }
 
     function handleAddVideo() {
-        console.log("cmabira video")
+        Alert.alert("Agregar video")
 
     }
 
     function handleRemoveVideo() {
-        console.log("cmabira video")
+        Alert.alert("Quitar video")
 
     }
 

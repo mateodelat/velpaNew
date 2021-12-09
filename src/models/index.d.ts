@@ -114,11 +114,11 @@ export declare class Aventura {
   readonly titulo: string;
   readonly imagenFondoIdx: number;
   readonly imagenDetalle: (string | null)[];
-  readonly precioMin: number;
-  readonly precioMax: number;
+  readonly precioMin?: number;
+  readonly precioMax?: number;
   readonly duracion?: string;
   readonly descripcion?: string;
-  readonly dificultad: number;
+  readonly dificultad?: number;
   readonly ubicacionNombre: string;
   readonly ubicacionId: string;
   readonly ubicacionLink?: string;
@@ -199,6 +199,7 @@ export declare class Usuario {
   readonly comentariosAdicionales?: string;
   readonly notificationToken?: string;
   readonly owner?: string;
+  readonly newMessages?: number;
   readonly AventurasAutorizadas?: (AventuraUsuario | null)[];
   readonly Mensajes?: (Mensaje | null)[];
   readonly ChatRooms?: (ChatRoomUsuario | null)[];
@@ -225,6 +226,7 @@ export declare class Mensaje {
 
 export declare class ChatRoomUsuario {
   readonly id: string;
+  readonly newMessages?: number;
   readonly chatroom: ChatRoom;
   readonly usuario: Usuario;
   readonly createdAt?: string;
@@ -237,9 +239,9 @@ export declare class ChatRoom {
   readonly id: string;
   readonly name: string;
   readonly picture?: string;
-  readonly newMessages: number;
   readonly lastMessage?: Mensaje;
   readonly fechaID?: string;
+  readonly guiaID?: string;
   readonly Mensajes?: (Mensaje | null)[];
   readonly Participantes?: (ChatRoomUsuario | null)[];
   readonly createdAt?: string;
@@ -290,6 +292,7 @@ export declare class Fecha {
   readonly tituloAventura?: string;
   readonly aventuraID: string;
   readonly usuarioID: string;
+  readonly dificultad?: number;
   readonly Reservas?: (Reserva | null)[];
   readonly ChatRoom?: (ChatRoom | null)[];
   readonly createdAt?: string;

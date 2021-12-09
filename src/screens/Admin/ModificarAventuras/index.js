@@ -31,6 +31,8 @@ import { DataStore } from '@aws-amplify/datastore';
 
 import Boton from '../../../components/Boton';
 import { EstadoAventura } from '../../../models';
+import { vibrar } from '../../../../assets/constants/constant';
+import { AventuraUsuario } from '../../../models';
 
 
 
@@ -150,6 +152,8 @@ export default ({
 
 
     const handleLongPressAventura = (e, row, column) => {
+        vibrar('select')
+
         // Seleccionar el elemento presionado
         let newSelectedItems = [...selectedItems]
         newSelectedItems[row][column].selected = true
@@ -164,6 +168,8 @@ export default ({
     }
 
     const handleSelectAventura = (aventura, row, column) => {
+        aventurasSeleccionadas().length !== 0
+
         let newSelectedItems = [...selectedItems]
 
         // Se cambia el valor del item seleccionado
@@ -171,13 +177,17 @@ export default ({
 
         // Se agrega el id del item seleccionado
         newSelectedItems[row][column].aventura = aventura
+        if (aventurasSeleccionadas(newSelectedItems).length === 0) {
+            setSelector(false)
+        }
 
         setSelectedItems(newSelectedItems)
     }
 
-    const aventurasSeleccionadas = () => {
+    const aventurasSeleccionadas = (newSelected) => {
+        let selectItems = selectedItems ? selectedItems : newSelected
         let listaAventuras = []
-        selectedItems.map((row) => {
+        selectItems.map((row) => {
             row.map((e) => {
                 if (e.selected) {
                     listaAventuras.push({
@@ -213,6 +223,7 @@ export default ({
                 setAventuras(newAventuras)
                 setAventurasAMostrar(newAventuras)
                 resetSelectedItems(newAventuras.length)
+                setSelector(false)
             } catch (error) {
                 Alert.alert("Error", "Erorr borrando las aventuras")
                 console.log(error)
@@ -247,6 +258,16 @@ export default ({
 
                 // Obtener el modelo de la aventura para datastore
                 const modelAventura = await DataStore.query(Aventura, newAventuras[idx].id)
+
+                // Si la aventura estaba en pendiente se autoriza al usuario creador
+                if (modelAventura.estadoAventura === EstadoAventura.PENDIENTE) {
+                    const modelUsuario = await DataStore.query(Usuario, modelAventura.usuarioID)
+                    DataStore.save(new AventuraUsuario({
+                        aventura: modelAventura,
+                        usuario: modelUsuario
+                    }))
+                }
+
 
                 DataStore.save(Aventura.copyOf(modelAventura, nuevo => {
                     nuevo.estadoAventura = EstadoAventura.AUTORIZADO
@@ -328,61 +349,10 @@ export default ({
 
                     // Dificultad dificil
                     (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
-
-
                 )
             )
         })
         setAventurasAMostrar(nuevasAve)
-    }
-
-    const handleClickDificultad = (index) => {
-        resetSelectedItems()
-        let newDificultades = [...dificultad]
-        newDificultades[index] = !newDificultades[index]
-
-        setDificultad(newDificultades)
-
-        const nuevasAve = aventuras.filter(e => {
-            return (
-                (// Es igual al titulo en minusculas
-                    e.titulo.toLowerCase().includes(buscar.toLowerCase())
-                    ||
-
-                    // Es igual a la descripcion
-                    e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
-                &&
-                ( // Dificultad facil
-                    (newDificultades[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (newDificultades[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (newDificultades[2] && e.dificultad > 3)) &&
-                (// ALPINISMO
-                    (categoriasSeleccionadas[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (categoriasSeleccionadas[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (categoriasSeleccionadas[2] && e.categoria === Categorias.OTROS)
-                )
-
-            )
-        })
-        setAventurasAMostrar(nuevasAve)
-
     }
 
     const handleChangeText = (text) => {
@@ -415,15 +385,6 @@ export default ({
 
                     // OTROS
                     (categorias[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
                 ))
         })
     }
@@ -448,17 +409,7 @@ export default ({
 
                     // Dificultad dificil
                     (categorias[2] && e.categoria === Categorias.OTROS)
-                ) && (
-                    // Dificultad facil
-                    (dificultad[0] && e.dificultad < 3) ||
-
-                    // Dificultad media
-                    (dificultad[1] && e.dificultad === 3) ||
-
-                    // Dificultad dificil
-                    (dificultad[2] && e.dificultad > 3)
                 )
-
             )
         })
     }
@@ -559,7 +510,7 @@ export default ({
                         <TextInput
                             style={{ padding: 0, flex: 1, padding: 10, paddingLeft: 40, }}
                             value={buscar}
-                            placeholder="Buscar aventuras"
+                            placeholder="Buscar experiencias"
                             placeholderTextColor={"#7E7F84"}
                             onChangeText={handleChangeText}
                         />
@@ -614,34 +565,6 @@ export default ({
                         {
                             filtrarAbierto ? <View
                             >
-
-                                {/* $$$$$$$$$$  DIFICULTAD  $$$$$$$$$$$*/}
-                                <View style={{
-                                    flexDirection: 'row',
-                                    height: 45,
-                                    marginTop: 15,
-                                    justifyContent: 'space-between',
-                                }}>
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(0)}
-                                        texto={"Facil"}
-                                        selected={dificultad[0]}
-                                    />
-
-
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(1)}
-                                        texto={"Medio"}
-                                        selected={dificultad[1]}
-                                    />
-
-                                    <BotonDificultad
-                                        onPress={() => handleClickDificultad(2)}
-                                        texto={"Dificil"}
-                                        selected={dificultad[2]}
-                                    />
-                                </View>
-
 
 
                                 {/* Categorias*/}
