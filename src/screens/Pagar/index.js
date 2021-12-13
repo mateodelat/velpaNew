@@ -28,7 +28,7 @@ import { DataStore } from '@aws-amplify/datastore';
 import { ChatRoom, ChatRoomUsuario, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
-import { scheduleNotificationAsync } from 'expo-notifications';
+import { getBadgeCountAsync, scheduleNotificationAsync } from 'expo-notifications';
 import { sendPushNotification } from '../../../assets/constants/constant';
 
 
@@ -318,6 +318,19 @@ export default function ({ route, navigation }) {
                         token: tokenGuia
                     })
                 }
+
+                // // Enviar notificaciones al usuario faltando una semana y un dia
+                // scheduleNotificationAsync({
+                //     content: {
+                //         title: tituloAventura,
+                //         body: "'Change sides!'",
+                //         badge: await getBadgeCountAsync() + 1
+                //     },
+                //     trigger: {
+                //         seconds: 60,
+                //     },
+                // });
+
 
 
                 await DataStore.save(new Notificacion({

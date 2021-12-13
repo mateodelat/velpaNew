@@ -127,11 +127,11 @@ export default ({
     tipo
 }) => {
 
-    const [tiempo, setTiempo] = useState(moment(time).from(moment()));
+    const [tiempo, setTiempo] = useState(() => moment(time).from(moment()));
 
     useEffect(() => {
         const i = setInterval(() => {
-            setTiempo(moment(time).from(moment()))
+            setTiempo(() => moment(time).from(moment()))
         }, 1000)
 
         return () => {

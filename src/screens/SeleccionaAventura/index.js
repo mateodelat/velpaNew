@@ -191,7 +191,7 @@ export default ({
             tipo: TipoNotificacion.SOLICITUDGUIA,
 
             titulo: "Nueva solicitud",
-            descripcion: "Se ha creado una solicitud de guia para" + listaAventuras.map(e => (" " + e.titulo)) + ", espera nuestra llamada!!",
+            descripcion: "Se ha creado una solicitud de guia para " + listaAventuras.map(e => (" " + e.titulo)) + ", espera nuestra llamada!!",
 
             usuarioID: sub,
 
@@ -253,7 +253,7 @@ export default ({
                 tipo: TipoNotificacion.SOLICITUDGUIA,
 
                 titulo: "Nueva solicitud",
-                descripcion: "Se ha creado una solicitud de guia para" + aventura.titulo + ", espera nuestra llamada!!",
+                descripcion: "Se ha creado una solicitud de guia para " + aventura.titulo + ", espera nuestra llamada!!",
 
                 usuarioID: sub,
 

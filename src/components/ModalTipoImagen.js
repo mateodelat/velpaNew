@@ -14,7 +14,6 @@ export default function ({
     video,
     aventura
 }) {
-
     const [innerModal, setInnerModal] = useState(false);
     const [modalType, setModalType] = useState("pick");
     const [linkImage, setLinkImage] = useState("");
@@ -179,7 +178,7 @@ export default function ({
                             <TextInput
                                 value={linkImage}
                                 onChangeText={setLinkImage}
-                                placeholder={"https://example-Image.jpg"}
+                                placeholder={video ? "https://exampleVideo.mp4" : "https://exampleImage.jpg"}
                                 style={styles.inputText} />
                         </View>
                     </View>

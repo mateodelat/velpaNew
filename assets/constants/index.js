@@ -322,8 +322,6 @@ export const createUsuario = async (attributes, unathenticated, username) => {
 
 export async function handleGoogle() {
   Auth.federatedSignIn({ provider: "Google" })
-    .then(e => {
-    })
     .catch(e => {
       Alert.alert("Error", "Error iniciando sesion con google")
       console.log(e)
@@ -802,6 +800,7 @@ export const getAventura = async (id) => {
 
   const ave = await DataStore.query(Aventura, id)
     .then(async ave => {
+      if (!ave) return false
       // Obtener urls de Storage
       const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
         isUrl(e) ? e : await Storage.get(e)
@@ -1198,7 +1197,7 @@ export function asignarReservaciones(fecha) {
 // Funcion que calcula el precio dependiendo de el numero de personas
 export function calculatePrice(precioIndividual, total, personasReservadas) {
   const sumaPersonas = personasReservadas ? total + personasReservadas : total
-
+  return precioIndividual
 
   if (personasReservadas === sumaPersonas) {
     return precioIndividual

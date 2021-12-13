@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
     ActivityIndicator,
-    Alert,
     Dimensions,
-    Image,
     Keyboard,
     Pressable,
     ScrollView,
@@ -14,15 +12,15 @@ import {
 } from 'react-native'
 
 
-import { FontAwesome5 } from '@expo/vector-icons';
+
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+
 import { MaterialIcons } from '@expo/vector-icons';
 
 
 import { categorias, colorFondo, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
-import BotonDificultad from './components/BotonDificultad';
+
 
 import CuadradoImagen from '../../components/CuadradoImagen';
 

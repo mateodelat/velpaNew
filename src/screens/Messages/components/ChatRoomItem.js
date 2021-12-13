@@ -25,11 +25,11 @@ export default ({
         lastMessage
     } = item
 
-    const [timeAgo, setTimeAgo] = useState(moment(lastMessage?.createdAt).from(moment()));
+    const [timeAgo, setTimeAgo] = useState(() => moment(lastMessage?.createdAt).from(moment()));
 
     useEffect(() => {
         const i = setInterval(() => {
-            setTimeAgo(moment(lastMessage?.createdAt).from(moment()))
+            setTimeAgo(() => moment(lastMessage?.createdAt).from(moment()))
         }, 1000)
 
         return () => {

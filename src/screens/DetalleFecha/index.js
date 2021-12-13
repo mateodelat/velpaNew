@@ -63,7 +63,7 @@ export default ({ navigation, route }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
 
-    const { fecha: fechaGotten, fechaID, reservaID } = route.params
+    const { fecha: fechaGotten, fechaID } = route.params
 
     const [fecha, setFecha] = useState(null);
 

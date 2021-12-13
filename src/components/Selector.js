@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { Entypo } from '@expo/vector-icons';
+import { vibrar } from '../../assets/constants/constant';
 
 export default ({
     cantidad,

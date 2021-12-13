@@ -31,13 +31,13 @@ export default () => {
 
 
     const handleIrAReserva = (idReserva) => {
-        navigation.navigate("MisReservas")
+        navigation.navigate("MisReservas", idReserva)
     }
 
     const handleIrAReservaEnFecha = (fechaID, reservaID) => {
         // Navegar a fechas y a la fecha especifica
         navigation.navigate("MisFechas")
-        navigation.navigate("DetalleFecha", { fechaID, reservaID })
+        navigation.navigate("DetalleFecha", { fechaID, })
     }
 
     const handleVerTutorial = () => {
@@ -58,22 +58,24 @@ export default () => {
 
     const fetchNotificaciones = async () => {
         const sub = await getUserSub()
-        const notificaciones = await DataStore.query(Notificacion, (e) => e.usuarioID("eq", sub), {
-            sort: e => e.createdAt("DESCENDING")
-        }).then(async r => {
-            setNotificacionesOriginal(r)
-            return Promise.all(r.map(async e => {
-                const imagen = {
-                    url: isUrl(e.imagen) ? e.imagen : await Storage.get(e.imagen),
-                    key: e.imagen
-                }
-                return {
-                    ...e,
-                    imagen
-                }
-            }))
-        })
-        setNotificaciones(notificaciones)
+        const notifications = await DataStore.query(Notificacion, (e) => e
+            .usuarioID("eq", sub)
+            , {
+                sort: e => e.createdAt("DESCENDING")
+            }).then(async r => {
+                setNotificacionesOriginal(r)
+                return Promise.all(r.map(async e => {
+                    const imagen = {
+                        url: isUrl(e.imagen) ? e.imagen : await Storage.get(e.imagen),
+                        key: e.imagen
+                    }
+                    return {
+                        ...e,
+                        imagen
+                    }
+                }))
+            })
+        setNotificaciones(notifications)
     }
 
     const handleVerNotificacion = (idx) => {

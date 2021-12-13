@@ -42,8 +42,9 @@ export default function () {
             }
         }).then(r => r.json())
             .then(r => {
+                console.log(r)
                 if (r.has_more) {
-                    Alert.alert("Faltan", "Faltan transferencias a mostrar, avisa al desarrollador")
+                    // Alert.alert("Faltan", "Faltan transferencias a mostrar, avisa al desarrollador")
                 }
                 if (r.error) {
                     Alert.alert("Error", "Ocurrio un error obteniendo las transferencias")

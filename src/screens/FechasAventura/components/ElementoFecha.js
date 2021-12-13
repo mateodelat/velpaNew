@@ -79,7 +79,6 @@ export default function ({ fecha, handleContinuar, idx }) {
                     return {
                         ...r,
                         foto: !r.foto ? null : isUrl(r.foto) ? r.foto : await Storage.get(r.foto),
-                        superGuia: r.superGuia
                     }
                 })
             setGuia(perfil)
@@ -109,7 +108,19 @@ export default function ({ fecha, handleContinuar, idx }) {
                 {/* Hora y superguia */}
                 <View style={styles.superGuiaContainer}>
                     <Text style={styles.superGuiaTxt}>{formatAMPM(fecha.fechaInicial, false)}</Text>
-                    <Text style={styles.superGuiaTxt}>SuperGuia</Text>
+                    {/* <Text style={styles.superGuiaTxt}>SuperGuia</Text> */}
+                    <View>
+                        <Text
+                            style={styles.precio}
+                        >{precio}$</Text>
+                        <Text
+                            style={{
+                                textAlign: 'right',
+                                fontSize: 10,
+                                color: '#666',
+                            }}
+                        >*aprox</Text>
+                    </View>
 
                 </View>
 
@@ -123,18 +134,6 @@ export default function ({ fecha, handleContinuar, idx }) {
                         <Text numberOfLines={1} style={styles.titulo}
                         >{formatDateShort(fechaInicial, fechaFinal)}</Text>}
 
-                    <View>
-                        <Text
-                            style={styles.precio}
-                        >{precio}$</Text>
-                        <Text
-                            style={{
-                                textAlign: 'right',
-                                fontSize: 10,
-                                color: '#666',
-                            }}
-                        >*aprox</Text>
-                    </View>
 
                 </View>
 
@@ -156,6 +155,8 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                 {/* Elementos de detalle */}
                 {openDetails && <View >
+
+                    {/* Dificultad de la fecha */}
                     {fecha.dificultad !== null && fecha.dificultad !== undefined && <View style={{ flexDirection: 'row', marginVertical: 10, }}>
                         {
                             [...Array(fecha.dificultad).keys()].map(e => {
@@ -174,22 +175,22 @@ export default function ({ fecha, handleContinuar, idx }) {
                     </View>}
 
                     {/* Perfil del guia */}
-                    <View
+                    <Pressable
+                        onPress={handleNavigateGuia}
                         style={{
-                            marginTop: 10,
+                            marginTop: 20,
+                            marginBottom: 10,
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
                         }}>
 
+
                         <View style={{ alignItems: 'flex-start', }}>
                             <Text style={{ fontSize: 16, }}>{guia?.nombre} {guia?.apellido}</Text>
                             <Text style={styles.nickname}>@{guia?.nickname}</Text>
                         </View>
-                        <Pressable
-                            onPress={handleNavigateGuia}
-
-                        >
+                        <View>
 
                             {guia.foto ? <Image
                                 source={{ uri: guia?.foto }} style={styles.foto} />
@@ -202,14 +203,14 @@ export default function ({ fecha, handleContinuar, idx }) {
                                     size={50}
                                     color="black"
                                 />}
-                        </Pressable>
 
-                    </View>
+                        </View>
+                    </Pressable>
                     {/* ubicacion */}
                     <Pressable
                         onPress={abrirMapa}
                         style={{
-                            marginTop: 40,
+                            marginTop: 20,
                         }}>
                         <Text style={{ marginBottom: 10, }}>Punto de reunion:</Text>
 
@@ -352,6 +353,7 @@ const styles = StyleSheet.create({
     superGuiaTxt: {
         fontWeight: 'bold',
         color: moradoOscuro,
+        fontSize: 16,
     },
 
     row: {
@@ -361,20 +363,20 @@ const styles = StyleSheet.create({
     },
 
     titulo: {
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: 'bold',
         flex: 1,
         color: '#000',
     },
 
     descripcion: {
-        fontSize: 17,
+        fontSize: 16,
         flex: 1,
         color: gris,
     },
 
     precio: {
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: 'bold',
         marginLeft: 10,
         color: moradoOscuro,
@@ -404,7 +406,7 @@ const styles = StyleSheet.create({
 
     cuadradoDatos: {
         flex: 1,
-        marginVertical: 30,
+        marginVertical: 20,
         marginBottom: 20,
 
         paddingHorizontal: 20,

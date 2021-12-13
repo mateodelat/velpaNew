@@ -76,7 +76,7 @@ const CuadradoImagen = ({
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}>
-                    {!!item?.duracion && <View style={{ flexDirection: 'row', }}>
+                    {!!item?.duracion ? <View style={{ flexDirection: 'row', }}>
                         <Feather name="clock" size={15} color="gray" />
                         <Text
                             numberOfLines={1}
@@ -84,6 +84,8 @@ const CuadradoImagen = ({
                                 color: 'gray',
                                 fontSize: 12,
                             }}> {item?.duracion}</Text>
+
+                    </View> : <View style={{ flex: 1, }}>
 
                     </View>}
 

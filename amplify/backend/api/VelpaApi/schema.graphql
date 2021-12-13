@@ -235,6 +235,7 @@ type Notificacion @model
   owner:String
 
   leido:Boolean
+  showAt:AWSTimestamp
 
   reservaID: ID
   fechaID: ID

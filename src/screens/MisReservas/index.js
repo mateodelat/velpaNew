@@ -87,7 +87,9 @@ function Item({ e }) {
 }
 
 
-export default function () {
+export default function ({ route, navigation }) {
+    const idReserva = route.params
+
     useEffect(() => {
         fetchReservas()
     }, []);
@@ -102,7 +104,6 @@ export default function () {
         // Obtener reservas y fechas para cada una
         const reservas = await DataStore.query(Reserva, r => r.usuarioID("eq", sub), {
             sort: e => e.createdAt("DESCENDING"),
-            limit: 4
         })
             .then(async r => {
                 return await Promise.all(r.map(async res => {
@@ -131,6 +132,15 @@ export default function () {
             })
 
         setReservas(reservas)
+
+        // Si hay un id de reserva encontrar la reserva para hacer reservas proximas o pasadas
+
+        if (idReserva) {
+            const selected = reservas.find(e => e.id === idReserva)
+            if (!selected) return
+
+            selected.pasada && setReservasProximas(false)
+        }
     }
 
     const nextReservations = reservas?.filter(e => !e.pasada)

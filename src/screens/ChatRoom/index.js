@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { container, formatDateShort, getUserSub, moradoOscuro } from '../../../assets/constants'
 import MessageComponent from './components/Message';
@@ -161,7 +161,9 @@ export default ({ route }) => {
 
 
     return (
-        <View style={{ ...container, paddingLeft: 10, }}>
+        <KeyboardAvoidingView
+            // behavior='position'
+            style={{ ...container, paddingLeft: 10, }}>
             {!chatMessages ? <Loading indicator /> :
 
                 <FlatList
@@ -229,7 +231,7 @@ export default ({ route }) => {
                 </Pressable>}
             </View>
 
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 

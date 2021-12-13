@@ -1,4 +1,5 @@
 import * as Haptics from 'expo-haptics';
+import { getBadgeCountAsync } from 'expo-notifications';
 
 
 export async function sendPushNotification(input: {
@@ -8,6 +9,7 @@ export async function sendPushNotification(input: {
     token: String,
 
 }) {
+    const badge = await getBadgeCountAsync()
     const {
         token,
         title,
@@ -21,7 +23,7 @@ export async function sendPushNotification(input: {
         title,
         body,
         data,
-        bade: "1",
+        badge: badge + 1,
         priority: "high",
     };
 

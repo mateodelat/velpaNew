@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, Dimensions, Image, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { colorFondo, container, getBlob, getImageUrl, isUrl, moradoOscuro, openImagePickerAsync } from '../../../../../assets/constants'
 
@@ -21,6 +21,7 @@ import HeaderModal from '../../../AgregarFecha/components/HeaderModal'
 
 
 import uuid from 'react-native-uuid';
+import { Video } from 'expo-av';
 
 
 const { height } = Dimensions.get("window")
@@ -35,6 +36,8 @@ export default function ({
     const [elemento, setElemento] = useState(item);
 
     const [showTipoAnuncio, setShowTipoAnuncio] = useState(false);
+
+    const video = useRef(null)
 
     async function handleGuardar(e) {
 
@@ -86,6 +89,7 @@ export default function ({
                 pub.linkAnuncio = e.linkAnuncio
                 pub.tipo = e.tipo
                 pub.titulo = e.titulo
+
             }))
         } else {
             await DataStore.save(new Publicidad({
@@ -144,13 +148,11 @@ export default function ({
     async function handleAddImage() {
         setModalVisible(true)
         setTipoModal("tipoImagen")
-        // const r = await openImagePickerAsync(true)
-        // console.log(r)
-
     }
 
     function handleAddVideo() {
-        Alert.alert("Agregar video")
+        setModalVisible(true)
+        setTipoModal("tipoVideo")
 
     }
 
@@ -221,13 +223,30 @@ export default function ({
                         />
 
                         <Pressable
-                            onPress={handleAddVideo}
+                            onPress={video.current !== null ? async () => {
+                                const { isPlaying } = await video.current.getStatusAsync()
+
+                                if (isPlaying) {
+                                    video.current.pauseAsync()
+                                } else {
+                                    video.current.playAsync()
+
+                                }
+                            }
+                                : handleAddVideo}
                             style={styles.videoContainer}>
-                            {elemento.videoUrl ?
-                                <View >
-                                    <Image
+                            {elemento.video.uri ?
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        backgroundColor: '#000',
+                                        justifyContent: 'center',
+                                        borderRadius: 7,
+                                    }}>
+                                    <Video
+                                        ref={video}
                                         style={styles.imagenVideo}
-                                        source={{ uri: item.videoUrl }}
+                                        source={{ uri: elemento.video.uri }}
                                     />
                                     <Entypo
                                         onPress={handleRemoveVideo}
@@ -237,11 +256,24 @@ export default function ({
                                             borderRadius: 20,
                                             left: 5,
                                             top: 5,
+                                            opacity: 0.9
                                         }}
                                         name="minus"
                                         size={20}
                                         color={"red"}
                                     />
+
+                                    <Entypo
+                                        style={{
+                                            position: 'absolute',
+                                            opacity: 0.9
+                                        }}
+                                        name="controller-play"
+                                        size={30}
+                                        color={"white"}
+                                    />
+
+
 
                                 </View> :
                                 <View style={styles.cuadradoVideo}>
@@ -413,6 +445,7 @@ export default function ({
 
 
             </View>
+
             <Modal
                 animationType={tipoModal === "aventura" ? "slide" : "none"}
                 transparent={true}
@@ -425,16 +458,30 @@ export default function ({
                     handleBack={() => setModalVisible(false)}
                     onPress={handleSelectAventura}
                 />
-                : <ModalTipoImagen
-                    setImage={data => {
-                        setElemento({
-                            ...elemento,
-                            imagenFondo: data
-                        })
-                    }}
-                    aventura={elemento.tipo === TipoPublicidad.AVENTURA ? elemento.aventura : null}
-                    setModalVisible={setModalVisible}
-                />
+                :
+                tipoModal === "tipoImagen" ?
+                    <ModalTipoImagen
+                        setImage={data => {
+                            setElemento({
+                                ...elemento,
+                                imagenFondo: data
+                            })
+                        }}
+                        aventura={elemento.tipo === TipoPublicidad.AVENTURA ? elemento.aventura : null}
+                        setModalVisible={setModalVisible}
+                    />
+                    :
+                    <ModalTipoImagen
+                        setImage={data => {
+                            setElemento({
+                                ...elemento,
+                                video: data
+                            })
+                        }}
+                        //    aventura={elemento.tipo === TipoPublicidad.AVENTURA ? elemento.aventura : null}
+                        setModalVisible={setModalVisible}
+                        video
+                    />
                 }
             </Modal>
         </ScrollView>

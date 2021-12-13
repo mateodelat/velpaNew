@@ -176,7 +176,10 @@ export default ({ navigation }) => {
                                     const selected = item.selected
                                     return <Pressable
                                         key={i.toString()}
-                                        onLongPress={() => handleSelecting(i) && vibrar('select')}
+                                        onLongPress={() => {
+                                            handleSelecting(i)
+                                            vibrar('select')
+                                        }}
                                         onPress={() => selecting ? handleSelectItem(i) : handlePressItem(i)}
                                         style={{ marginBottom: 20, }}>
                                         <ComponentePublicidad
@@ -236,7 +239,7 @@ export default ({ navigation }) => {
                 <EditarPublicidad
                     handleCerrar={() => setModalVisible(false)}
                     handleSave={handleSavePublicidad}
-                    item={publicidades && indexSelected ? publicidades[indexSelected] : {}}
+                    item={publicidades && indexSelected !== null ? publicidades[indexSelected] : {}}
                 />
 
             </Modal>

@@ -22,7 +22,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Line from '../../components/Line';
 import ModalMap from '../../components/ModalMap';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoom, Usuario } from '../../models';
+import { ChatRoom, Fecha, Usuario } from '../../models';
 import API from '@aws-amplify/api';
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
@@ -341,7 +341,7 @@ export default ({ navigation, route }) => {
 
                                 <Text style={styles.titleAventura}
                                     numberOfLines={1}
-                                >{guia.AventurasAutorizadas[0]?.titulo} fds fsdfds s sad</Text>
+                                >{guia.AventurasAutorizadas[0]?.titulo}</Text>
 
                                 <LinearGradient
                                     colors={['rgba(40, 46, 192, 0)', 'rgba(40, 46, 192, .7)',]}

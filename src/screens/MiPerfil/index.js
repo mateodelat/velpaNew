@@ -143,7 +143,8 @@ export default ({ route, navigation }) => {
     }
 
     function handleConfig() {
-        Alert.alert("Ir a configuracion", "Cambiar contraseña, modificar tema de la app, metodos de pago, privacidad etc..")
+        navigation.navigate("Configuracion")
+        // Alert.alert("Ir a configuracion", "Cambiar contraseña, modificar tema de la app, metodos de pago, privacidad etc..")
     }
 
 
@@ -284,7 +285,7 @@ export default ({ route, navigation }) => {
                         />
                     }
 
-                    <Elemento
+                    {/* <Elemento
                         texto={"Configuracion"}
                         onPress={handleConfig}
                         icono={<FontAwesome
@@ -293,7 +294,8 @@ export default ({ route, navigation }) => {
                             color="black"
                         />
                         }
-                    />
+                    /> */}
+
                     <Elemento
                         texto={"Cerrar sesion"}
                         onPress={cerrarSesion}

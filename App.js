@@ -21,6 +21,7 @@ import { Publicidad } from './src/models';
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
 async function urlOpener(url, redirectUrl) {
+  console.log(redirectUrl)
   const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
     url,
     redirectUrl
@@ -48,8 +49,8 @@ Amplify.configure({
   oauth: {
     ...awsconfig.oauth,
     urlOpener,
-    redirectSignIn: localRedirectSignIn,
-    redirectSignOut: localRedirectSignOut,
+    redirectSignIn: "exp://exp.host/@mateodelat/velpaNew/",
+    redirectSignOut: "exp://exp.host/@mateodelat/velpaNew/",
 
   }
 });
@@ -82,7 +83,7 @@ const App = () => {
     // Escuchar a actualizaciones de auth
     const auth = Hub.listen("auth", (data) => {
       const { event, message } = data.payload
-      console.log(event, message)
+      // console.log(event, message)
       switch (event) {
         case "signIn":
           setCargandoModelos(true)
@@ -128,9 +129,9 @@ const App = () => {
 
 
     return () => {
-      Hub.remove("auth")
+      Hub.remove("auth", () => null)
 
-      Hub.remove("datastore")
+      Hub.remove("datastore", () => null)
       listener()
       auth()
     }

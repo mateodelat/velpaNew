@@ -14,7 +14,6 @@ import {
     ActivityIndicator
 } from 'react-native'
 
-import dificultad from '../../../assets/dificultad';
 import ImageFullScreen from '../../components/ImageFullScreen';
 
 import Carrousel from './components/Carrousel';
@@ -28,10 +27,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Descripcion from './components/Descripcion';
 import CuadradoImagen from '../../components/CuadradoImagen';
 import Boton from '../../components/Boton';
-import { abrirEnGoogleMaps, getAventura, listAventurasSugeridas, moradoOscuro, redondear } from '../../../assets/constants';
+import { colorFondo, getAventura, listAventurasSugeridas, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 import { Loading } from '../../components/Loading';
 import ModalMap from '../../components/ModalMap';
+import Header from '../../components/header';
+import MapView, { Marker } from 'react-native-maps';
 
 
 
@@ -53,7 +54,6 @@ export default ({ navigation, route }) => {
     const scrollX = useRef(new Animated.Value(0)).current
     const scrollY = useRef(new Animated.Value(0)).current
 
-
     let { width, height } = Dimensions.get("screen")
     height = height * 0.35
 
@@ -70,6 +70,12 @@ export default ({ navigation, route }) => {
         if (id) {
             getAventura(id)
                 .then(r => {
+                    if (!r) {
+                        setAventura(null)
+                        setLoading(false)
+                        return false
+                    }
+
                     // Formatear las imagen detalle
                     r = {
                         ...r,
@@ -95,18 +101,19 @@ export default ({ navigation, route }) => {
                     return r
                 })
                 .then(ave => {
-                    // Obtener aventuras sugeridas
-                    listAventurasSugeridas(id, 4, ave).then(r => {
-                        setAventurasSugeridas(r)
-                        setLoading(false)
+                    if (ave) {
+                        // Obtener aventuras sugeridas
+                        listAventurasSugeridas(id, 4, ave).then(r => {
+                            setAventurasSugeridas(r)
+                            setLoading(false)
 
-                    })
+                        })
+                    }
 
                 })
         }
 
     }, []);
-
 
 
     function handleContinuar() {
@@ -131,11 +138,33 @@ export default ({ navigation, route }) => {
 
     </View>
 
+    if (!aventura) {
+        return <View style={styles.container}>
+            <Header
+                title={"Experiencia"}
+            />
+            <View style={{ padding: 20, }}>
+
+                <Text>Error, no existe la experiencia</Text>
+            </View>
+
+        </View>
+    }
+
+    const region = {
+        latitude: aventura.coordenadas.latitude,
+        longitude: aventura.coordenadas.longitude,
+        latitudeDelta: 2,
+        longitudeDelta: 2,
+
+    }
+
 
     return (
         <View style={{
             flex: 1,
         }}>
+
             <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
                 onScroll={Animated.event(
@@ -146,7 +175,10 @@ export default ({ navigation, route }) => {
                 style={styles.container}>
                 <Carrousel
 
-                    setModalVisible={setModalVisible}
+                    setModalVisible={(params) => {
+                        setModalVisible(params)
+                        setTipoModal("images")
+                    }}
                     setInitialImageIdx={setInitialImageIdx}
 
                     height={height}
@@ -235,60 +267,81 @@ export default ({ navigation, route }) => {
 
 
 
-                        {/* Contenedor ubicacion y altitud */}
+                        {/* Contenedor altitud */}
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            justifyContent: 'space-between',
                             marginTop: 5,
                         }}>
-                            {/* Ubicacion aventura */}
-                            <Pressable
-                                onPress={() => setModalVisible(true)}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                }}>
-                                <View style={{ width: 35, }}>
-                                    <Ionicons name="md-location-sharp" size={25} color="#0000009E" />
-                                </View>
-                                <Text style={{
-                                    fontSize: 16,
-                                    color: "#0000009E",
-                                }}>{aventura.ubicacionNombre}</Text>
-                            </Pressable>
 
-                            {/* Distancia */}
+                            {/* Altimetria */}
                             {
                                 aventura.altimetriaRecorrida && <View style={{
                                     flexDirection: 'row',
                                 }}>
-                                    <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', }}>
+                                    <View style={{ width: 25, height: 27, justifyContent: 'center', alignItems: 'center', }}>
                                         <Image source={require("../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
                                     </View>
                                     <Text style={{
-                                        marginLeft: 5,
+                                        marginLeft: 10,
                                         fontSize: 16,
                                         color: 'gray',
                                     }}>{aventura.altimetriaRecorrida} m</Text>
                                 </View>}
                         </View>
-                    </View>
+
+                        {/* Descripcion */}
+                        {!!aventura.descripcion ? <Descripcion
+                            descripcion={aventura.descripcion}
+                        /> :
+                            <View style={{
+                                marginBottom: 30,
+                            }}>
+
+                            </View>
+                        }
 
 
+                        {/* Ubicacion de la aventura*/}
+                        <View
+                            style={{
+                                marginVertical: 20,
+                                height: height * 0.7,
+                                backgroundColor: colorFondo,
+                            }}>
+                            <MapView
+                                onPress={() => {
+                                    setModalVisible(true)
+                                    setTipoModal("map")
+                                }}
 
+                                loadingIndicatorColor='black'
+                                loadingEnabled
+                                loadingBackgroundColor={colorFondo}
 
+                                pitchEnabled={false}
+                                rotateEnabled={false}
+                                zoomEnabled={false}
+                                scrollEnabled={false}
 
-                    {/* Descripcion */}
-                    {!!aventura.descripcion ? <Descripcion
-                        descripcion={aventura.descripcion}
-                    /> :
-                        <View style={{
-                            marginBottom: 30,
-                        }}>
+                                provider={"google"}
+                                mapType={"standard"}
+
+                                initialRegion={region}
+
+                                style={{
+                                    ...StyleSheet.absoluteFill,
+                                }}
+                            >
+                                {/* Marcador de la ubicacion */}
+                                <Marker
+                                    coordinate={region}
+                                />
+                            </MapView>
 
                         </View>
-                    }
+                    </View>
+
 
                     {/* Lugares recomendados */}
                     {
@@ -344,7 +397,7 @@ export default ({ navigation, route }) => {
             </Animated.ScrollView >
             <HeaderDetalleAventura
                 scrollY={scrollY}
-                height={height * 0.9}
+                height={height * 2}
                 titulo={aventura.titulo}
                 modalActive={modalVisible}
             />
@@ -353,7 +406,7 @@ export default ({ navigation, route }) => {
             {/* Mostrar imagenes */}
             {
                 tipoModal === "map" ?
-                    aventura ? <ModalMap
+                    (aventura ? <ModalMap
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
 
@@ -363,7 +416,8 @@ export default ({ navigation, route }) => {
                             titulo: aventura.ubicacionNombre,
                         }}
 
-                    /> : null :
+                    /> : null)
+                    :
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -380,8 +434,6 @@ export default ({ navigation, route }) => {
                         />
                     </Modal>
             }
-
-
         </View >
     )
 }

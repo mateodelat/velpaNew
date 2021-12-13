@@ -99,12 +99,13 @@ export default function ({
         }}>
             {/* Emisor y hora */}
 
-
             {/* Imagen y mensaje */}
             <View style={{ flexDirection: 'row', }}>
                 {/* Imagen */}
                 <View style={styles.imageContainer}>
-                    {lastMessagePerson && image ? <Image source={{ uri: image }} style={styles.image} />
+                    {lastMessagePerson ? <View style={styles.image}>
+                        <Image source={image ? { uri: image } : require("../../../../assets/user.png")} style={{ width: '100%', height: '100%', }} />
+                    </View>
                         :
                         <View style={{ width: 30, flex: 1, }} />
                     }
@@ -183,9 +184,12 @@ const styles = StyleSheet.create({
         top: 10,
         width: 30,
         height: 30,
+
         borderWidth: 2,
         borderColor: "#fff",
         borderRadius: 30,
+
+        overflow: "hidden"
     },
 
     contentTxt: {

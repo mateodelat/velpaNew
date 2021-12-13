@@ -310,6 +310,7 @@ export declare class Notificacion {
   readonly imagen?: string;
   readonly owner?: string;
   readonly leido?: boolean;
+  readonly showAt?: number;
   readonly reservaID?: string;
   readonly fechaID?: string;
   readonly aventuraID?: string;

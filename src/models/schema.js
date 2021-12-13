@@ -1948,6 +1948,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "showAt": {
+                    "name": "showAt",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "reservaID": {
                     "name": "reservaID",
                     "isArray": false,
@@ -2270,5 +2277,5 @@ export const schema = {
             }
         }
     },
-    "version": "b6091bb395f197c11bb1f23046e700b3"
+    "version": "b0962654bef6969d9705daa78d8a84d1"
 };
