@@ -66,7 +66,11 @@ export default function () {
 
     const verNuevasNotificaciones = async (sub) => {
         // Obtener todas las notificaciones no vistas
-        const unread = await DataStore.query(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+        const unread = await DataStore.query(Notificacion, e => e
+            .usuarioID("eq", sub)
+            .leido("ne", true)
+            .showAt("lt", new Date())
+        )
 
         if (unread.length !== 0) {
             setNewNotificaciones(true)

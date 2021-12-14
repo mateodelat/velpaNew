@@ -195,6 +195,8 @@ export default ({
 
             usuarioID: sub,
 
+            showAt: new Date().getTime(),
+
         }))
 
         // Poner el estatus de guia en el usuario actual
@@ -256,7 +258,7 @@ export default ({
                 descripcion: "Se ha creado una solicitud de guia para " + aventura.titulo + ", espera nuestra llamada!!",
 
                 usuarioID: sub,
-
+                showAt: new Date().getTime(),
             }))
 
             navigation.navigate("ExitoScreen", {

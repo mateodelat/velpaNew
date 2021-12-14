@@ -601,12 +601,14 @@ export const onCreateUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -730,15 +732,34 @@ export const onCreateUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -783,12 +804,14 @@ export const onUpdateUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -912,15 +935,34 @@ export const onUpdateUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -965,12 +1007,14 @@ export const onDeleteUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -1094,15 +1138,34 @@ export const onDeleteUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -1476,9 +1539,11 @@ export const onCreateNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
@@ -1499,9 +1564,11 @@ export const onUpdateNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
@@ -1522,15 +1589,68 @@ export const onDeleteNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onCreateComentario = /* GraphQL */ `
+  subscription OnCreateComentario {
+    onCreateComentario {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateComentario = /* GraphQL */ `
+  subscription OnUpdateComentario {
+    onUpdateComentario {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteComentario = /* GraphQL */ `
+  subscription OnDeleteComentario {
+    onDeleteComentario {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
@@ -1870,12 +1990,14 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -1914,6 +2036,10 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -1987,12 +2113,14 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2031,6 +2159,10 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2104,12 +2236,14 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2148,6 +2282,10 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2180,12 +2318,14 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2224,6 +2364,10 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2288,12 +2432,14 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2332,6 +2478,10 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2396,12 +2546,14 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2440,6 +2592,10 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }

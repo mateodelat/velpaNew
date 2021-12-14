@@ -9,8 +9,8 @@ import Element from './components/Element'
 import { TipoNotificacion } from '../../models'
 
 import moment from "moment";
-import Storage from '@aws-amplify/storage'
 import 'moment/locale/es'
+import CalificaUsuarioModal from '../../components/CalificaUsuarioModal'
 
 
 moment.locale('es')
@@ -23,6 +23,12 @@ export default () => {
 
     const [refreshing, setRefreshing] = useState(false);
 
+    // Modal para calificar al guia
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalData, setModalData] = useState({});
+
+    const [notificaciones, setNotificaciones] = useState(null);
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchNotificaciones()
@@ -32,6 +38,27 @@ export default () => {
 
     const handleIrAReserva = (idReserva) => {
         navigation.navigate("MisReservas", idReserva)
+    }
+
+    const handleCalificaUser = (usuarioID, aventuraID, notificacionIdx) => {
+        setModalVisible(true)
+        setModalData({
+            usuarioID,
+            aventuraID,
+            notificacionIdx
+        })
+    }
+
+    const handleBorrarNotificacion = () => {
+        const notificationToErase = notificaciones[modalData.notificacionIdx]
+        if (notificationToErase) {
+            let newNotifications = [...notificaciones]
+            newNotifications.splice(modalData.notificacionIdx, 1)
+            setNotificaciones(newNotifications)
+
+            DataStore.delete(Notificacion, notificationToErase.id)
+        }
+
     }
 
     const handleIrAReservaEnFecha = (fechaID, reservaID) => {
@@ -49,39 +76,29 @@ export default () => {
         navigation.navigate("MisSolicitudes", aventura ? true : undefined)
 
     }
-    const [notificaciones, setNotificaciones] = useState(null);
-    const [notificacionesOriginal, setNotificacionesOriginal] = useState([]);
 
     useEffect(() => {
         fetchNotificaciones()
     }, []);
-
     const fetchNotificaciones = async () => {
         const sub = await getUserSub()
         const notifications = await DataStore.query(Notificacion, (e) => e
             .usuarioID("eq", sub)
+
+            // Mostrar notificaciones que no tienen showAt o que el show at es anterior a la fecha actual
+            .showAt("lt", new Date())
+
             , {
-                sort: e => e.createdAt("DESCENDING")
-            }).then(async r => {
-                setNotificacionesOriginal(r)
-                return Promise.all(r.map(async e => {
-                    const imagen = {
-                        url: isUrl(e.imagen) ? e.imagen : await Storage.get(e.imagen),
-                        key: e.imagen
-                    }
-                    return {
-                        ...e,
-                        imagen
-                    }
-                }))
+                sort: e => e
+                    .showAt("DESCENDING")
             })
         setNotificaciones(notifications)
     }
 
-    const handleVerNotificacion = (idx) => {
+    const handleVerNotificacion = async (idx) => {
         let nuevasNotificaciones = [...notificaciones]
         let notificacion = nuevasNotificaciones[idx]
-        let originalModel = notificacionesOriginal[idx]
+        let originalModel = await DataStore.query(Notificacion, notificacion.id)
         DataStore.save(
             Notificacion.copyOf(originalModel, nuevo => {
                 nuevo.leido = true
@@ -131,7 +148,13 @@ export default () => {
                 handleVerSolicitud(true)
                 break;
 
+            case TipoNotificacion.RECORDATORIOFECHA:
+                handleIrAReserva(item.reservaID)
+                break;
 
+            case TipoNotificacion.CALIFICAUSUARIO:
+                handleCalificaUser(item.guiaID, item.aventuraID, index)
+                break;
 
             default:
                 console.log("otro tipo de notificacion")
@@ -173,7 +196,7 @@ export default () => {
                         tipo={tipo}
                         titulo={item.titulo}
                         descripcion={item.descripcion}
-                        tiempo={item.createdAt}
+                        tiempo={item.showAt ? item.showAt : item.createdAt}
                         leido={!!item.leido}
 
                         onPress={() => handlePressItem(item, index)}
@@ -182,6 +205,15 @@ export default () => {
                 </View>
             }}
         />
+
+        {modalData.aventuraID && <CalificaUsuarioModal
+            setModalVisible={setModalVisible}
+            modalVisible={modalVisible}
+            usuarioID={modalData.usuarioID}
+            aventuraID={modalData.aventuraID}
+
+            borrarNotificacion={handleBorrarNotificacion}
+        />}
     </View>
     )
 }

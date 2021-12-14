@@ -28,6 +28,7 @@ import Storage from '@aws-amplify/storage';
 import { reverseGeocodeAsync } from 'expo-location';
 import ModalMap from '../../../components/ModalMap';
 import { Foundation } from '@expo/vector-icons';
+import Calificacion from '../../../components/Calificacion';
 
 
 export default function ({ fecha, handleContinuar, idx }) {
@@ -35,8 +36,6 @@ export default function ({ fecha, handleContinuar, idx }) {
     const [tipoModal, setTipoModal] = useState("");
 
     const [openDetails, setOpenDetails] = useState(false);
-
-    const navigation = useNavigation()
 
     const abrirItinerario = () => {
         setModalVisible(true)
@@ -125,7 +124,7 @@ export default function ({ fecha, handleContinuar, idx }) {
                 </View>
 
 
-                {/* Titulo y precio */}
+                {/* Titulo y calificacion */}
                 <View style={styles.row}>
                     {titulo ? <Text
                         numberOfLines={1}
@@ -133,8 +132,6 @@ export default function ({ fecha, handleContinuar, idx }) {
                     >{titulo}</Text> :
                         <Text numberOfLines={1} style={styles.titulo}
                         >{formatDateShort(fechaInicial, fechaFinal)}</Text>}
-
-
                 </View>
 
 
@@ -182,29 +179,31 @@ export default function ({ fecha, handleContinuar, idx }) {
                             marginBottom: 10,
                             flexDirection: 'row',
                             alignItems: 'center',
-                            justifyContent: 'space-between',
                         }}>
 
+                        {guia.foto ? <Image
+                            source={{ uri: guia?.foto }} style={styles.foto} />
+                            : <Feather
+                                style={{
+                                    backgroundColor: "#f4f4f4",
+                                    borderRadius: 15,
+                                }}
+                                name="user"
+                                size={50}
+                                color="black"
+                            />}
 
-                        <View style={{ alignItems: 'flex-start', }}>
-                            <Text style={{ fontSize: 16, }}>{guia?.nombre} {guia?.apellido}</Text>
-                            <Text style={styles.nickname}>@{guia?.nickname}</Text>
+                        <View style={{ alignItems: 'flex-start', flex: 1, marginLeft: 15, }}>
+                            <Text numberOfLines={1} style={{ fontSize: 16, }}>{guia?.nombre} {guia?.apellido}</Text>
+                            <Text numberOfLines={1} style={styles.nickname}>@{guia?.nickname}</Text>
                         </View>
-                        <View>
 
-                            {guia.foto ? <Image
-                                source={{ uri: guia?.foto }} style={styles.foto} />
-                                : <Feather
-                                    style={{
-                                        backgroundColor: "#f4f4f4",
-                                        borderRadius: 15,
-                                    }}
-                                    name="user"
-                                    size={50}
-                                    color="black"
-                                />}
+                        <Calificacion
+                            // hideNumResenas
+                            usuario={guia}
+                        />
 
-                        </View>
+
                     </Pressable>
                     {/* ubicacion */}
                     <Pressable

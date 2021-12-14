@@ -121,6 +121,9 @@ type Usuario @model
   tipo: TipoUsuario
   guia:Boolean
 
+  calificacion:Float
+  numResenas:Int
+
   nombre: String
   apellido: String
 
@@ -128,7 +131,9 @@ type Usuario @model
   
   foto: String
   nickname: String
-  calificacion: Float
+
+  # Nivel del usuario
+  experience:Int
 
   stripeID: String
   
@@ -163,6 +168,7 @@ type Usuario @model
   Fechas: [Fecha] @connection(keyName: "byUsuario", fields: ["id"])
   Notificaciones:[Notificacion] @connection(keyName: "byUsuario", fields: ["id"])
   SolicitudesCreadas: [SolicitudGuia] @connection(keyName: "byUsuario", fields: ["id"])
+  Comentarios:[Comentario] @connection(keyName: "byUsuario", fields: ["id"])
 }
 
 type ChatRoom @model 
@@ -240,7 +246,24 @@ type Notificacion @model
   reservaID: ID
   fechaID: ID
   aventuraID: ID
+  guiaID: ID
   solicitudGuiaID: ID
+}
+
+type Comentario @model
+ @key(name: "byUsuario", fields: ["usuarioCalificadoID"])
+ @auth(rules: [
+   {allow: owner, operations: [create, delete]}, 
+   {allow: private, operations: [read]},
+  ]) {
+
+  id: ID!
+
+  usuarioCalificadoID: ID!
+  body:String
+  calificacion:Float!
+  creatorID: ID
+
 }
 
 
@@ -287,6 +310,8 @@ enum TipoNotificacion{
   ADMIN
   BIENVENIDA
   FECHACREADA
+
+  CALIFICAUSUARIO
 }
 
 enum TipoPublicidad {

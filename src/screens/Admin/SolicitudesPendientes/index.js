@@ -108,6 +108,9 @@ export default ({ navigation }) => {
                 descripcion: "Ya puedes agregar fechas a las experiencias:" + (solicitud.Aventuras.map(e => (" " + e.titulo)))
                     + (comentarios ? ("\ncomentarios: " + comentarios) : ""),
 
+                showAt: new Date().getTime(),
+
+
                 usuarioID: solicitud.usuarioID,
                 owner: solicitud.owner,
 

@@ -81,9 +81,10 @@ export default ({ navigation, route }) => {
                         ...r,
                         imagenDetalle: r.imagenDetalle.map(e => {
                             return {
-                                uri: e,
+                                uri: e.uri,
                                 // Verificar si es video
-                                video: e.endsWith(".mp4")
+                                video: e.uri.endsWith(".mp4"),
+                                key: e.key
                             }
                         })
                     }
@@ -119,7 +120,10 @@ export default ({ navigation, route }) => {
     function handleContinuar() {
         navigation.navigate("FechasAventura", {
             aventuraID: aventura.id,
-            imagenFondo: aventura.imagenDetalle[aventura.imagenFondoIdx].uri,
+            imagenFondo: {
+                uri: aventura.imagenDetalle[aventura.imagenFondoIdx].uri,
+                key: aventura.imagenDetalle[aventura.imagenFondoIdx].key
+            },
             titulo: aventura.titulo
         })
     }

@@ -149,7 +149,11 @@ export default () => {
 		const sub = await getUserSub()
 
 		// Obtener todas las notificaciones no vistas
-		const unread = await DataStore.query(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+		const unread = await DataStore.query(Notificacion, e => e
+			.usuarioID("eq", sub)
+			.leido("ne", true)
+			.showAt("lt", new Date())
+		)
 
 		if (unread.length !== 0) {
 			setNewNotificaciones(true)
@@ -275,7 +279,7 @@ export default () => {
 										}}>Notificaciones</Text>
 
 									{/* Indicador mensajes nuevos */}
-									{newNotificaciones || newMessages && <View style={{
+									{(newNotificaciones || newMessages) && <View style={{
 										height: 10,
 										width: 10,
 										borderRadius: 10,

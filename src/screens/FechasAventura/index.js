@@ -252,7 +252,7 @@ export default index = ({ route, navigation }) => {
             </Animated.ScrollView >
             <HeaderConImagen
                 titulo={titulo}
-                imagen={{ uri: imagenFondo }}
+                imagen={{ uri: imagenFondo.uri }}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
                 showFilter={true}

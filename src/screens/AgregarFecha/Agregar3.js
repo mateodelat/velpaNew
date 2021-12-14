@@ -211,7 +211,8 @@ export default function ({ navigation, route }) {
                         descripcion: "Creaste una fecha en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal),
 
                         usuarioID: sub,
-                        imagen: imagenFondo,
+                        showAt: new Date().getTime(),
+
 
                         fechaID: fecha.id,
                     }))

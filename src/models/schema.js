@@ -722,6 +722,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "calificacion": {
+                    "name": "calificacion",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "numResenas": {
+                    "name": "numResenas",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "nombre": {
                     "name": "nombre",
                     "isArray": false,
@@ -757,10 +771,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "calificacion": {
-                    "name": "calificacion",
+                "experience": {
+                    "name": "experience",
                     "isArray": false,
-                    "type": "Float",
+                    "type": "Int",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -974,6 +988,20 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "usuarioID"
+                    }
+                },
+                "Comentarios": {
+                    "name": "Comentarios",
+                    "isArray": true,
+                    "type": {
+                        "model": "Comentario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "usuarioCalificadoID"
                     }
                 },
                 "createdAt": {
@@ -1976,6 +2004,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "guiaID": {
+                    "name": "guiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "solicitudGuiaID": {
                     "name": "solicitudGuiaID",
                     "isArray": false,
@@ -2050,6 +2085,102 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Comentario": {
+            "name": "Comentario",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usuarioCalificadoID": {
+                    "name": "usuarioCalificadoID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "body": {
+                    "name": "body",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "calificacion": {
+                    "name": "calificacion",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "creatorID": {
+                    "name": "creatorID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Comentarios",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioCalificadoID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "delete"
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "read"
                                 ]
                             }
                         ]
@@ -2225,7 +2356,8 @@ export const schema = {
                 "SOLICITUDAVENTURA",
                 "ADMIN",
                 "BIENVENIDA",
-                "FECHACREADA"
+                "FECHACREADA",
+                "CALIFICAUSUARIO"
             ]
         },
         "TipoPublicidad": {
@@ -2277,5 +2409,5 @@ export const schema = {
             }
         }
     },
-    "version": "b0962654bef6969d9705daa78d8a84d1"
+    "version": "346bac9b3320bd7913d4562d7a16a417"
 };

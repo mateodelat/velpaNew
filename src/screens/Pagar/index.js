@@ -12,7 +12,7 @@ import {
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, formatDateShort, formatDia, getUserSub, moradoClaro, moradoOscuro, shadowMedia } from '../../../assets/constants'
+import { colorFondo, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
 import {
@@ -28,10 +28,10 @@ import { DataStore } from '@aws-amplify/datastore';
 import { ChatRoom, ChatRoomUsuario, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
-import { getBadgeCountAsync, scheduleNotificationAsync } from 'expo-notifications';
+
+import { AndroidNotificationPriority, cancelAllScheduledNotificationsAsync, getAllScheduledNotificationsAsync, getPresentedNotificationsAsync, scheduleNotificationAsync } from 'expo-notifications';
+
 import { sendPushNotification } from '../../../assets/constants/constant';
-
-
 
 
 export default function ({ route, navigation }) {
@@ -234,139 +234,312 @@ export default function ({ route, navigation }) {
         return (personasReservadas + personasTotales > fecha?.personasTotales)
     }
 
-    const handleConfirm = async () => {
-        // Revisar que no se haya llenado la fecha
-        if (await isFechaFull(fecha)) {
-            Alert.alert("Atencion",
-                "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
-                [
-                    {
-                        text: "Ver",
-                        // onPress: verOpciones
-                    },
-                ],
-                { cancelable: false }
-            )
-        } else {
-            // Verificar pago
-            if (!paymentOption?.label || !paymentOption?.image) {
-                Alert.alert("Error", "Agrega primero un metodo de pago")
-                return
-            }
 
-            setButtonLoading(true)
-            const { error } = await confirmPaymentSheetPayment()
-                .catch(e => {
-                    Alert.alert("Error", "Error realizando el pago")
-                    console.log(e)
-                })
+    async function sendNotifications(reservaID, user) {
+        /*Enviar notificaciones:
+        _Faltando 1 semana
+        _Faltando 1 dia
+        _Faltando 1 hora
+        _A las 8 del dia siguiente de la reserva para calificar
+        */
+        const initialDate = new Date(fecha.fechaInicial)
 
-            if (error) {
-                Alert.alert(`Error code: ${error.code}`, error.message);
-            } else {
-                //////////////////////////////////////////////////////////////////////////////
-                ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
-                //////////////////////////////////////////////////////////////////////////////
-                // Obtener id del chatroom correspondiente a la aventura
-                const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID("eq", fechaID)))[0]
-
-                // Obtener el usuario logeado
-                const usuario = await DataStore.query(Usuario, sub)
-
-
-                // Verificar que el usuario no este agregado ya al chatRoom
-                const relacion = (await DataStore.query(ChatRoomUsuario)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
-                if (!relacion) {
-                    // Si no esta el usuario se agrega
-                    await DataStore.save(new ChatRoomUsuario({
-                        usuario,
-                        chatroom
-                    }))
-                    console.log("Usuario agregado al grupo")
-                }
-
-
-                const datosReserva = {
-                    total: precioTotal,
-                    comision: precioTotal * comision,
-                    pagadoAlGuia: precioTotal - (precioTotal * comision),
-
-                    adultos, ninos, tercera,
-
-                    pagoID: idPago,
-
-                    fechaID,
-                    guiaID,
-                    usuarioID: sub
-                }
-
-                // Crear la reservacion en DataStore
-                const reserva = await DataStore.save(new Reserva(datosReserva))
-
-
-                //////////////////////////////////////////////////////////////////////////////
-                //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
-                //////////////////////////////////////////////////////////////////////////////
-
-                // Notificacion a el guia
-                const tokenGuia = (await DataStore.query(Usuario, fecha.usuarioID))?.notificationToken
-
-                if (tokenGuia) {
-                    sendPushNotification({
-                        title: "Nueva reserva",
-                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
-                        token: tokenGuia
-                    })
-                }
-
-                // // Enviar notificaciones al usuario faltando una semana y un dia
-                // scheduleNotificationAsync({
-                //     content: {
-                //         title: tituloAventura,
-                //         body: "'Change sides!'",
-                //         badge: await getBadgeCountAsync() + 1
-                //     },
-                //     trigger: {
-                //         seconds: 60,
-                //     },
-                // });
-
-
-
-                await DataStore.save(new Notificacion({
-                    tipo: TipoNotificacion.RESERVAENFECHA,
-
-                    titulo: "Nueva reserva",
-                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
-
-                    // Autorizar al guia a ver la misma
-                    owner: fecha?.owner,
-                    usuarioID: fecha?.usuarioID,
-                    imagen: imagenFondo,
-
-                    fechaID: fecha?.id,
-                    reservaID: reserva.id
-                }))
-
-                // Notificacion a el usuario
-                await DataStore.save(new Notificacion({
-                    tipo: TipoNotificacion.RESERVACREADA,
-
-                    titulo: "Reserva exitosa!!",
-                    descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura,
-                    imagen: imagenFondo,
-
-                    usuarioID: sub,
-
-                    fechaID: fecha?.id,
-                    reservaID: reserva.id
-                }))
-
-
-                navigation.navigate("ExitoScreen", {})
-            }
-            setButtonLoading(false)
+        // Poner fecha final al dia siguiente de que acabe a las 8
+        let finalDate = new Date(fecha.fechaFinal)
+        if (finalDate.getUTCHours() >= 8) {
+            finalDate = new Date(finalDate.getTime() + msInDay)
         }
+        finalDate.setUTCHours(8)
+
+        const remainingFor1Week = Math.round((initialDate - msInDay * 7 - new Date) / 1000)
+        const remainingFor1Day = Math.round((initialDate - msInDay - new Date) / 1000)
+        const remainingFor1Hour = Math.round((initialDate - msInHour - new Date) / 1000)
+        const remainingForNextDay = Math.round((finalDate - new Date) / 1000)
+
+
+        // Enviar notificacion de califica al guia
+        // Alerta cel
+        scheduleNotificationAsync({
+            content: {
+                title: ((user.nombre ? mayusFirstLetter(user.nombre) : user.nickname) + ", aydanos a hacer de Velpa un lugar mejor"),
+                body: "Calfica tu experiencia en " + tituloAventura + " con " + nicknameGuia,
+            },
+            trigger: {
+                seconds: remainingForNextDay,
+            },
+
+        })
+
+        // Notificacion IN-APP
+        DataStore.save(new Notificacion({
+            tipo: TipoNotificacion.CALIFICAUSUARIO,
+
+            titulo: "Califica tu experiencia",
+            descripcion: ((user.nombre ? mayusFirstLetter(user.nombre) : user.nickname) + ", ayudanos a hacer de Velpa un lugar mejor, calfica a " + nicknameGuia + " en " + tituloAventura),
+
+            showAt: finalDate.getTime(),
+
+            usuarioID: sub,
+            aventuraID: fecha.aventuraID,
+
+            imagen: imagenFondo.key,
+
+            guiaID
+        }))
+
+
+
+        // Si falta mas de una semana para la fecha enviar notificacion
+        if (remainingFor1Week > 0) {
+            // Alerta cel
+            scheduleNotificationAsync({
+                content: {
+                    title: "Todo listo??",
+                    body: "Tu experiencia en " + tituloAventura + " es en 1 semana, revisa el material a llevar",
+                    priority: AndroidNotificationPriority.HIGH,
+                    vibrate: true,
+                    data: {
+                        reservaID
+                    }
+
+                },
+                trigger: {
+                    seconds: remainingFor1Week,
+                },
+
+            })
+
+            // Notificacion IN-APP
+            DataStore.save(new Notificacion({
+                tipo: TipoNotificacion.RECORDATORIOFECHA,
+
+                titulo: "Experiencia en 1 semana",
+                descripcion: "Tu experiencia en " + tituloAventura + " es en 1 semana, ya tienes todo listo?",
+
+                showAt: (new Date(initialDate - msInDay * 7)).getTime(),
+
+                usuarioID: sub,
+
+                fechaID: fecha?.id,
+                reservaID
+            }))
+
+        }
+
+
+        // Si falta mas de una dia para la fecha enviar notificacion
+        if (remainingFor1Day > 0) {
+            // Alerta cel
+            scheduleNotificationAsync({
+                content: {
+                    title: "Solo falta 1 dia!!",
+                    body: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
+                    priority: AndroidNotificationPriority.MAX,
+                    vibrate: true,
+                    data: {
+                        reservaID
+                    }
+
+                },
+                trigger: {
+                    seconds: remainingFor1Day,
+                },
+
+            })
+
+            // Notificacion IN-APP
+            DataStore.save(new Notificacion({
+                tipo: TipoNotificacion.RECORDATORIOFECHA,
+
+                titulo: "Experiencia mañana",
+                descripcion: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
+
+                showAt: (new Date(initialDate - msInDay)).getTime(),
+
+                usuarioID: sub,
+
+                fechaID: fecha?.id,
+                reservaID
+            }))
+
+        }
+
+        // Enviar notificacion de en menos de 1 hora
+        // Alerta cel
+        scheduleNotificationAsync({
+            content: {
+                title: "Estas a nada de irte",
+                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia !!",
+                priority: AndroidNotificationPriority.MAX,
+                vibrate: true,
+                data: {
+                    reservaID
+                }
+
+            },
+            trigger: {
+                seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
+            },
+
+        })
+
+        // Notificacion IN-APP
+        DataStore.save(new Notificacion({
+            tipo: TipoNotificacion.RECORDATORIOFECHA,
+
+            titulo: "Experiencia en menos de 1 hora",
+            descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!",
+
+            showAt: (new Date(initialDate - msInHour)).getTime(),
+
+            usuarioID: sub,
+
+            fechaID: fecha?.id,
+            reservaID
+        }))
+
+
+    }
+
+    const handleConfirm = async () => {
+        try {
+
+            // Revisar que no se haya llenado la fecha
+            if (await isFechaFull(fecha)) {
+                Alert.alert("Atencion",
+                    "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
+                    [
+                        {
+                            text: "Ver",
+                        },
+                    ],
+                    { cancelable: false }
+                )
+            } else {
+                // Verificar pago
+                if (!paymentOption?.label || !paymentOption?.image) {
+                    Alert.alert("Error", "Agrega primero un metodo de pago")
+                    return
+                }
+
+                setButtonLoading(true)
+                const { error } = await confirmPaymentSheetPayment()
+                    .catch(e => {
+                        Alert.alert("Error", "Error realizando el pago")
+                        console.log(e)
+                    })
+
+                if (error) {
+                    setButtonLoading(false)
+                    Alert.alert(`Error code: ${error.code}`, error.message);
+                } else {
+                    //////////////////////////////////////////////////////////////////////////////
+                    ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
+                    //////////////////////////////////////////////////////////////////////////////
+                    // Obtener id del chatroom correspondiente a la aventura
+                    const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID("eq", fechaID)))[0]
+
+                    // Obtener el usuario logeado
+                    const usuario = await DataStore.query(Usuario, sub)
+
+
+                    // Verificar que el usuario no este agregado ya al chatRoom
+                    const relacion = (await DataStore.query(ChatRoomUsuario)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
+                    if (!relacion) {
+                        // Si no esta el usuario se agrega
+                        DataStore.save(new ChatRoomUsuario({
+                            usuario,
+                            chatroom
+                        }))
+                    }
+
+
+                    const datosReserva = {
+                        total: precioTotal,
+                        comision: precioTotal * comision,
+                        pagadoAlGuia: precioTotal - (precioTotal * comision),
+
+                        adultos, ninos, tercera,
+
+                        pagoID: idPago,
+
+                        fechaID,
+                        guiaID,
+                        usuarioID: sub
+                    }
+
+                    // Crear la reservacion en DataStore
+                    const reserva = await DataStore.save(new Reserva(datosReserva))
+
+
+                    //////////////////////////////////////////////////////////////////////////////
+                    //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
+                    //////////////////////////////////////////////////////////////////////////////
+
+                    // Notificacion a el guia en telefono
+                    DataStore.query(Usuario, fecha.usuarioID)
+                        .then(r => {
+                            const { notificationToken } = r
+                            if (notificationToken) {
+                                sendPushNotification({
+                                    title: "Nueva reserva",
+                                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+                                    token: notificationToken
+                                })
+                            }
+                        })
+
+
+
+
+                    // Notificacion al guia IN-APP
+                    DataStore.save(new Notificacion({
+                        tipo: TipoNotificacion.RESERVAENFECHA,
+
+                        titulo: "Nueva reserva",
+                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+
+                        showAt: new Date().getTime(),
+
+                        // Autorizar al guia a ver la misma
+                        owner: fecha?.owner,
+                        usuarioID: fecha?.usuarioID,
+
+                        fechaID: fecha?.id,
+                        reservaID: reserva.id
+                    }))
+
+
+                    // Notificacion a el usuario
+                    DataStore.save(new Notificacion({
+                        tipo: TipoNotificacion.RESERVACREADA,
+
+                        titulo: "Reserva exitosa!!",
+                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura,
+
+                        showAt: new Date().getTime(),
+
+                        usuarioID: sub,
+
+                        fechaID: fecha?.id,
+                        reservaID: reserva.id
+                    }))
+
+                    sendNotifications(
+                        reserva.id,
+                        usuario
+                    )
+
+                    navigation.navigate("ExitoScreen", {})
+                }
+                setButtonLoading(false)
+            }
+        } catch (error) {
+            Alert.alert("Error", error)
+            setButtonLoading(false)
+            console.log(error)
+        }
+
     }
 
     return (
@@ -383,7 +556,7 @@ export default function ({ route, navigation }) {
                 {/* Mostrar la aventura a pagar */}
                 <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
                     <Image
-                        source={{ uri: imagenFondo }}
+                        source={{ uri: imagenFondo.uri }}
                         style={styles.imgAventura}
                     />
 

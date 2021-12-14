@@ -546,28 +546,6 @@ export function emailValido(email) {
 }
 
 
-export const fetchAventura = (aventuraID) => {
-  return API.graphql({ query: getAventura, variables: { id: aventuraID } })
-    .then(async d => {
-      d = d.data.getAventura
-      // Obtenemos las uris firmadas de imagenes
-      d.imagenDetalle = await Promise.all(d.imagenDetalle.map(async e => {
-        const esUrl = !e.startsWith("ave-")
-        return {
-          uri: esUrl ? e : await Storage.get(e),
-          key: e,
-          video: e.endsWith(".mp4")
-        }
-      }))
-
-      d.imagenFondo = {
-        uri: !d.imagenFondo.startsWith("ave-") ? d.imagenFondo : await Storage.get(d.imagenFondo),
-        key: d.imagenFondo
-      }
-      return d
-    })
-}
-
 export const redondear = (numero, entero) => {
   if (!numero) return 0
   numero = Math.round(numero / entero) * entero
@@ -651,9 +629,16 @@ export const obtenerAventurasParaMapa = async () => {
 
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
-        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
-          isUrl(e) ? e : await Storage.get(e)
-        )))
+        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async (e, i) => {
+
+          // Solo obtener la imagen de fondo
+          if (i === ave.imagenFondoIdx) {
+            return isUrl(e) ? e : await Storage.get(e)
+
+          }
+          return e
+        }
+        ))
         return {
           ...ave,
           imagenDetalle
@@ -802,9 +787,11 @@ export const getAventura = async (id) => {
     .then(async ave => {
       if (!ave) return false
       // Obtener urls de Storage
-      const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => (
-        isUrl(e) ? e : await Storage.get(e)
-      )))
+      const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
+        uri: isUrl(e) ? e : await Storage.get(e),
+        key: e
+
+      })))
       return {
         ...ave,
         imagenDetalle

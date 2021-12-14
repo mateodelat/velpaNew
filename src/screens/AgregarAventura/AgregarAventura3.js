@@ -60,7 +60,9 @@ export default ({ navigation, route }) => {
 
                         titulo: "Nueva solicitud",
                         descripcion: "Se ha creado una solicitud de experiencia para " + aventura.titulo + " ,en breve nuestro equipo la revisara",
-                        imagen: aventuraAEnviar.imagenDetalle[aventuraAEnviar.imagenFondoIdx],
+
+                        showAt: new Date().getTime(),
+
 
                         usuarioID: sub,
 

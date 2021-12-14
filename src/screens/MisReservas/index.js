@@ -53,7 +53,7 @@ function Item({ e }) {
                 </View>
 
                 <View style={[styles.row, { marginTop: 10 }]}>
-                    <Text >{personasReservadas} personas</Text>
+                    <Text >{personasReservadas} persona{personasReservadas !== 1 ? "s" : ""}</Text>
                     <Text style={styles.precio}>{formatMoney(e.total, true)}</Text>
 
                 </View>
@@ -212,7 +212,7 @@ export default function ({ route, navigation }) {
 
                                 })
                         )}
-
+            <View style={{ marginTop: 20, }} />
         </ScrollView>
     )
 }

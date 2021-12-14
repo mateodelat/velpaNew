@@ -42,7 +42,8 @@ const TipoNotificacion = {
   "SOLICITUDAVENTURA": "SOLICITUDAVENTURA",
   "ADMIN": "ADMIN",
   "BIENVENIDA": "BIENVENIDA",
-  "FECHACREADA": "FECHACREADA"
+  "FECHACREADA": "FECHACREADA",
+  "CALIFICAUSUARIO": "CALIFICAUSUARIO"
 };
 
 const TipoPublicidad = {
@@ -51,7 +52,7 @@ const TipoPublicidad = {
   "ACTUALIZACION": "ACTUALIZACION"
 };
 
-const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, Notificacion, Publicidad, PaymentIntent, CreateAcountResponse } = initSchema(schema);
+const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
   Aventura,
@@ -65,6 +66,7 @@ export {
   Reserva,
   Fecha,
   Notificacion,
+  Comentario,
   Publicidad,
   AccountType,
   EstadoAventura,

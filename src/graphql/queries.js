@@ -497,12 +497,14 @@ export const getUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -626,15 +628,34 @@ export const getUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -684,12 +705,14 @@ export const listUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -728,6 +751,10 @@ export const listUsuarios = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -762,12 +789,14 @@ export const syncUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -806,6 +835,10 @@ export const syncUsuarios = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -1154,9 +1187,11 @@ export const getNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
@@ -1182,9 +1217,11 @@ export const listNotificacions = /* GraphQL */ `
         imagen
         owner
         leido
+        showAt
         reservaID
         fechaID
         aventuraID
+        guiaID
         solicitudGuiaID
         _version
         _deleted
@@ -1219,15 +1256,90 @@ export const syncNotificacions = /* GraphQL */ `
         imagen
         owner
         leido
+        showAt
         reservaID
         fechaID
         aventuraID
+        guiaID
         solicitudGuiaID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getComentario = /* GraphQL */ `
+  query GetComentario($id: ID!) {
+    getComentario(id: $id) {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listComentarios = /* GraphQL */ `
+  query ListComentarios(
+    $filter: ModelComentarioFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listComentarios(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        usuarioCalificadoID
+        body
+        calificacion
+        creatorID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncComentarios = /* GraphQL */ `
+  query SyncComentarios(
+    $filter: ModelComentarioFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncComentarios(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        usuarioCalificadoID
+        body
+        calificacion
+        creatorID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -1441,12 +1553,14 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          calificacion
+          numResenas
           nombre
           apellido
           nombreAgencia
           foto
           nickname
-          calificacion
+          experience
           stripeID
           selfie
           ID
@@ -1503,12 +1617,14 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          calificacion
+          numResenas
           nombre
           apellido
           nombreAgencia
           foto
           nickname
-          calificacion
+          experience
           stripeID
           selfie
           ID

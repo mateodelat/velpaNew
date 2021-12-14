@@ -707,12 +707,14 @@ export const createUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -836,15 +838,34 @@ export const createUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -892,12 +913,14 @@ export const updateUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -1021,15 +1044,34 @@ export const updateUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -1077,12 +1119,14 @@ export const deleteUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      calificacion
+      numResenas
       nombre
       apellido
       nombreAgencia
       foto
       nickname
-      calificacion
+      experience
       stripeID
       selfie
       ID
@@ -1206,15 +1250,34 @@ export const deleteUsuario = /* GraphQL */ `
           imagen
           owner
           leido
+          showAt
           reservaID
           fechaID
           aventuraID
+          guiaID
           solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
           createdAt
           updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+          owner
         }
         nextToken
         startedAt
@@ -1618,9 +1681,11 @@ export const createNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
@@ -1644,9 +1709,11 @@ export const updateNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
@@ -1670,15 +1737,77 @@ export const deleteNotificacion = /* GraphQL */ `
       imagen
       owner
       leido
+      showAt
       reservaID
       fechaID
       aventuraID
+      guiaID
       solicitudGuiaID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createComentario = /* GraphQL */ `
+  mutation CreateComentario(
+    $input: CreateComentarioInput!
+    $condition: ModelComentarioConditionInput
+  ) {
+    createComentario(input: $input, condition: $condition) {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateComentario = /* GraphQL */ `
+  mutation UpdateComentario(
+    $input: UpdateComentarioInput!
+    $condition: ModelComentarioConditionInput
+  ) {
+    updateComentario(input: $input, condition: $condition) {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteComentario = /* GraphQL */ `
+  mutation DeleteComentario(
+    $input: DeleteComentarioInput!
+    $condition: ModelComentarioConditionInput
+  ) {
+    deleteComentario(input: $input, condition: $condition) {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;
@@ -2039,12 +2168,14 @@ export const createAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2083,6 +2214,10 @@ export const createAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2159,12 +2294,14 @@ export const updateAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2203,6 +2340,10 @@ export const updateAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2279,12 +2420,14 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2323,6 +2466,10 @@ export const deleteAventuraUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2358,12 +2505,14 @@ export const createChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2402,6 +2551,10 @@ export const createChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2469,12 +2622,14 @@ export const updateChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2513,6 +2668,10 @@ export const updateChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }
@@ -2580,12 +2739,14 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
         id
         tipo
         guia
+        calificacion
+        numResenas
         nombre
         apellido
         nombreAgencia
         foto
         nickname
-        calificacion
+        experience
         stripeID
         selfie
         ID
@@ -2624,6 +2785,10 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
         Notificaciones {
+          nextToken
+          startedAt
+        }
+        Comentarios {
           nextToken
           startedAt
         }

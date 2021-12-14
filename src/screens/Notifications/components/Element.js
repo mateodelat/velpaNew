@@ -5,6 +5,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
 
 import { moradoOscuro } from '../../../../assets/constants';
 import { TipoNotificacion } from '../../../models';
@@ -52,9 +55,6 @@ const Icon = ({ tipo }) => {
                 color={"black"}
             />
 
-        // case TipoNotificacion.BIENVENIDA:
-        //     handleVerTutorial()
-        //     break;
 
         case TipoNotificacion.SOLICITUDGUIAAPROVADA:
             return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
@@ -106,6 +106,20 @@ const Icon = ({ tipo }) => {
                     }}
                     name="plus" size={18} color="black"
                 />
+            </View>
+
+        case TipoNotificacion.RECORDATORIOFECHA:
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+
+                <MaterialCommunityIcons name="bell-ring-outline" size={sizeIcon + 5} color="black" />
+
+            </View>
+
+
+        case TipoNotificacion.CALIFICAUSUARIO:
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+
+                <Feather name="user-check" size={sizeIcon} color="black" />
             </View>
 
 
@@ -222,7 +236,7 @@ const styles = StyleSheet.create({
         height: 6,
         width: 6,
         position: 'absolute',
-        left: 8,
+        left: 5,
         borderRadius: 10,
     }
 
