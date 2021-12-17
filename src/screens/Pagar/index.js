@@ -40,8 +40,9 @@ export default function ({ route, navigation }) {
         adultos,
         ninos,
         tercera,
-        precioIndividualSinComision,
         comisionVelpa: comision,
+
+        precioIndividual: precioIndividualConComision,
 
         nicknameGuia,
         tituloAventura,
@@ -78,7 +79,6 @@ export default function ({ route, navigation }) {
 
     const personasTotales = adultos + ninos + tercera
 
-    const precioIndividualConComision = precioIndividualSinComision * (1 + comision)
     const precioTotal = precioIndividualConComision * personasTotales
 
 
@@ -433,6 +433,8 @@ export default function ({ route, navigation }) {
                     setButtonLoading(false)
                     Alert.alert(`Error code: ${error.code}`, error.message);
                 } else {
+                    const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
+
                     //////////////////////////////////////////////////////////////////////////////
                     ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
                     //////////////////////////////////////////////////////////////////////////////
@@ -479,11 +481,18 @@ export default function ({ route, navigation }) {
                     // Notificacion a el guia en telefono
                     DataStore.query(Usuario, fecha.usuarioID)
                         .then(r => {
-                            const { notificationToken } = r
+                            const { notificationToken, experience } = r
+
+                            // Agregar la experiencia al usuario
+                            let newExp = (experience ? experience : 0) + experienciaGanada
+                            DataStore.save(Usuario.copyOf(r, n => {
+                                n.experience = newExp
+                            }))
+
                             if (notificationToken) {
                                 sendPushNotification({
                                     title: "Nueva reserva",
-                                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+                                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
                                     token: notificationToken
                                 })
                             }
@@ -497,7 +506,7 @@ export default function ({ route, navigation }) {
                         tipo: TipoNotificacion.RESERVAENFECHA,
 
                         titulo: "Nueva reserva",
-                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial),
+                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
 
                         showAt: new Date().getTime(),
 

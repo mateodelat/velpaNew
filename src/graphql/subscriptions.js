@@ -40,6 +40,7 @@ export const onCreateAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -139,6 +140,7 @@ export const onUpdateAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -238,6 +240,7 @@ export const onDeleteAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -379,6 +382,7 @@ export const onCreateFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -454,6 +458,7 @@ export const onUpdateFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -529,6 +534,7 @@ export const onDeleteFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -662,6 +668,7 @@ export const onCreateUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -865,6 +872,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -1068,6 +1076,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId

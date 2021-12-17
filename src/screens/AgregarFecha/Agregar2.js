@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Animated, Dimensions, Image, ImageBackground, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { abrirEnGoogleMaps, colorFondo, formatAMPM, formatDate, formatDateShort, formatDia, getCapacidadUsuario, getUserSub, moradoClaro, moradoOscuro, msInMinute, redondear, shadowMedia } from '../../../assets/constants'
+import {
+    calculateExpPerPerson,
+    calculateLvl,
+    colorFondo,
+    formatDia,
+    getUserSub,
+    moradoClaro,
+    moradoOscuro,
+    redondear,
+} from '../../../assets/constants'
+
 
 
 import SelectorInput from '../../components/SelectorInput'
@@ -11,18 +21,83 @@ import RadioButton from '../../components/RadioButton';
 
 
 import { Foundation } from '@expo/vector-icons';
+import { DataStore } from 'aws-amplify';
+import { Usuario } from '../../models';
+import { Loading } from '../../components/Loading';
+
+import { Entypo } from '@expo/vector-icons';
+import InfoNivelesModal from '../../components/InfoNivelesModal';
 
 
 const { height } = Dimensions.get("screen")
 
-export default function ({ navigation, route }) {
+export default function ({ navigation,
+    //  route 
+
+}) {
+
+    const route = {
+        key: "AgregarFecha2-NCd7-S_gmC8QCvlZJ7-i3",
+        name: "AgregarFecha2",
+        params: {
+            aventuraID: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
+            fecha: {
+                comision: 0.2,
+                fechaFinal: 1641060000000,
+                fechaInicial: 1640937600000,
+                itinerario: [
+                    {
+                        hora: 1640937600000,
+                        modifiable: false,
+                        tipo: "inicio",
+                        titulo: "Punto de reunion en  95988, Willows",
+                        ubicacionLink: undefined,
+                        ubicacionNombre: " 95988, Willows",
+                    },
+                    {
+                        hora: 1640937660000,
+                        titulo: "Aventura en Iztacihuatl",
+                    },
+                    {
+                        hora: 1641060000000,
+                        modifiable: false,
+                        tipo: "fin",
+                        titulo: "Punto de reunion en  95988, Willows",
+                        ubicacionLink: undefined,
+                        ubicacionNombre: " 95988, Willows",
+                    },
+                ],
+                puntoReunionCoords: {
+                    latitude: 39.56450438760179,
+                    latitudeDelta: undefined,
+                    longitude: -122.28864870965481,
+                    longitudeDelta: undefined,
+                },
+                puntoReunionId: undefined,
+                puntoReunionLink: undefined,
+                puntoReunionNombre: " 95988, Willows",
+            },
+            imagenFondo: {
+                key: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
+                uri: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
+            },
+            incluidoDefault: [
+                "Electrolit",
+            ],
+            materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
+            maxPersonas: 20,
+            precioMax: 1000,
+            precioMin: 500,
+            tituloAventura: "Iztacihuatl",
+        },
+    }
 
     const {
         fechaInicial,
         fechaFinal
     } = route?.params?.fecha
 
-    const {
+    let {
         precioMin,
         precioMax,
         tituloAventura,
@@ -30,8 +105,25 @@ export default function ({ navigation, route }) {
 
     } = route.params
 
+    precioMin = !precioMin ? 20 : precioMin
+
     const scrollY = React.useRef(new Animated.Value(0)).current
 
+    const [usuario, setUsuario] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    useEffect(() => {
+        try {
+            getUserSub()
+                .then(sub => {
+                    return DataStore.query(Usuario, sub).then(setUsuario)
+                })
+        } catch (error) {
+            console.log(error)
+            Alert.alert("Error obteniendo el usuario")
+
+        }
+    }, []);
 
 
 
@@ -51,9 +143,25 @@ export default function ({ navigation, route }) {
     // Dificultad de la fecha
     const [dificuldad, setDificuldad] = useState(3);
 
+    const comisionVelpa = calculateLvl(usuario?.experience)?.comisionVelpa * 100
+    const lvl = calculateLvl(usuario?.experience)?.lvl
+    const pagadoAlUsr = precio - precio * ((1 * comisionVelpa) / 100)
+    const expPerPerson = calculateExpPerPerson(precio)
+
 
 
     const handleContinuar = () => {
+        if (!comisionVelpa || !usuario) {
+            console.log({
+                comisionVelpa,
+                lvl,
+                pagadoAlUsr,
+                expPerPerson,
+            })
+            Alert.alert("Error", "Error inesperado, no hay usario")
+            return
+        }
+
         const { incluidoDefault, materialDefault } = route.params
 
 
@@ -72,6 +180,9 @@ export default function ({ navigation, route }) {
 
             dificuldad,
 
+            comision: comisionVelpa,
+            experienciaPorPersona: expPerPerson,
+
             ...route.params.fecha,
             ...route.params
         })
@@ -82,169 +193,224 @@ export default function ({ navigation, route }) {
         setDificuldad(index)
     }
 
+
     return (
         <View style={styles.container}>
 
-            {/* Fechas */}
-            <Animated.ScrollView
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                    { useNativeDriver: false }
-                )}
+            {!usuario ?
+                <Loading
+                    containerStyle={{
+                        backgroundColor: colorFondo,
+                    }}
+                    indicator
+                />
+                :
+                <Animated.ScrollView
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: false }
+                    )}
 
-                showsVerticalScrollIndicator={false}
-                style={{
-                    padding: 20,
-                    flex: 1,
+                    showsVerticalScrollIndicator={false}
+                    style={{
+                        padding: 20,
+                        flex: 1,
 
-                }}>
-
-                <View style={{ height: height * 0.24 }} />
-
-                {/* Texto de titulo */}
-                <View style={styles.item}>
-                    <Text style={styles.captionTxt}>Titulo fecha (opcional)</Text>
-                    <TextInput
-                        maxLength={30}
-                        style={styles.textInput}
-                        value={titulo}
-                        onChangeText={setTitulo}
-                    />
-                </View>
-
-                {/* Texto de descripcion */}
-                <View style={styles.item}>
-                    <Text style={styles.captionTxt}>Descripcion fecha (opcional)</Text>
-                    <TextInput
-                        style={{ ...styles.textInput, textAlignVertical: 'top', }}
-                        multiline={true}
-                        numberOfLines={3}
-                        value={descripcion}
-                        onChangeText={setDescripcion} />
-                </View>
-
-                <View style={styles.item}>
-                    <Text style={styles.captionTxt}>Dificultad*</Text>
-
-                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                        {
-                            [...Array(5).keys()].map(e => {
-                                return <Foundation
-                                    onPress={() => handleClickDificultad(e + 1)}
-                                    style={{
-                                        paddingHorizontal: 5,
-                                    }}
-                                    key={e}
-                                    name="mountains"
-                                    size={35}
-                                    color={dificuldad > e ? "black" : "gray"}
-                                />
-                            })
-                        }
-                    </View>
-                </View>
-
-
-                <View style={styles.linea} />
-
-                {/* Cantidad de personas */}
-                <View style={{
-                    ...styles.item,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-
-                }}>
-                    <View style={styles.contenedorSelector}>
-                        <SelectorInput
-                            cantidad={personasTotales}
-                            setCantidad={setPersonas}
-                            minValue={1}
-                            maxValue={maxPersonas}
-
-
-                            titulo={"Personas maximas"}
-
-                            cambio={1}
-                        />
-
-                    </View>
-                </View>
-
-
-                {/* Precio por persona */}
-                <View style={{
-                    ...styles.item,
-                    // marginTop: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-
-                }}>
-
-
-                    <View style={styles.contenedorSelector}>
-                        <SelectorInput
-                            cantidad={precio}
-                            setCantidad={setPrecio}
-                            minValue={precioMin}
-                            maxValue={precioMax}
-
-                            titulo={"Precio /persona"}
-
-                            cambio={50}
-                            showSigno={true}
-                        />
-
-                    </View>
-                </View>
-
-                {/* Permitir/negar tercera edad y niños */}
-                <View style={styles.allowContainer}>
-                    {/* Tercera edad */}
-                    <Pressable
-                        onPress={() => setAllowTercera(!allowTercera)}
-                        style={styles.allowInnerContainer}>
-                        <Text style={styles.textAllow}>Permitir tercera edad</Text>
-                        <RadioButton
-                            checked={allowTercera}
-                            setChecked={setAllowTercera}
-                        />
-
-                    </Pressable>
-                    <View style={{
-                        ...styles.linea,
-                        marginBottom: 5,
-                        marginTop: 5,
                     }}>
 
+                    <View style={{ height: height * 0.24 }} />
+
+                    {/* Texto de titulo */}
+                    <View style={styles.item}>
+                        <Text style={styles.captionTxt}>Titulo fecha (opcional)</Text>
+                        <TextInput
+                            maxLength={30}
+                            style={styles.textInput}
+                            value={titulo}
+                            onChangeText={setTitulo}
+                        />
                     </View>
 
-                    {/* Niños */}
+                    {/* Texto de descripcion */}
+                    <View style={styles.item}>
+                        <Text style={styles.captionTxt}>Descripcion fecha (opcional)</Text>
+                        <TextInput
+                            style={{ ...styles.textInput, textAlignVertical: 'top', }}
+                            multiline={true}
+                            numberOfLines={3}
+                            value={descripcion}
+                            onChangeText={setDescripcion} />
+                    </View>
+
+                    <View style={styles.item}>
+                        <Text style={styles.captionTxt}>Dificultad*</Text>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            {
+                                [...Array(5).keys()].map(e => {
+                                    return <Foundation
+                                        onPress={() => handleClickDificultad(e + 1)}
+                                        style={{
+                                            paddingHorizontal: 5,
+                                        }}
+                                        key={e}
+                                        name="mountains"
+                                        size={35}
+                                        color={dificuldad > e ? "black" : "gray"}
+                                    />
+                                })
+                            }
+                        </View>
+                    </View>
+
+
+                    <View style={styles.linea} />
+
+                    {/* Cantidad de personas */}
+                    <View style={{
+                        ...styles.item,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+
+                    }}>
+                        <View style={styles.contenedorSelector}>
+                            <SelectorInput
+                                cantidad={personasTotales}
+                                setCantidad={setPersonas}
+                                minValue={1}
+                                maxValue={maxPersonas}
+
+
+                                titulo={"Personas maximas"}
+
+                                cambio={1}
+                            />
+
+                        </View>
+                    </View>
+
+
+                    {/* Precio por persona */}
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+
+                    }}>
+
+
+
+                        <View style={styles.contenedorSelector}>
+
+                            <SelectorInput
+                                cantidad={precio}
+                                setCantidad={setPrecio}
+                                minValue={precioMin}
+                                maxValue={precioMax}
+
+                                titulo={"Precio /persona"}
+
+                                cambio={50}
+                                showSigno={true}
+                            />
+                        </View>
+                    </View>
+
+                    {/* Informacion comisiones */}
                     <Pressable
-                        onPress={() => setAllowNinos(!allowNinos)}
-                        style={styles.allowInnerContainer}>
-                        <Text style={styles.textAllow}>Permitir niños</Text>
-                        <RadioButton
-                            checked={allowNinos}
-                            setChecked={setAllowNinos}
-                        />
+                        onPress={() => setModalVisible(true)}
+                        style={{
+                            ...styles.item,
+                            backgroundColor: '#fff',
+                            padding: 10,
+                            paddingTop: 0,
+                            alignItems: 'center',
+                        }}>
+                        <View style={{
+                            ...styles.linea,
+                            marginTop: 0,
+                            marginBottom: 10,
+                        }} />
+
+                        <Entypo name="info-with-circle" size={24} color={moradoOscuro + "55"} />
+
+                        <View style={styles.infoPriceContainer}>
+                            <Text style={styles.infoPriceTitle}>Nivel actual:</Text>
+                            <Text style={styles.infoPriceNumber}>{lvl}</Text>
+
+                        </View>
+
+                        <View style={styles.infoPriceContainer}>
+                            <Text style={styles.infoPriceTitle}>Comision Velpa:</Text>
+                            <Text style={styles.infoPriceNumber}>{comisionVelpa}%</Text>
+
+                        </View>
+
+                        <View style={styles.infoPriceContainer}>
+                            <Text style={styles.infoPriceTitle}>Ganancia /persona:</Text>
+                            <Text style={styles.infoPriceNumber}>${pagadoAlUsr}</Text>
+                        </View>
+
+                        <View style={styles.infoPriceContainer}>
+                            <Text style={styles.infoPriceTitle}>Experiencia ganada /persona:</Text>
+                            <Text style={styles.infoPriceNumber}>+{expPerPerson} exp</Text>
+                        </View>
+
+                        <View style={styles.infoPriceContainer}>
+                            <Text style={styles.infoPriceTitle}>Experiencia fecha llena:</Text>
+                            <Text style={styles.infoPriceNumber}>+{expPerPerson * personasTotales} exp</Text>
+                        </View>
+
+
 
                     </Pressable>
 
-                </View>
+                    {/* Permitir/negar tercera edad y niños */}
+                    <View style={styles.allowContainer}>
+                        {/* Tercera edad */}
+                        <Pressable
+                            onPress={() => setAllowTercera(!allowTercera)}
+                            style={styles.allowInnerContainer}>
+                            <Text style={styles.textAllow}>Permitir tercera edad</Text>
+                            <RadioButton
+                                checked={allowTercera}
+                                setChecked={setAllowTercera}
+                            />
+
+                        </Pressable>
+                        <View style={{
+                            ...styles.linea,
+                            marginTop: 0,
+                            marginBottom: 0,
+                        }} />
+
+                        {/* Niños */}
+                        <Pressable
+                            onPress={() => setAllowNinos(!allowNinos)}
+                            style={styles.allowInnerContainer}>
+                            <Text style={styles.textAllow}>Permitir niños</Text>
+                            <RadioButton
+                                checked={allowNinos}
+                                setChecked={setAllowNinos}
+                            />
+
+                        </Pressable>
+
+                    </View>
 
 
 
 
-                <Boton
-                    style={{
-                        marginBottom: 40,
-                        marginTop: 20,
-                    }}
-                    titulo={"Continuar"}
-                    onPress={handleContinuar}
-                />
+                    <Boton
+                        style={{
+                            marginBottom: 40,
+                            marginTop: 20,
+                        }}
+                        titulo={"Continuar"}
+                        onPress={handleContinuar}
+                    />
 
-            </Animated.ScrollView >
+                </Animated.ScrollView >
+            }
 
             <HeaderConImagen
                 titulo={tituloAventura + " " + formatDia(fechaInicial)}
@@ -252,6 +418,13 @@ export default function ({ navigation, route }) {
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
             />
+
+            <InfoNivelesModal
+                userExp={usuario?.experience}
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+            />
+
 
         </View >
     )
@@ -304,10 +477,25 @@ const styles = StyleSheet.create({
 
     },
 
-    infoPrice: {
-        fontSize: 12,
-        color: '#444',
+    infoPriceTitle: {
+        flex: 1,
+        fontSize: 15,
+        color: '#000',
     },
+
+    infoPriceNumber: {
+        fontSize: 15,
+        color: moradoOscuro,
+        fontWeight: 'bold',
+        minWidth: 36,
+        textAlign: 'center',
+    },
+    infoPriceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+
 
     agregar: {
         backgroundColor: '#fff',
@@ -320,7 +508,7 @@ const styles = StyleSheet.create({
     contenedorSelector: {
         backgroundColor: '#fff',
         padding: 10,
-        alignItems: 'flex-end',
+        // alignItems: 'flex-end',
         flex: 1,
     },
 
@@ -345,9 +533,10 @@ const styles = StyleSheet.create({
 
     linea: {
         borderBottomWidth: 0.5,
-        marginHorizontal: 20,
         marginTop: 20,
         marginBottom: 40,
+        borderColor: "gray",
+        width: '100%',
     },
     row: {
         flexDirection: 'row',

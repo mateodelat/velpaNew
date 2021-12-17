@@ -233,9 +233,6 @@ export default function ({ navigation, route }) {
                 puntoReunionCoords,
 
                 itinerario,
-
-
-                comision: aventura.comision,
             },
 
             incluidoDefault,

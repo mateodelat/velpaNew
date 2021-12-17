@@ -170,30 +170,6 @@ export default ({ route, navigation }) => {
                                 <Image source={{ uri: data?.foto }} style={styles.image} /> :
                                 <Image source={require("../../../assets/user.png")} style={styles.image} />
                             }
-                            {/* <View style={{
-                                position: 'absolute',
-                                borderRadius: 20,
-                                borderWidth: 4,
-                                borderColor: "#fff",
-                                // right: 0,
-                            }}>
-                                <View style={{
-                                    backgroundColor: moradoOscuro,
-                                    borderRadius: 20,
-                                    alignItems: 'center', justifyContent: 'center',
-                                    width: 22,
-                                    height: 22,
-                                }}>
-
-                                    <Text style={{
-                                        color: "#fff",
-                                        fontWeight: 'bold',
-                                        fontSize: 16,
-
-                                    }}>1</Text>
-                                </View>
-
-                            </View> */}
                         </View>
                         <View style={styles.headerText}>
                             <Text numberOfLines={1} style={styles.title}
@@ -217,24 +193,11 @@ export default ({ route, navigation }) => {
                     {userEsGuia && <Pressable
                         onPress={showInfoLevel}
                     >
-                        <Line>
-                        </Line>
 
-                        <View style={{
-                            borderLeftWidth: 10,
-                            borderColor: "#FFF",
-                            position: 'absolute',
-                            right: 13,
-                            top: 8,
-                        }}>
-
-                            <HelpButton
-                                onPress={showInfoLevel}
-
-                            />
-                        </View>
                         <UserLevel
-                            style={{ marginHorizontal: 10, marginTop: 5, }}
+                            userExp={data?.experience}
+
+                            style={{ marginTop: 10, }}
                         />
                     </Pressable>
                     }
@@ -347,12 +310,13 @@ export default ({ route, navigation }) => {
             </ScrollView>
 
             <InfoNivelesModal
+                userExp={data?.experience}
                 setModalVisible={setModalVisible}
                 modalVisible={modalVisible}
             />
 
 
-        </View>
+        </View >
 
     )
 }

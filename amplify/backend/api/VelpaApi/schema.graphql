@@ -82,6 +82,8 @@ type Fecha @model
   fechaFinal: AWSTimestamp!
   precio: Float!
   comision: Float!
+  experienciaPorPersona:Int
+  
   itinerario: String!
 
   puntoReunionNombre: String!

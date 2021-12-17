@@ -1684,6 +1684,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "experienciaPorPersona": {
+                    "name": "experienciaPorPersona",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "itinerario": {
                     "name": "itinerario",
                     "isArray": false,
@@ -2409,5 +2416,5 @@ export const schema = {
             }
         }
     },
-    "version": "346bac9b3320bd7913d4562d7a16a417"
+    "version": "fa553e7a7617510896538aabd2a9560a"
 };

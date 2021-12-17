@@ -154,6 +154,7 @@ export default () => {
 			.leido("ne", true)
 			.showAt("lt", new Date())
 		)
+		// console.log("Nuevas notificaciones:", unread.length)
 
 		if (unread.length !== 0) {
 			setNewNotificaciones(true)
@@ -164,6 +165,8 @@ export default () => {
 	const verNuevosMensajes = async (sub) => {
 		// Obtener todas las notificaciones no vistas
 		const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
+
+		// console.log("Mensajes nuevos:", usr.newMessages)
 
 		if (!!usr.newMessages) {
 			setNewMessages(true)

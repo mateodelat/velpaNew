@@ -284,6 +284,7 @@ export declare class Fecha {
   readonly fechaFinal: number;
   readonly precio: number;
   readonly comision: number;
+  readonly experienciaPorPersona?: number;
   readonly itinerario: string;
   readonly puntoReunionNombre: string;
   readonly puntoReunionId?: string;

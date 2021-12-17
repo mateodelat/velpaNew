@@ -223,7 +223,7 @@ export default ({ navigation, route }) => {
                             fontSize: 18,
                             fontWeight: "bold",
                             marginLeft: 15,
-                        }}>$ {redondear(aventura.precioMin * (aventura.comision + 1), 50)} - {redondear(aventura.precioMax * (aventura.comision + 1), 50, true)}
+                        }}>$ {redondear(aventura.precioMin, 50)} - {redondear(aventura.precioMax, 50, true)}
                         </Text>}
                     </View>
 

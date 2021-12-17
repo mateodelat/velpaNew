@@ -13,7 +13,9 @@ export default function ({
 
     color,
 
-    buttonLoading
+    buttonLoading,
+
+    rightIcon,
 }) {
 
     return (
@@ -37,31 +39,32 @@ export default function ({
                 style={styles.iconLeft}
             />
             {
-                modify !== undefined && (modify ?
+                rightIcon ? rightIcon :
+                    modify !== undefined && (modify ?
 
-                    buttonLoading ?
-                        <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
-                            <ActivityIndicator color={"#fff"} />
+                        buttonLoading ?
+                            <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
+                                <ActivityIndicator color={"#fff"} />
 
-                        </View>
+                            </View>
+                            :
+                            <MaterialIcons
+                                onPress={handleSave}
+                                name={"check"}
+                                size={35}
+                                color={color ? color : "green"}
+                                style={styles.iconRight}
+
+                            />
                         :
-                        <MaterialIcons
+                        <Feather
                             onPress={handleSave}
-                            name={"check"}
+                            name={"edit"}
                             size={35}
-                            color={color ? color : "green"}
+                            color={color ? color : moradoClaro}
                             style={styles.iconRight}
 
-                        />
-                    :
-                    <Feather
-                        onPress={handleSave}
-                        name={"edit"}
-                        size={35}
-                        color={color ? color : moradoClaro}
-                        style={styles.iconRight}
-
-                    />)}
+                        />)}
 
 
         </View>)

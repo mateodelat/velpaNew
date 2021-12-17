@@ -57,7 +57,7 @@ function Item({ e }) {
                     <Text >{e.personasReservadasNum}/{e.personasTotales} personas</Text>
                     {e.personasReservadasNum === 0 ? <Text style={styles.precio}>{formatMoney(e.precio, true)} /p</Text>
                         :
-                        <Text style={styles.precio}>{formatMoney(e.precioAcomulado, true)}</Text>
+                        <Text style={styles.precio}>{formatMoney(e.precioAcomuladoSinComision, true)}</Text>
                     }
 
                 </View>
@@ -119,19 +119,26 @@ export default function () {
 
                         const usuario = await DataStore.query(Usuario, res.usuarioID)
                         personasReservadas.push({
+                            ...res,
+
                             foto: await getImageUrl(usuario.foto),
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas,
 
                             precioPagado: res.pagadoAlGuia,
+                            comision: res.comision,
+
                             total: res.total
                         })
                     }))
 
                     let personasReservadasNum = 0
                     let precioAcomulado = 0
+                    let precioAcomuladoSinComision = 0
+
                     reservas.map(e => {
-                        precioAcomulado += e.pagadoAlGuia
+                        precioAcomulado += e.total
+                        precioAcomuladoSinComision += e.pagadoAlGuia
                         personasReservadasNum += (e.adultos + e.ninos + e.tercera)
                     })
 
@@ -143,6 +150,7 @@ export default function () {
 
                         personasReservadasNum,
                         precioAcomulado,
+                        precioAcomuladoSinComision,
 
                         ...fecha,
                         imagenFondo: await getImageUrl(fecha.imagenFondo),

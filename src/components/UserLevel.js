@@ -1,47 +1,59 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { moradoClaro, moradoOscuro } from '../../assets/constants'
+import { calculateLvl, moradoClaro, moradoOscuro } from '../../assets/constants'
 
 import { LinearGradient } from 'expo-linear-gradient';
+import HelpButton from './HelpButton';
 
 
 export default function ({
-    style
+    style,
+    hideHelp,
+    userExp
 }) {
+    userExp = userExp ? userExp : 0
 
-    const expBaseLevel = 30
-    const expNextLevel = 200
-    const actualExp = 90
 
-    const nivelRecorrido = Math.round(((actualExp - expBaseLevel) * 100) / (expNextLevel - expBaseLevel))
+    const {
+        lvl,
+        expBaseLevel,
+        expNextLevel
+
+    } = calculateLvl(userExp)
+
+
+    const nivelRecorrido = Math.round(((userExp - expBaseLevel) * 100) / (expNextLevel - expBaseLevel))
 
     return (
         <View style={{ ...style }}>
-            <View style={styles.row}>
-                <Text style={styles.baseLevel}>Nivel 1</Text>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 10,
 
-                <Text numberOfLines={1} style={styles.expActual}>{actualExp}{nivelRecorrido > 25 && " exp"}</Text>
+            }}>
 
-                <Text style={styles.nextLevel}>Nivel 2</Text>
-
-            </View>
-
-            <View style={styles.row}>
-                <Text style={styles.experience}>{expBaseLevel} exp</Text>
-
-                <View style={styles.levelContainer}>
-                    <LinearGradient
-                        colors={['#8b8ed6', moradoClaro, moradoOscuro]}
-                        style={[styles.nivelRecorrido, { width: `${nivelRecorrido}%` }]}
-                    >
-
-                    </LinearGradient>
-
-
+                <View style={{ alignItems: 'center', }}>
+                    <Text style={styles.level}>Nivel {lvl}</Text>
+                    <Text style={styles.experience}>{userExp}/{expNextLevel}</Text>
                 </View>
 
-                <Text style={[styles.experience, { textAlign: 'right', }]}>{expNextLevel} exp</Text>
+                {!hideHelp && <HelpButton
+                    style={{
+                        position: 'absolute', right: 13,
+                    }}
+                />}
             </View>
+
+            <View style={styles.levelContainer}>
+                <LinearGradient
+                    colors={['#8b8ed6', moradoClaro, moradoOscuro]}
+                    style={[styles.nivelRecorrido, { width: `${nivelRecorrido}%` }]}
+                >
+                </LinearGradient>
+            </View>
+
 
         </View>
     )
@@ -54,34 +66,30 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         backgroundColor: '#f5f5f5',
         overflow: 'hidden',
-        flex: 1,
+
 
         justifyContent: 'center',
-    },
-
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        // justifyContent: 'center',
     },
 
     nivelRecorrido: {
         flex: 1,
         borderRadius: 20,
-        minWidth: 20,
+        minWidth: 4,
         alignItems: 'center',
         justifyContent: 'center',
     },
 
-    baseLevel: {
-        fontWeight: 'bold',
+    header: {
+        alignSelf: 'center',
     },
 
     experience: {
         color: "gray",
+        fontSize: 12,
     },
 
-    nextLevel: {
+    level: {
+        fontWeight: 'bold',
     },
 
     expActual: {

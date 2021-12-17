@@ -122,6 +122,7 @@ export default function ({ navigation, route }) {
 
             aventuraID,
             comision,
+            experienciaPorPersona,
 
             dificultad,
 
@@ -129,7 +130,6 @@ export default function ({ navigation, route }) {
 
         } = route.params
         try {
-
             setButtonLoading(true)
             const sub = await getUserSub()
             let imagenRutaKey
@@ -154,6 +154,7 @@ export default function ({ navigation, route }) {
 
                 precio,
                 comision,
+                experienciaPorPersona,
 
                 itinerario: JSON.stringify(itinerario),
 

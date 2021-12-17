@@ -70,7 +70,6 @@ export default function ({ fecha,
         fechaFinal,
         usuarioID
     } = fecha
-    precio *= (fecha.comision + 1)
     precio = Math.round(precio)
 
     const handleNavigateGuia = () => {

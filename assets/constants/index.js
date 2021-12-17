@@ -1243,15 +1243,120 @@ export async function getImageUrl(data) {
 }
 
 export function formatMoney(num, hideCents) {
+  if (!num) return
   return '$' + num.toFixed(hideCents ? 0 : 2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 
 
 }
 
+export const levels = {
+  1: {
+    lvl: 1,
+    expBaseLevel: 0,
+    expNextLevel: 100,
+
+    comisionVelpa: 0.35,
+  },
+
+  2: {
+    lvl: 2,
+    expBaseLevel: 100,
+    expNextLevel: 200,
+
+    comisionVelpa: 0.30,
+  },
+
+  3: {
+    lvl: 3,
+    expBaseLevel: 200,
+    expNextLevel: 350,
+
+    comisionVelpa: 0.25,
+  },
+
+  4: {
+    lvl: 4,
+    expBaseLevel: 350,
+    expNextLevel: 500,
+
+    comisionVelpa: 0.15,
+  },
+
+  5: {
+    lvl: 5,
+    expBaseLevel: 500,
+    expNextLevel: 650,
+
+    comisionVelpa: 0.08,
+  },
+
+  6: {
+    lvl: 6,
+    expBaseLevel: 650,
+    expNextLevel: 1000,
+
+    comisionVelpa: 0.04,
+  },
+}
+
+
+
 export function calculateLvl(experience) {
   if (!experience) {
-    return 1
+    return levels[1]
   }
+
+  if (experience < 100) {
+    return levels[1]
+  }
+
+  else if (experience < 200) {
+    return levels[2]
+  }
+
+  else if (experience < 350) {
+    return levels[3]
+  }
+
+  else if (experience < 500) {
+    return levels[4]
+  }
+
+  else if (experience < 650) {
+    return levels[5]
+  }
+
+  else {
+    return levels[6]
+  }
+
+}
+
+export function calculateExpPerPerson(precio) {
+  let exp = 0
+
+  if (!precio) {
+    return exp
+  }
+
+  if (precio < 150 && precio >= 20) {
+    exp = 1
+  }
+
+  if (precio < 400) {
+    exp = 2
+  }
+
+  if (precio >= 400) {
+    exp = 3
+  }
+
+  for (let index = 500 + 400; index <= precio; index += 500) {
+    exp++
+  }
+
+  return exp
+
 
 }
 

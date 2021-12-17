@@ -119,6 +119,7 @@ export const createAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -221,6 +222,7 @@ export const updateAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -323,6 +325,7 @@ export const deleteAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -476,6 +479,7 @@ export const createFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -554,6 +558,7 @@ export const updateFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -632,6 +637,7 @@ export const deleteFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -768,6 +774,7 @@ export const createUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -974,6 +981,7 @@ export const updateUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -1180,6 +1188,7 @@ export const deleteUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId

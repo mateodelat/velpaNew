@@ -40,6 +40,7 @@ export const getAventura = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId
@@ -317,6 +318,7 @@ export const getFecha = /* GraphQL */ `
       fechaFinal
       precio
       comision
+      experienciaPorPersona
       itinerario
       puntoReunionNombre
       puntoReunionId
@@ -397,6 +399,7 @@ export const listFechas = /* GraphQL */ `
         fechaFinal
         precio
         comision
+        experienciaPorPersona
         itinerario
         puntoReunionNombre
         puntoReunionId
@@ -454,6 +457,7 @@ export const syncFechas = /* GraphQL */ `
         fechaFinal
         precio
         comision
+        experienciaPorPersona
         itinerario
         puntoReunionNombre
         puntoReunionId
@@ -558,6 +562,7 @@ export const getUsuario = /* GraphQL */ `
           fechaFinal
           precio
           comision
+          experienciaPorPersona
           itinerario
           puntoReunionNombre
           puntoReunionId

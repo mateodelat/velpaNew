@@ -90,18 +90,22 @@ export default ({ navigation, route }) => {
 
             const usuario = await DataStore.query(Usuario, res.usuarioID)
             personasReservadas.push({
+                ...res,
+
                 foto: await getImageUrl(usuario.foto),
                 nickname: usuario.nickname,
                 personasReservadas: totalPersonas,
                 precioPagado: res.pagadoAlGuia,
-                total: res.total
+                total: res.total,
             })
         }))
 
         let personasReservadasNum = 0
         let precioAcomulado = 0
+        let precioAcomuladoSinComision = 0
         reservas.map(e => {
-            precioAcomulado += e.pagadoAlGuia
+            precioAcomulado += e.total
+            precioAcomuladoSinComision += e.pagadoAlGuia
             personasReservadasNum += (e.adultos + e.ninos + e.tercera)
         })
 
@@ -114,6 +118,7 @@ export default ({ navigation, route }) => {
 
             personasReservadasNum,
             precioAcomulado,
+            precioAcomuladoSinComision,
 
             imagenFondo: await getImageUrl(fecha.imagenFondo),
             material: JSON.parse(fecha.material),
@@ -207,8 +212,23 @@ export default ({ navigation, route }) => {
                         flexDirection: 'row',
                         marginTop: 20,
                     }}>
-                        <Text style={{ ...styles.title, flex: 1, }}>Total:</Text>
+                        <Text style={{ ...styles.title, flex: 1, }}>Suma:</Text>
                         <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precioAcomulado, true)}</Text>
+
+                    </View>
+
+                    <View style={{
+                        flexDirection: 'row',
+                    }}>
+                        <Text style={{ ...styles.title, flex: 1, }}>Comision:</Text>
+                        <Text style={{ ...styles.title, color: moradoOscuro, }}>- {formatMoney(fecha.precioAcomulado - fecha.precioAcomuladoSinComision, true)}</Text>
+
+                    </View>
+                    <View style={{
+                        flexDirection: 'row', marginTop: 10,
+                    }}>
+                        <Text style={{ ...styles.title, flex: 1, }}>Total:</Text>
+                        <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precioAcomuladoSinComision, true)}</Text>
 
                     </View>
 
@@ -271,7 +291,7 @@ export default ({ navigation, route }) => {
                                         </View>
                                         <Text style={{
                                             color: moradoOscuro,
-                                        }}>{formatMoney(persona.precioPagado, true)}</Text>
+                                        }}>{formatMoney(persona.total, true)}</Text>
                                     </View>
 
 

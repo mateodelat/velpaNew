@@ -56,8 +56,7 @@ export default ({ navigation, route }) => {
     const parseIncluido = JSON.parse(route.params?.incluido)
     incluido = [...parseIncluido.default, ...parseIncluido.agregado]
 
-    let precioIndividualSinComision = calculatePrice(precio, total, totalPersonasReservadas)
-    const precioIndividual = precioIndividualSinComision * (comisionVelpa + 1)
+    const precioIndividual = calculatePrice(precio, total, totalPersonasReservadas)
 
     function handlePagar() {
 
@@ -78,7 +77,8 @@ export default ({ navigation, route }) => {
             ninos,
 
             comisionVelpa,
-            precioIndividualSinComision: precioIndividualSinComision,
+
+            precioIndividual,
 
             imagenFondo,
             tituloAventura,

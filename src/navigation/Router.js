@@ -120,7 +120,7 @@ export default () => {
             <NavigationContainer>
 
                 <Stack.Navigator
-                    // initialRouteName={"PerfilScreen"}
+                    // initialRouteName={"AgregarFecha2"}
                     screenOptions={{
 
                         header: ({ scene, }) => {
@@ -230,17 +230,6 @@ export default () => {
                             headerShown: false
                         }}
                     />
-
-
-
-                    {/* <Stack.Screen
-                name="Solicitudes"
-                component={Solicitudes}
-                options={{
-                    title: "Mis solicitudes",
-                }}
-            /> */}
-
 
                     <Stack.Screen
                         name="AgregarAventura"
@@ -371,15 +360,6 @@ export default () => {
 
                 </Stack.Navigator>
             </NavigationContainer >
-            {/* <View style={{
-                backgroundColor: 'red',
-                width: '100%',
-                height: 60,
-            }}>
-
-            </View>
-
- */}
         </View>
 
     )

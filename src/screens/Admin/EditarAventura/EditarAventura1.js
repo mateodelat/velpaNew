@@ -140,8 +140,6 @@ export default ({ navigation, route }) => {
             ubicacionNombre: aventura.ubicacionNombre,
             altitud: aventura.altitud,
 
-            comision: aventura.comision,
-
             materialDefault: aventura.materialDefault
 
         }
@@ -194,8 +192,6 @@ export default ({ navigation, route }) => {
                 av.ubicacionLink = aventuraAEnviar.ubicacionLink
                 av.ubicacionNombre = aventuraAEnviar.ubicacionNombre
                 av.altitud = aventuraAEnviar.altitud
-
-                av.comision = aventuraAEnviar.comision
 
                 av.materialDefault = aventuraAEnviar.materialDefault
 
@@ -621,37 +617,6 @@ export default ({ navigation, route }) => {
                                     }}>  m</Text>
                                 </View>
                             </View>}
-
-                            <View>
-                                <Text style={[styles.captionTxt, { textAlign: 'left', }]}>Comision</Text>
-                                <View style={styles.row}>
-                                    <TextInput
-                                        value={String(Number(aventura.comision * 100))}
-                                        maxLength={2}
-                                        placeholderTextColor={"#00000040"}
-                                        placeholder="750"
-                                        keyboardType={"numeric"}
-                                        onChangeText={(e) => {
-                                            setAventura({
-                                                ...aventura,
-                                                comision: Number(e / 100)
-                                            })
-                                        }}
-                                        style={[styles.textInput, {
-                                            flex: 0,
-                                            width: 60,
-                                            textAlign: 'center',
-
-                                        }]}
-                                    />
-                                    <Text style={{
-                                        color: 'gray',
-                                        fontSize: 15,
-                                        width: 20,
-                                        textAlign: 'center',
-                                    }}>  %</Text>
-                                </View>
-                            </View>
                         </View>}
                     </View>
 

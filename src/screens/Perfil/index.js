@@ -356,7 +356,7 @@ export default ({ navigation, route }) => {
                         <Pressable
                             onPress={isOwner ? showInfoLevel : null}
                             style={styles.cuadro}>
-                            <Text style={styles.titleCuadro}>{calculateLvl(user?.experience)}</Text>
+                            <Text style={styles.titleCuadro}>{calculateLvl(user?.experience).lvl}</Text>
                             {isOwner && <View style={styles.question}>
                                 <Text style={styles.questionTxt}>?</Text>
                             </View>}
@@ -464,6 +464,8 @@ export default ({ navigation, route }) => {
                     />
                     :
                     <InfoNivelesModal
+                        userExp={user?.experience}
+
                         setModalVisible={setModalVisible}
                         modalVisible={modalVisible}
                     />
