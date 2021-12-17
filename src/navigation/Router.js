@@ -120,7 +120,7 @@ export default () => {
             <NavigationContainer>
 
                 <Stack.Navigator
-                    // initialRouteName={"AgregarFecha"}
+                    // initialRouteName={"PerfilScreen"}
                     screenOptions={{
 
                         header: ({ scene, }) => {

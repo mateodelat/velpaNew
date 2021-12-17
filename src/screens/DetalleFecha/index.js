@@ -11,24 +11,24 @@ import {
     View,
 } from 'react-native'
 
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+
 
 import Line from '../../components/Line';
-import ModalMap from '../../components/ModalMap';
+
 import { DataStore } from '@aws-amplify/datastore';
 import { ChatRoom, Usuario } from '../../models';
-import API from '@aws-amplify/api';
+
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
 import { Loading } from '../../components/Loading';
 import MapView, { Marker } from 'react-native-maps';
-import ListaPersonas from '../FechasAventura/components/ListaPersonas';
+
 import { Fecha } from '../../models';
 
 

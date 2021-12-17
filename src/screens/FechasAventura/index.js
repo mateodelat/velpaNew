@@ -9,8 +9,7 @@ import { DataStore, OpType, SortDirection } from '@aws-amplify/datastore';
 import { Fecha } from '../../models';
 import { Reserva } from '../../models';
 import { Usuario } from '../../models';
-import { useNavigation } from '@react-navigation/core';
-import Storage from '@aws-amplify/storage';
+
 import { Loading } from '../../components/Loading';
 
 export default index = ({ route, navigation }) => {
@@ -130,7 +129,7 @@ export default index = ({ route, navigation }) => {
 
                     const imagenRuta = fecha.imagenRuta ? {
                         key: fecha.imagenRuta,
-                        url: isUrl(fecha.imagenRuta) ? fecha.imagenRuta : await Storage.get(fecha.imagenRuta)
+                        url: await getImageUrl(fecha.imagenRuta)
                     } : null
 
 
@@ -155,8 +154,7 @@ export default index = ({ route, navigation }) => {
         wait(1000).then(() => setRefreshing(false));
     }, []);
 
-    const handleContinuar = (fecha, guia, idx) => {
-        setIndexPresionado(idx)
+    const handleContinuar = (fecha, guia) => {
 
         navigation.navigate("Logistica", {
             ...fecha,
@@ -217,35 +215,21 @@ export default index = ({ route, navigation }) => {
                                 fechas.map((e, idx) => {
 
                                     const feInicial = new Date(e.fechaInicial)
-                                    // Si es el primer elemento
-                                    if (!idx) return <View key={idx.toString()}>
-                                        <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
+                                    const feAnterior = idx && new Date(fechas[idx - 1].fechaInicial)
+
+                                    // Si el dia inicial es distinto al dia inicial de la siguiente fecha
+                                    return <View key={idx.toString()}>
+                                        {(!idx || feInicial.getUTCDate() !== feAnterior.getUTCDate()) && <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>}
                                         <ElementoFecha
+
+                                            showDetails={indexPresionado === idx}
+                                            handlePress={() => indexPresionado === idx ? setIndexPresionado(null) : setIndexPresionado(idx)}
                                             idx={idx}
                                             fecha={e}
                                             handleContinuar={handleContinuar}
+
                                         />
                                     </View>
-
-                                    const feAnterior = new Date(fechas[idx - 1].fechaInicial)
-                                    // Si el dia inicial es distinto al dia inicial de la siguiente fecha
-                                    if (feInicial.getUTCDate() !== feAnterior.getUTCDate())
-                                        return <View key={idx.toString()}>
-                                            <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>
-                                            <ElementoFecha
-                                                idx={idx}
-                                                fecha={e}
-                                                handleContinuar={handleContinuar}
-
-                                            />
-                                        </View>
-
-                                    return <ElementoFecha
-                                        idx={idx}
-                                        key={idx.toString()}
-                                        fecha={e}
-                                        handleContinuar={handleContinuar}
-                                    />
 
                                 })
                 }
@@ -255,7 +239,7 @@ export default index = ({ route, navigation }) => {
                 imagen={{ uri: imagenFondo.uri }}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
-                showFilter={true}
+            // showFilter={false}
             />
         </View >
     )

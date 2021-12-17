@@ -594,7 +594,7 @@ export default function ({ route, navigation }) {
 
                             {/* Calificacion guia */}
                             {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
-                                <Entypo name="star" size={11} color="#F4984A" />
+                                <Entypo name="star" size={11} color="#F5BE18" />
                                 <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
                             </View>}
                         </View>

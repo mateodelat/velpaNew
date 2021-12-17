@@ -183,7 +183,7 @@ export default function ({
                                         key={idx}
                                         name={rating <= idx ? "star-outlined" : "star"}
                                         size={35}
-                                        color="#F4984A"
+                                        color="#F5BE18"
                                     />
                                 ))
                             }

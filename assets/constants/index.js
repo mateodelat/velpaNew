@@ -633,7 +633,7 @@ export const obtenerAventurasParaMapa = async () => {
 
           // Solo obtener la imagen de fondo
           if (i === ave.imagenFondoIdx) {
-            return isUrl(e) ? e : await Storage.get(e)
+            return await getImageUrl(e)
 
           }
           return e
@@ -693,7 +693,7 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
         const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
-          uri: isUrl(e) ? e : await Storage.get(e),
+          uri: await getImageUrl(e),
           key: e
         }
         )))
@@ -760,7 +760,7 @@ export const listAventurasSugeridas = async (id, maxItems, aventuraBase) => {
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
         const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
-          uri: isUrl(e) ? e : await Storage.get(e),
+          uri: await getImageUrl(e),
           key: e
         }
         )))
@@ -788,7 +788,7 @@ export const getAventura = async (id) => {
       if (!ave) return false
       // Obtener urls de Storage
       const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
-        uri: isUrl(e) ? e : await Storage.get(e),
+        uri: await getImageUrl(e),
         key: e
 
       })))
@@ -1227,7 +1227,17 @@ export function formatAMPM(dateInMs, hideAMPM, localTime) {
   return strTime;
 }
 
+let numberOfFetchs = 0
+
 export async function getImageUrl(data) {
+  if (data && !isUrl(data)) {
+    numberOfFetchs += 1
+    console.log({
+      "fetchN°": numberOfFetchs,
+      data
+    })
+  }
+
   return data ? isUrl(data) ? data : await Storage.get(data) : null
 
 }
@@ -1238,6 +1248,12 @@ export function formatMoney(num, hideCents) {
 
 }
 
+export function calculateLvl(experience) {
+  if (!experience) {
+    return 1
+  }
+
+}
 
 export async function getPlaceElevation(latitude, longitude) {
   const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`

@@ -66,6 +66,11 @@ export default ({ navigation, route }) => {
             return
         }
 
+        if (!adultos && !tercera) {
+            Alert.alert("Debe de ir minimo alguien mayor a la aventura")
+            return
+        }
+
 
         navigation.navigate("Pagar", {
             adultos,
@@ -134,7 +139,6 @@ export default ({ navigation, route }) => {
                     descripcion={"Edad de 12 a 65 años"}
                     setCantidad={setAdultos}
                     cantidad={adultos}
-                    minValue={1}
                     maxReached={total >= personasMaximas}
                 />
 

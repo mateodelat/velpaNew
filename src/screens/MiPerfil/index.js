@@ -2,7 +2,7 @@ import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView } from 'react-native'
-import { colorFondo, getStripeIDUsuario, queryUsuario, userEsGuia } from '../../../assets/constants'
+import { colorFondo, getStripeIDUsuario, moradoOscuro, queryUsuario, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -10,10 +10,17 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 import { loginLinkStripe, retrieveBalanceStripe } from '../../graphql/mutations'
 import Elemento from './components/Elemento'
 import { DataStore } from '@aws-amplify/datastore';
+
+
+import UserLevel from '../../components/UserLevel'
+import Line from '../../components/Line'
+import HelpButton from '../../components/HelpButton'
+import InfoNivelesModal from '../../components/InfoNivelesModal'
 import { Usuario } from '../../models'
 
 
@@ -39,6 +46,8 @@ export default ({ route, navigation }) => {
 
     const [buttonLoading, setButtonLoading] = useState(false);
 
+    const [modalVisible, setModalVisible] = useState(false);
+
     useEffect(() => {
         setCurrentUserData()
     }, []);
@@ -58,45 +67,13 @@ export default ({ route, navigation }) => {
 
     function handlePerfil() {
         navigation.navigate("PerfilScreen", {
-            id: "MIID"
+            user: data,
+            isOwner: true
         })
     }
 
 
 
-    async function verTransferencias() {
-        setButtonLoading("transferencias")
-        // Obtener el sub
-        const sub = await Auth.currentUserInfo().then((r) => {
-            return r.attributes.sub
-        })
-
-        API.graphql({
-            query: getStripeIDUsuario,
-            variables: { id: sub }
-        }).then(async r => {
-            const stripeID = r.data.getUsuario.stripeID
-
-            const res = await API.graphql({
-                query: retrieveBalanceStripe,
-                variables: {
-                    stripeID
-                }
-            }).then(r => {
-                r = r.data.RetrieveBalanceStripe.result
-
-                console.log(JSON.parse(r))
-                setButtonLoading(false)
-                return r
-            })
-        }).catch(e => {
-            console.log(e)
-            Alert.alert("Error", "Error obteniendo las transferencias")
-            setButtonLoading(false)
-        })
-
-
-    }
 
     async function miSaldo() {
         navigation.navigate("Saldo")
@@ -135,7 +112,7 @@ export default ({ route, navigation }) => {
     async function fetchUsuario(user) {
         // Pedir el usuario
         const sub = user.attributes.sub
-        return await API.graphql({ query: getUsuario, variables: { id: sub } }).then(r => r.data.getUsuario)
+        return await DataStore.query(Usuario, sub)
     }
 
     function handleAdmin() {
@@ -165,6 +142,10 @@ export default ({ route, navigation }) => {
         )
     }
 
+    function showInfoLevel() {
+        setModalVisible(true)
+    }
+
     return (
         <View style={{ flex: 1, }}>
 
@@ -180,29 +161,83 @@ export default ({ route, navigation }) => {
                 <Pressable
                     onPress={handlePerfil}
                     style={styles.header}>
-                    <View >
-                        {data?.foto ?
-                            <Image source={{ uri: data?.foto }} style={styles.image} /> :
-                            <Image source={require("../../../assets/user.png")} style={styles.image} />
-                        }
-                    </View>
-                    <View style={styles.headerText}>
-                        <Text numberOfLines={1} style={styles.title}
-                        >{data?.nombre ? data?.nombre : data?.nickname}
-                            {data?.apellido && <Text numberOfLines={1} style={styles.title}> {data?.apellido}</Text>}
 
-                        </Text>
-                        <Text style={styles.nickname}>@{data?.nickname}</Text>
+                    {/* Elementos */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+
+                        <View >
+                            {data?.foto ?
+                                <Image source={{ uri: data?.foto }} style={styles.image} /> :
+                                <Image source={require("../../../assets/user.png")} style={styles.image} />
+                            }
+                            {/* <View style={{
+                                position: 'absolute',
+                                borderRadius: 20,
+                                borderWidth: 4,
+                                borderColor: "#fff",
+                                // right: 0,
+                            }}>
+                                <View style={{
+                                    backgroundColor: moradoOscuro,
+                                    borderRadius: 20,
+                                    alignItems: 'center', justifyContent: 'center',
+                                    width: 22,
+                                    height: 22,
+                                }}>
+
+                                    <Text style={{
+                                        color: "#fff",
+                                        fontWeight: 'bold',
+                                        fontSize: 16,
+
+                                    }}>1</Text>
+                                </View>
+
+                            </View> */}
+                        </View>
+                        <View style={styles.headerText}>
+                            <Text numberOfLines={1} style={styles.title}
+                            >{data?.nombre ? data?.nombre : data?.nickname}
+                                {data?.apellido && <Text numberOfLines={1} style={styles.title}> {data?.apellido}</Text>}
+
+                            </Text>
+                            <Text style={styles.nickname}>@{data?.nickname}</Text>
+                        </View>
+
+                        <MaterialIcons
+                            style={{
+                                padding: 5,
+                            }}
+                            name={"keyboard-arrow-right"}
+                            size={40}
+                            color={"black"}
+                        />
                     </View>
 
-                    <MaterialIcons
-                        style={{
-                            padding: 5,
-                        }}
-                        name={"keyboard-arrow-right"}
-                        size={40}
-                        color={"black"}
-                    />
+                    {userEsGuia && <Pressable
+                        onPress={showInfoLevel}
+                    >
+                        <Line>
+                        </Line>
+
+                        <View style={{
+                            borderLeftWidth: 10,
+                            borderColor: "#FFF",
+                            position: 'absolute',
+                            right: 13,
+                            top: 8,
+                        }}>
+
+                            <HelpButton
+                                onPress={showInfoLevel}
+
+                            />
+                        </View>
+                        <UserLevel
+                            style={{ marginHorizontal: 10, marginTop: 5, }}
+                        />
+                    </Pressable>
+                    }
                 </Pressable>
 
 
@@ -309,20 +344,14 @@ export default ({ route, navigation }) => {
 
                 </View>
 
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
-                {/* Solicitudes se muestran solo si el perfil ha mandado solicitud de guia0 */}
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
-
-
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
-                {/* En lista de solicitudes se puede pedir otra solicitud*/}
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
-
-
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
-                {/* Estado de solicitudes se muestra en notificaciones */}
-                {/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
             </ScrollView>
+
+            <InfoNivelesModal
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+            />
+
+
         </View>
 
     )
@@ -331,16 +360,13 @@ export default ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        paddingTop: 30,
         backgroundColor: colorFondo,
         flex: 1,
         width: '100%',
     },
 
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 30,
         backgroundColor: '#fff',
         borderRadius: 20,
         padding: 20,

@@ -31,11 +31,19 @@ import { Foundation } from '@expo/vector-icons';
 import Calificacion from '../../../components/Calificacion';
 
 
-export default function ({ fecha, handleContinuar, idx }) {
+export default function ({ fecha,
+    handleContinuar,
+    idx,
+
+    showDetails,
+    handlePress
+}) {
+
+    const navigation = useNavigation()
+
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("");
 
-    const [openDetails, setOpenDetails] = useState(false);
 
     const abrirItinerario = () => {
         setModalVisible(true)
@@ -66,7 +74,7 @@ export default function ({ fecha, handleContinuar, idx }) {
     precio = Math.round(precio)
 
     const handleNavigateGuia = () => {
-        // navigation.navigate("PerfilScreen", { id: usuarioID })
+        navigation.navigate("PerfilScreen", { id: usuarioID })
     }
 
     // Obtener el guia
@@ -100,7 +108,7 @@ export default function ({ fecha, handleContinuar, idx }) {
         }}>
             {/* Mostrar detalles cuando se hace click */}
             <Pressable
-                onPress={() => setOpenDetails(!openDetails)}
+                onPress={handlePress}
 
                 style={styles.container}>
 
@@ -140,18 +148,18 @@ export default function ({ fecha, handleContinuar, idx }) {
                 {/* Descripcion */}
                 {descripcion && <View style={styles.row}>
                     <Text
-                        numberOfLines={openDetails ? null : 1}
+                        numberOfLines={showDetails ? null : 1}
                         style={styles.descripcion}
                     >{descripcion}</Text>
 
-                    {!openDetails && <Text
+                    {!showDetails && <Text
                         style={[styles.precio, { color: '#fff', }]}
                     >{precio * (fecha.comision + 1)}$</Text>}
                 </View>}
 
 
                 {/* Elementos de detalle */}
-                {openDetails && <View >
+                {showDetails && <View >
 
                     {/* Dificultad de la fecha */}
                     {fecha.dificultad !== null && fecha.dificultad !== undefined && <View style={{ flexDirection: 'row', marginVertical: 10, }}>
@@ -274,7 +282,7 @@ export default function ({ fecha, handleContinuar, idx }) {
 
                 {/* Linea */}
                 <View style={styles.line} >
-                    {!openDetails && <MaterialIcons
+                    {!showDetails && <MaterialIcons
                         name={"keyboard-arrow-down"}
                         size={20}
                         color={gris}
@@ -293,7 +301,7 @@ export default function ({ fecha, handleContinuar, idx }) {
 
 
 
-                {openDetails && <Pressable
+                {showDetails && <Pressable
                     onPress={() => handleContinuar(fecha, guia, idx)}
                     style={{ ...styles.botonRedondo, width: '50%', alignSelf: 'center', marginBottom: 20, }}>
                     <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', }}>Reservar</Text>

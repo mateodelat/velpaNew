@@ -13,7 +13,7 @@ export default function ({
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', }}>{!usuario.calificacion ? 0 : (Math.round(usuario.calificacion * 100) / 100)}</Text>
 
-                <Entypo name="star" size={22} color="#F4984A" />
+                <Entypo name="star" size={22} color="#F5BE18" />
                 {!hideNumResenas && <Text style={{ fontSize: 16, marginLeft: 5, }}>({usuario.numResenas})</Text>}
 
             </View>
