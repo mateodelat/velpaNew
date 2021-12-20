@@ -17,6 +17,9 @@ import { createUsuario, getBlob, openImagePickerAsync } from './assets/constants
 import { Loading } from './src/components/Loading';
 import { Aventura } from './src/models';
 import { Publicidad } from './src/models';
+import ModalOnboarding from './src/navigation/components/ModalOnboarding';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
@@ -62,8 +65,10 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cargandoModelos, setCargandoModelos] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(null);
 
   useEffect(() => {
+    checkOnboarding()
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
@@ -138,7 +143,32 @@ const App = () => {
   }, []);
 
 
-  if (loading || cargandoModelos) return (
+
+  // Ver si ya se presento el onboarding
+  async function checkOnboarding() {
+    try {
+      const value = await AsyncStorage.getItem("@onboardingShown")
+      if (!!value) {
+        setShowOnboarding(true)
+      } else {
+        setShowOnboarding(false)
+      }
+    } catch (error) {
+      setShowOnboarding(false)
+      console.log(error)
+    }
+  }
+
+  // Limpiar el elemento de onboardingShown
+  async function handleDoneOnboarding() {
+    setShowOnboarding(false)
+    AsyncStorage.setItem("@onboardingShown", "")
+
+  }
+
+
+
+  if (loading || cargandoModelos || showOnboarding === null) return (
     <Loading valor={0} />
   )
 
@@ -151,6 +181,13 @@ const App = () => {
         <LoginStack />
       </View>
     )
+  }
+
+  if (showOnboarding) {
+    return <ModalOnboarding
+      doneViewing={handleDoneOnboarding}
+    />
+
   }
 
   return (

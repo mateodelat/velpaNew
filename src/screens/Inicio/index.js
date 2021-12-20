@@ -172,6 +172,7 @@ export default ({ navigation }) => {
                 {
                     !publicidad ?
                         <View style={{
+                            marginVertical: 10,
                             height: height * 0.25
 
                         }}>
@@ -271,7 +272,12 @@ export default ({ navigation }) => {
                         <View style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 198.6,
+
+                            marginTop: 20,
+                            marginBottom: 10,
+
+                            height: height * 0.2 + 62,
+
                             width: "100%",
                         }}>
                             <ActivityIndicator

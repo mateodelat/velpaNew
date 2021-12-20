@@ -1232,10 +1232,10 @@ let numberOfFetchs = 0
 export async function getImageUrl(data) {
   if (data && !isUrl(data)) {
     numberOfFetchs += 1
-    console.log({
-      "fetchN°": numberOfFetchs,
-      data
-    })
+    // console.log({
+    //   "fetchN°": numberOfFetchs,
+    //   data
+    // })
   }
 
   return data ? isUrl(data) ? data : await Storage.get(data) : null
