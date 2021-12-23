@@ -32,66 +32,9 @@ import InfoNivelesModal from '../../components/InfoNivelesModal';
 const { height } = Dimensions.get("screen")
 
 export default function ({ navigation,
-    //  route 
+    route
 
 }) {
-
-    const route = {
-        key: "AgregarFecha2-NCd7-S_gmC8QCvlZJ7-i3",
-        name: "AgregarFecha2",
-        params: {
-            aventuraID: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
-            fecha: {
-                comision: 0.2,
-                fechaFinal: 1641060000000,
-                fechaInicial: 1640937600000,
-                itinerario: [
-                    {
-                        hora: 1640937600000,
-                        modifiable: false,
-                        tipo: "inicio",
-                        titulo: "Punto de reunion en  95988, Willows",
-                        ubicacionLink: undefined,
-                        ubicacionNombre: " 95988, Willows",
-                    },
-                    {
-                        hora: 1640937660000,
-                        titulo: "Aventura en Iztacihuatl",
-                    },
-                    {
-                        hora: 1641060000000,
-                        modifiable: false,
-                        tipo: "fin",
-                        titulo: "Punto de reunion en  95988, Willows",
-                        ubicacionLink: undefined,
-                        ubicacionNombre: " 95988, Willows",
-                    },
-                ],
-                puntoReunionCoords: {
-                    latitude: 39.56450438760179,
-                    latitudeDelta: undefined,
-                    longitude: -122.28864870965481,
-                    longitudeDelta: undefined,
-                },
-                puntoReunionId: undefined,
-                puntoReunionLink: undefined,
-                puntoReunionNombre: " 95988, Willows",
-            },
-            imagenFondo: {
-                key: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
-                uri: "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
-            },
-            incluidoDefault: [
-                "Electrolit",
-            ],
-            materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
-            maxPersonas: 20,
-            precioMax: 1000,
-            precioMin: 500,
-            tituloAventura: "Iztacihuatl",
-        },
-    }
-
     const {
         fechaInicial,
         fechaFinal

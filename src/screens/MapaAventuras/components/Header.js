@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Dimensions, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { Feather, Entypo, } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -25,87 +25,90 @@ export default function ({
     }).filter(e => (e.titulo.toLowerCase().includes(buscar.toLowerCase()) || e.categoria.toLowerCase().includes(buscar.toLowerCase()))
     )
 
-    return <View style={styles.headerContainer}>
-
-        {/* Barra de busqueda */}
-        <View style={{
-
-            paddingVertical: 5,
-            justifyContent: 'center',
-
-        }}>
-
-            <TextInput
-                style={{ padding: 5, flex: 1, paddingLeft: 55, }}
-                value={buscar}
-                placeholder="Buscar experiencias"
-                placeholderTextColor={"#7E7F84"}
-                onChangeText={(value) => setBuscar(value)}
-            />
-            <Feather
-                name="search"
-                size={24}
-                color="#7E7F84"
-                style={{ position: 'absolute', left: 20, }}
-            />
-            {buscar?.length !== 0 && <Entypo
-                onPress={handleBorrarBusqueda}
-                style={{
-                    position: 'absolute',
-                    right: 10,
-                }}
-                name="cross"
-                size={24}
-                color="black"
-            />
-            }
-        </View>
+    return <SafeAreaView >
+        <View style={styles.headerContainer}>
 
 
-        {/* Barra de sugerencias */}
-        {buscar.length > 0 && <View style={styles.sugerenciasContainer}>
+            {/* Barra de busqueda */}
+            <View style={{
 
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-            >
-                {
-                    sugested.length !== 0 ?
-                        sugested.map((e, i) => (
-                            <Pressable
-                                key={i.toString()}
-                                onPress={() => onPress(e, e.index)}
+                paddingVertical: 5,
+                justifyContent: 'center',
+
+            }}>
+
+                <TextInput
+                    style={{ padding: 5, flex: 1, paddingLeft: 55, }}
+                    value={buscar}
+                    placeholder="Buscar experiencias"
+                    placeholderTextColor={"#7E7F84"}
+                    onChangeText={(value) => setBuscar(value)}
+                />
+                <Feather
+                    name="search"
+                    size={24}
+                    color="#7E7F84"
+                    style={{ position: 'absolute', left: 20, }}
+                />
+                {buscar?.length !== 0 && <Entypo
+                    onPress={handleBorrarBusqueda}
+                    style={{
+                        position: 'absolute',
+                        right: 10,
+                    }}
+                    name="cross"
+                    size={24}
+                    color="black"
+                />
+                }
+            </View>
+
+
+            {/* Barra de sugerencias */}
+            {buscar.length > 0 && <View style={styles.sugerenciasContainer}>
+
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
+                    {
+                        sugested.length !== 0 ?
+                            sugested.map((e, i) => (
+                                <Pressable
+                                    key={i.toString()}
+                                    onPress={() => onPress(e, e.index)}
+                                    style={styles.sugerenciaItem}>
+                                    <Entypo
+                                        name="location-pin"
+                                        size={24}
+                                        color="black"
+                                        style={{ marginRight: 10, marginLeft: 10, }}
+                                    />
+                                    <View style={styles.txtSugestContainer}>
+                                        <Text style={styles.sugerenciaTxt}>{e.titulo}</Text>
+
+                                    </View>
+                                </Pressable>
+                            )) : <View
                                 style={styles.sugerenciaItem}>
                                 <Entypo
                                     name="location-pin"
                                     size={24}
-                                    color="black"
+                                    color="transparent"
                                     style={{ marginRight: 10, marginLeft: 10, }}
                                 />
                                 <View style={styles.txtSugestContainer}>
-                                    <Text style={styles.sugerenciaTxt}>{e.titulo}</Text>
+                                    <Text style={styles.sugerenciaTxt}>No hay resultados</Text>
 
                                 </View>
-                            </Pressable>
-                        )) : <View
-                            style={styles.sugerenciaItem}>
-                            <Entypo
-                                name="location-pin"
-                                size={24}
-                                color="transparent"
-                                style={{ marginRight: 10, marginLeft: 10, }}
-                            />
-                            <View style={styles.txtSugestContainer}>
-                                <Text style={styles.sugerenciaTxt}>No hay resultados</Text>
-
                             </View>
-                        </View>
 
 
-                }
-            </ScrollView>
+                    }
+                </ScrollView>
+            </View>
+            }
         </View>
-        }
-    </View>
+    </SafeAreaView>
 }
 
 const styles = StyleSheet.create({

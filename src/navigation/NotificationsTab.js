@@ -2,7 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Notifications from '../screens/Notifications';
 import Messages from '../screens/Messages';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { colorFondo, getUserSub, moradoOscuro } from '../../assets/constants';
 import { DataStore } from '@aws-amplify/datastore';
 import { Notificacion } from '../models';
@@ -88,56 +88,60 @@ export default function () {
     }
 
     return (
-        <Pressable
-            onTouchStart={() => {
-                setNewNotificaciones(false)
-                setNewMessages(false)
-            }}
-            style={{ flex: 1, }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: moradoOscuro, }}>
 
-            <Tab.Navigator
-                screenOptions={{
-
-                    tabBarPressOpacity: 0,
-                    tabBarIndicatorStyle: {
-                        backgroundColor: colorFondo,
-                        marginBottom: 7,
-                        width: 5,
-                        height: 5,
-                        left: width / 4 - 2.5,
-                        borderRadius: 5,
-                    },
-                    style: { height: 60, },
-                    tabBarPressColor: "transparent",
-                    tabBarActiveTintColor: '#fff',
-                    tabBarInactiveTintColor: "#ffffff88",
-                    tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold', },
-                    tabBarStyle: {
-                        backgroundColor: moradoOscuro,
-                        height: 60,
-                        justifyContent: 'center',
-                    },
+            <Pressable
+                onTouchStart={() => {
+                    setNewNotificaciones(false)
+                    setNewMessages(false)
                 }}
+                style={{ flex: 1, }}>
 
-            >
-                <Tab.Screen name="Notificaciones"
-                    options={{
-                        tabBarLabel: ({ color, focused }) => {
-                            return <Texto color={color} showBadge={newNotificaciones} texto={"NOTIFICACIONES"} />
+                <Tab.Navigator
+                    screenOptions={{
 
-                        }
+                        tabBarPressOpacity: 0,
+                        tabBarIndicatorStyle: {
+                            backgroundColor: colorFondo,
+                            marginBottom: 7,
+                            width: 5,
+                            height: 5,
+                            left: width / 4 - 2.5,
+                            borderRadius: 5,
+                        },
+                        style: { height: 60, },
+                        tabBarPressColor: "transparent",
+                        tabBarActiveTintColor: '#fff',
+                        tabBarInactiveTintColor: "#ffffff88",
+                        tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold', },
+                        tabBarStyle: {
+                            backgroundColor: moradoOscuro,
+                            height: 60,
+                            justifyContent: 'center',
+                        },
                     }}
-                    component={Notifications} />
-                <Tab.Screen
 
-                    options={{
-                        tabBarLabel: ({ color, focused }) => {
-                            return <Texto color={color} showBadge={newMessages} texto={"MENSAJES"} />
-                        }
-                    }}
-                    name="Mensajes" component={Messages} />
-            </Tab.Navigator>
-        </Pressable>
+                >
+                    <Tab.Screen name="Notificaciones"
+                        options={{
+                            tabBarLabel: ({ color, focused }) => {
+                                return <Texto color={color} showBadge={newNotificaciones} texto={"NOTIFICACIONES"} />
+
+                            }
+                        }}
+                        component={Notifications} />
+                    <Tab.Screen
+
+                        options={{
+                            tabBarLabel: ({ color, focused }) => {
+                                return <Texto color={color} showBadge={newMessages} texto={"MENSAJES"} />
+                            }
+                        }}
+                        name="Mensajes" component={Messages} />
+                </Tab.Navigator>
+            </Pressable>
+        </SafeAreaView>
+
     );
 }
 

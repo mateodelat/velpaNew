@@ -479,7 +479,7 @@ export default function ({ route, navigation }) {
                     //////////////////////////////////////////////////////////////////////////////
 
                     // Notificacion a el guia en telefono
-                    DataStore.query(Usuario, fecha.usuarioID)
+                    DataStore.query(Usuario, guiaID)
                         .then(r => {
                             const { notificationToken, experience } = r
 
@@ -497,8 +497,6 @@ export default function ({ route, navigation }) {
                                 })
                             }
                         })
-
-
 
 
                     // Notificacion al guia IN-APP
@@ -539,7 +537,7 @@ export default function ({ route, navigation }) {
                         usuario
                     )
 
-                    navigation.navigate("ExitoScreen", {})
+                    navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
                 }
                 setButtonLoading(false)
             }
@@ -691,6 +689,7 @@ export default function ({ route, navigation }) {
 
                 <View style={{ flex: 1, }} />
                 <Boton
+                    red
                     loading={buttonLoading}
                     titulo={"Confirmar"}
                     onPress={handleConfirm}

@@ -4,11 +4,9 @@ import React, { useEffect, useState } from 'react'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { moradoClaro } from "../../assets/constants";
+import { moradoOscuro } from "../../assets/constants";
 import { DataStore } from "@aws-amplify/datastore";
 import API from "@aws-amplify/api";
-import { getChatRoom } from "../graphql/queries";
-import { ChatRoom } from "../models";
 
 export const getUsersInChat = /* GraphQL */ `
     query getChatRoom($id: ID!) {
@@ -61,7 +59,7 @@ export default ({ id, titulo, image }) => {
             <MaterialIcons
                 name="keyboard-arrow-left"
                 size={40}
-                color={moradoClaro}
+                color={moradoOscuro}
                 onPress={handlePress} />
 
 

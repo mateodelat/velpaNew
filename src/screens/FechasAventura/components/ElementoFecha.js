@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { colorFondo, diffDays, formatAMPM, formatDateShort, isUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { colorFondo, diffDays, formatAMPM, formatDateShort, isUrl, moradoClaro, moradoOscuro, tinto } from '../../../../assets/constants'
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -22,13 +22,13 @@ import ModalRuta from './ModalRuta';
 import { useNavigation } from '@react-navigation/native';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../../models';
-import ModalItinerario from '../../AgregarFecha/components/ModalItinerario';
 
 import Storage from '@aws-amplify/storage';
 import { reverseGeocodeAsync } from 'expo-location';
 import ModalMap from '../../../components/ModalMap';
 import { Foundation } from '@expo/vector-icons';
 import Calificacion from '../../../components/Calificacion';
+import ModalItinerario from '../../../components/ModalItinerario';
 
 
 export default function ({ fecha,
@@ -218,7 +218,11 @@ export default function ({ fecha,
                         style={{
                             marginTop: 20,
                         }}>
-                        <Text style={{ marginBottom: 10, }}>Punto de reunion:</Text>
+                        <Text style={{
+                            marginBottom: 10,
+                            fontWeight: 'bold',
+                            fontSize: 16,
+                        }}>Punto de reunion</Text>
 
                         <View style={{ ...styles.row }}>
 
@@ -316,25 +320,28 @@ export default function ({ fecha,
                     selectedPlace={puntoReunion}
 
                 /> :
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    {tipoModal === "itinerario" ?
-                        <ModalItinerario
-                            editAllowed={false}
-                            setModalVisible={setModalVisible}
-                            itinerario={JSON.parse(fecha.itinerario)}
-                        /> :
+                tipoModal === "itinerario" ?
+                    <ModalItinerario
+                        setModalVisible={setModalVisible}
+                        modalVisible={modalVisible}
+
+                        itinerario={JSON.parse(fecha.itinerario)}
+
+                        puntoReunion={puntoReunion}
+                    /> :
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
                         <ModalRuta
                             img={fecha?.imagenRuta?.url}
                             setModalVisible={setModalVisible}
-                        />}
-                </Modal>}
+                        />
+                    </Modal>}
         </View >)
 }
 
@@ -474,7 +481,7 @@ const styles = StyleSheet.create({
     },
 
     botonRedondo: {
-        backgroundColor: moradoOscuro,
+        backgroundColor: tinto,
         padding: 14,
         borderRadius: 200,
         alignItems: 'center', justifyContent: 'center',
@@ -483,6 +490,7 @@ const styles = StyleSheet.create({
 
     ubicacionTxt: {
         color: moradoOscuro,
-        maxWidth: "80%"
+        maxWidth: "80%",
+        fontSize: 16,
     }
 })

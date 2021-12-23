@@ -12,9 +12,11 @@ export default ({ navigation,
         vibrar('sucess')
     }, []);
 
+    let descripcion = route.params?.descripcion
     let txtExito = route.params?.txtExito
     let onPress = route.params?.onPress
     let txtOnPress = route.params?.txtOnPress
+
 
     txtExito = txtExito ? txtExito : "pago exitoso"
     onPress = onPress ? onPress : () => navigation.popToTop()
@@ -31,7 +33,12 @@ export default ({ navigation,
                     width: 185,
                     height: 150,
                 }} />
-            <Text style={styles.txt}>{txtExito}</Text>
+            <Text style={{
+                ...styles.titulo,
+                fontWeight: descripcion ? 'bold' : "normal",
+            }}>{txtExito}</Text>
+            {descripcion && <Text style={styles.descripcion}>{descripcion}</Text>}
+
 
             <TouchableOpacity
                 onPress={onPress}
@@ -60,9 +67,16 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 
-    txt: {
+    titulo: {
         fontSize: 16,
-        marginTop: 15,
+        marginTop: 10,
+        marginHorizontal: 20,
+        textAlign: 'center',
+    },
+
+    descripcion: {
+        fontSize: 16,
+        marginTop: 5,
         marginHorizontal: 20,
         textAlign: 'center',
     },

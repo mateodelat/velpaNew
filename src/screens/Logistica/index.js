@@ -267,6 +267,7 @@ export default ({ navigation, route }) => {
 
             {/* Boton de pagar */}
             <Boton
+                red
                 onPress={handlePagar}
                 style={{
                     marginBottom: 40,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     },
 
     personasTotales: {
-        fontSize: 18,
+        fontSize: 25,
     },
 
     precio: {

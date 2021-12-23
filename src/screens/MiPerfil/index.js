@@ -172,9 +172,9 @@ export default ({ route, navigation }) => {
                             }
                         </View>
                         <View style={styles.headerText}>
-                            <Text numberOfLines={1} style={styles.title}
-                            >{data?.nombre ? data?.nombre : data?.nickname}
-                                {data?.apellido && <Text numberOfLines={1} style={styles.title}> {data?.apellido}</Text>}
+                            <Text numberOfLines={1} style={styles.title} fds
+                            >{!!data.nombre ? data?.nombre : data?.nickname}
+                                {!!data?.apellido && <Text numberOfLines={1} style={styles.title}> {data.apellido}</Text>}
 
                             </Text>
                             <Text style={styles.nickname}>@{data?.nickname}</Text>
@@ -190,7 +190,7 @@ export default ({ route, navigation }) => {
                         />
                     </View>
 
-                    {userEsGuia && <Pressable
+                    {guia && <Pressable
                         onPress={showInfoLevel}
                     >
 

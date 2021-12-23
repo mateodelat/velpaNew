@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, Pressable, Alert } from 'react-native';
-import { colorFondo } from '../../../assets/constants';
+import { colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants';
 import Boton from './components/Boton';
 
 export default function Landing({ navigation }) {
@@ -30,13 +30,13 @@ export default function Landing({ navigation }) {
                 <Boton
                     onPress={handleRegistrarse}
                     titulo={"Registrarse"}
-                    backgroundColor={'#282EC0'}
+                    backgroundColor={moradoOscuro}
                 />
 
                 <Boton
                     onPress={handleLogin}
                     titulo={"Iniciar Sesion"}
-                    backgroundColor={'#6468C9'}
+                    backgroundColor={moradoClaro}
                 />
 
                 {/* <Pressable onPress={handleSaltar}>

@@ -722,6 +722,7 @@ export const createUsuario = /* GraphQL */ `
       nickname
       experience
       stripeID
+      admin
       selfie
       ID
       certificaciones
@@ -929,6 +930,7 @@ export const updateUsuario = /* GraphQL */ `
       nickname
       experience
       stripeID
+      admin
       selfie
       ID
       certificaciones
@@ -1136,6 +1138,7 @@ export const deleteUsuario = /* GraphQL */ `
       nickname
       experience
       stripeID
+      admin
       selfie
       ID
       certificaciones
@@ -2186,6 +2189,7 @@ export const createAventuraUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -2312,6 +2316,7 @@ export const updateAventuraUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -2438,6 +2443,7 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -2523,6 +2529,7 @@ export const createChatRoomUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -2640,6 +2647,7 @@ export const updateChatRoomUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -2757,6 +2765,7 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones

@@ -13,7 +13,9 @@ export default function Header({ title, add, noArrow }) {
   }
 
   return (
-    <View style={styles.header}>
+    <View style={{
+      ...styles.header,
+    }}>
       {noArrow ? null : <MaterialIcons name="keyboard-arrow-left" size={35} color="white" style={styles.icon} onPress={handlePress} />}
       {add && <MaterialIcons name="add" size={35} color="black" style={{
         position: 'absolute',

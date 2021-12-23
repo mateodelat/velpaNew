@@ -156,6 +156,10 @@ export default () => {
                 handleCalificaUser(item.guiaID, item.aventuraID, index)
                 break;
 
+            case TipoNotificacion.ADMIN:
+                navigation.navigate("Admin")
+                break;
+
             default:
                 console.log("otro tipo de notificacion")
                 break;

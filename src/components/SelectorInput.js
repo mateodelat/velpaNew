@@ -20,6 +20,7 @@ export default ({
 
     minValue = minValue ? minValue : 0
     maxValue = maxValue ? maxValue : 10000000
+    cambio = cambio ? cambio : 1
 
     const minReached = cantidad <= minValue
     const maxReached = (cantidad >= maxValue)

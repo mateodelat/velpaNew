@@ -31,6 +31,8 @@ import { SolicitudGuia } from '../../../models';
 import { AventuraUsuario } from '../../../models';
 import { TipoNotificacion } from '../../../models';
 import { Notificacion } from '../../../models';
+import SelectorInput from '../../../components/SelectorInput';
+import { sendPushNotification } from '../../../../assets/constants/constant';
 
 
 export default ({ navigation }) => {
@@ -394,7 +396,7 @@ export default ({ navigation }) => {
                                             </Pressable> */}
 
 
-                                            <Selector
+                                            <SelectorInput
                                                 cantidad={capacidadMaxima}
                                                 setCantidad={setCapacidadMaxima}
 

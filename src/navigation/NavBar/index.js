@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, getUserSub, moradoOscuro, userEsGuia } from '../../../assets/constants';
+import { colorFondo, getUserSub, moradoOscuro, sendAdminNotification, userEsGuia } from '../../../assets/constants';
 import Inicio from '../../screens/Inicio';
 import HeaderNav from './../components/HeaderNav';
 
@@ -107,7 +107,7 @@ const Plus = () => {
 const { width, height } = Dimensions.get("window")
 
 export default () => {
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("tutorial");
 
     const [newNotificaciones, setNewNotificaciones] = useState(false);
@@ -124,7 +124,11 @@ export default () => {
             const sub = await getUserSub()
 
             verNuevasNotificaciones(sub)
-            subscripcionNotificaciones = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+            subscripcionNotificaciones = DataStore.observe(Notificacion, e => e
+                .usuarioID("eq", sub)
+                .leido("ne", true)
+                .showAt("lt", new Date())
+            )
                 .subscribe(msg => {
                     setNewNotificaciones(true)
                     console.log("new notificacion de subscripcion")
@@ -137,7 +141,6 @@ export default () => {
                     // Si hay nuevos mensajes en el usuario
                     if (!!msg.element.newMessages) {
                         setNewMessages(true)
-                        console.log("new notificacion de mensaje")
                     }
                 })
         })()
@@ -182,7 +185,7 @@ export default () => {
 
     // Ver si ya se mostro el tutorial de la app
     useEffect(() => {
-        checkFirstTimeTutorial()
+        // checkFirstTimeTutorial()
     }, []);
 
 
@@ -206,8 +209,9 @@ export default () => {
 
     return (
         <View style={{
-            width,
-            height,
+            // width,
+            // height,
+            flex: 1,
         }}>
 
             <Tab.Navigator
@@ -277,7 +281,10 @@ export default () => {
                     component={Plus}
                     options={{
                         tabBarButton: () => <CustomPlus
-                            setModalVisible={setModalVisible && (() => setTipoModal("tutorial"))}
+                            setModalVisible={async () => {
+                                setModalVisible(true)
+                                setTipoModal("add")
+                            }}
                         />
                     }}
                 />

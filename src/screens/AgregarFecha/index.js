@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Animated, Dimensions, Image, ImageBackground, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { abrirEnGoogleMaps, colorFondo, formatAMPM, getCapacidadUsuario, getUserSub, moradoClaro, moradoOscuro, msInMinute, redondear, shadowMedia } from '../../../assets/constants'
+import { Alert, Animated, Dimensions, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { colorFondo, formatAMPM, getUserSub, moradoClaro, moradoOscuro, msInMinute, } from '../../../assets/constants'
 
 
-import SelectorInput from '../../components/SelectorInput'
 import { Entypo, Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'
 
 import Calendario from './components/Calendario';
 import HeaderConImagen from '../../components/HeaderConImagen';
 import Boton from '../../components/Boton';
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import API from '@aws-amplify/api';
 import { DataStore } from '@aws-amplify/datastore';
-import RadioButton from '../../components/RadioButton';
 import ModalItinerario from './components/ModalItinerario';
 import ModalPuntoReunion from './components/ModalPuntoReunion';
 import { Usuario } from '../../models';

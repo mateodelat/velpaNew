@@ -114,7 +114,7 @@ type Fecha @model
 type Usuario @model 
 @auth(rules: [
    {allow: public, operations: [create,read]}, 
-   {allow: private, operations: [read]}, 
+   {allow: private, operations: [read,update]}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
    {allow: owner, ownerField: "owner"}
   ]) 
@@ -138,6 +138,8 @@ type Usuario @model
   experience:Int
 
   stripeID: String
+
+  admin:Boolean
   
   selfie: String
   ID: [String]

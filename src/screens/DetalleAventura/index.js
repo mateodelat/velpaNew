@@ -392,6 +392,7 @@ export default ({ navigation, route }) => {
 
 
                     <Boton
+                        red
                         onPress={handleContinuar}
                         style={{ marginTop: 40, }}
                         titulo={"Reservar ahora"}

@@ -39,42 +39,6 @@ const { height } = Dimensions.get("screen")
 export default ({ navigation, route }) => {
     const agencia = route.params.agencia
 
-    const net = useNetInfo()
-
-    // const route = {
-    //     params: {
-    //         DOB: null,
-    //         IDAtras: {
-    //             S3Key: "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDAtras.jpg",
-    //             stripeKey: "file_1JzOd8FIERW56TAEUIGCiqJC",
-    //         },
-    //         IDFrente: {
-    //             S3Key: "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDFrente.jpg",
-    //             stripeKey: "file_1JzOd8FIERW56TAEUIGCiqJC",
-    //         },
-    //         agencia: true,
-    //         apellido: "delat",
-    //         certificaciones: [
-    //             {
-    //                 S3Key: "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-Certificacion 0.jpg",
-    //             },
-    //         ],
-    //         direccion: {
-    //             city: "zapopan",
-    //             line1: "tomas mann 5700",
-    //             postal_code: "45215",
-    //             state: "jalisco",
-    //         },
-    //         email: "mateodelat@gmail.com",
-    //         nombre: "mateo",
-    //         nombreAgencia: "mateo delat",
-    //         selfie: {
-    //             S3Key: "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-Selfie.jpg",
-    //         },
-    //         sitioWeb: "https://google.com",
-    //         telefono: "+524323432343",
-    //     }
-    // }
     //////////////////////////////////////////////////////////////////////////
     ////////////////////////////Variables texto///////////////////////////////
     //////////////////////////////////////////////////////////////////////////
@@ -201,7 +165,7 @@ export default ({ navigation, route }) => {
                 r = r.data.createStripeAcount
                 if (r.errors) {
                     setButtonLoading(false)
-                    Alert.alert("Error", "Hubo un error creando tu cuenta bancaria, avisa a los desarrolladores")
+                    Alert.alert("Error", "Hubo un error creando tu cuenta bancaria")
                     return
                 }
                 else {

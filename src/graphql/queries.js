@@ -510,6 +510,7 @@ export const getUsuario = /* GraphQL */ `
       nickname
       experience
       stripeID
+      admin
       selfie
       ID
       certificaciones
@@ -719,6 +720,7 @@ export const listUsuarios = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -803,6 +805,7 @@ export const syncUsuarios = /* GraphQL */ `
         nickname
         experience
         stripeID
+        admin
         selfie
         ID
         certificaciones
@@ -1567,6 +1570,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           nickname
           experience
           stripeID
+          admin
           selfie
           ID
           certificaciones
@@ -1631,6 +1635,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           nickname
           experience
           stripeID
+          admin
           selfie
           ID
           certificaciones

@@ -785,6 +785,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "admin": {
+                    "name": "admin",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "selfie": {
                     "name": "selfie",
                     "isArray": false,
@@ -1042,7 +1049,8 @@ export const schema = {
                             {
                                 "allow": "private",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ]
                             },
                             {
@@ -2416,5 +2424,5 @@ export const schema = {
             }
         }
     },
-    "version": "fa553e7a7617510896538aabd2a9560a"
+    "version": "c8a1bab9d222b9c67b18f9bf95e78128"
 };

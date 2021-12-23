@@ -3,7 +3,7 @@ import { Alert, Animated, Dimensions, Image, ImageBackground, Pressable, Refresh
 
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { moradoClaro, moradoOscuro, } from '../../assets/constants';
+import { moradoOscuro, } from '../../assets/constants';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -113,6 +113,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         fontSize: 16,
-        color: moradoClaro,
+        color: moradoOscuro,
     }
 })

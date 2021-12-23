@@ -111,7 +111,7 @@ const ModalItinerario = ({
             transparent={false}
             visible={modalVisible}
             onRequestClose={() => {
-                setModalVisible(!modalVisible);
+                setModalVisible(false);
             }}
         >
 

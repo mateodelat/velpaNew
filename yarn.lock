@@ -7287,6 +7287,11 @@ react-native-get-random-values@^1.4.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
+react-native-hole-view@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-hole-view/-/react-native-hole-view-2.0.2.tgz#94f3ce57d0d20b2fe83aed06f28f1ca6215ebe09"
+  integrity sha512-izbteaQ8eyEKXCsJ8Y6f8qwYOh+t5mpCiL/h7FZ5y03dddzNvJyFOkuMS6UklQV7QiSMeUQ1rMKKYgo05RBogw==
+
 react-native-image-pan-zoom@^2.1.12:
   version "2.1.12"
   resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.12.tgz#eb98bf56fb5610379bdbfdb63219cc1baca98fd2"

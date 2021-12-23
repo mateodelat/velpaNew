@@ -192,6 +192,7 @@ export declare class Usuario {
   readonly nickname?: string;
   readonly experience?: number;
   readonly stripeID?: string;
+  readonly admin?: boolean;
   readonly selfie?: string;
   readonly ID?: (string | null)[];
   readonly certificaciones?: (string | null)[];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { RNHole, RNHoleView, ERNHoleViewTimingFunction, IRNHoleViewAnimation } from "react-native-hole-view";
+// import { RNHole, RNHoleView, ERNHoleViewTimingFunction, IRNHoleViewAnimation } from "react-native-hole-view";
 
 
 
@@ -16,8 +16,10 @@ export default function ({
         firstHole,
         secondHole
     ]
+
     return (
-        <Pressable
+
+        <View
             onPress={() => {
                 setStep(step + 1)
                 console.log(step + 1)
@@ -25,7 +27,7 @@ export default function ({
             style={styles.container}>
 
             {/* Elemento de buscar */}
-            <RNHoleView
+            {/* <RNHoleView
                 style={{
                     position: 'absolute',
                     width: '100%',
@@ -35,11 +37,11 @@ export default function ({
                 holes={holes}
             >
 
-            </RNHoleView>
+            </RNHoleView> */}
 
 
             <Text>Tutorial de la app</Text>
-        </Pressable>
+        </View>
     )
 }
 

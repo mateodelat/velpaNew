@@ -99,7 +99,6 @@ export default ({ route }) => {
         fectchData()
         const subscription = DataStore.observe(Mensaje, msg => msg.chatroomID("eq", chatroomID))
             .subscribe((msg) => {
-
                 // Subir solo si es la primera solicitud
                 if (msg.opType === OpType.UPDATE && readedMessageId !== msg.element.id) {
                     readedMessageId = msg.element.id

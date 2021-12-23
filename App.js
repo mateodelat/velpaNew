@@ -19,6 +19,8 @@ import { Aventura } from './src/models';
 import { Publicidad } from './src/models';
 import ModalOnboarding from './src/navigation/components/ModalOnboarding';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Usuario } from './src/models';
+import { Notificacion } from './src/models';
 
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
@@ -52,14 +54,16 @@ Amplify.configure({
   oauth: {
     ...awsconfig.oauth,
     urlOpener,
-    redirectSignIn: "exp://exp.host/@mateodelat/velpaNew/",
-    redirectSignOut: "exp://exp.host/@mateodelat/velpaNew/",
+    redirectSignIn: localRedirectSignOut,
+    redirectSignOut: localRedirectSignOut,
 
   }
 });
 
 let publicidadLoaded
 let aventuraLoaded
+let usuarioLoaded
+let notificacionLoaded
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -123,10 +127,21 @@ const App = () => {
       const { event, data } = hubData.payload;
       if (event === "modelSynced" && data?.model === Aventura) {
         aventuraLoaded = true
-      } else if (event === "modelSynced" && data?.model === Publicidad) {
+      }
+      else if (event === "modelSynced" && data?.model === Publicidad) {
         publicidadLoaded = true
 
-      } else if (publicidadLoaded && aventuraLoaded) {
+      }
+
+      else if (event === "modelSynced" && data?.model === Usuario) {
+        usuarioLoaded = true
+
+      }
+      else if (event === "modelSynced" && data?.model === Notificacion) {
+        notificacionLoaded = true
+
+      }
+      else if (publicidadLoaded && aventuraLoaded && usuarioLoaded && notificacionLoaded) {
         setCargandoModelos(false)
 
       }
@@ -148,7 +163,7 @@ const App = () => {
   async function checkOnboarding() {
     try {
       const value = await AsyncStorage.getItem("@onboardingShown")
-      if (!!value) {
+      if (!value) {
         setShowOnboarding(true)
       } else {
         setShowOnboarding(false)
@@ -162,7 +177,7 @@ const App = () => {
   // Limpiar el elemento de onboardingShown
   async function handleDoneOnboarding() {
     setShowOnboarding(false)
-    AsyncStorage.setItem("@onboardingShown", "")
+    AsyncStorage.setItem("@onboardingShown", "t")
 
   }
 
@@ -191,7 +206,9 @@ const App = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={{
+      flex: 1, backgroundColor: '#fff',
+    }}>
       <StatusBar hidden={true} />
       <Router />
     </View>

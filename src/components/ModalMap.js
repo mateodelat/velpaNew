@@ -87,7 +87,7 @@ export default ({
                 />
 
 
-                <View style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, }}>
+                <View style={{ flex: 1, }}>
                     {region && locationPermision !== null ? <MapView
                         provider={"google"}
                         mapType={"standard"}

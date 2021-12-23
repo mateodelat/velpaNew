@@ -21,11 +21,11 @@ export default ({
 }) => {
     const { name,
         picture,
-        newMessages,
         lastMessage
     } = item
 
     const [timeAgo, setTimeAgo] = useState(() => moment(lastMessage?.createdAt).from(moment()));
+    const [newMessages, setNewMessages] = useState(item.newMessages);
 
     useEffect(() => {
         const i = setInterval(() => {
@@ -45,6 +45,7 @@ export default ({
                 if (msg.opType === OpType.UPDATE && !!newElement.name) {
                     const lastMessage = await DataStore.query(Mensaje, newElement?.chatRoomLastMessageId)
 
+                    setNewMessages(newMessages + 1)
                     setChatRooms((existingChats) => {
                         let newChats = [...existingChats]
 
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     },
 
     badgeTxt: {
-        fontSize: 9,
+        fontSize: 10,
         fontWeight: 'bold',
         color: '#fff',
     }

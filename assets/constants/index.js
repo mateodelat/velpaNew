@@ -11,6 +11,7 @@ import { Foundation, MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
+import { sendPushNotification } from "./constant";
 
 
 
@@ -1243,10 +1244,47 @@ export async function getImageUrl(data) {
 }
 
 export function formatMoney(num, hideCents) {
-  if (!num) return
+  if (!num) {
+    num = 0
+  }
   return '$' + num.toFixed(hideCents ? 0 : 2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 
 
+}
+
+export async function sendAdminNotification({
+  titulo,
+  descripcion,
+  usuarioID
+}) {
+  const admins = await DataStore.query(Usuario, usr => usr.admin("eq", true))
+
+  const sender = await DataStore.query(Usuario, usuarioID)
+
+  descripcion = "@" + sender.nickname + ": " + descripcion
+
+  admins.map(usr => {
+    const { notificationToken, owner, id } = usr
+
+    DataStore.save(new Notificacion({
+      tipo: TipoNotificacion.ADMIN,
+
+      titulo,
+      descripcion,
+
+      showAt: new Date().getTime(),
+
+      usuarioID: id,
+      owner
+
+    }))
+
+    sendPushNotification({
+      title: titulo,
+      descripcion,
+      token: notificationToken
+    })
+  })
 }
 
 export const levels = {
@@ -1654,10 +1692,11 @@ export const openLink = async (link) => {
 
 // Colores
 export const colorFondo = "#E5E5E5"
-export const moradoClaro = '#6468C9'
-export const moradoOscuro = '#282EC0'
+export const moradoClaro = '#1ed095'
+export const tinto = '#ba1b50'
+export const moradoOscuro = '#1BBA85'
 export const verdeTurquesa = '#1BBA85'
-
+export const salmon = '#FF8E72'
 
 export const shadowMarcada = {
   shadowColor: "#000",

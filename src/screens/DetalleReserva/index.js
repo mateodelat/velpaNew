@@ -35,7 +35,7 @@ export const getUsuario = /* GraphQL */ `
       id
       foto
       nickname
-      AventurasAutorizadas(limit:2) {
+      AventurasAutorizadas(limit:4) {
         items {
             aventura {
                 titulo
@@ -96,18 +96,17 @@ export default ({ navigation, route }) => {
     }
 
     const fetchData = async () => {
-        await DataStore.query(Reserva, reserva.id)
+        const { guiaID } = await DataStore.query(Reserva, reserva.id)
             .then((r) => {
                 setMaterialChecked(r.materialChecked ?
                     JSON.parse(r.materialChecked)
                     :
                     materialDefault
                 )
+                return r
             })
-
         // Obtener el usuario y la imagen de las aventuras autorizadas
-        const sub = await getUserSub()
-        API.graphql({ query: getUsuario, variables: { id: sub } })
+        API.graphql({ query: getUsuario, variables: { id: guiaID } })
             .then(async r => {
                 r = r.data.getUsuario
                 const AventurasAutorizadas = await Promise.all(r.AventurasAutorizadas.items.map(async e => {

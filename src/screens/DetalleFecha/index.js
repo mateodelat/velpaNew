@@ -208,22 +208,22 @@ export default ({ navigation, route }) => {
                     </View>
                     }
 
-                    <View style={{
+                    {!!fecha.precioAcomulado && <View style={{
                         flexDirection: 'row',
                         marginTop: 20,
                     }}>
                         <Text style={{ ...styles.title, flex: 1, }}>Suma:</Text>
                         <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precioAcomulado, true)}</Text>
 
-                    </View>
+                    </View>}
 
-                    <View style={{
+                    {!!fecha.precioAcomulado && <View style={{
                         flexDirection: 'row',
                     }}>
                         <Text style={{ ...styles.title, flex: 1, }}>Comision:</Text>
                         <Text style={{ ...styles.title, color: moradoOscuro, }}>- {formatMoney(fecha.precioAcomulado - fecha.precioAcomuladoSinComision, true)}</Text>
 
-                    </View>
+                    </View>}
                     <View style={{
                         flexDirection: 'row', marginTop: 10,
                     }}>

@@ -314,7 +314,7 @@ export default ({ navigation, route }) => {
                                 color="black"
                             />}
                         <View style={styles.headerTextContainer}>
-                            <Text style={styles.nombre}>{user?.nombreAgencia ? user.nombreAgencia : (user?.nombre + " " + user?.apellido)}</Text>
+                            <Text style={styles.nombre}>{user?.nombreAgencia ? user.nombreAgencia : (user?.nombre + " " + (!!user.apellido ? user.apellido : ""))}</Text>
                             <Text numberOfLines={1} style={styles.nickname}>{user?.nickname && ("@" + user.nickname)}</Text>
 
                             {/* Calificaciones */}
@@ -370,9 +370,7 @@ export default ({ navigation, route }) => {
 
 
                 {/* Comentarios del perfil */}
-                {comentarios?.length !== 0 && <Pressable
-                    onPress={handleOpenComments}
-
+                <View
                     style={styles.innerContainer}>
                     < View
                         style={styles.item}>
@@ -385,6 +383,8 @@ export default ({ navigation, route }) => {
                             <Text style={{ ...styles.title, marginLeft: 0, }}>Reseñas {comentarios?.length ? ("(" + comentarios?.length + ")") : ""}</Text>
 
                             {comentarios?.length > 3 && <Text
+                                onPress={handleOpenComments}
+
                                 style={{
                                     ...styles.title,
                                     textAlign: 'right',
@@ -398,22 +398,30 @@ export default ({ navigation, route }) => {
                             !comentarios ?
                                 <Loading indicator />
                                 :
-                                comentarios?.map((e, index) => {
-                                    // Si el index no coincide con uno de los 3 index random no se muestra
-                                    if (e.show) return <CommentItem
-                                        key={index}
-                                        content={e}
-                                    />
+                                comentarios.length !== 0 ?
+                                    <Pressable onPress={handleOpenComments}>
 
-                                })
+                                        {comentarios.map((e, index) => {
+                                            // Si el index no coincide con uno de los 3 index random no se muestra
+                                            if (e.show) return <CommentItem
+                                                key={index}
+                                                content={e}
+                                            />
+
+                                        })
+                                        }
+                                    </Pressable>
+
+                                    :
+                                    <Text style={styles.NoHay}>No hay reseñas</Text>
                         }
 
                     </View>
-                </Pressable>}
+                </View>
 
 
                 {/* Experiencias del guia */}
-                {experiencias?.length !== 0 && <View style={styles.innerContainer}>
+                <View style={styles.innerContainer}>
                     <Pressable
                         onPress={() => setShowExperiencias(!showExperiencias)}
                         style={styles.item}>
@@ -441,15 +449,21 @@ export default ({ navigation, route }) => {
                             />
                         </View>
 
-                        {showExperiencias && <View style={{ marginTop: 20, }}>
+                        {showExperiencias &&
+                            (
+                                experiencias.length !== 0 ?
+                                    <View style={{ marginTop: 20, }}>
 
-                            <ExperienciasGuia
-                                experiencias={experiencias}
-                            />
-                        </View>}
+                                        <ExperienciasGuia
+                                            experiencias={experiencias}
+                                        />
+                                    </View> :
+                                    <Text style={[styles.NoHay, { marginTop: 20, }]}>No hay experiencias</Text>
+                            )
+                        }
 
                     </Pressable>
-                </View>}
+                </View>
 
 
             </View>
@@ -613,6 +627,12 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         justifyContent: 'center',
     },
+    NoHay: {
+        textAlign: 'center',
+        fontSize: 16,
+        marginVertical: 5,
+        color: moradoOscuro,
+    }
 
 })
 

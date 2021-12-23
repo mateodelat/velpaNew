@@ -16,7 +16,6 @@ export async function sendPushNotification(input: {
         descripcion: body,
         data
     } = input
-    console.log(input)
     const message = {
         to: token,
         sound: 'default',

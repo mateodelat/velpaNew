@@ -122,13 +122,22 @@ const Icon = ({ tipo }) => {
                 <Feather name="user-check" size={sizeIcon} color="black" />
             </View>
 
+        case TipoNotificacion.ADMIN:
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+
+                <MaterialCommunityIcons
+                    name="shield-edit"
+                    size={30}
+                    color="black"
+                />
+            </View>
+
 
         default:
             return <Image
                 style={{ flex: 1, width: '100%', height: '100%', }}
                 source={require("../../../../assets/VELPA.png")}
             />
-            break;
     }
 }
 
@@ -176,7 +185,8 @@ export default ({
                     <Text style={styles.titulo}
                         numberOfLines={1}
                     >{titulo}</Text>
-                    <Text style={styles.descripcion}>{descripcion}</Text>
+                    <Text
+                        numberOfLines={4} style={styles.descripcion}>{descripcion}</Text>
 
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10, }}>

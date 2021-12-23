@@ -1,5 +1,6 @@
-import { Hub } from '@aws-amplify/core';
+import { Hub, retry } from '@aws-amplify/core';
 import { DataStore } from '@aws-amplify/datastore';
+import { PredicateAll } from '@aws-amplify/datastore/lib-esm/predicates';
 import React, { useEffect, useRef, useState } from 'react'
 import {
     ActivityIndicator,
@@ -22,9 +23,14 @@ import { getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, wait 
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
+import { Usuario } from '../../models';
 import { Publicidad } from '../../models';
 import ComponentePublicidad from './components/ComponentePublicidad';
 import Indicador from './components/Indicador';
+
+import { Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+
 
 export default ({ navigation }) => {
     const { height, width } = Dimensions.get("window")
@@ -37,6 +43,8 @@ export default ({ navigation }) => {
 
     const [publicidad, setPublicidad] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
+
+    const [guias, setGuias] = useState(null);
 
     let timer
 
@@ -77,7 +85,40 @@ export default ({ navigation }) => {
                 setAventuras(r)
             })
 
+        fetchUsuariosGuia()
+
     }
+
+    async function fetchUsuariosGuia() {
+        try {
+
+            setGuias(await DataStore.query(Usuario,
+                usr => usr
+                    .guia("eq", true)
+                ,
+                {
+                    sort: e => e
+                        .experience("DESCENDING")
+                        .updatedAt("ASCENDING")
+
+                }
+            )
+                .then(async r => {
+                    return await Promise.all(r.map(async usr => ({
+                        ...usr,
+                        foto: await getImageUrl(usr.foto)
+                    })
+                    )
+                    )
+                })
+            )
+
+        } catch (error) {
+            console.log(error)
+
+        }
+    }
+
     const fetchPublicidad = async () => {
         DataStore.query(Publicidad)
             .then(async r => {
@@ -144,6 +185,9 @@ export default ({ navigation }) => {
         wait(300).then(() => setRefreshing(false));
     }, []);
 
+    const handleNavigateProfile = (id) => {
+        navigation.navigate("PerfilScreen", { id })
+    }
 
     return (
         <ScrollView
@@ -239,6 +283,8 @@ export default ({ navigation }) => {
 
             </View>
 
+
+
             {/* $$$$$$$$$$*/}
             {/* Aventuras recomendadas*/}
             {/* $$$$$$$$$$*/}
@@ -262,7 +308,6 @@ export default ({ navigation }) => {
                         }}>Ver todo</Text>
 
                 </View>
-
 
                 {/* $$$$$$$$$$$$$*/}
                 {/* Lista lugares*/}
@@ -406,7 +451,84 @@ export default ({ navigation }) => {
                         </ScrollView>
                 }
             </View>
-            <Pressable
+
+            {/* Guias de Velpa */}
+            <View style={{ marginBottom: 40, marginTop: 20, }}>
+                <Text style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    marginBottom: 10,
+                }}>Guias</Text>
+
+                {!guias ?
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+
+                        height: 130,
+
+                        width: "100%",
+                    }}>
+                        <ActivityIndicator
+                            size={"large"}
+                            color={"black"}
+                        />
+
+                    </View>
+                    :
+                    <ScrollView
+                        showsHorizontalScrollIndicator={false}
+                        horizontal >
+
+                        {
+                            guias?.map(usr => <Pressable
+                                onPress={() => handleNavigateProfile(usr.id)}
+                                key={usr.id}
+                                style={{
+                                    marginRight: 30,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                {usr.foto ? <Image
+                                    style={styles.imageUsr}
+                                    source={{ uri: usr.foto }}
+                                />
+                                    :
+                                    <View style={{
+                                        ...styles.imageUsr,
+                                        backgroundColor: "#f4f4f4",
+                                        overflow: "hidden",
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: 200,
+                                    }}>
+
+                                        <Feather
+                                            name="user"
+                                            size={80}
+                                            color="black"
+                                        />
+                                    </View>
+                                }
+
+                                <Text style={{ flex: 1, }}>@{usr.nickname}</Text>
+                                {usr.calificacion && <View style={{
+                                    flexDirection: 'row',
+                                }}>
+                                    <Entypo name="star" size={20} color="#F5BE18" />
+                                    <Text >{usr.calificacion}</Text>
+
+                                </View>}
+
+                            </Pressable>)
+                        }
+                    </ScrollView>
+                }
+            </View>
+
+
+
+            {/* <Pressable
                 onPress={handleMisAventuras}
                 style={{
                     backgroundColor: moradoOscuro,
@@ -423,7 +545,7 @@ export default ({ navigation }) => {
                         color: '#fff',
                         fontSize: 16,
                     }}>Mis experiencias</Text>
-            </Pressable>
+            </Pressable> */}
         </ScrollView >
     )
 }
@@ -436,4 +558,10 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingVertical: 0,
     },
+
+    imageUsr: {
+        width: 90,
+        height: 90,
+        borderRadius: 120,
+    }
 })

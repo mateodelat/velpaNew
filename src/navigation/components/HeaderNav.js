@@ -11,7 +11,7 @@ export default ({ title }) => {
     const navigation = useNavigation()
 
     return (
-        <SafeAreaView style={styles.header}>
+        <View style={styles.header}>
 
             {/* Campanita de notificaiones */}
             <Pressable
@@ -32,17 +32,11 @@ export default ({ title }) => {
             <View style={styles.headerTitle}>
                 <Text style={styles.headerText} numberOfLines={1}>{title}</Text>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    headerImg: {
-        height: 26,
-        width: 26,
-        margin: 10
-    },
-
     header: {
         width: '100%',
         height: 70,

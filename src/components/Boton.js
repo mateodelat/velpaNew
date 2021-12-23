@@ -1,9 +1,16 @@
 import React from 'react'
 import { TouchableOpacity, StyleSheet, Text, ActivityIndicator } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
-import { moradoOscuro } from '../../assets/constants';
+import { tinto, moradoOscuro } from '../../assets/constants';
 
-export default ({ onPress, titulo, loading, done, style, disabled }) => {
+export default ({ onPress,
+    titulo,
+    loading,
+    done,
+    style,
+    disabled,
+    red
+}) => {
     if (loading !== undefined) {
         return (
 
@@ -12,7 +19,7 @@ export default ({ onPress, titulo, loading, done, style, disabled }) => {
                     done ||
                     loading)
                 }
-                style={[styles.boton, style]}
+                style={[{ backgroundColor: red ? tinto : moradoOscuro }, styles.boton, style,]}
                 onPress={onPress}>
                 {loading ?
                     <ActivityIndicator
@@ -32,7 +39,7 @@ export default ({ onPress, titulo, loading, done, style, disabled }) => {
 
     return (
         <TouchableOpacity
-            style={[styles.boton, style]}
+            style={[{ backgroundColor: red ? tinto : moradoOscuro }, styles.boton, style,]}
             onPress={onPress}>
             <Text style={{
                 fontSize: 16,
@@ -51,6 +58,5 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: moradoOscuro,
     },
 });

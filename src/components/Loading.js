@@ -20,7 +20,7 @@ export const Loading = ({ containerStyle, valor, indicator, color }) => {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: '#fff',
+                backgroundColor: '#FCFCFD',
                 ...containerStyle,
             }}>
             {!!valor ? <Image

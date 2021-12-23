@@ -10,7 +10,7 @@ import {
 
 
 import Boton from '../../components/Boton';
-import { comisionVelpa, getUserSub, moradoClaro } from '../../../assets/constants';
+import { comisionVelpa, getUserSub, moradoClaro, sendAdminNotification } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import Header from '../../components/header';
@@ -22,6 +22,7 @@ import { TipoNotificacion } from '../../models';
 import { Notificacion } from '../../models';
 import API from '@aws-amplify/api';
 import { createAventura } from '../../graphql/mutations';
+import { Usuario } from '../../models';
 
 const { height } = Dimensions.get("window")
 
@@ -54,6 +55,13 @@ export default ({ navigation, route }) => {
             // Nueva aventura con graphql para poder agregad el id de storage personalizado
             await API.graphql({ query: createAventura, variables: { input: aventuraAEnviar } })
                 .then(async r => {
+                    sendAdminNotification({
+                        usuarioID: sub,
+                        titulo: "Nueva solicitud a aventura",
+                        descripcion: "Aventura nueva : " + aventura.titulo,
+                    })
+
+
                     // Notificacion de nueva aventura
                     await DataStore.save(new Notificacion({
                         tipo: TipoNotificacion.SOLICITUDAVENTURA,
@@ -72,7 +80,6 @@ export default ({ navigation, route }) => {
                     navigation.navigate("ExitoScreen", {
                         txtExito: "Solicitud enviada con exito, espera nuestra respuesta!!",
                     })
-
                 })
         } catch (error) {
             Alert.alert("Error creando aventura", error)

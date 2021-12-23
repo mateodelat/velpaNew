@@ -20,7 +20,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { categorias, colorFondo, getUserSub, listAventurasAutorizadas, moradoClaro, moradoOscuro } from '../../../assets/constants';
+import { categorias, colorFondo, getUserSub, listAventurasAutorizadas, moradoClaro, moradoOscuro, sendAdminNotification } from '../../../assets/constants';
 import BotonDificultad from './components/BotonDificultad';
 
 import CuadradoImagen from '../../components/CuadradoImagen';
@@ -185,6 +185,13 @@ export default ({
             }))
         }))
 
+        sendAdminNotification({
+            usuarioID: sub,
+
+            titulo: "Nueva solicitud guia",
+            descripcion: "Nuevas solicitudes para guia en: " + listaAventuras.map(e => (" " + e.titulo)),
+        })
+
 
         // Mandar notificacion
         await DataStore.save(new Notificacion({
@@ -237,6 +244,29 @@ export default ({
         async function handleSendSolicitud() {
             const sub = await getUserSub()
 
+            // Verificar que no exista una solicitud pendiente para esa aventura
+            const aventuras = await DataStore.query(AventuraSolicitudGuia)
+                .then(r => {
+                    return r.filter(e => {
+
+                        // Si el id de la aventura es igual a la solicitada y la solicitud esta en pendiente
+                        return (e.aventura.id === aventura.id && e.solicitudguia.status === StatusSolicitud.PENDIENTE)
+                    })
+                })
+            if (aventuras.length !== 0) {
+                Alert.alert("Error", "Ya enviaste una solicitud para esa aventura", [
+                    {
+                        text: "Cancelar"
+                    },
+                    {
+                        text: "Ver",
+                        onPress: () => navigation.navigate("MisSolicitudes")
+                    },
+                ])
+                return
+            }
+
+
             const solicitudguia = await DataStore.save(new SolicitudGuia({
                 status: StatusSolicitud.PENDIENTE,
                 usuarioID: sub
@@ -248,6 +278,12 @@ export default ({
                 solicitudguia
             }))
 
+            // Notificacion a admins
+            sendAdminNotification({
+                usuarioID: sub,
+                titulo: "Nueva solicitud guia",
+                descripcion: "Nueva solicitud para guia en: " + aventura.titulo,
+            })
 
 
             // Mandar notificacion
