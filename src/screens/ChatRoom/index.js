@@ -82,7 +82,7 @@ export default ({ route }) => {
 
                 sendPushNotification({
                     title: "Nuevo mensaje en " + chatroom.name,
-                    descripcion: "@" + listaUsuarios.find(e => e.id === usuarioID)?.nickname + ": " + lastMessage.content,
+                    descripcion: lastMessage.content + " @" + listaUsuarios.find(e => e.id === usuarioID)?.nickname,
 
                     token: e.notificationToken
                 })
@@ -94,15 +94,16 @@ export default ({ route }) => {
 
     }
 
-    let readedMessageId = null
     useEffect(() => {
         fectchData()
         const subscription = DataStore.observe(Mensaje, msg => msg.chatroomID("eq", chatroomID))
             .subscribe((msg) => {
                 // Subir solo si es la primera solicitud
-                if (msg.opType === OpType.UPDATE && readedMessageId !== msg.element.id) {
-                    readedMessageId = msg.element.id
-                    setChatMessages((existingMessages) => [msg.element, ...existingMessages])
+                if (msg.opType === OpType.INSERT) {
+                    setChatMessages((existingMessages) => [{
+                        ...msg.element,
+                        createdAt: msg.element.createdAt ? msg.element.createdAt : new Date().getTime()
+                    }, ...existingMessages])
                 }
             })
 

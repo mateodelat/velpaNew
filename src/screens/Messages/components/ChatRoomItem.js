@@ -19,13 +19,13 @@ export default ({
     index
 
 }) => {
-    const { name,
+    let { name,
         picture,
-        lastMessage
+        lastMessage,
+        newMessages
     } = item
 
     const [timeAgo, setTimeAgo] = useState(() => moment(lastMessage?.createdAt).from(moment()));
-    const [newMessages, setNewMessages] = useState(item.newMessages);
 
     useEffect(() => {
         const i = setInterval(() => {
@@ -45,7 +45,6 @@ export default ({
                 if (msg.opType === OpType.UPDATE && !!newElement.name) {
                     const lastMessage = await DataStore.query(Mensaje, newElement?.chatRoomLastMessageId)
 
-                    setNewMessages(newMessages + 1)
                     setChatRooms((existingChats) => {
                         let newChats = [...existingChats]
 
@@ -62,7 +61,10 @@ export default ({
                 }
             })
 
-        return () => subscription.unsubscribe()
+        return () => {
+            subscription.unsubscribe()
+        }
+
 
     }, []);
 

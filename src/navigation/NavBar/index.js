@@ -176,7 +176,7 @@ export default () => {
 
         // console.log("Mensajes nuevos:", usr.newMessages)
 
-        if (!!usr.newMessages) {
+        if (!!usr?.newMessages) {
             setNewMessages(true)
         }
 

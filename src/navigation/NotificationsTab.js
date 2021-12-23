@@ -81,7 +81,7 @@ export default function () {
         // Obtener todas las notificaciones no vistas
         const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
 
-        if (!!usr.newMessages) {
+        if (!!usr?.newMessages) {
             setNewMessages(true)
         }
 

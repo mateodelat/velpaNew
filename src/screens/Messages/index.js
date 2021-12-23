@@ -55,7 +55,8 @@ export default ({ navigation }) => {
                 }
 
                 return e
-            }))
+            })
+        )
 
         setChats(chatRooms)
         return chatRooms
