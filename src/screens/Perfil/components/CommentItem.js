@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
     },
 
     timeAgo: {
-        color: moradoOscuro + "66",
+        color: moradoOscuro,
 
     },
 
     content: {
         marginTop: 10,
-        color: moradoOscuro + "66",
+        color: moradoOscuro,
 
     }
 

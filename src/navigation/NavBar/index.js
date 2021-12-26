@@ -25,6 +25,7 @@ import { Usuario } from '../../models';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tutorial from './Tutorial';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 const Tab = createBottomTabNavigator()
@@ -205,7 +206,7 @@ export default () => {
 
     }
 
-
+    const insets = useSafeAreaInsets()
 
     return (
         <View style={{
@@ -213,7 +214,6 @@ export default () => {
             // height,
             flex: 1,
         }}>
-
             <Tab.Navigator
                 screenOptions={{
                     headerShown: false,
@@ -223,11 +223,10 @@ export default () => {
                     tabBarInactiveTintColor: "black",
 
                     tabBarStyle: {
-                        paddingLeft: 10,
-                        paddingBottom: 10,
+                        paddingBottom: insets.bottom ? insets.bottom : 10,
                         elevation: 0,
                         backgroundColor: '#F4F6F6',
-                        height: 80,
+                        height: insets.bottom ? 70 + insets.bottom : 80,
                     },
                 }}
             >
@@ -377,7 +376,7 @@ export default () => {
                 }
             </Modal>
 
-        </View>
+        </View >
     )
 }
 

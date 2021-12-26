@@ -164,7 +164,7 @@ export default ({ navigation }) => {
 
         Alert.alert("Link externo", "Deseas salir de velpa para abrir el link", [
             {
-                text: "CANCEL",
+                text: "Cancelar",
                 style: "cancel"
             },
             {
@@ -453,7 +453,7 @@ export default ({ navigation }) => {
             </View>
 
             {/* Guias de Velpa */}
-            <View style={{ marginBottom: 40, marginTop: 20, }}>
+            {guias?.length !== 0 && <View style={{ marginBottom: 40, marginTop: 20, }}>
                 <Text style={{
                     fontSize: 18,
                     fontWeight: 'bold',
@@ -524,7 +524,7 @@ export default ({ navigation }) => {
                         }
                     </ScrollView>
                 }
-            </View>
+            </View>}
 
 
 

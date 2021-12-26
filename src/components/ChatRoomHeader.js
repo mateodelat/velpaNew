@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { moradoOscuro } from "../../assets/constants";
 import { DataStore } from "@aws-amplify/datastore";
 import API from "@aws-amplify/api";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const getUsersInChat = /* GraphQL */ `
     query getChatRoom($id: ID!) {
@@ -51,11 +52,15 @@ export default ({ id, titulo, image }) => {
 
     }
 
+    const insets = useSafeAreaInsets();
 
     return (
         <Pressable
             onPress={handleNavigate}
-            style={styles.container}>
+            style={{
+                ...styles.container,
+                paddingTop: insets.top + 10,
+            }}>
             <MaterialIcons
                 name="keyboard-arrow-left"
                 size={40}
@@ -88,7 +93,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
 
-        backgroundColor: "#fff",
         padding: 20,
         paddingVertical: 10,
         alignItems: 'center',

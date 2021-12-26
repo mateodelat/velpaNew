@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
 
 export default ({ personasReservadas, personasTotales }) => {
     const tamañoFotos = 15
@@ -31,10 +33,26 @@ export default ({ personasReservadas, personasTotales }) => {
                     personasReservadas?.map((persona, idx) => {
                         // Solo renderizar 3 primeras imagenes
                         if (idx > 2) return
+                        if (!persona.foto) {
+                            return <View style={{
+                                ...styles.imagenPersonas,
+                                left: tamañoFotos * idx,
+                            }}
+                            >
+                                <Feather
+                                    key={idx.toString()}
+
+                                    name="user"
+                                    size={25}
+                                    color="black"
+                                />
+                            </View>
+                        }
+
                         return (
                             <Image
                                 key={idx.toString()}
-                                source={persona.foto ? { uri: persona.foto } : require("../../../../assets/user.png")}
+                                source={{ uri: persona.foto }}
                                 style={{
                                     ...styles.imagenPersonas,
                                     borderWidth: persona.foto ? 3 : 0,
@@ -90,16 +108,32 @@ export default ({ personasReservadas, personasTotales }) => {
                                     marginBottom: 5,
                                     alignItems: 'center',
                                     flexDirection: 'row',
-                                }}>
-                                <Image
-                                    source={persona.foto ? { uri: persona.foto } : require("../../../../assets/user.png")}
-                                    style={{
-                                        ...styles.imagenPersonas,
-                                        borderWidth: persona.foto ? 3 : 0,
-                                        position: 'relative',
-                                        marginRight: 10,
-                                    }}
-                                />
+                                }}>{
+                                    persona.foto ?
+                                        <Image
+                                            source={{ uri: persona.foto }}
+                                            style={{
+                                                ...styles.imagenPersonas,
+                                                position: 'relative',
+                                                marginRight: 10,
+                                            }}
+                                        />
+
+                                        : <View style={{
+                                            ...styles.imagenPersonas,
+                                            position: 'relative',
+                                            marginRight: 10,
+                                        }}
+                                        >
+                                            <Feather
+                                                key={idx.toString()}
+
+                                                name="user"
+                                                size={25}
+                                                color="black"
+                                            />
+                                        </View>
+                                }
                                 <Text style={{
                                     flex: 1,
                                     color: "gray",
@@ -132,6 +166,12 @@ const styles = StyleSheet.create({
         borderColor: "#fff",
 
         position: 'absolute',
+
+        backgroundColor: "#f4f4f4",
+
+        overflow: "hidden",
+
+        alignItems: 'center', justifyContent: 'center',
     }
 
 })

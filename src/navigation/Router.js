@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import NavBar from './NavBar';
 
-import Header from '../components/header';
+import { MaterialIcons } from '@expo/vector-icons';
 import ChatRoomHeader from '../components/ChatRoomHeader';
 
 import SolicitudStack from './SolicitudStack';
@@ -81,7 +81,7 @@ async function registerForPushNotificationsAsync() {
             name: 'default',
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
-            lightColor: '#FF231F7C',
+            lightColor: moradoOscuro,
         });
     }
 
@@ -121,20 +121,24 @@ export default () => {
 
                     <Stack.Navigator
                         screenOptions={{
+                            headerLeft: ({ onPress }) => <MaterialIcons name="keyboard-arrow-left" size={35} color="white" onPress={onPress} />,
+                            headerTintColor: "white",
+                            headerStyle: { backgroundColor: moradoOscuro, },
+                            headerTitleAlign: "center"
 
-                            header: ({ scene, }) => {
-                                const { options } = scene.descriptor;
-                                const title =
-                                    options.headerTitle !== undefined
-                                        ? options.headerTitle
-                                        : options.title !== undefined
-                                            ? options.title
-                                            : scene.route.name;
+                            // header: ({ scene, }) => {
+                            //     const { options } = scene.descriptor;
+                            //     const title =
+                            //         options.headerTitle !== undefined
+                            //             ? options.headerTitle
+                            //             : options.title !== undefined
+                            //                 ? options.title
+                            //                 : scene.route.name;
 
-                                return (
-                                    <Header title={title} />
-                                );
-                            }
+                            //     return (
+                            //         <Header title={title} />
+                            //     );
+                            // }
                         }}
                     >
                         <Stack.Screen
@@ -164,6 +168,7 @@ export default () => {
                             }}
 
                         />
+
 
 
 
@@ -298,7 +303,7 @@ export default () => {
                             name="MisReservas"
                             component={MisReservas}
                             options={{
-                                title: "Mis reservaciones"
+                                title: "Mis reservas"
                             }}
                         />
 
@@ -306,7 +311,9 @@ export default () => {
                         <Stack.Screen
                             name="DetalleReserva"
                             component={DetalleReserva}
-                            options={{ headerShown: false }}
+                            options={{
+                                headerShown: false
+                            }}
                         />
 
                         <Stack.Screen

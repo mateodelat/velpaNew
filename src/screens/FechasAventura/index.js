@@ -11,6 +11,7 @@ import { Reserva } from '../../models';
 import { Usuario } from '../../models';
 
 import { Loading } from '../../components/Loading';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default index = ({ route, navigation }) => {
     const { height, width } = Dimensions.get("screen")
@@ -170,7 +171,7 @@ export default index = ({ route, navigation }) => {
         })
     }
 
-
+    const insets = useSafeAreaInsets()
     return (
         <View style={{
             flex: 1,
@@ -198,7 +199,7 @@ export default index = ({ route, navigation }) => {
                     padding: 20,
                 }}>
                 <View style={{
-                    height: height * 0.24 + 20,
+                    height: height * 0.24 + 10 + insets.top,
                 }} />
                 {
                     !fechas ? <Loading indicator /> :
@@ -238,7 +239,7 @@ export default index = ({ route, navigation }) => {
                 titulo={titulo}
                 imagen={{ uri: imagenFondo.uri }}
                 scrollY={scrollY}
-                maxHeight={height * 0.24}
+                maxHeight={height * 0.24 + insets.top}
             // showFilter={false}
             />
         </View >

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { Alert, Dimensions, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Dimensions, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+
 
 import { Feather, Entypo, } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colorFondo } from '../../../../assets/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const { height } = Dimensions.get("window")
+const { height, width } = Dimensions.get("window")
 
 
 export default function ({
@@ -25,16 +27,20 @@ export default function ({
     }).filter(e => (e.titulo.toLowerCase().includes(buscar.toLowerCase()) || e.categoria.toLowerCase().includes(buscar.toLowerCase()))
     )
 
-    return <SafeAreaView >
-        <View style={styles.headerContainer}>
+    return <SafeAreaView style={styles.headerContainer}>
+        <View style={{
+            backgroundColor: '#fff',
+            borderRadius: 10,
+
+            overflow: "hidden",
+
+        }}>
 
 
             {/* Barra de busqueda */}
             <View style={{
-
-                paddingVertical: 5,
                 justifyContent: 'center',
-
+                paddingVertical: Platform.OS === "ios" ? 10 : 5
             }}>
 
                 <TextInput
@@ -108,6 +114,7 @@ export default function ({
             </View>
             }
         </View>
+
     </SafeAreaView>
 }
 
@@ -117,10 +124,7 @@ const styles = StyleSheet.create({
         top: 20,
         left: 20,
         right: 20,
-        backgroundColor: '#fff',
-        borderRadius: 10,
 
-        overflow: "hidden"
     },
 
     sugerenciasContainer: {

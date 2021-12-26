@@ -188,17 +188,19 @@ export default function ({ fecha,
                             alignItems: 'center',
                         }}>
 
-                        {guia.foto ? <Image
-                            source={{ uri: guia?.foto }} style={styles.foto} />
-                            : <Feather
-                                style={{
-                                    backgroundColor: "#f4f4f4",
-                                    borderRadius: 15,
-                                }}
-                                name="user"
-                                size={50}
-                                color="black"
-                            />}
+                        <View style={styles.foto}>
+                            {guia.foto ? <Image
+                                source={{ uri: guia?.foto }} style={{ flex: 1 }} />
+                                : <Feather
+                                    style={{
+                                        backgroundColor: "#f4f4f4",
+                                        borderRadius: 15,
+                                    }}
+                                    name="user"
+                                    size={50}
+                                    color="black"
+                                />}
+                        </View>
 
                         <View style={{ alignItems: 'flex-start', flex: 1, marginLeft: 15, }}>
                             <Text numberOfLines={1} style={{ fontSize: 16, }}>{guia?.nombre} {guia?.apellido}</Text>
@@ -399,6 +401,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 15,
+        overflow: "hidden"
     },
 
     line: {

@@ -44,12 +44,13 @@ function Item({ e }) {
                         <Text style={styles.tituloAventura}>{e.fecha.tituloAventura}</Text>
                         <Text style={styles.dateTxt}>{formatDateShort(e.fecha.fechaInicial, e.fecha.fechaFinal)}</Text>
                     </View>
-                    <MaterialIcons
-                        style={styles.iconContinuar}
-                        name="keyboard-arrow-right"
-                        size={24}
-                        color={"#ffff"}
-                    />
+                    <View style={styles.iconContinuar}>
+                        <MaterialIcons
+                            name="keyboard-arrow-right"
+                            size={24}
+                            color={"#ffff"}
+                        />
+                    </View>
                 </View>
 
                 <View style={[styles.row, { marginTop: 10 }]}>

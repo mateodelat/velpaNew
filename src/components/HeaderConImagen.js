@@ -6,6 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { moradoOscuro, } from '../../assets/constants';
 
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 export default index = ({
@@ -23,10 +24,11 @@ export default index = ({
         0,
         125,
     ]
+    const insets = useSafeAreaInsets()
 
     const heightHeader = scrollY.interpolate({
         inputRange: inputRangeHeader,
-        outputRange: [maxHeight, 70]
+        outputRange: [maxHeight, 75.6 + insets.top]
     })
 
 
@@ -35,12 +37,13 @@ export default index = ({
         outputRange: [20, 75]
     })
 
+
     return (
         <Animated.View style={{
             height: heightHeader,
             width: '100%',
             position: 'absolute',
-            minHeight: 75.6
+            minHeight: 75.6 + insets.top
         }}>
             <ImageBackground
                 source={imagen}
@@ -51,7 +54,7 @@ export default index = ({
 
                 {/* Filtro negro */}
                 <View style={{
-                    backgroundColor: moradoOscuro + "30",
+                    backgroundColor: moradoOscuro + "40",
                     position: 'absolute',
                     height: '100%',
                     width: '100%',
@@ -61,12 +64,13 @@ export default index = ({
                 <View style={{
                     justifyContent: 'space-between',
                     padding: 20,
+                    paddingTop: insets.top + 20,
                     flexDirection: 'row',
                 }}>
                     <MaterialIcons
                         onPress={() => navigation.pop()}
                         name={"keyboard-arrow-left"}
-                        size={35}
+                        size={32}
                         color={"#fff"}
                     />
 
@@ -92,7 +96,6 @@ export default index = ({
                         numberOfLines={1}
                         style={{
                             fontSize: 25,
-                            fontWeight: "100",
                             color: '#fff',
                             textAlign: 'center',
                             width: width - (75 * 2),

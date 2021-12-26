@@ -22,6 +22,7 @@ import Line from '../../components/Line'
 import HelpButton from '../../components/HelpButton'
 import InfoNivelesModal from '../../components/InfoNivelesModal'
 import { Usuario } from '../../models'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 
 const getUsuario = /* GraphQL */ `
@@ -147,7 +148,10 @@ export default ({ route, navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1, }}>
+        <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: colorFondo,
+        }}>
 
             <ScrollView
                 key={route.params ? route.params.key : 12}
@@ -316,7 +320,7 @@ export default ({ route, navigation }) => {
             />
 
 
-        </View >
+        </SafeAreaView >
 
     )
 }

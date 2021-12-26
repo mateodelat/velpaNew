@@ -55,7 +55,7 @@ export default ({ navigation }) => {
 
         Alert.alert("Link externo", "Abrir link: " + link, [
             {
-                text: "CANCEL",
+                text: "cancelar",
                 style: "cancel"
             },
             {

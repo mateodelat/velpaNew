@@ -18,7 +18,7 @@ export default ({ navigation,
     let txtOnPress = route.params?.txtOnPress
 
 
-    txtExito = txtExito ? txtExito : "pago exitoso"
+    txtExito = txtExito ? txtExito : "Pago exitoso"
     onPress = onPress ? onPress : () => navigation.popToTop()
     txtOnPress = txtOnPress ? txtOnPress : "Volver al inicio"
 

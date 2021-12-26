@@ -5,6 +5,7 @@ import { moradoClaro, moradoOscuro } from '../../../assets/constants'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -33,6 +34,7 @@ export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
         height: 30,
     }} />
 
+    const insets = useSafeAreaInsets()
     return (
         <View style={styles.container}>
             {/* Header con animaciones de fondo y titulo */}
@@ -42,11 +44,16 @@ export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
                 backgroundColor: moradoOscuro,
                 opacity: opacityBackground,
                 width: '100%',
-                height: '100%',
+                height: insets.top ? 55 + insets.top : '100%',
             }} />
 
 
-            <View style={styles.rowJustify}>
+            <View style={{
+                ...styles.rowJustify,
+                marginTop: insets.top,
+                paddingTop: insets.top ? 0 : 10,
+
+            }}>
                 <Pressable
                     onPress={handleBack ? handleBack : () => navigation.pop()}
                     style={styles.backContainer}>

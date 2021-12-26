@@ -4,6 +4,7 @@ import ImageViewer from 'react-native-image-zoom-viewer'
 
 import { Entypo } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Funcion para ver las imagenes en pantalla completa
 const ImageFullScreen = ({ setModalVisible, images, titulo, initialImageIdx }) => {
@@ -11,9 +12,14 @@ const ImageFullScreen = ({ setModalVisible, images, titulo, initialImageIdx }) =
     initialImageIdx !== undefined ? initialImageIdx : 0
     const { height } = Dimensions.get("screen")
 
+    const insets = useSafeAreaInsets()
+
     return (
         <View style={{
             height,
+            backgroundColor: '#000',
+            paddingTop: insets.top,
+
         }}>
             <ImageViewer
                 index={initialImageIdx}

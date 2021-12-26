@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     },
 
     numResenas: {
-        color: moradoOscuro + "66",
+        color: moradoOscuro,
         textAlign: 'center',
         marginBottom: 20,
         marginTop: 5,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     tituloBarra: {
         width: 80,
         marginRight: 10,
-        color: moradoOscuro + "66",
+        color: moradoOscuro,
     },
 
     barContainer: {

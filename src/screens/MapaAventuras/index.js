@@ -112,39 +112,43 @@ export default function ({ navigation }) {
                 loadingEnabled={true}
             >{
                     aventuras ?
-                        aventuras.map((e, i) => <Marker
-                            key={i.toString()}
-                            coordinate={e.coordenadas}
-                            tracksViewChanges={false}
-                            onPress={() => handleVerElemento(e, i)}
-                        >
-                            <View style={{
-                                ...styles.iconContainer,
-                                backgroundColor: selectedMarkerIdx === i ? moradoOscuro : "#fff",
-                            }}>
+                        aventuras.map((e, i) => {
+                            return <Marker
+                                key={i.toString()}
+                                coordinate={e.coordenadas}
+                                onPress={() => {
+                                    handleVerElemento(e, i)
+                                }}
+                            >
+                                <View style={{
+                                    ...styles.iconContainer,
+                                    backgroundColor: selectedMarkerIdx === i ? moradoOscuro : "#fff",
+                                }}>
 
-                                {/* Render iconos dependiendo de la categoria    */}
-                                {e.categoria === Categorias.APLINISMO ?
+                                    {/* Render iconos dependiendo de la categoria    */}
+                                    {/* {e.categoria === Categorias.APLINISMO ? */}
                                     <FontAwesome5
                                         name="mountain"
                                         size={15}
                                         color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-                                    /> :
-                                    e.categoria === Categorias.CICLISMO ?
-                                        <MaterialIcons
-                                            name="directions-bike"
-                                            size={24}
-                                            color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-                                        /> :
-                                        <Entypo
-                                            name="dots-three-horizontal"
-                                            size={15}
-                                            color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
+                                    />
+                                    {/* :
+                                        e.categoria === Categorias.CICLISMO ?
+                                            <MaterialIcons
+                                                name="directions-bike"
+                                                size={24}
+                                                color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
+                                            /> :
+                                            <Entypo
+                                                name="dots-three-horizontal"
+                                                size={15}
+                                                color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
 
-                                        />
-                                }
-                            </View>
-                        </Marker>)
+                                            />
+                                    } */}
+                                </View>
+                            </Marker>
+                        })
                         : <View style={{
                             flex: 1,
                             backgroundColor: 'red',

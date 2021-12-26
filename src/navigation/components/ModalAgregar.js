@@ -6,6 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 export default function ({ setModalVisible }) {
@@ -33,7 +34,7 @@ export default function ({ setModalVisible }) {
         setInnerModal(false)
         setModalVisible(false)
     }
-
+    const insets = useSafeAreaInsets()
     return (
         <View style={styles.container}>
             <Modal
@@ -49,7 +50,10 @@ export default function ({ setModalVisible }) {
                     onPress={handleCloseModal}
                     style={{ flex: 1, }}
                 />
-                <View style={styles.innerContainer}>
+                <View style={{
+                    ...styles.innerContainer,
+                    paddingBottom: insets.bottom,
+                }}>
                     <View style={styles.header}>
                         <Text style={styles.title}>Agregar</Text>
                         <Feather
@@ -64,11 +68,14 @@ export default function ({ setModalVisible }) {
                         onPress={handleNuevaFecha}
                         style={styles.row}>
 
-                        <FontAwesome
-                            style={styles.icon}
-                            name="calendar-plus-o"
-                            size={20}
-                            color={colorLogo} />
+                        <View style={styles.icon}>
+
+                            <FontAwesome
+                                name="calendar-plus-o"
+                                size={20}
+                                color={colorLogo} />
+                        </View>
+
                         <Text style={styles.subTitle}>Nueva fecha en experiencia</Text>
 
                     </Pressable>
@@ -76,20 +83,22 @@ export default function ({ setModalVisible }) {
                     <Pressable
                         onPress={handleNuevaAventura}
                         style={styles.row}>
-                        <Foundation
-                            style={styles.icon}
-                            name="mountains"
-                            size={24}
-                            color={colorLogo}
-                        />
+                        <View style={styles.icon}>
 
-                        <Foundation
-                            style={styles.mas}
-                            name="plus"
-                            size={10}
-                            color={colorLogo}
-                        />
+                            <Foundation
+                                name="mountains"
+                                size={24}
+                                color={colorLogo}
+                            />
 
+                            <Foundation
+                                style={styles.mas}
+                                name="plus"
+                                size={10}
+                                color={colorLogo}
+                            />
+
+                        </View>
                         <Text style={styles.subTitle}>Solicitar experiencias</Text>
 
                     </Pressable>

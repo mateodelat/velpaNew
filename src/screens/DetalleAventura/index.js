@@ -33,6 +33,7 @@ import { Loading } from '../../components/Loading';
 import ModalMap from '../../components/ModalMap';
 import Header from '../../components/header';
 import MapView, { Marker } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -55,7 +56,9 @@ export default ({ navigation, route }) => {
     const scrollY = useRef(new Animated.Value(0)).current
 
     let { width, height } = Dimensions.get("screen")
-    height = height * 0.35
+    const insets = useSafeAreaInsets()
+
+    height = height * 0.35 + insets.top
 
 
     const [initialImageIdx, setInitialImageIdx] = useState(0);

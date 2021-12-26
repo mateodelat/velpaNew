@@ -233,18 +233,22 @@ export default ({ navigation, route }) => {
                             </View>
                         </View>}
 
-                    <Text style={{
-                        marginVertical: 10,
-                    }}>Punto de reunion: </Text>
                     <Pressable
                         onPress={handleOpenMap}
-                        style={styles.reunionContainer}>
-                        <Ionicons
-                            name="location-sharp"
-                            size={24}
-                            color={moradoOscuro}
-                        />
-                        <Text style={styles.locationTxt}>{fecha.puntoReunionNombre}</Text>
+                    >
+
+                        <Text style={{
+                            marginVertical: 10,
+                        }}>Punto de reunion: </Text>
+                        <View
+                            style={styles.reunionContainer}>
+                            <Ionicons
+                                name="location-sharp"
+                                size={24}
+                                color={moradoOscuro}
+                            />
+                            <Text style={styles.locationTxt}>{fecha.puntoReunionNombre}</Text>
+                        </View>
                     </Pressable>
 
                     <Line />
@@ -257,9 +261,13 @@ export default ({ navigation, route }) => {
                         style={styles.itinerarioContainer}>
 
 
-                        <MaterialCommunityIcons
+                        <View
                             style={styles.botonItinerario}
-                            name="calendar-text" size={20} color="#fff" />
+                        >
+
+                            <MaterialCommunityIcons
+                                name="calendar-text" size={20} color="#fff" />
+                        </View>
 
                         <View style={styles.lineItinerarioContainer}>
                             {/* Linea de itinerario */}
@@ -316,9 +324,14 @@ export default ({ navigation, route }) => {
 
                         <Text style={styles.guiaNickname}>{guia.nickname}</Text>
 
-                        <Ionicons
-                            onPress={navigateChat}
-                            style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" />
+                        <View
+                            style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }}
+                        >
+                            <Ionicons
+                                onPress={navigateChat}
+                                name="chatbox" size={20} color="white" />
+                        </View>
+
                     </View>
 
 

@@ -1,7 +1,8 @@
 import React from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
 import { colorFondo, moradoClaro, moradoOscuro } from '../../../../assets/constants'
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ({
     handleCerrar,
@@ -18,56 +19,69 @@ export default function ({
     rightIcon,
 }) {
 
+    const insets = useSafeAreaInsets()
     return (
-        <View style={[styles.container, style]}>
-            <Text
-                numberOfLines={1}
-                style={{
-                    flex: 1,
-                    fontSize: 20,
-                    color: color ? color : moradoOscuro,
-                    textAlign: 'center',
-                    marginHorizontal: 50,
-                }}>{titulo}</Text>
+        <Pressable
+            onPress={handleCerrar}
+
+            style={{
+                backgroundColor: colorFondo,
+            }}>
+
+            <View style={[styles.container, style, {
+                marginTop: insets.top,
+                height: insets.top ? 53 : 63
+            }]}>
+                <Text
+                    numberOfLines={1}
+                    style={{
+                        flex: 1,
+                        fontSize: 20,
+                        color: color ? color : moradoOscuro,
+                        textAlign: 'center',
+                        marginHorizontal: 50,
+                    }}>{titulo}</Text>
 
 
-            <Entypo
-                onPress={handleCerrar}
-                name={"cross"}
-                size={35}
-                color={color ? color : moradoOscuro}
-                style={styles.iconLeft}
-            />
-            {
-                rightIcon ? rightIcon :
-                    modify !== undefined && (modify ?
+                <Entypo
+                    name={"cross"}
+                    size={35}
+                    color={color ? color : moradoOscuro}
+                    style={styles.iconLeft}
+                />
+                {
+                    rightIcon ? rightIcon :
+                        modify !== undefined && (modify ?
 
-                        buttonLoading ?
-                            <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
-                                <ActivityIndicator color={"#fff"} />
+                            buttonLoading ?
+                                <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
+                                    <ActivityIndicator color={"#fff"} />
 
-                            </View>
+                                </View>
+                                :
+                                <MaterialIcons
+                                    onPress={handleSave}
+                                    name={"check"}
+                                    size={35}
+                                    color={color ? color : "green"}
+                                    style={styles.iconRight}
+
+                                />
                             :
-                            <MaterialIcons
+                            <Feather
                                 onPress={handleSave}
-                                name={"check"}
+                                name={"edit"}
                                 size={35}
-                                color={color ? color : "green"}
+                                color={color ? color : moradoClaro}
                                 style={styles.iconRight}
 
-                            />
-                        :
-                        <Feather
-                            onPress={handleSave}
-                            name={"edit"}
-                            size={35}
-                            color={color ? color : moradoClaro}
-                            style={styles.iconRight}
-
-                        />)}
+                            />)}
 
 
-        </View>)
+            </View>
+        </Pressable>
+
+    )
 }
 
 const styles = StyleSheet.create({
@@ -75,18 +89,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colorFondo,
-        height: 60,
+        height: 63,
     },
 
     iconLeft: {
         position: 'absolute',
         left: 10,
+        padding: 6,
     },
 
 
     iconRight: {
         position: 'absolute',
-        right: 10,
+        right: 16,
     }
 
 

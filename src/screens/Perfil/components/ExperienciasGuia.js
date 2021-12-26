@@ -30,7 +30,7 @@ export default function ({
                     experiencias.map((ave, idxAve) => (
                         <View
                             key={idxAve.toString()}
-                            style={styles.innerContainer}>
+                            style={[styles.innerContainer, { marginTop: idxAve ? 20 : 0, }]}>
                             <View style={styles.aventuraInfo}>
                                 <Image
                                     resizeMode={"cover"}
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
     innerContainer: {
         // backgroundColor: '#f4f4f4',
-        // marginBottom: 0,
+        marginTop: 20,
 
         overflow: "hidden",
         borderRadius: 7,

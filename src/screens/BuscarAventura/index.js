@@ -25,6 +25,7 @@ import { categorias, colorFondo, listAventurasAutorizadas, moradoOscuro } from '
 import CuadradoImagen from '../../components/CuadradoImagen';
 
 import { Categorias } from '../../models';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default ({ navigation, onPress, handleBack }) => {
 
@@ -147,12 +148,13 @@ export default ({ navigation, onPress, handleBack }) => {
                 ))
         })
     }
+    const insets = useSafeAreaInsets()
 
     return (
         <View
             onPress={() => Keyboard.dismiss()}
 
-            style={styles.container}>
+            style={{ ...styles.container, paddingTop: insets.top !== 0 ? insets.top : 20, }}>
 
             {/* Barra de busqueda*/}
             <View style={{

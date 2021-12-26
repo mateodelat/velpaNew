@@ -159,10 +159,9 @@ export default ({ route }) => {
         return strTime;
     }
 
-
     return (
         <KeyboardAvoidingView
-            // behavior='position'
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ ...container, paddingLeft: 10, }}>
             {!chatMessages ? <Loading indicator /> :
 

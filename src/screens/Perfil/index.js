@@ -35,6 +35,9 @@ import { Comentario } from '../../models';
 import { Loading } from '../../components/Loading';
 import CommentItem from './components/CommentItem';
 import ModalComentarios from './components/ModalComentarios';
+import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -44,12 +47,14 @@ const { height } = Dimensions.get("screen")
 
 
 
-export default ({ navigation, route }) => {
+export default ({ route }) => {
 
     const {
         isOwner,
         id
     } = route.params
+
+    const navigation = useNavigation()
 
 
     const [user, setUser] = useState(route.params.user);
@@ -236,6 +241,8 @@ export default ({ navigation, route }) => {
         return <View />
     }
 
+    const insets = useSafeAreaInsets()
+
     return (
         <ScrollView
             style={styles.container}
@@ -243,50 +250,19 @@ export default ({ navigation, route }) => {
         >
             <Image
                 source={user?.imagenFondo ? user?.imagenFondo : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
-                style={styles.imagenFondo}
+                style={{
+                    ...styles.imagenFondo,
+                    height: height * 0.24 + insets.top,
+
+                }}
                 blurRadius={10}
             />
-
-            {/* Header */}
-            <View style={styles.header}>
-                <View style={styles.backIcon}>
-                    <MaterialIcons
-                        name="keyboard-arrow-left"
-                        size={40}
-                        color={moradoClaro}
-                        onPress={handleGoBack} />
-
-                </View>
-
-                {/* {
-                    isOwner &&
-                    <Pressable
-                        onPress={() => editing ? handleSaveProfile() : setEditing(!editing)}
-                        style={styles.backIcon}>
-                        {editing ?
-                            <Feather
-                                name="check"
-                                size={30}
-                                color={"green"}
-                            />
-
-                            :
-                            <Feather
-                                name="edit-2"
-                                size={25}
-                                color={moradoClaro}
-                            />
-                        }
-
-                    </Pressable>
-                } */}
-            </View>
 
 
 
 
             <View style={{
-                height: (height * 0.24) - (imageSize / 2 + 10),
+                height: (height * 0.24) - (imageSize / 2 + 10) + insets.top,
 
             }} />
 
@@ -388,7 +364,6 @@ export default ({ navigation, route }) => {
                                 style={{
                                     ...styles.title,
                                     textAlign: 'right',
-                                    fontWeight: 'normal',
                                 }}>Ver todo</Text>}
                         </View>
 
@@ -421,9 +396,10 @@ export default ({ navigation, route }) => {
 
 
                 {/* Experiencias del guia */}
-                <View style={styles.innerContainer}>
-                    <Pressable
-                        onPress={() => setShowExperiencias(!showExperiencias)}
+                <Pressable
+                    onPress={() => setShowExperiencias(!showExperiencias)}
+                    style={styles.innerContainer}>
+                    <View
                         style={styles.item}>
                         <View style={{
                             flexDirection: 'row',
@@ -462,8 +438,8 @@ export default ({ navigation, route }) => {
                             )
                         }
 
-                    </Pressable>
-                </View>
+                    </View>
+                </Pressable>
 
 
             </View>
@@ -484,6 +460,48 @@ export default ({ navigation, route }) => {
                         modalVisible={modalVisible}
                     />
             }
+            {/* Header */}
+            <View style={{
+                ...styles.header,
+                paddingTop: insets.top ? insets.top : 10
+
+            }}>
+                <Pressable
+                    onPress={handleGoBack}
+                    style={styles.backIcon}>
+                    <MaterialIcons
+                        name="keyboard-arrow-left"
+                        size={40}
+                        color={moradoClaro}
+                    />
+
+                </Pressable>
+
+                {/* {
+                    isOwner &&
+                    <Pressable
+                        onPress={() => editing ? handleSaveProfile() : setEditing(!editing)}
+                        style={styles.backIcon}>
+                        {editing ?
+                            <Feather
+                                name="check"
+                                size={30}
+                                color={"green"}
+                            />
+
+                            :
+                            <Feather
+                                name="edit-2"
+                                size={25}
+                                color={moradoClaro}
+                            />
+                        }
+
+                    </Pressable>
+                } */}
+            </View>
+
+
         </ScrollView>
     )
 }
@@ -516,12 +534,12 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
+        elevation: 1
     },
 
     imagenFondo: {
         position: 'absolute',
         width: '100%',
-        height: height * 0.24,
 
     },
 
