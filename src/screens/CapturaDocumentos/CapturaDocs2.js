@@ -8,6 +8,7 @@ import {
     View,
     TextInput,
     Alert,
+    KeyboardAvoidingView,
 } from 'react-native'
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -25,36 +26,6 @@ const containerColor = "#fff"
 const colorFondo = "#F4F6F6"
 
 
-
-function Icono({ tipo }) {
-    if (tipo === "Mas") {
-        return <View style={{
-            backgroundColor: moradoOscuro,
-            overflow: "hidden",
-            borderRadius: 100,
-            padding: 2,
-        }}>
-
-            <Feather name="plus" size={20} color={"#fff"} />
-        </View>
-    }
-
-    if (tipo === "Check") {
-        return <View style={{}}>
-
-            <Feather name="check" size={24} color="green" />
-        </View>
-    }
-
-
-    else {
-        return <View style={{}}>
-
-            <Entypo name="circle-with-cross" size={24} color="red" />
-        </View>
-
-    }
-}
 
 
 export default ({ navigation, route }) => {
@@ -281,341 +252,346 @@ export default ({ navigation, route }) => {
     //////////////////////////////////////////////////////////////////////////
     return (
         <View style={{ flex: 1, backgroundColor: colorFondo, }}>
-            {/* Cuerpo */}
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={styles.container}>
+            <KeyboardAvoidingView
+                behavior="padding"
+                style={{ flex: 1, }}
+            >
+                {/* Cuerpo */}
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={styles.container}>
 
-                {/* Nombre individial */}
-                {
-                    // Nombre
-                    !agencia && <View style={styles.innerContainer}>
-                        <Text style={styles.captionTxt}>Nombre*</Text>
-                        <View style={{ ...styles.textInput, borderColor: errorNombre ? "red" : "transparent", }}>
-                            <TextInput
-                                autoCapitalize={"words"}
-                                onTouchStart={() => setErrorNombre(false)}
-                                style={{ flex: 1 }}
-                                value={nombre}
-                                onChangeText={setNombre}
-                            />
-
-                            {!!nombre && <Feather
-                                style={styles.cancelInput}
-                                name="x"
-                                size={24}
-                                color="black"
-                                onPress={() => setNombre("")}
-                            />}
-
-                        </View>
-                    </View>
-                }
-
-                {/* Apellido individual */}
-                {!agencia && <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Apellido*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorApellido ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorApellido(false)}
-                            autoCapitalize={"words"}
-                            value={apellido}
-                            onChangeText={setApellido}
-                        />
-
-                        {!!apellido && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setApellido("")}
-                        />}
-
-                    </View>
-                </View>
-                }
-
-
-                {/* Nombre de la agencia */}
-                {agencia && <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Nombre de la agencia*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorNombreAgencia ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorNombreAgencia(false)}
-                            value={nombreAgencia}
-                            onChangeText={setNombreAgencia}
-                        />
-
-                        {!!nombreAgencia && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setNombreAgencia("")}
-                        />}
-
-                    </View>
-                </View>
-                }
-
-                {/* Correo electronico */}
-                <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Correo electronico*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorEmail ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorEmail(false)}
-                            autoCapitalize={"none"}
-                            value={email}
-                            onChangeText={setEmail}
-                        />
-
-                        {!!email && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setEmail("")}
-                        />}
-
-                    </View>
-                </View>
-
-                {/* Telefono */}
-                <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Telefono*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorTelefono ? "red" : "transparent", }}>
-                        <Text >+52 (1) </Text>
-                        <TextInput
-                            onTouchStart={() => setErrorTelefono(false)}
-                            style={{ flex: 1, }}
-                            autoCapitalize={"none"}
-                            value={telefono}
-
-                            textContentType="telephoneNumber"
-                            autoCompleteType="tel"
-
-                            keyboardType={"numeric"}
-                            onChangeText={(r) => setTelefono(formatTelefono(r))}
-                        />
-
-                        {!!telefono && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setTelefono("")}
-                        />}
-
-                    </View>
-                </View>
-
-                {/* Fecha nacimiento */}
-                {!agencia && <Pressable
-                    onPress={() => {
-                        setErrorDOB(false)
-                        setDOBVisible(true)
-                    }}
-                    style={{ marginBottom: 40, }}>
-                    <Text style={styles.captionTxt}>Fecha de nacimiento*</Text>
-
-                    <View style={{
-                        ...styles.textInput,
-                        borderColor: errorDOB ? "red" : "transparent",
-
-                    }}>
-
-                        {/* Dia */}
-                        <Text style={styles.diaContainer}>{DOB.dia ? DOB.dia : "DD"}</Text>
-
-                        <View style={styles.lineVertical} />
-
-                        {/* Mes */}
-                        <Text style={styles.diaContainer}>{DOB.mes ? meses[DOB.mes] : "MM"}</Text>
-
-                        <View style={styles.lineVertical} />
-
-                        {/* Año */}
-                        <Text style={styles.diaContainer}>{DOB.año ? DOB.año : "AAAA"}</Text>
-
-
-                    </View>
-                </Pressable>}
-
-
-                {/* Sitio web */}
-                {agencia && <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Sitio web</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorSitioWeb ? "red" : "transparent", }}>
-                        <Text style={{ color: moradoClaro, }}>https://</Text>
-                        <TextInput
-                            onTouchStart={() => setErrorSitioWeb(false)}
-                            style={{ flex: 1, color: moradoClaro, }}
-                            value={sitioWeb}
-                            onChangeText={setSitioWeb}
-                        />
-
-                        {!!sitioWeb && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setSitioWeb("")}
-                        />}
-
-                    </View>
-                </View>}
-
-
-                <Line style={{
-                    marginBottom: 40,
-                }} />
-
-
-                <View style={styles.innerContainer}>
-                    <Text style={styles.captionTxt}>Direccion* (calle y numero)</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorDireccion.line1 ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorDireccion({ ...errorDireccion, line1: false })}
-                            value={direccion.line1}
-
-                            textContentType="fullStreetAddress"
-                            autoCompleteType="street-address"
-
-                            onChangeText={(r) => setDireccion({ ...direccion, line1: r })}
-                        />
-
-                        {!!(direccion.line1) && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setDireccion({ ...direccion, line1: "" })}
-                        />}
-                    </View>
-
-                    <View style={{ marginBottom: 10, }} />
-
-                    <Text style={styles.captionTxt}>Ciudad*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorDireccion.city ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorDireccion({ ...errorDireccion, city: false })}
-                            value={direccion.city}
-
-                            textContentType="addressCity"
-
-                            onChangeText={(r) => setDireccion({ ...direccion, city: r })}
-                        />
-
-                        {!!(direccion.city) && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setDireccion({ ...direccion, city: "" })}
-                        />}
-                    </View>
-
-                    <View style={{ marginBottom: 10, }} />
-
-                    <Text style={styles.captionTxt}>Estado*</Text>
-                    <View style={{ ...styles.textInput, borderColor: errorDireccion.state ? "red" : "transparent", }}>
-                        <TextInput
-                            style={{ flex: 1, }}
-                            onTouchStart={() => setErrorDireccion({ ...errorDireccion, state: false })}
-                            value={direccion.state}
-
-                            textContentType="addressState"
-
-                            onChangeText={(r) => setDireccion({ ...direccion, state: r })}
-                        />
-
-                        {!!(direccion.state) && <Feather
-                            style={styles.cancelInput}
-                            name="x"
-                            size={24}
-                            color="black"
-                            onPress={() => setDireccion({ ...direccion, state: "" })}
-                        />}
-                    </View>
-
-                    <View style={{ marginBottom: 10, }} />
-
-                    <View style={{ flexDirection: 'row', }}>
-                        <View style={{ flex: 1, marginRight: 10, }}>
-                            <Text style={styles.captionTxt}>Codigo postal*</Text>
-                            <View style={{ ...styles.textInput, borderColor: errorDireccion.postal_code ? "red" : "transparent", }}>
+                    {/* Nombre individial */}
+                    {
+                        // Nombre
+                        !agencia && <View style={styles.innerContainer}>
+                            <Text style={styles.captionTxt}>Nombre*</Text>
+                            <View style={{ ...styles.textInput, borderColor: errorNombre ? "red" : "transparent", }}>
                                 <TextInput
-                                    autoCompleteType="postal-code"
-                                    onTouchStart={() => setErrorDireccion({ ...errorDireccion, postal_code: false })}
-                                    textContentType="postalCode"
-
-                                    style={{ flex: 1, }}
-                                    keyboardType={'numeric'}
-                                    maxLength={5}
-                                    value={direccion.postal_code}
-                                    onChangeText={(r) => setDireccion({ ...direccion, postal_code: r })}
+                                    autoCapitalize={"words"}
+                                    onTouchStart={() => setErrorNombre(false)}
+                                    style={{ flex: 1 }}
+                                    value={nombre}
+                                    onChangeText={setNombre}
                                 />
 
-                                {!!(direccion.postal_code) && <Feather
+                                {!!nombre && <Feather
                                     style={styles.cancelInput}
                                     name="x"
                                     size={24}
                                     color="black"
-                                    onPress={() => setDireccion({ ...direccion, postal_code: "" })}
+                                    onPress={() => setNombre("")}
                                 />}
+
                             </View>
                         </View>
+                    }
 
-                        <Pressable
-                            onPress={() => {
-                                Alert.alert("", "Actualmente solo se puede con ubicacion fiscal en mexico")
-                            }}
-                            style={{ flex: 1, marginLeft: 10, }}>
-                            <Text style={styles.captionTxt}>Pais</Text>
-                            <View style={{ ...styles.textInput, height: 48, }}>
-                                <Text style={{
-                                    color: 'gray',
-                                }}>México</Text>
-                            </View>
-                        </Pressable>
+                    {/* Apellido individual */}
+                    {!agencia && <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Apellido*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorApellido ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorApellido(false)}
+                                autoCapitalize={"words"}
+                                value={apellido}
+                                onChangeText={setApellido}
+                            />
 
+                            {!!apellido && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setApellido("")}
+                            />}
+
+                        </View>
                     </View>
-                </View>
+                    }
+
+
+                    {/* Nombre de la agencia */}
+                    {agencia && <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Nombre de la agencia*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorNombreAgencia ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorNombreAgencia(false)}
+                                value={nombreAgencia}
+                                onChangeText={setNombreAgencia}
+                            />
+
+                            {!!nombreAgencia && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setNombreAgencia("")}
+                            />}
+
+                        </View>
+                    </View>
+                    }
+
+                    {/* Correo electronico */}
+                    <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Correo electronico*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorEmail ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorEmail(false)}
+                                autoCapitalize={"none"}
+                                value={email}
+                                onChangeText={setEmail}
+                            />
+
+                            {!!email && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setEmail("")}
+                            />}
+
+                        </View>
+                    </View>
+
+                    {/* Telefono */}
+                    <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Telefono*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorTelefono ? "red" : "transparent", }}>
+                            <Text >+52 (1) </Text>
+                            <TextInput
+                                onTouchStart={() => setErrorTelefono(false)}
+                                style={{ flex: 1, }}
+                                autoCapitalize={"none"}
+                                value={telefono}
+
+                                textContentType="telephoneNumber"
+                                autoCompleteType="tel"
+
+                                keyboardType={"numeric"}
+                                onChangeText={(r) => setTelefono(formatTelefono(r))}
+                            />
+
+                            {!!telefono && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setTelefono("")}
+                            />}
+
+                        </View>
+                    </View>
+
+                    {/* Fecha nacimiento */}
+                    {!agencia && <Pressable
+                        onPress={() => {
+                            setErrorDOB(false)
+                            setDOBVisible(true)
+                        }}
+                        style={{ marginBottom: 40, }}>
+                        <Text style={styles.captionTxt}>Fecha de nacimiento*</Text>
+
+                        <View style={{
+                            ...styles.textInput,
+                            borderColor: errorDOB ? "red" : "transparent",
+
+                        }}>
+
+                            {/* Dia */}
+                            <Text style={styles.diaContainer}>{DOB.dia ? DOB.dia : "DD"}</Text>
+
+                            <View style={styles.lineVertical} />
+
+                            {/* Mes */}
+                            <Text style={styles.diaContainer}>{DOB.mes ? meses[DOB.mes] : "MM"}</Text>
+
+                            <View style={styles.lineVertical} />
+
+                            {/* Año */}
+                            <Text style={styles.diaContainer}>{DOB.año ? DOB.año : "AAAA"}</Text>
+
+
+                        </View>
+                    </Pressable>}
+
+
+                    {/* Sitio web */}
+                    {agencia && <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Sitio web</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorSitioWeb ? "red" : "transparent", }}>
+                            <Text style={{ color: moradoClaro, }}>https://</Text>
+                            <TextInput
+                                onTouchStart={() => setErrorSitioWeb(false)}
+                                style={{ flex: 1, color: moradoClaro, }}
+                                value={sitioWeb}
+                                onChangeText={setSitioWeb}
+                            />
+
+                            {!!sitioWeb && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setSitioWeb("")}
+                            />}
+
+                        </View>
+                    </View>}
+
+
+                    <Line style={{
+                        marginBottom: 40,
+                    }} />
+
+
+                    <View style={styles.innerContainer}>
+                        <Text style={styles.captionTxt}>Direccion* (calle y numero)</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorDireccion.line1 ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorDireccion({ ...errorDireccion, line1: false })}
+                                value={direccion.line1}
+
+                                textContentType="fullStreetAddress"
+                                autoCompleteType="street-address"
+
+                                onChangeText={(r) => setDireccion({ ...direccion, line1: r })}
+                            />
+
+                            {!!(direccion.line1) && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setDireccion({ ...direccion, line1: "" })}
+                            />}
+                        </View>
+
+                        <View style={{ marginBottom: 10, }} />
+
+                        <Text style={styles.captionTxt}>Ciudad*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorDireccion.city ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorDireccion({ ...errorDireccion, city: false })}
+                                value={direccion.city}
+
+                                textContentType="addressCity"
+
+                                onChangeText={(r) => setDireccion({ ...direccion, city: r })}
+                            />
+
+                            {!!(direccion.city) && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setDireccion({ ...direccion, city: "" })}
+                            />}
+                        </View>
+
+                        <View style={{ marginBottom: 10, }} />
+
+                        <Text style={styles.captionTxt}>Estado*</Text>
+                        <View style={{ ...styles.textInput, borderColor: errorDireccion.state ? "red" : "transparent", }}>
+                            <TextInput
+                                style={{ flex: 1, }}
+                                onTouchStart={() => setErrorDireccion({ ...errorDireccion, state: false })}
+                                value={direccion.state}
+
+                                textContentType="addressState"
+
+                                onChangeText={(r) => setDireccion({ ...direccion, state: r })}
+                            />
+
+                            {!!(direccion.state) && <Feather
+                                style={styles.cancelInput}
+                                name="x"
+                                size={24}
+                                color="black"
+                                onPress={() => setDireccion({ ...direccion, state: "" })}
+                            />}
+                        </View>
+
+                        <View style={{ marginBottom: 10, }} />
+
+                        <View style={{ flexDirection: 'row', }}>
+                            <View style={{ flex: 1, marginRight: 10, }}>
+                                <Text style={styles.captionTxt}>Codigo postal*</Text>
+                                <View style={{ ...styles.textInput, borderColor: errorDireccion.postal_code ? "red" : "transparent", }}>
+                                    <TextInput
+                                        autoCompleteType="postal-code"
+                                        onTouchStart={() => setErrorDireccion({ ...errorDireccion, postal_code: false })}
+                                        textContentType="postalCode"
+
+                                        style={{ flex: 1, }}
+                                        keyboardType={'numeric'}
+                                        maxLength={5}
+                                        value={direccion.postal_code}
+                                        onChangeText={(r) => setDireccion({ ...direccion, postal_code: r })}
+                                    />
+
+                                    {!!(direccion.postal_code) && <Feather
+                                        style={styles.cancelInput}
+                                        name="x"
+                                        size={24}
+                                        color="black"
+                                        onPress={() => setDireccion({ ...direccion, postal_code: "" })}
+                                    />}
+                                </View>
+                            </View>
+
+                            <Pressable
+                                onPress={() => {
+                                    Alert.alert("", "Actualmente solo se puede con ubicacion fiscal en mexico")
+                                }}
+                                style={{ flex: 1, marginLeft: 10, }}>
+                                <Text style={styles.captionTxt}>Pais</Text>
+                                <View style={{ ...styles.textInput, height: 48, }}>
+                                    <Text style={{
+                                        color: 'gray',
+                                    }}>México</Text>
+                                </View>
+                            </Pressable>
+
+                        </View>
+                    </View>
 
 
 
-                <Line style={{
-                    marginBottom: 40,
-                }} />
+                    <Line style={{
+                        marginBottom: 40,
+                    }} />
 
 
 
-                <Boton
-                    titulo={"Continuar"}
-                    disabled={false}
-                    loading={!imagesToSend}
-                    onPress={handleContinuar} />
-                <View style={{
-                    height: 40,
-                }} />
+                    <Boton
+                        titulo={"Continuar"}
+                        disabled={false}
+                        loading={!imagesToSend}
+                        onPress={handleContinuar} />
+                    <View style={{
+                        height: 40,
+                    }} />
 
 
-            </ScrollView>
-            <DateTimePickerModal
-                isVisible={DOBVisible}
-                mode="date"
-                date={defaultDate}
-                maximumDate={new Date(today - (msInDay * 365 * 13))}
-                onConfirm={handleConfirmDOB}
-                onCancel={() => setDOBVisible(false)}
-            />
+                </ScrollView>
+                <DateTimePickerModal
+                    isVisible={DOBVisible}
+                    mode="date"
+                    date={defaultDate}
+                    maximumDate={new Date(today - (msInDay * 365 * 13))}
+                    onConfirm={handleConfirmDOB}
+                    onCancel={() => setDOBVisible(false)}
+                />
 
-        </View >
+            </KeyboardAvoidingView >
+        </View>
     )
 }
 
@@ -673,8 +649,7 @@ const styles = StyleSheet.create({
     },
 
     cancelInput: {
-        position: 'absolute',
-        right: 10,
+        backgroundColor: 'white',
     },
 
     diaContainer: {

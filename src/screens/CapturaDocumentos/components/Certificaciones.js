@@ -4,6 +4,7 @@ import { colorFondo, moradoClaro, moradoOscuro } from '../../../../assets/consta
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { vibrar } from '../../../../assets/constants/constant';
 
 
 export default function ({
@@ -20,7 +21,10 @@ export default function ({
         <View style={styles.certificacionesContainer}>
             {/* Certificaciones */}
             <Pressable
-                onPress={() => setCertificacionEnabled(!certificacionEnabled)}
+                onPress={() => {
+                    setCertificacionEnabled(!certificacionEnabled)
+                    vibrar("medium")
+                }}
                 style={{
                     padding: 10,
                     flexDirection: 'row',

@@ -27,6 +27,7 @@ import { createStripeAcount } from '../../graphql/mutations';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { DataStore } from '@aws-amplify/datastore';
 import { TipoUsuario, Usuario } from '../../models';
+import { vibrar } from '../../../assets/constants/constant';
 
 const containerColor = "#fff"
 const colorFondo = "#F4F6F6"
@@ -279,7 +280,7 @@ export default ({ navigation, route }) => {
     }
 
     function handleAbrirTerminos() {
-        Alert.alert("Link a terminos y condiciones de velpa")
+        // Alert.alert("Link a terminos y condiciones de velpa")
 
     }
 
@@ -450,6 +451,7 @@ export default ({ navigation, route }) => {
                     onPress={() => {
                         setAceptoTerminos(!aceptoTerminos)
                         setErrorTerminos(false)
+                        vibrar("medium")
                     }}
                     style={{ ...styles.textInput, marginBottom: 40, borderColor: errorTerminos ? "red" : "transparent", }}>
                     <Text style={styles.textoTerminos}>Acepto <Text style={{ color: moradoOscuro, }} onPress={handleAbrirTerminos}>terminos y condiciones</Text> de velpa</Text>

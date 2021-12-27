@@ -1,9 +1,11 @@
 import React from 'react'
 
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { moradoOscuro } from '../../../../assets/constants'
 
 export default ({ setModalVisible, image, condiciones }) => {
+    const insets = useSafeAreaInsets()
     return (
         <View style={styles.modalInfo}>
             <View style={{
@@ -50,7 +52,10 @@ export default ({ setModalVisible, image, condiciones }) => {
                 </View>
             </View>
             <Pressable
-                style={styles.closeInfoModal}
+                style={{
+                    ...styles.closeInfoModal,
+                    paddingBottom: insets.bottom ? insets.bottom : 15,
+                }}
                 onPress={() => {
                     setModalVisible(false)
                 }} >

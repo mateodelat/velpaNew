@@ -20,6 +20,8 @@ import { Entypo } from '@expo/vector-icons';
 
 import ModalInfo from "../ModalInfo"
 import * as ImageManipulator from 'expo-image-manipulator';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CameraType } from 'expo-camera/build/Camera.types';
 
 let { width, height } = Dimensions.get('window');
 
@@ -48,29 +50,20 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
     async function handlePicture() {
         let image = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png"
         let fotosLocal = { ...fotos }
-
         if (loaded) {
             image = await camaraRef.current.takePictureAsync()
-            const pixRel = image.width / width
             const manipResult = await ImageManipulator.manipulateAsync(
                 image.uri,
                 [
-                    {
-                        crop: {
-                            originX: 30 * pixRel,
-                            originY: 90 * pixRel,
-                            width: (width - 60) * pixRel,
-                            height: (height - 180) * pixRel,
-                        }
-                    },
                     {
                         resize: {
                             width: 800
                         }
                     }
                 ],
-                { compress: 0.6, }
+                { compress: 0.7, }
             );
+
             image = manipResult.uri
         } else {
             const manipResult = await ImageManipulator.manipulateAsync(
@@ -83,8 +76,6 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
                 { compress: 1, }
             );
             image = manipResult.uri
-
-            // Alert.alert("La camara no ha cargado")
         }
         switch (tipoLocal) {
             case "selfie":
@@ -182,6 +173,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
         return <View />
     }
 
+    const insets = useSafeAreaInsets()
 
     return (
         <Modal
@@ -201,6 +193,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
                 <View style={{ flex: 1, }}>
                     <Camera
+                        useCamera2Api={type === CameraType.front ? true : false}
                         autoFocus={Camera.Constants.AutoFocus.on}
                         onCameraReady={() => setLoaded(true)}
                         ref={camaraRef}
@@ -254,13 +247,18 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
                             <Text style={{
 
                                 fontSize: 15,
-                                bottom: width / 5,
+                                bottom: 120,
                                 color: '#fff',
                             }}>{mensajeDetalleCamara}</Text>
 
                         </View>
 
-                        <View style={styles.barraSuperior}>
+                        <View style={{
+                            ...styles.barraSuperior,
+                            paddingTop: insets.top ? insets.top : 10,
+                            height: insets.top ? insets.top + 50 : 80,
+
+                        }}>
                             <View style={{
                                 flex: 1,
                                 alignItems: 'center',
@@ -283,29 +281,40 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
                         </View>
 
-                        <View style={styles.barraInferior}>
-                            <Entypo
-                                style={{
-                                    position: 'absolute',
-                                    left: 25,
-                                }}
-                                name="info-with-circle"
-                                size={45}
-                                color="#ffffffc9"
-                                onPress={() => setModalInfoVisible(true)}
-                            />
-                            <Pressable
-                                onPress={handlePicture}
-                                style={styles.tomarFoto}
-                            >
-                                <View style={{
-                                    flex: 1,
-                                    backgroundColor: '#fff',
-                                    borderRadius: 60,
-                                }}>
+                        <View style={{
+                            ...styles.barraInferior,
+                            paddingBottom: insets.bottom,
+                        }}>
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                            }}>
 
-                                </View>
-                            </Pressable>
+                                <Entypo
+                                    style={{
+                                        position: 'absolute',
+                                        left: 0,
+                                    }}
+                                    name="info-with-circle"
+                                    size={45}
+                                    color="#ffffffc9"
+                                    onPress={() => setModalInfoVisible(true)}
+                                />
+                                <Pressable
+                                    onPress={handlePicture}
+                                    style={styles.tomarFoto}
+                                >
+                                    <View style={{
+                                        flex: 1,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 60,
+                                    }}>
+
+                                    </View>
+                                </Pressable>
+                            </View>
+
 
                         </View>
 
@@ -317,7 +326,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
             <Modal
                 animationType="slide"
                 transparent={false}
-                visible={modalInfoVisible}
+                visible={false}
                 onRequestClose={() => {
                     setModalInfoVisible(false);
                 }}
@@ -349,7 +358,6 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: '100%',
-        height: 80,
         padding: 10,
         paddingLeft: 15,
         alignItems: 'flex-start',
@@ -360,6 +368,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         justifyContent: 'center',
         position: 'absolute',
+        alignItems: 'center',
         bottom: 0,
         width: '100%',
         paddingHorizontal: 20,
@@ -377,7 +386,6 @@ const styles = StyleSheet.create({
 
     tomarFoto: {
         padding: 2,
-        alignSelf: 'center',
         width: 75,
         height: 75,
         borderRadius: 60,

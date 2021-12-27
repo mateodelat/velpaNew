@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { container, formatDateShort, getUserSub, moradoOscuro } from '../../../assets/constants'
 import MessageComponent from './components/Message';
@@ -13,6 +13,8 @@ import API from '@aws-amplify/api';
 import { sendPushNotification } from '../../../assets/constants/constant';
 import { ChatRoomUsuario } from '../../models';
 import { Usuario } from '../../models';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/stack';
 
 const getUsersInChat = /* GraphQL */ `
     query getChatRoom($id: ID!) {
@@ -158,10 +160,13 @@ export default ({ route }) => {
 
         return strTime;
     }
-
+    const headerHeight = useHeaderHeight()
+    const insets = useSafeAreaInsets()
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? headerHeight - insets.bottom + 10 : headerHeight + 40}
+
             style={{ ...container, paddingLeft: 10, }}>
             {!chatMessages ? <Loading indicator /> :
 
@@ -213,21 +218,29 @@ export default ({ route }) => {
                 />
             }
 
-            <View style={styles.footerContainer}>
-                {/* Contenedor blanco */}
-                <TextInput
-                    onSubmitEditing={handleEnviar}
-                    style={styles.capturaMensaje}
-                    value={message}
-                    placeholder="Escribe tu mensaje..."
-                    onChangeText={setMessage}
-                />
+            <View style={{
+                paddingBottom: insets.bottom,
 
-                {message.length !== 0 && <Pressable
-                    onPress={handleEnviar}
-                    style={styles.enviar}>
-                    <Ionicons name="send" size={24} color="white" />
-                </Pressable>}
+            }}>
+
+                <View style={{
+                    ...styles.footerContainer,
+                }}>
+                    {/* Contenedor blanco */}
+                    <TextInput
+                        onSubmitEditing={handleEnviar}
+                        style={styles.capturaMensaje}
+                        value={message}
+                        placeholder="Escribe tu mensaje..."
+                        onChangeText={setMessage}
+                    />
+
+                    {message.length !== 0 && <Pressable
+                        onPress={handleEnviar}
+                        style={styles.enviar}>
+                        <Ionicons name="send" size={24} color="white" />
+                    </Pressable>}
+                </View>
             </View>
 
         </KeyboardAvoidingView>

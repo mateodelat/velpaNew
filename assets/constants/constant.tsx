@@ -71,7 +71,7 @@ export const vibrar = (tipo: VibrationType) => {
 }
 
 
-declare enum VibrationType {
+export declare enum VibrationType {
     light = "light",
     medium = "medium",
     heavy = "heavy",

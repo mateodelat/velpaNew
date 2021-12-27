@@ -137,11 +137,15 @@ export default function ({
 
 
                     }
-                    <Text style={{
-                        ...styles.contentTxt,
+                    <View style={{
                         ...styles.content,
                         borderBottomLeftRadius: lastMessagePerson ? 4 : 15
-                    }}>{content}</Text>
+
+                    }}>
+                        <Text style={{
+                            ...styles.contentTxt,
+                        }}>{content}</Text>
+                    </View>
                 </View>
                 <View style={{ flex: 1, }} />
             </View>

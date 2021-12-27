@@ -2,8 +2,10 @@ import React from 'react'
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 import { moradoOscuro } from '../../../../assets/constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default ({ imagen, titulo, modalVisible, setModalVisible }) => {
+    const insets = useSafeAreaInsets()
     return (
         <Modal
             animationType="slide"
@@ -16,16 +18,27 @@ export default ({ imagen, titulo, modalVisible, setModalVisible }) => {
             <View style={styles.container}>
 
 
-                <View style={styles.header}>
-                    <Text style={styles.titulo}>{titulo}</Text>
-                    <Pressable
-                        onPress={() => {
-                            setModalVisible(false)
-                        }}
-                        style={styles.button}
-                    >
-                        <Feather name="x" size={30} color="#fff" />
-                    </Pressable>
+                <View style={{
+                    ...styles.header,
+                    height: insets.top ? insets.top + 50 : 60,
+
+                }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        flex: 1,
+                    }}>
+                        <Text style={styles.titulo}>{titulo}</Text>
+                        <Pressable
+                            onPress={() => {
+                                setModalVisible(false)
+                            }}
+                            style={styles.button}
+                        >
+                            <Feather name="x" size={30} color="#fff" />
+                        </Pressable>
+
+                    </View>
                 </View>
                 <View style={styles.innerContainer}>
                     <Image
@@ -54,10 +67,9 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        alignItems: 'center',
+        alignItems: 'flex-end',
         flexDirection: 'row',
         backgroundColor: moradoOscuro,
-        height: 60,
 
     },
 

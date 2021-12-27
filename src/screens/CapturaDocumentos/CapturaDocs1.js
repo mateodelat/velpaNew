@@ -27,6 +27,7 @@ import Certificaciones from './components/Certificaciones';
 import Auth from '@aws-amplify/auth';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../models';
+import { vibrar, VibrationType } from '../../../assets/constants/constant';
 
 const containerColor = "#fff"
 const colorFondo = "#F4F6F6"
@@ -246,6 +247,7 @@ export default ({ navigation }) => {
             <View style={styles.agencia}>
                 <Pressable
                     onPress={() => {
+                        vibrar("medium")
                         setAgencia(true)
                     }}
                     style={{
@@ -260,6 +262,7 @@ export default ({ navigation }) => {
                 </Pressable>
                 <Pressable
                     onPress={() => {
+                        vibrar("medium")
                         setAgencia(false)
                     }}
                     style={{

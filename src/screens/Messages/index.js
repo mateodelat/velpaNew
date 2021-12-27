@@ -107,7 +107,13 @@ export default ({ navigation }) => {
     }
 
     return (
-        <View
+        <ScrollView
+            refreshControl={<RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />
+            }
+            showsVerticalScrollIndicator={false}
 
             style={{ ...container, borderLeftWidth: .25, }}>
 
@@ -140,30 +146,24 @@ export default ({ navigation }) => {
             </View>
 
             {/* Lista de chatRooms */}
-            {
-                !chats ?
-                    <Loading indicator={true} /> :
-                    chats.length === 0 ?
-                        <View
-                            style={styles.container}
-                        >
-                            <Text style={styles.noHayTxt}>No hay mensajes</Text>
-                        </View>
-                        :
-                        <View style={{
-                            ...styles.innerContainer,
-                            // marginTop: 20,
-                        }}>
+            <View style={{ flex: 1, }}>
 
-                            <FlatList
-                                refreshControl={<RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />
-                                }
-                                style={{ width: '100%', }}
-                                data={chats}
-                                renderItem={({ item, index }) => {
+                {
+                    !chats ?
+                        <Loading indicator={true} /> :
+                        chats.length === 0 ?
+                            <View
+                                style={styles.container}
+                            >
+                                <Text style={styles.noHayTxt}>No hay mensajes</Text>
+                            </View>
+                            :
+                            <View style={{
+                                ...styles.innerContainer,
+                                // marginTop: 20,
+                            }}>
+
+                                {chats.map((item, index) => {
                                     return <View
                                         key={index.toString()}
                                         style={{
@@ -182,12 +182,13 @@ export default ({ navigation }) => {
                                         {index !== chats.length - 1 && <View style={styles.line} />}
                                     </View>
 
-                                }}
-                            />
-                        </View>
-            }
+                                }
+                                )}
+                            </View>
+                }
+            </View>
 
-        </View>
+        </ScrollView>
     )
 }
 

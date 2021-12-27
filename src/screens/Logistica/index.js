@@ -10,6 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Boton from '../../components/Boton';
 import RadioButton from '../../components/RadioButton';
 import QueLlevar from '../AgregarFecha/components/QueLlevar';
+import { vibrar } from '../../../assets/constants/constant';
 
 export default ({ navigation, route }) => {
     const {
@@ -245,7 +246,10 @@ export default ({ navigation, route }) => {
 
                 {/* Velpa */}
                 <Pressable
-                    onPress={() => setAceptoTerminos(!aceptoTerminos)}
+                    onPress={() => {
+                        setAceptoTerminos(!aceptoTerminos)
+                        vibrar("medium")
+                    }}
 
                     style={styles.personasContainer}>
                     <Text style={styles.textoTerminos}>
