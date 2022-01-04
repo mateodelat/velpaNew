@@ -52,7 +52,7 @@ export default function () {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + "rk_test_51J7OwUFIERW56TAE2Af9n7pLq9RrCk5ABDR6EoPFdHzPIM9v3kkxCAt12wdBIvV6b9QKLxMlsPlkK2fmX9SO1MtX00H16Ba1De",
+                    "Authorization": "Bearer " + "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",
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())
@@ -85,7 +85,7 @@ export default function () {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + "rk_test_51J7OwUFIERW56TAE2Af9n7pLq9RrCk5ABDR6EoPFdHzPIM9v3kkxCAt12wdBIvV6b9QKLxMlsPlkK2fmX9SO1MtX00H16Ba1De",
+                    "Authorization": "Bearer " + "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",
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())

@@ -54,8 +54,8 @@ Amplify.configure({
   oauth: {
     ...awsconfig.oauth,
     urlOpener,
-    redirectSignIn: productionRedirectSignOut,
-    redirectSignOut: productionRedirectSignOut,
+    redirectSignIn: localRedirectSignOut,
+    redirectSignOut: localRedirectSignOut,
 
   }
 });

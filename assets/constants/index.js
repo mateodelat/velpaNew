@@ -554,6 +554,14 @@ export const redondear = (numero, entero) => {
   return numero
 }
 
+export const redondearNDecimales = (numero, entero) => {
+  if (!numero) return 0
+  numero = Math.round(numero * 10 ** entero) / 10 ** entero
+
+  return numero
+}
+
+
 export function formatTelefono(input) {
   // Strip all characters from the input except digits
   input = input.replace(/\D/g, '');
@@ -1812,7 +1820,7 @@ export async function uploadImageToStripe(uri) {
       headers: {
         "Content-Type": "multipart/form-data",
         "Accept": "application/json",
-        "Authorization": "Bearer " + "pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd",
+        "Authorization": "Bearer " + "pk_live_51J7OwUFIERW56TAETjQ7dMTgYLXQnjLxuss5HmvufxrC3kl0jv6jnQQmTsLCn6UhG3vQPeryjQi04xSQm1XUhs4900866NxYwP",
       }
     })
     let responseJson = await res.json()

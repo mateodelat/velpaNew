@@ -18,7 +18,6 @@ import {
 import ImageFullScreen from '../../../components/ImageFullScreen';
 
 
-import Carrousel from './components/Carrousel';
 
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,6 +35,7 @@ import ModalMaterial from './components/ModalMaterial';
 import { DataStore } from '@aws-amplify/datastore';
 import { Aventura } from '../../../models';
 import { Loading } from '../../../components/Loading';
+import Carrousel from '../../AgregarAventura/components/Carrousel';
 
 
 const { height } = Dimensions.get("screen")
@@ -170,7 +170,6 @@ export default ({ navigation, route }) => {
         }
         setButtonLoading(true)
         try {
-            console.log(aventuraAEnviar.imagenDetalle)
             const modelAventura = await DataStore.query(Aventura, aventura.id)
             await DataStore.save(Aventura.copyOf(modelAventura, av => {
                 av.imagenDetalle = aventuraAEnviar.imagenDetalle

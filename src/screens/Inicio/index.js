@@ -19,7 +19,7 @@ import {
     View
 } from 'react-native'
 
-import { getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, wait } from '../../../assets/constants';
+import { getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
@@ -516,7 +516,7 @@ export default ({ navigation }) => {
                                     flexDirection: 'row',
                                 }}>
                                     <Entypo name="star" size={20} color="#F5BE18" />
-                                    <Text >{usr.calificacion}</Text>
+                                    <Text >{redondearNDecimales(usr.calificacion, 2)}</Text>
 
                                 </View>}
 

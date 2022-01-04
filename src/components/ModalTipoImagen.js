@@ -178,6 +178,9 @@ export default function ({
                             <TextInput
                                 value={linkImage}
                                 onChangeText={setLinkImage}
+
+                                onEndEditing={handleSaveLink}
+
                                 placeholder={video ? "https://exampleVideo.mp4" : "https://exampleImage.jpg"}
                                 style={styles.inputText} />
                         </View>

@@ -70,6 +70,14 @@ export default ({
                     // Obtener urls de Storage
                     const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => {
 
+                        if (!e) return {
+                            uri: "https://picsum.photos/400?random=101.jpg",
+                            key: "https://picsum.photos/400?random=101.jpg",
+                            video: false
+
+                        }
+
+
                         return {
                             uri: await getImageUrl(e),
                             key: e,
@@ -92,7 +100,7 @@ export default ({
             })
             // Obtener aventuras ya perimitidas
             .then(async r => {
-                resetSelectedItems(r.length)
+                resetSelectedItems(r?.length)
                 return r
             })
 
@@ -130,7 +138,7 @@ export default ({
 
     // Reiniciar los items seleccionados
     function resetSelectedItems(length) {
-        length = length ? length : aventuras.length
+        length = length ? length : aventuras?.length
         setSelectedItems([...Array(length + 1).keys()].map((_, row) => {
             return (
                 [{

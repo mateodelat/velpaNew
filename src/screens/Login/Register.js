@@ -37,13 +37,6 @@ export default function Register({ navigation }) {
             return
         }
 
-        if (!isAlphaNumeric(nombre)) {
-            clearError()
-            setError("El usuario debe ser valores alfanumericos")
-            setErrorNombre(true)
-            return
-        }
-
         if (email === "") {
             clearError()
             setError("El correo no puede estar vacio")

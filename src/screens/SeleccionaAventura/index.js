@@ -14,6 +14,8 @@ import {
     View
 } from 'react-native'
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -431,9 +433,14 @@ export default ({
         ])
     }
 
+    const insets = useSafeAreaInsets()
+
     return (
         <View
-            style={styles.container}>
+            style={{
+                ...styles.container,
+                paddingTop: insets.top ? insets.top : 10,
+            }}>
 
             <Header navigation={navigation} titulo={titulo} />
 

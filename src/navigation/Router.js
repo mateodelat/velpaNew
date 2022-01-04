@@ -239,7 +239,7 @@ export default () => {
                             name="AgregarAventura"
                             component={AgregarAventura}
                             options={{
-                                title: "Agregar Experiencia",
+                                title: "Agregar experiencia",
                             }}
                         />
 

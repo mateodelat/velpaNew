@@ -16,9 +16,6 @@ export default function ({
 }) {
     const {
         lvl,
-        expBaseLevel,
-        expNextLevel
-
     } = calculateLvl(userExp)
 
 
@@ -82,8 +79,8 @@ export default function ({
                         <Text style={{ ...styles.descripcion, marginBottom: 15, marginLeft: 5, }}>Cada $500 extra: <Text style={{ fontWeight: 'bold', }}>+1 exp</Text></Text>
 
                         <Text style={styles.tituloNivel}>Buena reputacion</Text>
-                        <Text style={{ ...styles.descripcion, marginLeft: 5, }}>Calificacion de 4 o 5: <Text style={{ fontWeight: 'bold', }}>+1 exp</Text></Text>
-                        <Text style={{ ...styles.descripcion, marginLeft: 5, }}>Calificacion de 1 o 2: <Text style={{ fontWeight: 'bold', }}>-1 exp</Text></Text>
+                        <Text style={{ ...styles.descripcion, marginLeft: 5, }}>Calificacion de 4 o 5: <Text style={{ fontWeight: 'bold', }}>+3 exp</Text></Text>
+                        <Text style={{ ...styles.descripcion, marginLeft: 5, }}>Calificacion de 1 o 2: <Text style={{ fontWeight: 'bold', }}>-3 exp</Text></Text>
                     </View>
                 </View>
 

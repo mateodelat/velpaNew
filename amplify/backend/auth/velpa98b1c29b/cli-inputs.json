@@ -70,6 +70,6 @@
     },
     "permissions": [],
     "hostedUIProviderCreds": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpaNew/\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpaNew/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\",\"velpa://\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/velpa/\",\"velpa://\"]}"
   }
 }

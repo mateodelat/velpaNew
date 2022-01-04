@@ -85,6 +85,8 @@ export default ({
 
 }) => {
 
+    setUploading = setUploading ? setUploading : () => null
+
     const data = aventura.imagenDetalle
 
 
@@ -313,8 +315,10 @@ export default ({
             addImage ? newImagenDetalle.splice(imageIdxSelected, 0, {
                 uri: img.uri,
                 video: isVideo,
+                key: img.uri
             }) : newImagenDetalle[imageIdxSelected] = {
                 uri: img.uri,
+                key: img.uri,
                 video: isVideo,
             }
 

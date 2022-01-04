@@ -1,8 +1,8 @@
 import { DataStore } from 'aws-amplify';
 import React, { useEffect, useState } from 'react'
 import { Alert, Dimensions, Image, Keyboard, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { getImageUrl, getUserSub, redondear } from '../../assets/constants';
-import { Aventura } from '../models';
+import { getImageUrl, getUserSub, mayusFirstLetter, redondear, redondearNDecimales } from '../../assets/constants';
+import { Aventura, Notificacion, TipoNotificacion } from '../models';
 import { Usuario } from '../models';
 
 import { Entypo } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import { Loading } from './Loading';
 import Boton from './Boton';
 import { Comentario } from '../models';
 import Calificacion from './Calificacion';
+import { sendPushNotification } from '../../assets/constants/constant';
 
 const { height, width } = Dimensions.get("window")
 
@@ -89,10 +90,15 @@ export default function ({
 
 
         const actualCalificacion = guia.calificacion
-        const numResenas = guia.numResenas
 
-        const mediaCalif = ((actualCalificacion * numResenas) + rating) / (numResenas + 1)
+        const { notificationToken,
+            numResenas,
+            experience
+        } = guia
 
+        const mediaCalif = redondearNDecimales(((actualCalificacion * numResenas) + rating) / (numResenas + 1), 2)
+
+        const expGain = rating > 3 ? 3 : rating < 3 ? -3 : 1
         try {
 
             // Guardar la nueva calificacion del usuario
@@ -101,12 +107,37 @@ export default function ({
                 n.numResenas = numResenas + 1
             }))
 
+            // Guardar el comentario al guia
             await DataStore.save(new Comentario({
                 calificacion: rating,
                 body: comments,
                 usuarioCalificadoID: guia.id,
                 creatorID: await getUserSub()
             }))
+
+            const sub = await getUserSub()
+            const usuarioCalificador = await DataStore.query(Usuario, sub)
+            const titulo = "Nueva reseña"
+            const descripcion = mayusFirstLetter(usuarioCalificador.nickname) + " te ha calificado en " + aventura.titulo + " con " + rating + " estrellas.\n" + ((expGain > 0 ? "+" : "") + expGain + " exp")
+
+
+            DataStore.save(new Notificacion({
+                tipo: 'BIENVENIDA',
+
+                titulo,
+                descripcion,
+                usuarioID: guia.id,
+
+                showAt: new Date().getTime(),
+            }))
+
+            sendPushNotification({
+                title: titulo,
+                descripcion,
+                token: notificationToken
+            })
+
+
             Alert.alert("Exito", "Experiencia calificada con exito!!")
             borrarNotificacion()
 

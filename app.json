@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "velpaNew",
-    "slug": "velpaNew",
+    "name": "velpa",
+    "slug": "velpa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,12 +29,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/velpa.png",
+        "backgroundColor": "#1BBA85"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }
