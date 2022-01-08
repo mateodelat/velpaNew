@@ -72,7 +72,7 @@ export default function ({ navigation }) {
             longitudeDelta: 0.8,
         }
         flatlist.current.scrollToIndex({ index: idx })
-        map.current.animateToRegion(region);
+        map?.current?.animateToRegion(region);
 
 
     }

@@ -55,8 +55,8 @@ export default ({ navigation }) => {
         }
 
         timer = setTimeout(() => {
-            flatList?.current?.scrollToIndex({
-                index: actualIdx < (publicidad?.length - 1) ? actualIdx : 0
+            flatList?.current.scrollToIndex({
+                index: actualIdx < (publicidad?.length) ? actualIdx : 0
             })
             setActualIdx(actualIdx < (publicidad?.length - 1) ? actualIdx + 1 : 0)
         }, duration);
@@ -67,7 +67,7 @@ export default ({ navigation }) => {
         if (actualIdx === null) {
             empezarTimer()
         }
-        empezarTimer(6000)
+        empezarTimer(5000)
         return () => clearTimeout(timer)
     }, [actualIdx]);
 
@@ -297,7 +297,7 @@ export default ({ navigation }) => {
                     <Text style={{
                         fontSize: 18,
                         fontWeight: 'bold',
-                    }}>Experiencias recomendadas</Text>
+                    }}>Experiencias cercanas</Text>
 
                     <Text
                         onPress={() => navigation.navigate("Busqueda")}

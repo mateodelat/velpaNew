@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Dimensions, FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, FlatList, Image, Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 
 import { colorFondo, container, getImageUrl, moradoOscuro } from '../../../../assets/constants';

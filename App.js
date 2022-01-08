@@ -42,11 +42,13 @@ async function urlOpener(url, redirectUrl) {
 const [
   localRedirectSignIn,
   productionRedirectSignIn,
+  publishRedirectSignIn,
 ] = awsconfig.oauth.redirectSignIn.split(",");
 
 const [
   localRedirectSignOut,
   productionRedirectSignOut,
+  publishRedirectSignOut,
 ] = awsconfig.oauth.redirectSignOut.split(",");
 
 Amplify.configure({

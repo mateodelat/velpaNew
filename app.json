@@ -29,9 +29,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/velpa.png",
+        "foregroundImage": "./assets/VELPA.png",
         "backgroundColor": "#1BBA85"
-      }
+      },
+      "package": "com.mateodelat.velpa"
     }
   }
 }

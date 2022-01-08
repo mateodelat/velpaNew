@@ -61,7 +61,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
                         }
                     }
                 ],
-                { compress: 0.7, }
+                { compress: 0.9, }
             );
 
             image = manipResult.uri

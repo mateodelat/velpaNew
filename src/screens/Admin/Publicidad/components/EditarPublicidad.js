@@ -235,7 +235,7 @@ export default function ({
                             }
                                 : handleAddVideo}
                             style={styles.videoContainer}>
-                            {elemento.video.uri ?
+                            {elemento.video?.uri ?
                                 <View
                                     style={{
                                         alignItems: 'center',
