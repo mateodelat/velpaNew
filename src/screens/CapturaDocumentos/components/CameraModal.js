@@ -143,12 +143,18 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
 
                 tipo === "selfie" ? setType(Camera.Constants.Type.front) : setType(Camera.Constants.Type.back)
-                const { status } = await Camera.requestCameraPermissionsAsync();
-                setHasPermission(status === 'granted');
                 setModalInfoVisible(true)
             }
         })();
     }, [modalVisible]);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setHasPermission(status === 'granted')
+        })()
+
+    }, []);
 
 
     if (hasPermission === null) {

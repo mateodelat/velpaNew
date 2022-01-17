@@ -30,6 +30,7 @@ import Indicador from './components/Indicador';
 
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { AventuraUsuario } from '../../models';
 
 
 export default ({ navigation }) => {
@@ -91,7 +92,6 @@ export default ({ navigation }) => {
 
     async function fetchUsuariosGuia() {
         try {
-
             setGuias(await DataStore.query(Usuario,
                 usr => usr
                     .guia("eq", true)
@@ -99,8 +99,8 @@ export default ({ navigation }) => {
                 {
                     sort: e => e
                         .experience("DESCENDING")
-                        .updatedAt("ASCENDING")
-
+                        .updatedAt("ASCENDING"),
+                    limit: 4
                 }
             )
                 .then(async r => {

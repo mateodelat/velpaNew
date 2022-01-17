@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "velpa",
-    "slug": "velpa",
-    "version": "1.0.0",
+    "name": "Velpa",
+    "slug": "Velpa",
+    "version": "2.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "velpa",
@@ -29,10 +29,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/VELPA.png",
-        "backgroundColor": "#1BBA85"
+        "foregroundImage": "./assets/icon512.png",
+        "backgroundColor": "#fff"
       },
-      "package": "com.mateodelat.velpa"
+      "package": "com.velpa.adventures"
     }
   }
 }
