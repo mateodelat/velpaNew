@@ -514,7 +514,7 @@ export default function ({ navigation, route }) {
 
             <HeaderConImagen
                 titulo={tituloAventura}
-                imagen={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
+                imagen={{ uri: route.params?.aventura?.imagenDetalle[route.params?.aventura?.imagenFondoIdx].uri }}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
             />

@@ -3,7 +3,7 @@ import { Alert, Linking, Platform } from "react-native";
 import * as WebBrowser from 'expo-web-browser';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import { Aventura, Notificacion, TipoNotificacion } from "../../src/models";
+import { Aventura, Notificacion, TipoNotificacion, Fecha } from "../../src/models";
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 import React from "react";
 
@@ -696,9 +696,11 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
     c => c.estadoAventura("eq", "AUTORIZADO"),
     {
       limit: maxItems,
-      page
+      page,
     })
     .then(async r => {
+
+
       r = await Promise.all(r.map(async ave => {
         // Obtener urls de Storage
         const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
@@ -706,9 +708,10 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
           key: e
         }
         )))
+
         return {
           ...ave,
-          imagenDetalle
+          imagenDetalle,
         }
       }))
       return r
@@ -734,7 +737,7 @@ export const distancia2Puntos = function (lat1, lon1, lat2, lon2) {
   var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
-  return d.toFixed(3); //Retorna tres decimales
+  return d; //Retorna tres decimales
 }
 
 

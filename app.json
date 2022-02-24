@@ -2,7 +2,7 @@
   "expo": {
     "name": "Velpa",
     "slug": "Velpa",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "velpa",
@@ -12,8 +12,8 @@
       "backgroundColor": "#ffffff"
     },
     "notification": {
-      "icon": "./assets/icon.png",
-      "color": "#6468C9"
+      "androidMode": "collapse",
+      "androidCollapsedTitle": "Tienes #{unread_notifications} notificaciones"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,6 +25,10 @@
       "supportsTablet": false,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription ": "Velpa utiliza tu ubicacion para buscar experiencias cerca de ti"
+      },
+      "buildNumber": "0.0.0",
+      "config": {
+        "googleMapsApiKey": "AIzaSyD6Rcc9UBWW5tsACf9mur9dLmMZJN7LxSI"
       }
     },
     "android": {
@@ -32,7 +36,13 @@
         "foregroundImage": "./assets/icon512.png",
         "backgroundColor": "#fff"
       },
-      "package": "com.velpa.adventures"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC_jHT1RiD8ExSZRX7XGdKhi8PTC9JzI4w"
+        }
+      },
+      "package": "com.velpa.adventures",
+      "versionCode": 2
     }
   }
 }

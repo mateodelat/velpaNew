@@ -38,17 +38,10 @@ async function urlOpener(url, redirectUrl) {
   }
 }
 
-// Assuming you have two redirect URIs, and the first is for localhost and second is for production
 const [
-  localRedirectSignIn,
-  productionRedirectSignIn,
-  publishRedirectSignIn,
-] = awsconfig.oauth.redirectSignIn.split(",");
-
-const [
-  localRedirectSignOut,
-  productionRedirectSignOut,
-  publishRedirectSignOut,
+  localRedirect,
+  productionRedirect,
+  publishRedirect,
 ] = awsconfig.oauth.redirectSignOut.split(",");
 
 Amplify.configure({
@@ -56,8 +49,8 @@ Amplify.configure({
   oauth: {
     ...awsconfig.oauth,
     urlOpener,
-    redirectSignIn: publishRedirectSignOut,
-    redirectSignOut: publishRedirectSignOut,
+    redirectSignIn: publishRedirect,
+    redirectSignOut: publishRedirect,
 
   }
 });

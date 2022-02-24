@@ -19,7 +19,7 @@ import {
     View
 } from 'react-native'
 
-import { getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, wait } from '../../../assets/constants';
+import { distancia2Puntos, getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
@@ -31,6 +31,7 @@ import Indicador from './components/Indicador';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { AventuraUsuario } from '../../models';
+import { getLastKnownPositionAsync } from 'expo-location';
 
 
 export default ({ navigation }) => {
@@ -78,11 +79,38 @@ export default ({ navigation }) => {
     }, []);
 
 
-    const fetchData = () => {
+    const fetchData = async () => {
         fetchPublicidad()
+        let location = getLastKnownPositionAsync();
 
         listAventurasAutorizadas(4, 0)
-            .then(r => {
+            .then(async r => {
+
+
+
+                // Obtener distancia al usuario si existe
+                const loc = await location
+
+
+                // Si hay coordenadas del dispositivo se ordenan las experiencias 
+                // de la mas cercana a la mas lejana
+                if (loc?.coords) {
+
+
+                    r = r.map(ave => {
+                        // Coordenadas del usuario
+                        const { latitude: userLat, longitude: userLong } = loc.coords
+                        const { latitude, longitude } = ave.coordenadas
+                        const distanciaAlUsuario = distancia2Puntos(userLat, userLong, latitude, longitude,)
+
+                        return {
+                            ...ave,
+                            distanciaAlUsuario
+                        }
+                    }).sort((a, b) => a.distanciaAlUsuario > b.distanciaAlUsuario)
+
+                }
+
                 setAventuras(r)
             })
 
@@ -172,10 +200,6 @@ export default ({ navigation }) => {
                 onPress: () => Linking.openURL(link)
             },
         ])
-    }
-
-    const handleMisAventuras = async () => {
-        navigation.navigate("MisReservas")
     }
 
     const onRefresh = React.useCallback(() => {
