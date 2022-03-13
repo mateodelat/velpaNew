@@ -584,7 +584,7 @@ export default ({ navigation, route }) => {
 
                             {/* Ascenso recorrido */}
                             {(categoria === Categorias.CICLISMO || categoria === Categorias.APLINISMO) && <View>
-                                <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Altimetria recorrida</Text>
+                                <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Desnivel recorrido</Text>
                                 <View style={styles.row}>
                                     <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', marginRight: 8, }}>
                                         <Image source={require("../../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />

@@ -62,7 +62,6 @@ let { width, height } = Dimensions.get("screen")
 export default ({ navigation, route }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
-
     const { fecha: fechaGotten, fechaID } = route.params
 
     const [fecha, setFecha] = useState(null);
@@ -75,7 +74,6 @@ export default ({ navigation, route }) => {
             getFecha()
         }
     }, []);
-
     async function getFecha() {
         if (!fechaID) return
 
@@ -91,6 +89,7 @@ export default ({ navigation, route }) => {
             const usuario = await DataStore.query(Usuario, res.usuarioID)
             personasReservadas.push({
                 ...res,
+                tipoPago: res.tipoPago,
 
                 foto: await getImageUrl(usuario.foto),
                 nickname: usuario.nickname,
@@ -277,10 +276,16 @@ export default ({ navigation, route }) => {
                                             marginRight: 10,
                                         }}
                                     />
-                                    <Text style={{
-                                        flex: 1,
-                                        color: "gray",
-                                    }}>@{persona.nickname}</Text>
+                                    <View style={{ flex: 1, justifyContent: 'center', }}>
+                                        <Text style={{
+                                            color: "gray",
+                                        }}>@{persona.nickname}</Text>
+
+                                        <Text style={{
+                                            color: persona.tipoPago === "EFECTIVO" ? "coral" : moradoOscuro,
+                                        }}>{persona.tipoPago === "EFECTIVO" ? "Pagar en efectivo" : "Pagado"}</Text>
+
+                                    </View>
 
                                     <View style={{ alignItems: 'flex-end', }}>
                                         <View style={{ flexDirection: 'row', marginBottom: 5, }}>

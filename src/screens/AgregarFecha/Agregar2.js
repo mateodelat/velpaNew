@@ -123,7 +123,7 @@ export default function ({ navigation,
 
             dificuldad,
 
-            comision: comisionVelpa,
+            comision: comisionVelpa / 100,
             experienciaPorPersona: expPerPerson,
 
             ...route.params.fecha,

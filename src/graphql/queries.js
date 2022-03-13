@@ -229,6 +229,7 @@ export const getReserva = /* GraphQL */ `
       fechaID
       usuarioID
       guiaID
+      tipoPago
       materialChecked
       _version
       _deleted
@@ -258,6 +259,7 @@ export const listReservas = /* GraphQL */ `
         fechaID
         usuarioID
         guiaID
+        tipoPago
         materialChecked
         _version
         _deleted
@@ -296,6 +298,7 @@ export const syncReservas = /* GraphQL */ `
         fechaID
         usuarioID
         guiaID
+        tipoPago
         materialChecked
         _version
         _deleted
@@ -354,6 +357,7 @@ export const getFecha = /* GraphQL */ `
           fechaID
           usuarioID
           guiaID
+          tipoPago
           materialChecked
           _version
           _deleted
@@ -544,6 +548,7 @@ export const getUsuario = /* GraphQL */ `
           fechaID
           usuarioID
           guiaID
+          tipoPago
           materialChecked
           _version
           _deleted

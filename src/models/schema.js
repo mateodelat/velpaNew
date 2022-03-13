@@ -1533,7 +1533,7 @@ export const schema = {
                     "name": "pagoID",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "fechaID": {
@@ -1554,6 +1554,15 @@ export const schema = {
                     "name": "guiaID",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tipoPago": {
+                    "name": "tipoPago",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoPago"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -2357,6 +2366,13 @@ export const schema = {
                 "GUIAINDIVIDUAL"
             ]
         },
+        "TipoPago": {
+            "name": "TipoPago",
+            "values": [
+                "EFECTIVO",
+                "TARJETA"
+            ]
+        },
         "TipoNotificacion": {
             "name": "TipoNotificacion",
             "values": [
@@ -2424,5 +2440,5 @@ export const schema = {
             }
         }
     },
-    "version": "c8a1bab9d222b9c67b18f9bf95e78128"
+    "version": "683a1d5f2f589581c15bcce103081a43"
 };

@@ -120,6 +120,7 @@ export default () => {
                 <NavigationContainer>
 
                     <Stack.Navigator
+
                         screenOptions={{
                             headerLeft: ({ onPress }) => <MaterialIcons name="keyboard-arrow-left" size={35} color="white" onPress={onPress} />,
                             headerTintColor: "white",
@@ -138,7 +139,7 @@ export default () => {
                             //     return (
                             //         <Header title={title} />
                             //     );
-                            // }
+                            // }    
                         }}
                     >
                         <Stack.Screen

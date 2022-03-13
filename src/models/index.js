@@ -30,6 +30,11 @@ const TipoUsuario = {
   "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
 };
 
+const TipoPago = {
+  "EFECTIVO": "EFECTIVO",
+  "TARJETA": "TARJETA"
+};
+
 const TipoNotificacion = {
   "RESERVAENFECHA": "RESERVAENFECHA",
   "RESERVACREADA": "RESERVACREADA",
@@ -73,6 +78,7 @@ export {
   Categorias,
   StatusSolicitud,
   TipoUsuario,
+  TipoPago,
   TipoNotificacion,
   TipoPublicidad,
   PaymentIntent,

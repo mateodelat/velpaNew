@@ -28,6 +28,11 @@ export enum TipoUsuario {
   GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
 }
 
+export enum TipoPago {
+  EFECTIVO = "EFECTIVO",
+  TARJETA = "TARJETA"
+}
+
 export enum TipoNotificacion {
   RESERVAENFECHA = "RESERVAENFECHA",
   RESERVACREADA = "RESERVACREADA",
@@ -267,10 +272,11 @@ export declare class Reserva {
   readonly tercera: number;
   readonly ninos: number;
   readonly adultos: number;
-  readonly pagoID: string;
+  readonly pagoID?: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
   readonly guiaID?: string;
+  readonly tipoPago?: TipoPago | keyof typeof TipoPago;
   readonly materialChecked?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;

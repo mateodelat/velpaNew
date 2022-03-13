@@ -2,7 +2,7 @@
   "expo": {
     "name": "Velpa",
     "slug": "Velpa",
-    "version": "2.0.3",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "velpa",
@@ -42,7 +42,7 @@
         }
       },
       "package": "com.velpa.adventures",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }

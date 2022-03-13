@@ -10,7 +10,8 @@ import {
 } from 'react-native'
 
 import { Entypo } from '@expo/vector-icons';
-
+import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import { colorFondo, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
@@ -55,7 +56,29 @@ export default function ({ route, navigation }) {
 
         fechaID,
         guiaID
-    } = route.params
+    } =
+    // route.params
+    {
+        adultos: 1,
+        calificacionGuia: 4.9,
+        comisionVelpa: .35,
+        descripcion: null,
+        fechaFinal: 1648922400000,
+        fechaID: "77ef58c5-f2ab-4a6b-9d90-44e298d3257d",
+        fechaInicial: 1648800000000,
+        guiaID: "2ebd46eb-b627-4bd9-a158-ee23ad738130",
+        imagenFondo: {
+            key: "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
+            uri: "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
+        },
+        nicknameGuia: "mateo delat",
+        ninos: 0,
+        precioIndividual: 400,
+        stripeID: "acct_1KLTWV2ZeyFmkStn",
+        tercera: 0,
+        tituloAventura: "Nevado de Colima",
+    }
+
     // Variables de stripe
     const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
@@ -66,8 +89,10 @@ export default function ({ route, navigation }) {
     // Id de transaccion
     const [idPago, setIdPago] = useState("");
 
+    // Opciones que se llenan cuando tenemos tarjeta seleccionada
     const [paymentOption, setPaymentOption] = useState({});
 
+    const [tipoPago, setTipoPago] = useState(null);
 
     // UI del boton
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -80,7 +105,6 @@ export default function ({ route, navigation }) {
     const personasTotales = adultos + ninos + tercera
 
     const precioTotal = precioIndividualConComision * personasTotales
-
 
     useEffect(() => {
         fetchFecha()
@@ -123,46 +147,53 @@ export default function ({ route, navigation }) {
 
     // Obtener el clientSecret del backend
     const fetchPaymentIntent = async () => {
-        const sub = await getUserSub()
-        setSub(sub)
+        try {
 
-        if (!stripeID) {
-            Alert.alert("Error",
-                "Lo sentimos, el guia no ha registrado sus datos bancarios pero puedes ver mas opciones",
-                [
-                    {
-                        text: "OK",
-                        onPress: verOpciones
-                    },
-                ],
-                { cancelable: false }
-            )
-            setError(true)
-            return
-        }
 
-        const response = await API.graphql({
-            query: createPaymentIntent, variables:
-            {
-                amount: Math.round(precioTotal),
-                destinationStripeID: stripeID,
-                comision,
-                fechaID,
-                usuarioID: sub
+            const sub = await getUserSub()
+            setSub(sub)
+
+            if (!stripeID) {
+                Alert.alert("Error",
+                    "Lo sentimos, el guia no ha registrado sus datos bancarios pero puedes ver mas opciones",
+                    [
+                        {
+                            text: "OK",
+                            onPress: verOpciones
+                        },
+                    ],
+                    { cancelable: false }
+                )
+                setError(true)
+                return
             }
-        })
 
-        if (!response?.data?.createPaymentIntent?.id || !response?.data?.createPaymentIntent?.clientSecret) {
-            Alert.alert("Error", "Error obteniendo el clientSecret")
-            setError(true)
-            return
+            const response = await API.graphql({
+                query: createPaymentIntent, variables:
+                {
+                    amount: Math.round(precioTotal),
+                    destinationStripeID: stripeID,
+                    comision,
+                    fechaID,
+                    usuarioID: sub
+                }
+            })
+
+            if (!response?.data?.createPaymentIntent?.id || !response?.data?.createPaymentIntent?.clientSecret) {
+                Alert.alert("Error", "Error obteniendo el clientSecret")
+                setError(true)
+                return
+            }
+
+            // Obtener el id de pago y el client secret
+            setIdPago(response.data.createPaymentIntent.id)
+            setClientSecret(response.data.createPaymentIntent.clientSecret)
+
+            return response
+
+        } catch (error) {
+            return error
         }
-
-        // Obtener el id de pago y el client secret
-        setIdPago(response.data.createPaymentIntent.id)
-        setClientSecret(response.data.createPaymentIntent.clientSecret)
-
-        return response
     }
 
     //Empezar a cargar el modal de pago
@@ -185,6 +216,7 @@ export default function ({ route, navigation }) {
     const openPaymentSheet = async () => {
         const { error, paymentOption } = await presentPaymentSheet({
             confirmPayment: false,
+
         });
 
 
@@ -344,7 +376,6 @@ export default function ({ route, navigation }) {
                 trigger: {
                     seconds: remainingFor1Day,
                 },
-
             })
 
             // Notificacion IN-APP
@@ -369,7 +400,7 @@ export default function ({ route, navigation }) {
         scheduleNotificationAsync({
             content: {
                 title: "Estas a nada de irte",
-                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia !!",
+                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!" + (tipoPago === "EFECTIVO" ? "\nRecuerda llevar el pago de $" + precioTotal + " en efectivo de la aventura" : ""),
                 priority: AndroidNotificationPriority.MAX,
                 vibrate: true,
                 data: {
@@ -388,7 +419,7 @@ export default function ({ route, navigation }) {
             tipo: TipoNotificacion.RECORDATORIOFECHA,
 
             titulo: "Experiencia en menos de 1 hora",
-            descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!",
+            descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!" + (tipoPago === "EFECTIVO" ? "\nRecuerda llevar el pago de $" + precioTotal + " en efectivo de la aventura" : ""),
 
             showAt: (new Date(initialDate - msInHour)).getTime(),
 
@@ -402,37 +433,52 @@ export default function ({ route, navigation }) {
     }
 
     const handleConfirm = async () => {
-        try {
+        if (tipoPago === null) {
+            Alert.alert("Error", "Selecciona un tipo de pago")
+        } else {
 
-            // Revisar que no se haya llenado la fecha
-            if (await isFechaFull(fecha)) {
-                Alert.alert("Atencion",
-                    "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
-                    [
-                        {
-                            text: "Ver",
-                        },
-                    ],
-                    { cancelable: false }
-                )
-            } else {
-                // Verificar pago
-                if (!paymentOption?.label || !paymentOption?.image) {
-                    Alert.alert("Error", "Agrega primero un metodo de pago")
-                    return
-                }
-
+            try {
                 setButtonLoading(true)
-                const { error } = await confirmPaymentSheetPayment()
-                    .catch(e => {
-                        Alert.alert("Error", "Error realizando el pago")
-                        console.log(e)
-                    })
 
-                if (error) {
+                // Revisar que no se haya llenado la fecha
+                if (await isFechaFull(fecha)) {
                     setButtonLoading(false)
-                    Alert.alert(`Error code: ${error.code}`, error.message);
+
+                    Alert.alert("Atencion",
+                        "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
+                        [
+                            {
+                                text: "Ver",
+                            },
+                        ],
+                        { cancelable: false }
+                    )
                 } else {
+
+                    // Pago con tarjeta
+                    if (tipoPago === "TARJETA") {
+
+                        // Verificar pago
+                        if (!paymentOption?.label || !paymentOption?.image) {
+                            Alert.alert("Error", "Agrega una tarjeta o paga en efectivo")
+                            setButtonLoading(false)
+                            return
+                        }
+
+                        const { error } = await confirmPaymentSheetPayment()
+                            .catch(e => {
+                                Alert.alert("Error", "Error realizando el pago")
+                                console.log(e)
+                            })
+
+                        // Si hubo un error con la tarjeta, se sale de la funcion
+                        if (error) {
+                            setButtonLoading(false)
+                            Alert.alert(`Error code: ${error.code}`, error.message);
+                            return
+                        }
+                    }
+
                     const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
 
                     //////////////////////////////////////////////////////////////////////////////
@@ -463,11 +509,14 @@ export default function ({ route, navigation }) {
 
                         adultos, ninos, tercera,
 
-                        pagoID: idPago,
+                        // Si fue con tarjeta se agrega la referencia al pago
+                        pagoID: tipoPago === "TARJETA" ? idPago : null,
+
+                        tipoPago,
 
                         fechaID,
                         guiaID,
-                        usuarioID: sub
+                        usuarioID: sub,
                     }
 
                     // Crear la reservacion en DataStore
@@ -538,13 +587,12 @@ export default function ({ route, navigation }) {
                     )
 
                     navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
+                    setButtonLoading(false)
                 }
+            } catch (error) {
                 setButtonLoading(false)
+                console.log(error)
             }
-        } catch (error) {
-            Alert.alert("Error", error)
-            setButtonLoading(false)
-            console.log(error)
         }
 
     }
@@ -655,37 +703,70 @@ export default function ({ route, navigation }) {
                 </View>
 
 
-                {/* Metodo de pago */}
-                {
-                    // Si no se tiene el ultimo numero y la imagen, se muestra agregar
-                    (!paymentOption?.label && !paymentOption?.image) ?
-                        <Pressable
-                            onPress={handleAddPaymentMethod}
-                            style={{ ...styles.metodoDePago, justifyContent: 'space-between', }}>
-                            <Text style={styles.titulo}>Agregar metodo de pago</Text>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 24, }}>
-                                {paymentLoaded ? <Entypo name="plus" size={24} color={moradoClaro} /> : <ActivityIndicator color={moradoClaro} />}
+                {/* Metodos de pago */}
+                <View style={styles.paymentContainer}>
+                    {/* 
+                        // Si no se tiene el ultimo numero y la imagen, se muestra agregar
+                        // (!paymentOption?.label && !paymentOption?.image) ? 
+                        */}
 
-                            </View>
-                        </Pressable>
-                        :
+                    <Pressable
+                        onPress={() => {
+                            paymentLoaded && setTipoPago("TARJETA")
 
-                        <View style={styles.metodoDePago}>
-                            <View style={styles.bolita} />
+                            // Si esta seleccionado por tarjeta 
+                            handleAddPaymentMethod()
+                        }}
+                        style={styles.metodoDePago}>
 
-                            <Image
-                                source={{
-                                    uri: `data:image/png;base64,${paymentOption?.image}`,
-                                }}
-                                style={{
-                                    width: '30%',
-                                    height: '100%',
-                                }}
-                            />
-                            <Text style={styles.cardNumber}>{paymentOption?.label}</Text>
+                        <View style={{
+                            ...styles.iconoIzquierda,
+                            alignItems: 'center',
+
+                        }}>
+                            <AntDesign name="creditcard" size={30} color="black" />
 
                         </View>
-                }
+
+                        <Text style={{
+                            ...styles.titulo,
+                            color: tipoPago === "TARJETA" ? "#000" : "#aaa"
+                        }}>TARJETA</Text>
+
+                        <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                            {paymentLoaded ?
+                                paymentOption?.label ?
+                                    tipoPago === "TARJETA" && <Entypo name="check" size={30} color={moradoClaro} />
+                                    :
+                                    <Entypo name="plus" size={30} color={"#aaa"} />
+                                : <ActivityIndicator size={25} color={"gray"} />}
+
+                        </View>
+                    </Pressable>
+                    <View style={{
+                        borderColor: '#aaa',
+                        borderBottomWidth: 1,
+                        marginHorizontal: 30,
+                    }} />
+
+                    <Pressable
+                        onPress={() => {
+                            setTipoPago("EFECTIVO")
+                        }}
+                        style={styles.metodoDePago}>
+
+                        <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
+
+                        <Text style={{
+                            ...styles.titulo,
+                            color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
+                        }}>EFECTIVO</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                            {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
+                        </View>
+                    </Pressable>
+
+                </View>
 
                 <View style={{ flex: 1, }} />
                 <Boton
@@ -709,7 +790,7 @@ const styles = StyleSheet.create({
 
     innerContainer: {
         backgroundColor: '#fff',
-        borderRadius: 20,
+        borderRadius: 10,
         overflow: "hidden",
         marginBottom: 20,
     },
@@ -754,36 +835,29 @@ const styles = StyleSheet.create({
     },
 
     metodoDePago: {
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        overflow: "hidden",
         padding: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 60,
+        paddingVertical: 20,
+    },
+
+    paymentContainer: {
+        borderRadius: 10,
+        overflow: "hidden",
+        backgroundColor: '#fff',
+    },
+
+    iconoIzquierda: {
+        paddingHorizontal: 15,
+        paddingRight: 30,
+
     },
 
     titulo: {
         fontSize: 18,
-        color: '#000',
-    },
-
-    cardNumber: {
+        color: '#AAA',
         fontWeight: 'bold',
-        fontSize: 18,
         flex: 1,
-        textAlign: 'right',
     },
 
-    bolita: {
-        ...shadowMedia,
-
-        borderRadius: 100,
-        borderWidth: 3,
-        borderColor: "#fff",
-        backgroundColor: moradoOscuro,
-        height: 30,
-        width: 30,
-        marginRight: 20,
-    }
 })

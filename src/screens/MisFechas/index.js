@@ -117,6 +117,7 @@ export default function () {
                     await Promise.all(reservas.map(async res => {
                         const totalPersonas = res.adultos + res.ninos + res.tercera
 
+
                         const usuario = await DataStore.query(Usuario, res.usuarioID)
                         personasReservadas.push({
                             ...res,
@@ -124,6 +125,8 @@ export default function () {
                             foto: await getImageUrl(usuario.foto),
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas,
+
+                            tipoPago: res.tipoPago,
 
                             precioPagado: res.pagadoAlGuia,
                             comision: res.comision,

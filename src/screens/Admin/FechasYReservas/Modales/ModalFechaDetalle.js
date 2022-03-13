@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 
-// import DetalleFecha from '../../../Explorar/5DetalleFecha/DetalleFecha';
 import { Loading } from '../../../../components/Loading';
 import { formatAMPM, getDetalleFecha, getMaterialAventura, meses } from '../../../../../assets/constants';
 import API from '@aws-amplify/api';

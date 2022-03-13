@@ -58,11 +58,13 @@ type Reserva @model
   tercera: Int!
   ninos: Int!
   adultos: Int!
-  pagoID: String!
+  pagoID: String
 
   fechaID: ID
   usuarioID: ID
   guiaID: ID
+
+  tipoPago:tipoPago
 
   materialChecked:String
 }
@@ -424,6 +426,11 @@ type Mutation {
 enum AccountType {
   INDIVIDUAL
   COMPANY
+}
+
+enum tipoPago {
+  EFECTIVO
+  TARJETA
 }
 
 
