@@ -27,6 +27,7 @@ import API from '@aws-amplify/api';
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
 import { Loading } from '../../components/Loading';
+import QRIcon from '../DetalleFecha/components/QRIcon';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -172,6 +173,29 @@ export default ({ navigation, route }) => {
     function handleOpenItinerario() {
         setModalType("itinerario")
         setModalVisible(true)
+    }
+
+    function handleQR() {
+        const {
+            tituloAventura,
+            fechaInicial,
+            fechaFinal,
+            imagenFondo
+
+        } = fecha
+
+        navigation.navigate("QRCode", {
+            ...reserva,
+            tituloAventura,
+
+            nickname: guia?.nickname,
+            fechaInicial,
+            fechaFinal,
+            imagenFondo,
+            personas: reserva.adultos + reserva.tercera + reserva.ninos,
+
+
+        })
     }
 
     return (
@@ -470,6 +494,9 @@ export default ({ navigation, route }) => {
                 height={height * 0.5}
                 handleBack={handleBack}
                 titulo={fecha.tituloAventura}
+
+                IconRight={() => <QRIcon handleQR={handleQR} />}
+
             />
             {
                 modalType === "map" ?

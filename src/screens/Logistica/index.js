@@ -234,7 +234,7 @@ export default ({ navigation, route }) => {
             <View style={styles.innerContainer}>
                 {/* Material */}
                 <Pressable
-                    onPress={() => setAceptoMaterial(!aceptoMaterial)}
+                    onPress={() => setAceptoMaterial(!aceptoMaterial) && vibrar("medium")}
                     style={styles.personasContainer}>
                     <Text style={styles.textoTerminos}>Estoy de acuerdo que cualquier material que me falte es bajo mi responsabilidad</Text>
                     <RadioButton

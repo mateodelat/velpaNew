@@ -49,13 +49,14 @@ const styles = StyleSheet.create({
 
     cantidad: {
         width: 40,
-        fontSize: 16,
+        fontSize: 18,
         flex: 1,
     },
 
     precio: {
         width: '20%',
-        textAlign: 'center',
+        // textAlign: 'center',
+        fontSize: 18,
     }
 
 })

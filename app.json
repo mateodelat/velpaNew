@@ -2,7 +2,7 @@
   "expo": {
     "name": "Velpa",
     "slug": "Velpa",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "velpa",
@@ -32,6 +32,14 @@
       }
     },
     "android": {
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon512.png",
         "backgroundColor": "#fff"
@@ -42,7 +50,7 @@
         }
       },
       "package": "com.velpa.adventures",
-      "versionCode": 3
+      "versionCode": 5
     }
   }
 }

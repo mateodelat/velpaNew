@@ -17,6 +17,8 @@ export default ({
     descripcion,
 
     style,
+
+    onlyShow
 }) => {
 
     minValue = minValue ? minValue : 0
@@ -48,7 +50,7 @@ export default ({
 
             {/* Numero y mas/menos */}
             <View style={styles.controlsContainer}>
-                <TouchableOpacity
+                {!onlyShow && <TouchableOpacity
                     onPress={handleResta}
                     disabled={minReached}
                     style={{
@@ -56,9 +58,9 @@ export default ({
                         opacity: minReached ? .4 : 1
                     }}>
                     <Entypo name="minus" size={24} color="#908F94" />
-                </TouchableOpacity>
-                <Text style={styles.cantidad}>{cantidad}</Text>
-                <TouchableOpacity
+                </TouchableOpacity>}
+                <Text style={{ ...styles.cantidad, fontWeight: onlyShow ? "bold" : "normal", }}>{cantidad}</Text>
+                {!onlyShow ? <TouchableOpacity
                     onPress={handleSuma}
                     disabled={maxReached}
                     style={{
@@ -67,6 +69,8 @@ export default ({
                     }}>
                     <Entypo name="plus" size={24} color="#908F94" />
                 </TouchableOpacity>
+                    : <View style={{ width: 20, }} />
+                }
             </View>
         </View>
     )
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     cantidad: {
         width: 40,
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 18,
     }
 
 })

@@ -41,6 +41,7 @@ import { getUserSub, moradoOscuro } from '../../assets/constants';
 import * as Notifications from 'expo-notifications';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import QRCode from '../screens/QRScan/QRCode';
 
 
 const Stack = createStackNavigator();
@@ -159,6 +160,17 @@ export default () => {
                         <Stack.Screen
                             name="Logistica"
                             component={Logistica}
+                        />
+
+                        <Stack.Screen
+                            name="QRCode"
+                            component={QRCode}
+
+
+                            options={{
+                                title: "Codigo de acceso"
+                            }}
+
                         />
 
                         <Stack.Screen
@@ -343,18 +355,13 @@ export default () => {
                         <Stack.Screen
                             name="Configuracion"
                             component={Configuracion}
-                            options={{
-                                // headerShown: false
-                            }}
                         />
 
                         <Stack.Screen
                             name="Saldo"
                             component={Saldo}
-                            options={{
-                                // headerShown: false
-                            }}
                         />
+
 
                         <Stack.Screen
                             options={{

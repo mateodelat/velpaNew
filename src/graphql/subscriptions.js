@@ -312,6 +312,8 @@ export const onCreateReserva = /* GraphQL */ `
       ninos
       adultos
       pagoID
+      ingreso
+      horaIngreso
       fechaID
       usuarioID
       guiaID
@@ -337,6 +339,8 @@ export const onUpdateReserva = /* GraphQL */ `
       ninos
       adultos
       pagoID
+      ingreso
+      horaIngreso
       fechaID
       usuarioID
       guiaID
@@ -362,6 +366,8 @@ export const onDeleteReserva = /* GraphQL */ `
       ninos
       adultos
       pagoID
+      ingreso
+      horaIngreso
       fechaID
       usuarioID
       guiaID
@@ -418,6 +424,8 @@ export const onCreateFecha = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -495,6 +503,8 @@ export const onUpdateFecha = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -572,6 +582,8 @@ export const onDeleteFecha = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -653,6 +665,8 @@ export const onCreateUsuario = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -859,6 +873,8 @@ export const onUpdateUsuario = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -1065,6 +1081,8 @@ export const onDeleteUsuario = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID

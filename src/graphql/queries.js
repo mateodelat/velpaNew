@@ -226,6 +226,8 @@ export const getReserva = /* GraphQL */ `
       ninos
       adultos
       pagoID
+      ingreso
+      horaIngreso
       fechaID
       usuarioID
       guiaID
@@ -256,6 +258,8 @@ export const listReservas = /* GraphQL */ `
         ninos
         adultos
         pagoID
+        ingreso
+        horaIngreso
         fechaID
         usuarioID
         guiaID
@@ -295,6 +299,8 @@ export const syncReservas = /* GraphQL */ `
         ninos
         adultos
         pagoID
+        ingreso
+        horaIngreso
         fechaID
         usuarioID
         guiaID
@@ -354,6 +360,8 @@ export const getFecha = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID
@@ -545,6 +553,8 @@ export const getUsuario = /* GraphQL */ `
           ninos
           adultos
           pagoID
+          ingreso
+          horaIngreso
           fechaID
           usuarioID
           guiaID

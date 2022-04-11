@@ -1536,6 +1536,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "ingreso": {
+                    "name": "ingreso",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "horaIngreso": {
+                    "name": "horaIngreso",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "fechaID": {
                     "name": "fechaID",
                     "isArray": false,
@@ -2440,5 +2454,5 @@ export const schema = {
             }
         }
     },
-    "version": "683a1d5f2f589581c15bcce103081a43"
+    "version": "8a08c4659a65cddbaacddb35d7f8c5d5"
 };

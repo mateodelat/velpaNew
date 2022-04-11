@@ -60,6 +60,9 @@ type Reserva @model
   adultos: Int!
   pagoID: String
 
+  ingreso:Boolean
+  horaIngreso: AWSDateTime
+
   fechaID: ID
   usuarioID: ID
   guiaID: ID

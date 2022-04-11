@@ -39,18 +39,20 @@ async function urlOpener(url, redirectUrl) {
 }
 
 const [
-  localRedirect,
-  productionRedirect,
-  publishRedirect,
+  local,
+  expo,
+  standAlone,
 ] = awsconfig.oauth.redirectSignOut.split(",");
+
+const url = expo
 
 Amplify.configure({
   ...awsconfig,
   oauth: {
     ...awsconfig.oauth,
     urlOpener,
-    redirectSignIn: publishRedirect,
-    redirectSignOut: publishRedirect,
+    redirectSignIn: url,
+    redirectSignOut: url,
 
   }
 });

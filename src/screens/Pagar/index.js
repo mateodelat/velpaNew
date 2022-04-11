@@ -57,27 +57,7 @@ export default function ({ route, navigation }) {
         fechaID,
         guiaID
     } =
-    // route.params
-    {
-        adultos: 1,
-        calificacionGuia: 4.9,
-        comisionVelpa: .35,
-        descripcion: null,
-        fechaFinal: 1648922400000,
-        fechaID: "77ef58c5-f2ab-4a6b-9d90-44e298d3257d",
-        fechaInicial: 1648800000000,
-        guiaID: "2ebd46eb-b627-4bd9-a158-ee23ad738130",
-        imagenFondo: {
-            key: "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
-            uri: "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
-        },
-        nicknameGuia: "mateo delat",
-        ninos: 0,
-        precioIndividual: 400,
-        stripeID: "acct_1KLTWV2ZeyFmkStn",
-        tercera: 0,
-        tituloAventura: "Nevado de Colima",
-    }
+        route.params
 
     // Variables de stripe
     const { initPaymentSheet, presentPaymentSheet } = useStripe()

@@ -126,12 +126,7 @@ export default function () {
                             nickname: usuario.nickname,
                             personasReservadas: totalPersonas,
 
-                            tipoPago: res.tipoPago,
-
                             precioPagado: res.pagadoAlGuia,
-                            comision: res.comision,
-
-                            total: res.total
                         })
                     }))
 

@@ -273,6 +273,8 @@ export declare class Reserva {
   readonly ninos: number;
   readonly adultos: number;
   readonly pagoID?: string;
+  readonly ingreso?: boolean;
+  readonly horaIngreso?: string;
   readonly fechaID?: string;
   readonly usuarioID?: string;
   readonly guiaID?: string;

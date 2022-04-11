@@ -12,12 +12,12 @@ import {
 } from 'react-native'
 
 
-import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
+import { formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
 
+import { Entypo } from '@expo/vector-icons';
 
 import Line from '../../components/Line';
 
@@ -30,6 +30,9 @@ import { Loading } from '../../components/Loading';
 import MapView, { Marker } from 'react-native-maps';
 
 import { Fecha } from '../../models';
+import DetalleReserva from './DetalleReserva';
+import QRIcon from './components/QRIcon';
+import QRScan from '../QRScan';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -62,9 +65,16 @@ let { width, height } = Dimensions.get("screen")
 export default ({ navigation, route }) => {
     //HACER DISTANCIA Y ALTITUD DEPENDIENTE DE SI EXISTE EN LA DB PARA TENER
     //DISTINTAS CATEGORIAS
-    const { fecha: fechaGotten, fechaID } = route.params
+
+    const { fecha: fechaGotten, fechaID } =
+        route.params
 
     const [fecha, setFecha] = useState(null);
+
+    // Tipo modal reserva/ itinerario
+    const [tipoModal, setTipoModal] = useState("reserva");
+    // Reserva seleccionada
+    const [actualReservation, setActualReservation] = useState({});
 
     // Detectar si se manda directamente la fecha de la ruta, si no obtenerla
     useEffect(() => {
@@ -85,17 +95,13 @@ export default ({ navigation, route }) => {
 
         await Promise.all(reservas.map(async res => {
             const totalPersonas = res.adultos + res.ninos + res.tercera
-
             const usuario = await DataStore.query(Usuario, res.usuarioID)
             personasReservadas.push({
                 ...res,
-                tipoPago: res.tipoPago,
-
                 foto: await getImageUrl(usuario.foto),
                 nickname: usuario.nickname,
                 personasReservadas: totalPersonas,
                 precioPagado: res.pagadoAlGuia,
-                total: res.total,
             })
         }))
 
@@ -169,6 +175,86 @@ export default ({ navigation, route }) => {
 
     function handleOpenItinerario() {
         setModalVisible(true)
+        setTipoModal("itinerario")
+
+    }
+
+    function handleQR() {
+        setModalVisible(true)
+        setTipoModal("escaner")
+    }
+
+    function handleOpenReservacion(r) {
+        setModalVisible(true)
+        setTipoModal("reserva")
+        setActualReservation(r)
+    }
+
+    async function codigoEscaneado(scanedID) {
+
+        // Encontrar los ids de reserva y fecha
+        const personas = [
+            ...fecha.personasReservadas
+        ]
+
+        // Mapear todas las personas y ver si existe el id escaneado en las mismas
+
+        const idx = personas.findIndex(e => e.id === scanedID)
+
+        // Si la reserva existe en la fecha y checar si ya paso el cliente 
+        if (idx !== -1) {
+            if (personas[idx].ingreso) {
+                return new Promise((resolve) => {
+                    Alert.alert(
+                        'Error',
+                        'La persona ya ingreso a la fecha',
+                        [
+                            { text: 'OK', onPress: () => resolve() },
+                        ],
+                        { cancelable: false }
+                    )
+                })
+
+            }
+
+            // Asignarle a newPersonas el ingresado y la hora
+            let newPersonas = [...personas]
+            newPersonas[idx].ingreso = true
+            newPersonas[idx].horaIngreso = new Date()
+
+            const newFecha = {
+                ...fecha,
+                personasReservadas: newPersonas
+            }
+            console.log(scanedID)
+            const reser = await DataStore.query(Reserva, scanedID)
+            DataStore.save(Reserva.copyOf(reser, res => {
+                res.horaIngreso = new Date().toISOString()
+                res.ingreso = true
+            }))
+                .catch(e => console.log(e))
+                .then(r => {
+                    console.log(r)
+                })
+            setFecha(newFecha)
+
+            Alert.alert("Info", "Persona ingresada con exito")
+            handleOpenReservacion(newPersonas[idx])
+
+        } else {
+            return new Promise((resolve, reject) => {
+                Alert.alert(
+                    'Error',
+                    'La reserva no esta en la fecha',
+                    [
+                        { text: 'OK', onPress: () => resolve() },
+                    ],
+                    { cancelable: false }
+                )
+            })
+        }
+
+
     }
 
 
@@ -197,7 +283,7 @@ export default ({ navigation, route }) => {
                             style={styles.title}>{fecha.tituloAventura}
                         </Text>
 
-                        <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(fecha.precio, true)}<Text style={{ fontWeight: "normal", }}> /persona</Text>
+                        <Text style={{ ...styles.title, color: "#000", }}>{formatMoney(fecha.precio, true)}<Text style={{ fontWeight: "normal", }}> /persona</Text>
                         </Text>
                     </View>
 
@@ -259,32 +345,44 @@ export default ({ navigation, route }) => {
                         {/* Imagenes personas y chat */}
                         <View style={{ marginBottom: 50, marginTop: 10, }}>
                             {fecha.personasReservadas.map((persona, i) => {
-                                return <View
+                                return <Pressable
+                                    onPress={() =>
+                                        handleOpenReservacion(persona)
+                                    }
                                     key={i.toString()}
                                     style={{
                                         marginBottom: 20,
                                         alignItems: 'center',
                                         flexDirection: 'row',
                                     }}>
+
+                                    <View style={{
+                                        width: 30,
+                                        height: 30,
+                                        // backgroundColor: 'red',
+                                        justifyContent: 'center',
+                                    }}>
+                                        {
+                                            persona.ingreso && <Entypo name="check" size={24} color={moradoOscuro} />
+                                        }
+                                    </View>
+
                                     <Image
                                         source={persona.foto ? { uri: persona.foto } : require("../../../assets/user.png")}
                                         style={{
+                                            borderRadius: 30,
                                             width: 30,
                                             height: 30,
-                                            borderRadius: 30,
 
                                             marginRight: 10,
+
                                         }}
                                     />
+
                                     <View style={{ flex: 1, justifyContent: 'center', }}>
                                         <Text style={{
                                             color: "gray",
                                         }}>@{persona.nickname}</Text>
-
-                                        <Text style={{
-                                            color: persona.tipoPago === "EFECTIVO" ? "coral" : moradoOscuro,
-                                        }}>{persona.tipoPago === "EFECTIVO" ? "Pagar en efectivo" : "Pagado"}</Text>
-
                                     </View>
 
                                     <View style={{ alignItems: 'flex-end', }}>
@@ -295,12 +393,12 @@ export default ({ navigation, route }) => {
                                             <Ionicons name="ios-person" size={20} color={"lightgray"} />
                                         </View>
                                         <Text style={{
-                                            color: moradoOscuro,
+                                            color: "#000",
                                         }}>{formatMoney(persona.total, true)}</Text>
                                     </View>
 
 
-                                </View>
+                                </Pressable>
 
                             })}
 
@@ -469,25 +567,51 @@ export default ({ navigation, route }) => {
                 scrollY={scrollY}
                 height={height * 0.5}
                 titulo={fecha.tituloAventura}
+
+                IconRight={() => <QRIcon handleQR={handleQR} />
+                }
             />
 
-            <ModalItinerario
-                puntoReunion={{
-                    latitude: JSON.parse(fecha.puntoReunionCoords).latitude,
-                    longitude: JSON.parse(fecha.puntoReunionCoords).longitude,
-                    titulo: fecha.puntoReunionNombre
-                }}
+            {
+                tipoModal === "itinerario" ?
+
+                    < ModalItinerario
+                        puntoReunion={{
+                            latitude: JSON.parse(fecha.puntoReunionCoords).latitude,
+                            longitude: JSON.parse(fecha.puntoReunionCoords).longitude,
+                            titulo: fecha.puntoReunionNombre
+                        }}
 
 
 
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
 
-                itinerario={itinerario}
+                        itinerario={itinerario}
 
 
-            />
+                    /> :
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(false);
+                        }}
+                    >{
+                            tipoModal === "escaner" ?
+                                <QRScan
+                                    cerrar={() => setModalVisible(false)}
+                                    handleScanned={codigoEscaneado} />
+                                : <DetalleReserva
+                                    handleBack={() => setModalVisible(false)}
+                                    reserva={actualReservation}
+                                />
+                        }
 
+                    </Modal>
+
+            }
         </View >
     )
 }

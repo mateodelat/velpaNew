@@ -4,12 +4,14 @@ import { moradoClaro, moradoOscuro } from '../../../assets/constants'
 
 
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
-export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
+export default ({ scrollY, height, titulo, modalActive, handleBack, IconRight }) => {
     const navigation = useNavigation()
 
     const inputRange = [
@@ -54,6 +56,20 @@ export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
                 paddingTop: insets.top ? 0 : 10,
 
             }}>
+                {/* Texto animado cuando se pasa la imagen */}
+                <Animated.Text
+                    numberOfLines={1}
+                    style={{
+                        ...styles.title,
+                        position: 'absolute',
+                        width: '100%',
+                        alignSelf: 'center',
+                        left: 10,
+                        opacity: opacity
+                    }}>{titulo}</Animated.Text>
+
+
+
                 <Pressable
                     onPress={handleBack ? handleBack : () => navigation.pop()}
                     style={styles.backContainer}>
@@ -64,25 +80,8 @@ export default ({ scrollY, height, titulo, modalActive, handleBack }) => {
                     />
                 </Pressable>
 
-                {/* Texto animado cuando se pasa la imagen */}
-                <Animated.Text
-                    numberOfLines={1}
-                    style={{
-                        ...styles.title
-                        , opacity: opacity
-                    }}>{titulo}</Animated.Text>
+                {IconRight && <IconRight style={styles.backContainer} />}
 
-                <Pressable
-                    style={{
-                        ...styles.backContainer,
-                        opacity: 0
-                    }}>
-                    <MaterialIcons
-                        name={"keyboard-arrow-left"}
-                        size={35}
-                        color={moradoOscuro}
-                    />
-                </Pressable>
             </View>
         </View>
     )

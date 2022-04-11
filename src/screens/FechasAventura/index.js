@@ -219,7 +219,7 @@ export default index = ({ route, navigation }) => {
                                     const feAnterior = idx && new Date(fechas[idx - 1].fechaInicial)
 
                                     // Si el dia inicial es distinto al dia inicial de la siguiente fecha
-                                    return <View key={idx.toString()}>
+                                    return <View key={idx}>
                                         {(!idx || feInicial.getUTCDate() !== feAnterior.getUTCDate()) && <Text style={styles.fecha}>{formatDiaMesCompeto(e.fechaInicial)}</Text>}
                                         <ElementoFecha
 
