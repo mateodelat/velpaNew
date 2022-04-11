@@ -750,15 +750,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "nombreAgencia": {
-                    "name": "nombreAgencia",
+                "foto": {
+                    "name": "foto",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "foto": {
-                    "name": "foto",
+                "imagenFondo": {
+                    "name": "imagenFondo",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -2454,5 +2454,5 @@ export const schema = {
             }
         }
     },
-    "version": "8a08c4659a65cddbaacddb35d7f8c5d5"
+    "version": "80459ec0f626fd11df19d67db5263269"
 };

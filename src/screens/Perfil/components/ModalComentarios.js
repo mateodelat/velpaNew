@@ -8,7 +8,6 @@ import CommentItem from './CommentItem';
 
 export default function ({
     setModalVisible,
-    modalVisible,
     user,
     comments
 }) {
@@ -24,126 +23,118 @@ export default function ({
 
 
     return (
-        <Modal
-            animationType="slide"
-            visible={modalVisible}
-            onRequestClose={() => {
-                setModalVisible(!modalVisible);
-            }}
-        >
-            <View style={{ flex: 1, }}>
-                <HeaderModal
-                    titulo={"Reseñas"}
-                    handleCerrar={() => setModalVisible(false)}
-                />
+        <View style={{ flex: 1, }}>
+            <HeaderModal
+                titulo={"Reseñas"}
+                handleCerrar={() => setModalVisible(false)}
+            />
 
-                {
-                    !user || !comments ?
-                        <Loading indicator />
-                        :
+            {
+                !user || !comments ?
+                    <Loading indicator />
+                    :
 
-                        <View style={{ flex: 1, }}>
-                            <View style={styles.header}>
+                    <View style={{ flex: 1, }}>
+                        <View style={styles.header}>
 
-                                <Text style={styles.calificacionTxt}>{user.calificacion}</Text>
-                                <Rating
-                                    readonly
-                                    ratingCount={5}
-                                    startingValue={user.calificacion}
-                                    fractions
-                                    imageSize={22}
-                                    type='custom'
-                                    ratingColor="#F5BE18"
+                            <Text style={styles.calificacionTxt}>{user.calificacion}</Text>
+                            <Rating
+                                readonly
+                                ratingCount={5}
+                                startingValue={user.calificacion}
+                                fractions
+                                imageSize={22}
+                                type='custom'
+                                ratingColor="#F5BE18"
 
-                                />
+                            />
 
-                                <Text style={styles.numResenas}>Basado en {user.numResenas} reseñas</Text>
+                            <Text style={styles.numResenas}>Basado en {user.numResenas} reseñas</Text>
 
 
-                                <View style={styles.rowCalif}>
-                                    <Text style={styles.tituloBarra}>Excelente</Text>
+                            <View style={styles.rowCalif}>
+                                <Text style={styles.tituloBarra}>Excelente</Text>
 
-                                    <View style={styles.barContainer}>
-                                        <View style={{
-                                            backgroundColor: 'green',
-                                            width: `${percentage5}%`,
-                                            ...styles.innerBar
-                                        }} />
-                                    </View>
-                                </View>
-
-
-                                <View style={styles.rowCalif}>
-                                    <Text style={styles.tituloBarra}>Bueno</Text>
-
-                                    <View style={styles.barContainer}>
-                                        <View style={{
-                                            backgroundColor: '#A6D436',
-                                            width: `${percentage4}%`,
-                                            ...styles.innerBar
-                                        }} />
-                                    </View>
-                                </View>
-
-                                <View style={styles.rowCalif}>
-                                    <Text style={styles.tituloBarra}>Medio</Text>
-
-                                    <View style={styles.barContainer}>
-                                        <View style={{
-                                            backgroundColor: '#F5E64F',
-                                            width: `${percentage3}%`,
-                                            ...styles.innerBar
-                                        }} />
-                                    </View>
-                                </View>
-
-                                <View style={styles.rowCalif}>
-                                    <Text style={styles.tituloBarra}>Regular</Text>
-
-                                    <View style={styles.barContainer}>
-                                        <View style={{
-                                            backgroundColor: '#F3A527',
-                                            width: `${percentage2}%`,
-                                            ...styles.innerBar
-                                        }} />
-                                    </View>
-                                </View>
-
-                                <View style={styles.rowCalif}>
-                                    <Text style={styles.tituloBarra}>Insuficiente</Text>
-
-                                    <View style={styles.barContainer}>
-                                        <View style={{
-                                            backgroundColor: 'red',
-                                            width: `${percentage1}%`,
-                                            ...styles.innerBar
-                                        }} />
-                                    </View>
+                                <View style={styles.barContainer}>
+                                    <View style={{
+                                        backgroundColor: 'green',
+                                        width: `${percentage5}%`,
+                                        ...styles.innerBar
+                                    }} />
                                 </View>
                             </View>
 
-                            <FlatList
-                                data={comments}
-                                style={styles.flatList}
-                                showsVerticalScrollIndicator={false}
-                                ListFooterComponent={() => <View style={{
-                                    marginTop: 20,
-                                }}>
 
-                                </View>}
-                                renderItem={({ item }) => (
-                                    <CommentItem
-                                        content={item}
-                                    />
+                            <View style={styles.rowCalif}>
+                                <Text style={styles.tituloBarra}>Bueno</Text>
+
+                                <View style={styles.barContainer}>
+                                    <View style={{
+                                        backgroundColor: '#A6D436',
+                                        width: `${percentage4}%`,
+                                        ...styles.innerBar
+                                    }} />
+                                </View>
+                            </View>
+
+                            <View style={styles.rowCalif}>
+                                <Text style={styles.tituloBarra}>Medio</Text>
+
+                                <View style={styles.barContainer}>
+                                    <View style={{
+                                        backgroundColor: '#F5E64F',
+                                        width: `${percentage3}%`,
+                                        ...styles.innerBar
+                                    }} />
+                                </View>
+                            </View>
+
+                            <View style={styles.rowCalif}>
+                                <Text style={styles.tituloBarra}>Regular</Text>
+
+                                <View style={styles.barContainer}>
+                                    <View style={{
+                                        backgroundColor: '#F3A527',
+                                        width: `${percentage2}%`,
+                                        ...styles.innerBar
+                                    }} />
+                                </View>
+                            </View>
+
+                            <View style={styles.rowCalif}>
+                                <Text style={styles.tituloBarra}>Insuficiente</Text>
+
+                                <View style={styles.barContainer}>
+                                    <View style={{
+                                        backgroundColor: 'red',
+                                        width: `${percentage1}%`,
+                                        ...styles.innerBar
+                                    }} />
+                                </View>
+                            </View>
+                        </View>
+
+                        <FlatList
+                            data={comments}
+                            style={styles.flatList}
+                            showsVerticalScrollIndicator={false}
+                            ListFooterComponent={() => <View style={{
+                                marginTop: 20,
+                            }}>
+
+                            </View>}
+                            renderItem={({ item }) => (
+                                <CommentItem
+                                    content={item}
+                                />
 
 
-                                )}
-                            />
+                            )}
+                        />
 
-                        </View>}
+                    </View>}
 
-            </View>
-        </Modal >
+        </View>
     )
 }
 

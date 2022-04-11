@@ -629,8 +629,8 @@ export const onCreateUsuario = /* GraphQL */ `
       numResenas
       nombre
       apellido
-      nombreAgencia
       foto
+      imagenFondo
       nickname
       experience
       stripeID
@@ -837,8 +837,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       numResenas
       nombre
       apellido
-      nombreAgencia
       foto
+      imagenFondo
       nickname
       experience
       stripeID
@@ -1045,8 +1045,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       numResenas
       nombre
       apellido
-      nombreAgencia
       foto
+      imagenFondo
       nickname
       experience
       stripeID
@@ -2033,8 +2033,8 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -2157,8 +2157,8 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -2281,8 +2281,8 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -2364,8 +2364,8 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -2479,8 +2479,8 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -2594,8 +2594,8 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID

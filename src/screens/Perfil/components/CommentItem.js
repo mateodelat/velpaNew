@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import moment from 'moment';
 import { moradoOscuro } from '../../../../assets/constants';
+import Line from '../../../components/Line';
 
 moment.locale('es')
 
@@ -54,7 +55,6 @@ export default function ({ content }) {
 
                 </View>
             </View>
-
             {content.body && <Text style={styles.content}>{content.body}</Text>}
 
         </View>)
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     },
 
     content: {
-        marginTop: 10,
+        marginTop: 20,
+        marginLeft: 20,
         color: moradoOscuro,
 
     }

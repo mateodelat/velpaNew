@@ -14,6 +14,7 @@ const ImageFullScreen = ({ setModalVisible, images, titulo, initialImageIdx }) =
 
     const insets = useSafeAreaInsets()
 
+
     return (
         <View style={{
             height,
@@ -21,30 +22,31 @@ const ImageFullScreen = ({ setModalVisible, images, titulo, initialImageIdx }) =
             paddingTop: insets.top,
 
         }}>
+
             <ImageViewer
                 index={initialImageIdx}
-                renderHeader={() => {
-                    return (
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                        }}>
-                            <Text style={styles.titulo}>{titulo}</Text>
-                            <Pressable
-                                onPress={() => setModalVisible(false)}
-                                style={styles.button}
-                            >
-                                <Entypo name="cross" size={24} color="white" />
-                            </Pressable>
-                        </View>
-                    )
-                }}
+                renderHeader={() => null}
                 loadingRender={() => <ActivityIndicator size="large" color={"white"} />}
                 enableSwipeDown={true}
                 onSwipeDown={() => setModalVisible(false)}
                 imageUrls={images}
-
             />
+
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'absolute',
+                width: '100%',
+            }}>
+                <Text style={styles.titulo}>{titulo}</Text>
+                <Pressable
+                    onPress={() => setModalVisible(false)}
+                    style={styles.button}
+                >
+                    <Entypo name="cross" size={24} color="white" />
+                </Pressable>
+            </View>
+
         </View>
 
     )

@@ -44,7 +44,7 @@ const [
   standAlone,
 ] = awsconfig.oauth.redirectSignOut.split(",");
 
-const url = expo
+const url = local
 
 Amplify.configure({
   ...awsconfig,

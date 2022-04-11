@@ -12,6 +12,7 @@ import { Entypo } from '@expo/vector-icons';
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
 import { sendPushNotification } from "./constant";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 
 
@@ -1760,7 +1761,57 @@ export const wait = (timeout) => {
 }
 
 
-export const openImagePickerAsync = async (denyVideos) => {
+export const openCameraPickerAsync = async (aspect) => {
+  let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+
+  if (permissionResult.granted === false) {
+    Alert.alert("Error", "Los permisos para acceder a la camara son requeridos para seleccionar imagen")
+    await ImagePicker.requestCameraPermissionsAsync()
+    return false
+  }
+
+  let camResult
+
+  console.log(aspect)
+  // Si se le paso un aspect ratio, respetarlo
+  if (aspect) {
+    camResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+      aspect
+
+    })
+
+  } else {
+    camResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+    })
+
+  }
+
+  if (camResult.cancelled === true) {
+    return false;
+  }
+  else {
+    // Comprimir la imagen
+    camResult = await ImageManipulator.manipulateAsync(
+      camResult.uri,
+      [
+        {
+          resize: {
+            width: 1000
+          }
+        }
+      ],
+      { compress: 0.9, }
+    );
+
+    return (camResult)
+  }
+}
+
+export const openImagePickerAsync = async (denyVideos, aspect) => {
   await ImagePicker.requestMediaLibraryPermissionsAsync()
   let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync()
 
@@ -1770,10 +1821,20 @@ export const openImagePickerAsync = async (denyVideos) => {
     return false
   }
 
-  const pickerResult = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: denyVideos ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.All,
-    allowsEditing: true
-  })
+  let pickerResult
+  if (aspect) {
+    pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: denyVideos ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect,
+    })
+  } else {
+    pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: denyVideos ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+    })
+  }
+
   if (pickerResult.cancelled === true) {
     return false;
   }

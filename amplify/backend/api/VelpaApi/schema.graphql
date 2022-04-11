@@ -133,10 +133,9 @@ type Usuario @model
 
   nombre: String
   apellido: String
-
-  nombreAgencia:String
   
   foto: String
+  imagenFondo:String
   nickname: String
 
   # Nivel del usuario

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { colorFondo, isUrl, openImagePickerAsync } from '../../assets/constants';
+import { colorFondo, isUrl, openCameraPickerAsync, openImagePickerAsync } from '../../assets/constants';
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -12,9 +12,13 @@ export default function ({
     setModalVisible,
     setImage,
     video,
-    aventura
+    aventura,
+
+    cameraEnabled,
+    aspectRatio
 }) {
     const [innerModal, setInnerModal] = useState(false);
+
     const [modalType, setModalType] = useState("pick");
     const [linkImage, setLinkImage] = useState("");
 
@@ -38,11 +42,10 @@ export default function ({
     }
 
     async function handleDeviceImage() {
-        const image = await openImagePickerAsync(video ? true : false)
+        const image = await openImagePickerAsync(!!video ? false : true, aspectRatio)
         if (!image) return
         setImage(image)
         handleCloseModal()
-
     }
 
     function handleSaveLink() {
@@ -61,6 +64,13 @@ export default function ({
     function handleCloseModal() {
         setInnerModal(false)
         setModalVisible(false)
+    }
+
+    async function handleCamera() {
+        const image = await openCameraPickerAsync(aspectRatio)
+        if (!image) return
+        setImage(image)
+
     }
 
     return (
@@ -89,6 +99,21 @@ export default function ({
                                 color="gray"
                             />
                         </View>
+
+                        {/* Imagen desde camara */}
+                        {cameraEnabled && <Pressable
+                            onPress={handleCamera}
+                            style={styles.row}>
+
+                            <View style={styles.icon}>
+
+                                <Feather name="camera" size={24} color="black" />
+
+                            </View>
+                            <Text style={styles.subTitle}>Tomar {video ? "video" : "foto"}</Text>
+
+                        </Pressable>}
+
 
                         {/* Link a imagen */}
                         <Pressable
@@ -122,7 +147,6 @@ export default function ({
                             <Text style={styles.subTitle}>Subir {video ? "video" : "imagen"} del dispositivo</Text>
 
                         </Pressable>
-
 
                         {/* Imagen de fondo de la aventura */}
                         {aventura && <Pressable

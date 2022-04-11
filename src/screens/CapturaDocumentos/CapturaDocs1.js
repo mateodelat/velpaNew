@@ -173,7 +173,7 @@ export default ({ navigation }) => {
             selfie: { uri: datos.selfie },
 
             email,
-            nombreAgencia,
+            nickname: nombreAgencia,
             nombre,
             apellido,
 

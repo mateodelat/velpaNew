@@ -24,7 +24,6 @@ export default function AdminStack() {
 
     return (
         <Stack.Navigator
-            // initialRouteName={"ModificarAventuras"}
             screenOptions={{
                 header: ({ scene, previous, navigation }) => {
                     const { options } = scene.descriptor;

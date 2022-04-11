@@ -220,7 +220,7 @@ export default ({ navigation, route }) => {
             email,
             telefono: "+52" + telefono.replace(/\s+/g, ''),
 
-            nombreAgencia: agencia ? nombreAgencia : null,
+            nickname: agencia ? nombreAgencia : null,
             sitioWeb: sitioWeb ? ("https://" + sitioWeb) : null,
 
             DOB: DOB.dia ? DOB : null,

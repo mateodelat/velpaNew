@@ -8,16 +8,19 @@ import {
     Text,
     View,
     ScrollView,
+    Modal,
 } from 'react-native'
 import {
     colorFondo,
     moradoClaro,
-    shadowMedia,
     moradoOscuro,
     getImageUrl,
     msInDay,
-    calculateLvl
+    calculateLvl,
+    getBlob
 } from '../../../assets/constants'
+
+
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -35,9 +38,11 @@ import { Comentario } from '../../models';
 import { Loading } from '../../components/Loading';
 import CommentItem from './components/CommentItem';
 import ModalComentarios from './components/ModalComentarios';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ModalTipoImagen from '../../components/ModalTipoImagen';
+import ImageFullScreen from '../../components/ImageFullScreen';
 
 
 
@@ -48,25 +53,84 @@ const { height } = Dimensions.get("screen")
 
 
 export default ({ route }) => {
+    route.params = {
+        "isOwner": true,
+        "user": {
+            "CuentaBancaria": "012320015149702582",
+            "ID": [
+                "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDFrente.jpg",
+                "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDAtras.jpg",
+            ],
+            "_deleted": null,
+            "_lastChangedAt": 1649719143868,
+            "_version": 141,
+            "admin": true,
+            "apellido": "delat",
+            "calificacion": 4.91,
+            "capacidadMaxima": 30,
+            "certificaciones": null,
+            "comentariosAdicionales": null,
+            "createdAt": "2021-11-23T21:17:42.078Z",
+            "direccion": {
+                "city": "Zapopan",
+                "country": "MX",
+                "line1": "Tomas Mann 5700",
+                "postal_code": "45027",
+                "state": "Jalisco",
+            },
+            "experience": 51,
+            "fechaNacimiento": {
+                "day": 30,
+                "month": 7,
+                "year": 2002,
+            },
+            "foto": "https://lh3.googleusercontent.com/a/AATXAJyPur3pemWzbDpmahJ2fAoNY47KgG3K1ZxyViM2=s96-c",
+            "guia": true,
+            "id": "2ebd46eb-b627-4bd9-a158-ee23ad738130",
+            "imagenFondo": null,
+            "newMessages": 0,
+            "nickname": "mateo delat",
+            "nombre": "mateo",
+            "notificationToken": "ExponentPushToken[hHcVaIBG1k3c3WlGfPUPya]",
+            "numResenas": 15,
+            "owner": "google_113316946581811190835",
+            "rfcCompania": null,
+            "rfcIndividual": null,
+            "selfie": "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-Selfie.jpg",
+            "sitioWeb": null,
+            "stripeID": "acct_1KLTWV2ZeyFmkStn",
+            "telefono": "+523324963705",
+            "tipo": "GUIAINDIVIDUAL",
+            "updatedAt": "2022-04-11T23:19:03.847Z",
+        }
+    }
 
     const {
         isOwner,
         id
     } = route.params
 
+
     const navigation = useNavigation()
 
 
     const [user, setUser] = useState(route.params.user);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [tipoModal, setTipoModal] = useState();
+    const [originalUsr, setOriginalUsr] = useState(null);
+    const [modalVisible, setModalVisible] = useState(true);
+    const [tipoModal, setTipoModal] = useState("imagePicker");
+
+    // Variable para cambiar la imagen de fondo si es el caso
+    const [imageBackground, setImageBackground] = useState(false);
+
+    // Imagenes a visualizar
+    const [imagenVisor, setImagenVisor] = useState([{ url: "" }]);
 
     const [comentarios, setComentarios] = useState(null);
 
     const [showExperiencias, setShowExperiencias] = useState(false);
     const [experiencias, setExperiencias] = useState(null);
 
-    const [editing, setEditing] = useState(false);
+    const [editing, setEditing] = useState(true);
 
     useEffect(() => {
         setDataUsr()
@@ -83,7 +147,6 @@ export default ({ route }) => {
         DataStore.query(Comentario, c => c.usuarioCalificadoID("eq", id ? id : user.id), {
             sort: r => r.createdAt("DESCENDING")
         })
-
             .then(async c => {
                 if (c.length === 0) {
                     setComentarios([])
@@ -91,25 +154,28 @@ export default ({ route }) => {
                 }
                 let i = c.length - 1;
 
-                const randomNumber = () => Math.floor(Math.random() * i)
+                // Si hay menos de 3 comentarios se ponen todos
 
+                const randomNumber = () => Math.floor(Math.random() * i)
                 let rand1 = randomNumber()
                 let rand2 = randomNumber()
                 let rand3 = randomNumber()
 
-                // Comprobar que los index random no sean ya tomados
-                while (rand2 === rand1) {
+                // Comprobar que los index random no sean ya tomados solo si hay mas de 3 comentarios
+                while (rand2 === rand1 && i > 2) {
                     rand2 = randomNumber()
                 }
 
-                while (rand3 === rand2 || rand3 === rand1) {
+                while ((rand3 === rand2 || rand3 === rand1) && i > 2) {
                     rand3 = randomNumber()
                 }
 
                 c = await Promise.all(c.map(async (e, idx) => {
                     return {
                         ...e,
-                        show: idx === rand1 || idx === rand2 || idx === rand3 ? true : false,
+
+                        // Si tenemos menos de 3 comentarios se muestran
+                        show: e.body !== null ? (i <= 2 ? true : (idx === rand1 || idx === rand2 || idx === rand3) ? true : false) : false,
 
                         // Obtener el usuario de cada comentario
                         owner: await DataStore.query(Usuario, e.creatorID).then(async r => ({
@@ -119,10 +185,8 @@ export default ({ route }) => {
                     }
                 }))
 
-
                 setComentarios(c)
             })
-
     }
 
     async function setDataUsr() {
@@ -130,6 +194,7 @@ export default ({ route }) => {
             if (!user) {
                 DataStore.query(Usuario, id)
                     .then(async r => {
+                        setOriginalUsr(r)
                         const fechasUsuario = await DataStore.query(Fecha, f => f.usuarioID("eq", r.id))
 
 
@@ -145,6 +210,8 @@ export default ({ route }) => {
                     })
 
             } else {
+
+
                 const fechasUsuario = await DataStore.query(Fecha,
                     f => f.usuarioID("eq", user.id)
                 )
@@ -162,7 +229,6 @@ export default ({ route }) => {
             console.log(e)
         }
     }
-
     function getDateFromNow(date) {
         if (!date) return null
         const fecha = new Date(date)
@@ -233,7 +299,68 @@ export default ({ route }) => {
 
     function handleSaveProfile() {
         setEditing(!editing)
-        console.log("Save")
+
+        const {
+            imagenFondo,
+            foto,
+        } = user
+
+        console.log({
+            imagenFondo,
+            foto
+        })
+
+    }
+
+    function handleChangePic(profileImage) {
+        setImageBackground(!profileImage)
+        setModalVisible(true)
+        setTipoModal("imagePicker")
+    }
+
+    function handleImageSelected(img) {
+        console.log(img)
+        // Si es imagen de fondo se cambia la imagen de fondo del usuario
+        if (imageBackground) {
+            setUser({
+                ...user,
+                imagenFondo: img.uri,
+                imagenFondoModified: true,
+            })
+
+        } else {
+            setUser({
+                ...user,
+                foto: img.uri,
+                fotoModified: true,
+            })
+
+        }
+
+        setModalVisible(false)
+
+    }
+
+    function openImage(img, require) {
+        setModalVisible(true)
+        setTipoModal("imageViewer")
+
+        // Si es una imagen local
+        if (!!require) {
+            setImagenVisor([{
+                url: "",
+                props: {
+                    source: require
+                }
+
+            }])
+
+        } else {
+            setImagenVisor([{
+                url: img
+            }])
+
+        }
 
     }
 
@@ -249,22 +376,46 @@ export default ({ route }) => {
             showsVerticalScrollIndicator={false}
         >
             <Image
-                source={user?.imagenFondo ? user?.imagenFondo : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
+                source={user?.imagenFondo ? { uri: user?.imagenFondo } : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
                 style={{
                     ...styles.imagenFondo,
                     height: height * 0.24 + insets.top,
 
                 }}
-                blurRadius={10}
+                blurRadius={7}
             />
 
 
 
+            {/* Abrir imagen de fondo o cambiarla */}
+            <Pressable
+                onPress={editing ? () => handleChangePic(false) : () => openImage(user.imagenFondo, user.imagenFondo ? false : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"))}
 
-            <View style={{
-                height: (height * 0.24) - (imageSize / 2 + 10) + insets.top,
+                style={{
+                    height: (height * 0.24) - (imageSize / 2 + 10) + insets.top,
+                    alignItems: 'center', justifyContent: 'center',
+                }} >
+                {editing && <Pressable
+                    onPress={() => handleChangePic(false)}
 
-            }} />
+                    style={{
+                        backgroundColor: moradoClaro,
+
+                        padding: 15,
+                        borderRadius: 100,
+
+                    }}>
+
+                    <Feather
+                        name="camera"
+                        size={25}
+                        color={"#fff"}
+                    />
+
+
+                </Pressable>}
+
+            </Pressable>
 
             {/* Cuerpo */}
             <View style={styles.body}>
@@ -274,23 +425,44 @@ export default ({ route }) => {
                     <View style={{
                         flexDirection: 'row',
                         marginHorizontal: 10,
+                        justifyContent: editing ? 'center' : "flex-start",
                     }}>
                         {/* Foto de perfil */}
-                        {user?.foto ? <Image
-                            source={{ uri: user.foto }}
-                            style={styles.image} />
-                            : <Feather
-                                style={{
-                                    backgroundColor: "#f4f4f4",
+                        <Pressable
+                            onPress={editing ? handleChangePic : () => openImage(user.foto)}
+                            style={{ marginBottom: 10, }}>
+                            {user?.foto ? <Image
+                                source={{ uri: user.foto }}
+                                style={styles.image} />
+                                : <Feather
+                                    style={{
+                                        backgroundColor: "#f4f4f4",
 
-                                    ...styles.image,
-                                }}
-                                name="user"
-                                size={imageSize}
-                                color="black"
-                            />}
-                        <View style={styles.headerTextContainer}>
-                            <Text style={styles.nombre}>{user?.nombreAgencia ? user.nombreAgencia : (user?.nombre + " " + (!!user.apellido ? user.apellido : ""))}</Text>
+                                        ...styles.image,
+                                    }}
+                                    name="user"
+                                    size={imageSize}
+                                    color="black"
+                                />}
+
+                            {/* Editar imagen */}
+                            {editing && <Pressable
+                                onPress={handleChangePic}
+
+                                style={styles.editCameraContainer}>
+
+                                <Feather
+                                    name="camera"
+                                    size={17}
+                                    color={"#fff"}
+                                />
+
+
+                            </Pressable>}
+
+                        </Pressable>
+                        {!editing && <View style={styles.headerTextContainer}>
+                            <Text style={styles.nombre}>{user?.nombre + " " + (!!user.apellido ? user.apellido : "")}</Text>
                             <Text numberOfLines={1} style={styles.nickname}>{user?.nickname && ("@" + user.nickname)}</Text>
 
                             {/* Calificaciones */}
@@ -314,7 +486,7 @@ export default ({ route }) => {
 
                             </View>
 
-                        </View>
+                        </View>}
 
                     </View>
 
@@ -346,7 +518,7 @@ export default ({ route }) => {
 
 
                 {/* Comentarios del perfil */}
-                <View
+                {!editing && <View
                     style={styles.innerContainer}>
                     < View
                         style={styles.item}>
@@ -392,11 +564,11 @@ export default ({ route }) => {
                         }
 
                     </View>
-                </View>
+                </View>}
 
 
                 {/* Experiencias del guia */}
-                <Pressable
+                {!editing && <Pressable
                     onPress={() => setShowExperiencias(!showExperiencias)}
                     style={styles.innerContainer}>
                     <View
@@ -439,26 +611,53 @@ export default ({ route }) => {
                         }
 
                     </View>
-                </Pressable>
+                </Pressable>}
 
 
             </View>
 
             {
-                tipoModal === "comentarios" ?
-                    <ModalComentarios
-                        user={user}
-                        comments={comentarios}
-                        setModalVisible={setModalVisible}
-                        modalVisible={modalVisible}
-                    />
-                    :
-                    <InfoNivelesModal
-                        userExp={user?.experience}
 
-                        setModalVisible={setModalVisible}
-                        modalVisible={modalVisible}
-                    />
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                >
+                    {
+                        tipoModal === "comentarios" ?
+                            <ModalComentarios
+                                user={user}
+                                comments={comentarios}
+                                setModalVisible={setModalVisible}
+                            />
+                            :
+                            tipoModal === "imageViewer" ?
+                                <ImageFullScreen
+                                    images={imagenVisor}
+                                    setModalVisible={setModalVisible}
+                                />
+                                :
+                                tipoModal === "imagePicker" ?
+
+                                    <ModalTipoImagen
+                                        setImage={handleImageSelected}
+                                        setModalVisible={setModalVisible}
+
+                                        cameraEnabled
+                                        aspectRatio={!imageBackground ? [1, 1] : false}
+                                    />
+                                    :
+                                    <InfoNivelesModal
+                                        userExp={user?.experience}
+
+                                        setModalVisible={setModalVisible}
+                                        modalVisible={modalVisible}
+                                    />
+                    }
+
+                </Modal>
+
             }
             {/* Header */}
             <View style={{
@@ -477,7 +676,7 @@ export default ({ route }) => {
 
                 </Pressable>
 
-                {/* {
+                {
                     isOwner &&
                     <Pressable
                         onPress={() => editing ? handleSaveProfile() : setEditing(!editing)}
@@ -486,7 +685,7 @@ export default ({ route }) => {
                             <Feather
                                 name="check"
                                 size={30}
-                                color={"green"}
+                                color={moradoClaro}
                             />
 
                             :
@@ -498,7 +697,7 @@ export default ({ route }) => {
                         }
 
                     </Pressable>
-                } */}
+                }
             </View>
 
 
@@ -650,6 +849,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: 5,
         color: moradoOscuro,
+    },
+
+    editCameraContainer: {
+        position: 'absolute',
+        backgroundColor: moradoClaro,
+
+        padding: 8,
+        borderRadius: 100,
+        right: -8,
+        bottom: -8,
     }
 
 })

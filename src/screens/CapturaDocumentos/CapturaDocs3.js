@@ -113,7 +113,7 @@ export default ({ navigation, route }) => {
                 state,
             },
             email,
-            nombreAgencia,
+            nickname,
             selfie: {
                 S3Key: S3Selfie,
             },
@@ -156,7 +156,7 @@ export default ({ navigation, route }) => {
                     ip,
                     date,
 
-                    companyName: nombreAgencia,
+                    companyName: nickname,
                     url: sitioWeb,
                     accountType: agencia ? "COMPANY" : "INDIVIDUAL",
                     rfcIndividual: (agencia && !RFCIndividual) ? null : RFCIndividual,

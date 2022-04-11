@@ -517,8 +517,8 @@ export const getUsuario = /* GraphQL */ `
       numResenas
       nombre
       apellido
-      nombreAgencia
       foto
+      imagenFondo
       nickname
       experience
       stripeID
@@ -730,8 +730,8 @@ export const listUsuarios = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -815,8 +815,8 @@ export const syncUsuarios = /* GraphQL */ `
         numResenas
         nombre
         apellido
-        nombreAgencia
         foto
+        imagenFondo
         nickname
         experience
         stripeID
@@ -1580,8 +1580,8 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           numResenas
           nombre
           apellido
-          nombreAgencia
           foto
+          imagenFondo
           nickname
           experience
           stripeID
@@ -1645,8 +1645,8 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           numResenas
           nombre
           apellido
-          nombreAgencia
           foto
+          imagenFondo
           nickname
           experience
           stripeID

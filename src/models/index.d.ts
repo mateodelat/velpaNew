@@ -192,8 +192,8 @@ export declare class Usuario {
   readonly numResenas?: number;
   readonly nombre?: string;
   readonly apellido?: string;
-  readonly nombreAgencia?: string;
   readonly foto?: string;
+  readonly imagenFondo?: string;
   readonly nickname?: string;
   readonly experience?: number;
   readonly stripeID?: string;
