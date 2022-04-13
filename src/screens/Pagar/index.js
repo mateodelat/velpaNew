@@ -4,6 +4,7 @@ import {
     Alert,
     Image,
     Pressable,
+    ScrollView,
     StyleSheet,
     Text,
     View
@@ -584,177 +585,190 @@ export default function ({ route, navigation }) {
         // merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
         >
 
+
+
+
             <View style={styles.container}>
+                <ScrollView
+                    showsHorizontalScrollIndicator={false}
+                    style={{
+                        padding: 20,
+                    }}
+                >
+                    {/* Mostrar la aventura a pagar */}
+                    <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
+                        <Image
+                            source={{ uri: imagenFondo.uri }}
+                            style={styles.imgAventura}
+                        />
+
+                        <View style={styles.adventureTextContainer}>
 
 
-
-                {/* Mostrar la aventura a pagar */}
-                <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
-                    <Image
-                        source={{ uri: imagenFondo.uri }}
-                        style={styles.imgAventura}
-                    />
-
-                    <View style={styles.adventureTextContainer}>
-
-
-                        <View style={[styles.row, { marginTop: 0, }]}>
-                            {/* Titulo de la aventura */}
-                            <Text style={{
-                                fontSize: 16,
-                                flex: 1,
-                            }}>{tituloAventura}</Text>
-                        </View>
-
-                        <Text style={{
-                            color: moradoClaro,
-                            fontSize: 12,
-                            marginBottom: 5,
-
-                        }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
-
-
-
-                        <View style={styles.row}>
-
-                            {/* Guia */}
-                            <View style={{ flexDirection: 'row', }}>
-                                <Image
-                                    source={require("../../../assets/icons/guia.png")}
-                                    style={styles.guiaIcon}
-
-                                />
-                                <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
+                            <View style={[styles.row, { marginTop: 0, }]}>
+                                {/* Titulo de la aventura */}
+                                <Text style={{
+                                    fontSize: 16,
+                                    flex: 1,
+                                }}>{tituloAventura}</Text>
                             </View>
 
-                            {/* Calificacion guia */}
-                            {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
-                                <Entypo name="star" size={11} color="#F5BE18" />
-                                <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
-                            </View>}
+                            <Text style={{
+                                color: moradoClaro,
+                                fontSize: 12,
+                                marginBottom: 5,
+
+                            }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
+
+
+
+                            <View style={styles.row}>
+
+                                {/* Guia */}
+                                <View style={{ flexDirection: 'row', }}>
+                                    <Image
+                                        source={require("../../../assets/icons/guia.png")}
+                                        style={styles.guiaIcon}
+
+                                    />
+                                    <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
+                                </View>
+
+                                {/* Calificacion guia */}
+                                {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
+                                    <Entypo name="star" size={11} color="#F5BE18" />
+                                    <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
+                                </View>}
+                            </View>
+
+                            {/* Descripcion fecha */}
+                            {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
+                        </View>
+                    </View>
+
+
+
+
+                    <View style={[styles.innerContainer, { padding: 15, }]}>
+
+                        <ElementoPersonas
+                            precio={precioIndividualConComision}
+                            titulo={"Tercera edad"}
+
+                            cantidad={tercera}
+                        />
+
+                        <View style={styles.line} />
+
+                        <ElementoPersonas
+                            precio={precioIndividualConComision}
+                            titulo={"Adultos"}
+
+                            cantidad={adultos}
+                        />
+
+                        <View style={styles.line} />
+
+                        <ElementoPersonas
+                            precio={precioIndividualConComision}
+                            titulo={"Niños"}
+
+                            cantidad={ninos}
+                        />
+
+                        <View style={styles.line} />
+
+                        {/* Precio */}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                            <Text
+                                style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
+                            <Text
+                                style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
+
                         </View>
 
-                        {/* Descripcion fecha */}
-                        {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
-                    </View>
-                </View>
-
-
-
-
-                <View style={[styles.innerContainer, { padding: 15, }]}>
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Tercera edad"}
-
-                        cantidad={tercera}
-                    />
-
-                    <View style={styles.line} />
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Adultos"}
-
-                        cantidad={adultos}
-                    />
-
-                    <View style={styles.line} />
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Niños"}
-
-                        cantidad={ninos}
-                    />
-
-                    <View style={styles.line} />
-
-                    {/* Precio */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                        <Text
-                            style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
-                        <Text
-                            style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
-
                     </View>
 
-                </View>
 
-
-                {/* Metodos de pago */}
-                <View style={styles.paymentContainer}>
-                    {/* 
+                    {/* Metodos de pago */}
+                    <View style={styles.paymentContainer}>
+                        {/* 
                         // Si no se tiene el ultimo numero y la imagen, se muestra agregar
                         // (!paymentOption?.label && !paymentOption?.image) ? 
                         */}
 
-                    <Pressable
-                        onPress={() => {
-                            paymentLoaded && setTipoPago("TARJETA")
+                        <Pressable
+                            onPress={() => {
+                                paymentLoaded && setTipoPago("TARJETA")
 
-                            // Si esta seleccionado por tarjeta 
-                            handleAddPaymentMethod()
-                        }}
-                        style={styles.metodoDePago}>
+                                // Si esta seleccionado por tarjeta 
+                                handleAddPaymentMethod()
+                            }}
+                            style={styles.metodoDePago}>
 
+                            <View style={{
+                                ...styles.iconoIzquierda,
+                                alignItems: 'center',
+
+                            }}>
+                                <AntDesign name="creditcard" size={30} color="black" />
+
+                            </View>
+
+                            <Text style={{
+                                ...styles.titulo,
+                                color: tipoPago === "TARJETA" ? "#000" : "#aaa"
+                            }}>TARJETA</Text>
+
+                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                                {paymentLoaded ?
+                                    paymentOption?.label ?
+                                        tipoPago === "TARJETA" && <Entypo name="check" size={30} color={moradoClaro} />
+                                        :
+                                        <Entypo name="plus" size={30} color={"#aaa"} />
+                                    : <ActivityIndicator size={25} color={"gray"} />}
+
+                            </View>
+                        </Pressable>
                         <View style={{
-                            ...styles.iconoIzquierda,
-                            alignItems: 'center',
+                            borderColor: '#aaa',
+                            borderBottomWidth: 1,
+                            marginHorizontal: 30,
+                        }} />
 
-                        }}>
-                            <AntDesign name="creditcard" size={30} color="black" />
+                        <Pressable
+                            onPress={() => {
+                                setTipoPago("EFECTIVO")
+                            }}
+                            style={styles.metodoDePago}>
 
-                        </View>
+                            <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
 
-                        <Text style={{
-                            ...styles.titulo,
-                            color: tipoPago === "TARJETA" ? "#000" : "#aaa"
-                        }}>TARJETA</Text>
+                            <Text style={{
+                                ...styles.titulo,
+                                color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
+                            }}>EFECTIVO</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                                {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
+                            </View>
+                        </Pressable>
 
-                        <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
-                            {paymentLoaded ?
-                                paymentOption?.label ?
-                                    tipoPago === "TARJETA" && <Entypo name="check" size={30} color={moradoClaro} />
-                                    :
-                                    <Entypo name="plus" size={30} color={"#aaa"} />
-                                : <ActivityIndicator size={25} color={"gray"} />}
+                    </View>
+                    <View style={{ height: 40, }} />
 
-                        </View>
-                    </Pressable>
-                    <View style={{
-                        borderColor: '#aaa',
-                        borderBottomWidth: 1,
-                        marginHorizontal: 30,
-                    }} />
-
-                    <Pressable
-                        onPress={() => {
-                            setTipoPago("EFECTIVO")
-                        }}
-                        style={styles.metodoDePago}>
-
-                        <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
-
-                        <Text style={{
-                            ...styles.titulo,
-                            color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
-                        }}>EFECTIVO</Text>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
-                            {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
-                        </View>
-                    </Pressable>
-
-                </View>
-
+                </ScrollView>
                 <View style={{ flex: 1, }} />
-                <Boton
-                    red
-                    loading={buttonLoading}
-                    titulo={"Confirmar"}
-                    onPress={handleConfirm}
-                />
+                <View style={{
+                    padding: 20,
+                }}>
+
+                    <Boton
+                        red
+                        loading={buttonLoading}
+                        titulo={"Confirmar"}
+                        onPress={handleConfirm}
+                    />
+                </View>
             </View>
         </StripeProvider >
 
@@ -765,7 +779,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: colorFondo,
         flex: 1,
-        padding: 20,
     },
 
     innerContainer: {

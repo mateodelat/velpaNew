@@ -2,16 +2,13 @@ import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView } from 'react-native'
-import { colorFondo, getStripeIDUsuario, moradoOscuro, queryUsuario, userEsGuia } from '../../../assets/constants'
+import { colorFondo, getImageUrl, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-
 import { loginLinkStripe, retrieveBalanceStripe } from '../../graphql/mutations'
 import Elemento from './components/Elemento'
 import { DataStore } from '@aws-amplify/datastore';
@@ -94,8 +91,18 @@ export default ({ route, navigation }) => {
 
 
         fetchUsuario(user)
-            .then((r) => {
-                setData(r)
+            .then(async (r) => {
+                setData({
+                    ...r,
+                    foto: {
+                        uri: await getImageUrl(r.foto),
+                        key: r.foto
+                    },
+                    imagenFondo: {
+                        uri: await getImageUrl(r.imagenFondo),
+                        key: r.imagenFondo
+                    },
+                })
                 setLoaded(true)
             })
             .catch(e => {
@@ -170,8 +177,8 @@ export default ({ route, navigation }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', }}>
 
                         <View >
-                            {data?.foto ?
-                                <Image source={{ uri: data?.foto }} style={styles.image} /> :
+                            {data?.foto?.uri ?
+                                <Image source={{ uri: data?.foto?.uri }} style={styles.image} /> :
                                 <Image source={require("../../../assets/user.png")} style={styles.image} />
                             }
                         </View>

@@ -121,7 +121,7 @@ export default () => {
                 <NavigationContainer>
 
                     <Stack.Navigator
-                        initialRouteName={"PerfilScreen"}
+                        // initialRouteName={"PerfilScreen"}
 
                         screenOptions={{
                             headerLeft: ({ onPress }) => <MaterialIcons name="keyboard-arrow-left" size={35} color="white" onPress={onPress} />,

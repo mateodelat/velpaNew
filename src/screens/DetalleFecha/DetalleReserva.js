@@ -12,9 +12,11 @@ import { colorFondo, formatAMPM, formatDateWithHour, meses, moradoOscuro } from 
 import ElementoPersonas from '../Pagar/components/ElementoPersonas';
 import Persona from './Persona';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function ({ handleBack, reserva, }) {
+    const navigation = useNavigation()
 
     const {
         tercera,
@@ -32,13 +34,19 @@ export default function ({ handleBack, reserva, }) {
 
 
     const formatDateWithHour = (time) => {
-        const dateInicial = new Date(time)
+        const dateInicial = new Date(new Date(time).getTime() - 21600000)
 
-        const ddInicial = String(dateInicial.getUTCDate())
-        const mmInicial = String(dateInicial.getUTCMonth())
+        const ddInicial = String(dateInicial.getDate())
+        const mmInicial = String(dateInicial.getMonth())
 
 
-        return ddInicial + " de " + meses[mmInicial] + " a las " + formatAMPM(time, false, true)
+        return ddInicial + " de " + meses[mmInicial] + " a las " + formatAMPM(dateInicial, false, true)
+
+    }
+
+    function openProfile() {
+        handleBack()
+        navigation.navigate("PerfilScreen", { id: reserva.usuarioID })
 
     }
 
@@ -159,6 +167,7 @@ export default function ({ handleBack, reserva, }) {
                         </View>
 
                         <Persona
+                            onPress={openProfile}
                             usuario={reserva}
                         />
 

@@ -9,6 +9,7 @@ import {
     TextInput,
     Pressable,
     Keyboard,
+    Linking,
 } from 'react-native'
 
 
@@ -59,7 +60,6 @@ export default ({
     const [buscar, setBuscar] = useState(buscarInitial);
     const [suggestedPlace, setSuggestedPlace] = useState([]);
 
-    const [buttonLoading, setButtonLoading] = useState(false);
 
     const [locationPermision, setLocationPermision] = useState(null);
 
@@ -67,12 +67,19 @@ export default ({
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
+
                 // Si no hay permisos de ubicacion
                 setLocationPermision(r)
 
                 let latitude, longitude
+                let coords
 
-                const coords = (await getLastKnownPositionAsync())?.coords
+                // Si tenemos permisos de la ubicacion se detectan 
+                if (r) {
+                    coords = (await getLastKnownPositionAsync())?.coords
+
+                }
+
                 latitude = coords?.latitude
                 longitude = coords?.longitude
 
@@ -111,6 +118,22 @@ export default ({
 
         // Si se presiona el mapa buscar lugares por ahi
         if (!ubicacionId && !denySelectPlaceInMap) {
+
+            // Si no se tiene permisos de ubicacion se da un error
+            if (!locationPermision) {
+                Alert.alert("Error", "Se necesitan los permisos de ubicacion para poder seleccionar un lugar desde el mapa", [
+                    {
+                        text: "Cancelar",
+
+                    },
+                    {
+                        text: "Configuracion",
+                        onPress: () => Linking.openSettings()
+
+                    },
+                ])
+                return
+            }
             reverseGeocodeAsync(coordinate)
                 .then(r => {
                     r = r[0]
@@ -385,7 +408,7 @@ export default ({
             {handleContinuar && <Boton
                 onPress={handleContinuar}
                 titulo={"Continuar"}
-                loading={buttonLoading}
+                loading={false}
                 style={{
                     marginTop: 30,
                 }}

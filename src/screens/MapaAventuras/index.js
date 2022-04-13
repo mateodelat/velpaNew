@@ -23,12 +23,20 @@ import { getLastKnownPositionAsync } from 'expo-location';
 export default function ({ navigation }) {
     const [region, setRegion] = useState(null);
 
+    const [locationPermision, setLocationPermision] = useState(null);
+
+
     useEffect(() => {
         verificarUbicacion()
             .then(async r => {
                 let latitude, longitude
 
-                const coords = (await getLastKnownPositionAsync())?.coords
+
+                let coords
+                if (r) {
+                    coords = (await getLastKnownPositionAsync())?.coords
+
+                }
                 latitude = coords?.latitude
                 longitude = coords?.longitude
 

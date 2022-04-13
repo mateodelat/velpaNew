@@ -155,7 +155,7 @@ export default function ({ navigation, route }) {
 
         if (horaInicial) {
             // Verificacion hora valida
-            if (hora.getTime() >= fechaFinal) {
+            if (!!fechaFinal && hora.getTime() >= fechaFinal) {
                 setFechaInicial(fechaFinal - msInMinute)
                 setErrorHoraInicial(true)
                 Alert.alert("Error", "La hora inicial debe ser menor a la hora final")

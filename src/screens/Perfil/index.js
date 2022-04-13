@@ -9,6 +9,8 @@ import {
     View,
     ScrollView,
     Modal,
+    TextInput,
+    ActivityIndicator,
 } from 'react-native'
 import {
     colorFondo,
@@ -17,7 +19,8 @@ import {
     getImageUrl,
     msInDay,
     calculateLvl,
-    getBlob
+    getBlob,
+    getUserSub
 } from '../../../assets/constants'
 
 
@@ -27,7 +30,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 import ExperienciasGuia from './components/ExperienciasGuia';
-import { DataStore } from 'aws-amplify';
+import { DataStore, Storage, StorageClass } from 'aws-amplify';
 import { Usuario } from '../../models';
 
 import { Rating, } from 'react-native-ratings';
@@ -53,71 +56,20 @@ const { height } = Dimensions.get("screen")
 
 
 export default ({ route }) => {
-    route.params = {
-        "isOwner": true,
-        "user": {
-            "CuentaBancaria": "012320015149702582",
-            "ID": [
-                "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDFrente.jpg",
-                "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-IDAtras.jpg",
-            ],
-            "_deleted": null,
-            "_lastChangedAt": 1649719143868,
-            "_version": 141,
-            "admin": true,
-            "apellido": "delat",
-            "calificacion": 4.91,
-            "capacidadMaxima": 30,
-            "certificaciones": null,
-            "comentariosAdicionales": null,
-            "createdAt": "2021-11-23T21:17:42.078Z",
-            "direccion": {
-                "city": "Zapopan",
-                "country": "MX",
-                "line1": "Tomas Mann 5700",
-                "postal_code": "45027",
-                "state": "Jalisco",
-            },
-            "experience": 51,
-            "fechaNacimiento": {
-                "day": 30,
-                "month": 7,
-                "year": 2002,
-            },
-            "foto": "https://lh3.googleusercontent.com/a/AATXAJyPur3pemWzbDpmahJ2fAoNY47KgG3K1ZxyViM2=s96-c",
-            "guia": true,
-            "id": "2ebd46eb-b627-4bd9-a158-ee23ad738130",
-            "imagenFondo": null,
-            "newMessages": 0,
-            "nickname": "mateo delat",
-            "nombre": "mateo",
-            "notificationToken": "ExponentPushToken[hHcVaIBG1k3c3WlGfPUPya]",
-            "numResenas": 15,
-            "owner": "google_113316946581811190835",
-            "rfcCompania": null,
-            "rfcIndividual": null,
-            "selfie": "usr-2ebd46eb-b627-4bd9-a158-ee23ad738130-Selfie.jpg",
-            "sitioWeb": null,
-            "stripeID": "acct_1KLTWV2ZeyFmkStn",
-            "telefono": "+523324963705",
-            "tipo": "GUIAINDIVIDUAL",
-            "updatedAt": "2022-04-11T23:19:03.847Z",
-        }
-    }
+
+
 
     const {
         isOwner,
         id
     } = route.params
 
-
     const navigation = useNavigation()
 
 
     const [user, setUser] = useState(route.params.user);
-    const [originalUsr, setOriginalUsr] = useState(null);
-    const [modalVisible, setModalVisible] = useState(true);
-    const [tipoModal, setTipoModal] = useState("imagePicker");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [tipoModal, setTipoModal] = useState();
 
     // Variable para cambiar la imagen de fondo si es el caso
     const [imageBackground, setImageBackground] = useState(false);
@@ -130,7 +82,17 @@ export default ({ route }) => {
     const [showExperiencias, setShowExperiencias] = useState(false);
     const [experiencias, setExperiencias] = useState(null);
 
-    const [editing, setEditing] = useState(true);
+
+    // Variables de cuando se esta editando
+    const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
+    const [nickname, setNickname] = useState("");
+
+    const [editing, setEditing] = useState(false);
+
+    // Para cuando se esta subiendo los datos (imagenes, texto, etc...)
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         setDataUsr()
@@ -189,36 +151,54 @@ export default ({ route }) => {
             })
     }
 
+
     async function setDataUsr() {
         try {
-            if (!user) {
+            if (!route.params?.user) {
                 DataStore.query(Usuario, id)
                     .then(async r => {
-                        setOriginalUsr(r)
                         const fechasUsuario = await DataStore.query(Fecha, f => f.usuarioID("eq", r.id))
 
 
                         setUser({
                             ...r,
-                            foto: await getImageUrl(r.foto),
+                            foto: {
+                                uri: await getImageUrl(r.foto),
+                                key: r.foto,
+                            },
+
+                            imagenFondo: {
+                                uri: await getImageUrl(r.imagenFondo),
+                                key: r.imagenFondo
+                            },
+
                             fechas: fechasUsuario
 
                         })
+
+                        // Settear variables de editar usuario
+                        setNombre(r.nombre)
+                        setNickname(r.nickname)
+                        setApellido(r.apellido)
 
                         fetchAventurasGuia(fechasUsuario)
 
                     })
 
             } else {
-
+                const usr = route.params.user
 
                 const fechasUsuario = await DataStore.query(Fecha,
-                    f => f.usuarioID("eq", user.id)
+                    f => f.usuarioID("eq", usr.id)
                 )
 
+                setNombre(usr.nombre)
+                setNickname(usr.nickname)
+                setApellido(usr.apellido)
+
+
                 setUser({
-                    ...user,
-                    foto: await getImageUrl(user.foto),
+                    ...usr,
                     fechas: fechasUsuario
                 })
 
@@ -297,18 +277,117 @@ export default ({ route }) => {
 
     }
 
-    function handleSaveProfile() {
-        setEditing(!editing)
+    async function handleSaveProfile() {
 
-        const {
-            imagenFondo,
-            foto,
-        } = user
+        try {
 
-        console.log({
-            imagenFondo,
-            foto
-        })
+            setLoading(true)
+            const {
+                imagenFondo,
+                foto,
+            } = user
+
+            // Bandera para ver si se cambio algo
+            let changed = false
+
+            let imagenFondoKey = user.imagenFondo.key
+            let fotoKey = user.foto.key
+
+            if (nickname !== user.nickname || nombre !== user.nombre || apellido !== user.apellido) {
+                changed = true
+                console.log("cambiar texto en datastore")
+            }
+
+            // Checar si cambio la imagen de fondo
+            if (imagenFondo.modified) {
+                changed = true
+
+                // Subir imagen de fondo a S3 solo si no fue link
+                if (!user.imagenFondo.link) {
+                    const blob = await getBlob(user.imagenFondo?.uri)
+                    imagenFondoKey = "usr-" + user.id + "imagenFondo.jpg"
+
+                    await Storage.put(imagenFondoKey, blob)
+                    console.log(imagenFondoKey)
+
+                } else {
+                    // Solo actualizar el link de la foto
+                    imagenFondoKey = user.imagenFondo.uri
+                }
+
+            }
+            // Checar si cambio la foto de perfil
+            if (foto.modified) {
+                changed = true
+
+                // Subir foto a S3 solo si no fue link
+                if (!user.foto.link) {
+                    const blob = await getBlob(user.foto?.uri)
+                    fotoKey = "usr-" + user.id + "foto.jpg"
+
+                    console.log(fotoKey)
+                    await Storage.put(fotoKey, blob)
+
+
+                } else {
+                    // Solo actualizar el link de la foto
+                    fotoKey = user.foto.uri
+                }
+
+            }
+
+
+            if (changed) {
+                // Settear nombre apellido y nickname
+                setUser({
+                    ...user,
+                    nombre,
+                    apellido,
+                    nickname,
+                    foto: {
+                        ...user.foto,
+                        modified: false,
+                        key: fotoKey,
+
+                    },
+                    imagenFondo: {
+                        ...user.imagenFondo,
+
+                        // Actualizar la key si se hizo algo
+                        modified: false,
+                        key: imagenFondoKey,
+
+                    }
+
+
+                })
+
+                const u = await DataStore.query(Usuario, user.id)
+                await DataStore.save(Usuario.copyOf(u, e => {
+                    e.foto = fotoKey
+                    e.imagenFondo = imagenFondoKey
+                    e.nombre = nombre
+                    e.apellido = apellido
+                    e.nickname = nickname
+                }))
+                    .then(console.log)
+
+                setLoading(false)
+
+            }
+
+            setLoading(false)
+            setEditing(!editing)
+            console.log({
+                foto: user.foto,
+                imagenFondo: user.imagenFondo
+            })
+
+        } catch (error) {
+            Alert.alert("Error", "Error guardando el perfil en la nube")
+            setLoading(false)
+            console.log(error)
+        }
 
     }
 
@@ -319,20 +398,31 @@ export default ({ route }) => {
     }
 
     function handleImageSelected(img) {
-        console.log(img)
         // Si es imagen de fondo se cambia la imagen de fondo del usuario
         if (imageBackground) {
             setUser({
                 ...user,
-                imagenFondo: img.uri,
-                imagenFondoModified: true,
+                imagenFondo: {
+                    uri: img.uri,
+                    key: user.imagenFondo.key,
+
+                    // Ver si fue un link
+                    link: !!img.link,
+                    modified: true,
+                },
             })
 
         } else {
             setUser({
                 ...user,
-                foto: img.uri,
-                fotoModified: true,
+                foto: {
+                    uri: img.uri,
+                    key: user.foto.key,
+
+                    // Ver si fue un link
+                    link: !!img.link,
+                    modified: true,
+                },
             })
 
         }
@@ -376,7 +466,8 @@ export default ({ route }) => {
             showsVerticalScrollIndicator={false}
         >
             <Image
-                source={user?.imagenFondo ? { uri: user?.imagenFondo } : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
+                onError={() => { }}
+                source={user?.imagenFondo?.uri ? { uri: user?.imagenFondo?.uri } : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
                 style={{
                     ...styles.imagenFondo,
                     height: height * 0.24 + insets.top,
@@ -389,7 +480,7 @@ export default ({ route }) => {
 
             {/* Abrir imagen de fondo o cambiarla */}
             <Pressable
-                onPress={editing ? () => handleChangePic(false) : () => openImage(user.imagenFondo, user.imagenFondo ? false : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"))}
+                onPress={editing ? () => handleChangePic(false) : () => openImage(user.imagenFondo.uri, user.imagenFondo.uri ? false : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"))}
 
                 style={{
                     height: (height * 0.24) - (imageSize / 2 + 10) + insets.top,
@@ -429,10 +520,10 @@ export default ({ route }) => {
                     }}>
                         {/* Foto de perfil */}
                         <Pressable
-                            onPress={editing ? handleChangePic : () => openImage(user.foto)}
+                            onPress={editing ? handleChangePic : () => openImage(user.foto?.uri)}
                             style={{ marginBottom: 10, }}>
-                            {user?.foto ? <Image
-                                source={{ uri: user.foto }}
+                            {user?.foto?.uri ? <Image
+                                source={{ uri: user.foto.uri }}
                                 style={styles.image} />
                                 : <Feather
                                     style={{
@@ -461,6 +552,9 @@ export default ({ route }) => {
                             </Pressable>}
 
                         </Pressable>
+
+
+
                         {!editing && <View style={styles.headerTextContainer}>
                             <Text style={styles.nombre}>{user?.nombre + " " + (!!user.apellido ? user.apellido : "")}</Text>
                             <Text numberOfLines={1} style={styles.nickname}>{user?.nickname && ("@" + user.nickname)}</Text>
@@ -489,6 +583,46 @@ export default ({ route }) => {
                         </View>}
 
                     </View>
+                    {/* Campos si se esta editando */}
+                    {
+                        editing && <View style={styles.inputContainer}>
+                            {/* <Text style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+
+                            }}>Informacion</Text> */}
+
+                            {/* Nombre */}
+                            <Text style={styles.captionTxt}>Nombre</Text>
+                            <TextInput
+                                maxLength={30}
+                                style={styles.textInput}
+                                value={nombre}
+                                onChangeText={setNombre}
+                            />
+
+                            {/* Apellido */}
+                            <Text style={styles.captionTxt}>Apellido</Text>
+                            <TextInput
+                                maxLength={30}
+                                style={styles.textInput}
+                                value={apellido}
+                                onChangeText={setApellido}
+                            />
+
+
+                            {/* Nickname */}
+                            <Text style={styles.captionTxt}>Nickname</Text>
+                            <TextInput
+                                maxLength={30}
+                                style={styles.textInput}
+                                value={nickname}
+                                onChangeText={setNickname}
+                            />
+
+                        </View>
+                    }
+
 
                     {/* Antiguedad, numero de aventuras, */}
                     <View style={styles.cuadrosContainer}>
@@ -623,6 +757,7 @@ export default ({ route }) => {
                     animationType="slide"
                     transparent={true}
                     visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
                 >
                     {
                         tipoModal === "comentarios" ?
@@ -646,6 +781,7 @@ export default ({ route }) => {
 
                                         cameraEnabled
                                         aspectRatio={!imageBackground ? [1, 1] : false}
+                                        quality={imageBackground ? 0.2 : 0.4}
                                     />
                                     :
                                     <InfoNivelesModal
@@ -679,21 +815,28 @@ export default ({ route }) => {
                 {
                     isOwner &&
                     <Pressable
-                        onPress={() => editing ? handleSaveProfile() : setEditing(!editing)}
+                        onPress={loading ? null : () => editing ? handleSaveProfile() : setEditing(!editing)}
                         style={styles.backIcon}>
-                        {editing ?
-                            <Feather
-                                name="check"
-                                size={30}
-                                color={moradoClaro}
-                            />
+                        {
+                            loading ?
+                                <ActivityIndicator
+                                    color={moradoClaro}
+                                    size={'small'}
+                                />
+                                :
+                                editing ?
+                                    <Feather
+                                        name="check"
+                                        size={30}
+                                        color={moradoClaro}
+                                    />
 
-                            :
-                            <Feather
-                                name="edit-2"
-                                size={25}
-                                color={moradoClaro}
-                            />
+                                    :
+                                    <Feather
+                                        name="edit-2"
+                                        size={25}
+                                        color={moradoClaro}
+                                    />
                         }
 
                     </Pressable>
@@ -758,6 +901,23 @@ const styles = StyleSheet.create({
         borderRadius: 10,
 
     },
+
+    captionTxt: {
+        fontSize: 15,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginTop: 10,
+        color: '#999',
+
+    },
+    textInput: {
+        // flex: 1,
+        backgroundColor: '#f4f4f4',
+        padding: 5,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+    },
+
 
     headerTextContainer: {
         marginHorizontal: 20,
@@ -859,7 +1019,14 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         right: -8,
         bottom: -8,
+    },
+
+    inputContainer: {
+        paddingHorizontal: 10,
+
+        marginVertical: 20,
     }
+
 
 })
 

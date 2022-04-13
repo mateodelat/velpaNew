@@ -19,7 +19,7 @@ import {
     View
 } from 'react-native'
 
-import { distancia2Puntos, getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, wait } from '../../../assets/constants';
+import { distancia2Puntos, getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, verificarUbicacion, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
@@ -81,7 +81,14 @@ export default ({ navigation }) => {
 
     const fetchData = async () => {
         fetchPublicidad()
-        let location = getLastKnownPositionAsync();
+        const status = await verificarUbicacion()
+
+
+        let location = false
+
+        if (status) {
+            location = getLastKnownPositionAsync();
+        }
 
         listAventurasAutorizadas(4, 0)
             .then(async r => {
@@ -373,7 +380,7 @@ export default ({ navigation }) => {
                                     aventuras.map((e, idxAve) => (
 
                                         <Pressable
-                                            key={"idxAve", idxAve}
+                                            key={"idxAve" + idxAve}
                                             onPress={() => navigation.navigate("DetalleAventura", {
                                                 id: e.id
                                             })}

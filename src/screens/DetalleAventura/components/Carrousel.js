@@ -95,6 +95,7 @@ export default ({
     }, []);
 
     const [errorImagenes, setErrorImagenes] = useState([...Array(data?.length ? data.length - 1 : 0).keys()].map(() => false))
+    const [imagesLoading, setImagesLoading] = useState([...Array(data?.length ? data.length - 1 : 0).keys()].map(() => true));
 
 
     /////////////VIDEO//////////////////
@@ -284,17 +285,34 @@ export default ({
                                             color="black"
                                         />
                                         :
-                                        <Image
-                                            onError={({ nativeEvent: { error } }) => {
-                                                console.log(item)
-                                                console.log(error)
-                                                let newArray = [...errorImagenes]
-                                                newArray[index] = true
-                                                setErrorImagenes([...newArray])
-                                            }}
-                                            source={{ uri: item.uri }}
-                                            style={{ resizeMode: "cover", width, height, }}
-                                        />
+                                        <View style={{
+                                            alignItems: 'center', justifyContent: 'center',
+                                        }}>
+                                            {imagesLoading[index] && <ActivityIndicator
+                                                size={'large'}
+                                                color={"black"}
+                                                style={{ position: 'absolute', }}
+
+                                            />}
+                                            <Image
+                                                onLoad={() => {
+                                                    let newImagesLoading = [...imagesLoading]
+                                                    newImagesLoading[index] = false
+
+                                                    setImagesLoading([...newImagesLoading])
+                                                }}
+                                                onError={({ nativeEvent: { error } }) => {
+                                                    console.log(item)
+                                                    console.log(error)
+                                                    let newArray = [...errorImagenes]
+                                                    newArray[index] = true
+                                                    setErrorImagenes([...newArray])
+                                                }}
+                                                source={{ uri: item.uri }}
+                                                style={{ resizeMode: "cover", width, height, }}
+                                            />
+                                        </View>
+
                                     }
                                     <Animated.View
                                         style={{

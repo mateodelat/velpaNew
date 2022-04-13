@@ -88,6 +88,7 @@ const App = () => {
 
     // Escuchar a actualizaciones de auth
     const auth = Hub.listen("auth", (data) => {
+      console.log(data)
       const { event, message } = data.payload
       // console.log(event, message)
       switch (event) {

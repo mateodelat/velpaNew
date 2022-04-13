@@ -23,7 +23,7 @@ export default function ({
 
 
     return (
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1, backgroundColor: '#fff', }}>
             <HeaderModal
                 titulo={"Reseñas"}
                 handleCerrar={() => setModalVisible(false)}

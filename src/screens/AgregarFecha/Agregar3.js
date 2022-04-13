@@ -109,9 +109,9 @@ export default function ({ navigation, route }) {
         _A las 8 del dia siguiente de la reserva para calificar
         */
 
-        const remainingFor1Week = Math.round((initialDate - msInDay * 7 - new Date) / 1000)
-        const remainingFor1Day = Math.round((initialDate - msInDay - new Date) / 1000)
-        const remainingFor1Hour = Math.round((initialDate - msInHour - new Date) / 1000)
+        const remainingFor1Week = Math.round((fechaInicial - msInDay * 7 - new Date) / 1000)
+        const remainingFor1Day = Math.round((fechaInicial - msInDay - new Date) / 1000)
+        const remainingFor1Hour = Math.round((fechaInicial - msInHour - new Date) / 1000)
 
         // Si falta mas de una semana para la fecha enviar notificacion
         if (remainingFor1Week > 0) {
@@ -136,7 +136,7 @@ export default function ({ navigation, route }) {
                 titulo: "Experiencia en 1 semana",
                 descripcion: "Tu experiencia en " + tituloAventura + " es en 1 semana, ya tienes todo listo?",
 
-                showAt: (new Date(initialDate - msInDay * 7)).getTime(),
+                showAt: (new Date(fechaInicial - msInDay * 7)).getTime(),
 
                 usuarioID: sub,
 
@@ -168,7 +168,7 @@ export default function ({ navigation, route }) {
                 titulo: "Experiencia mañana",
                 descripcion: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
 
-                showAt: (new Date(initialDate - msInDay)).getTime(),
+                showAt: (new Date(fechaInicial - msInDay)).getTime(),
 
                 usuarioID: sub,
 
@@ -200,7 +200,7 @@ export default function ({ navigation, route }) {
             titulo: "Experiencia en menos de 1 hora",
             descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes!!",
 
-            showAt: (new Date(initialDate - msInHour)).getTime(),
+            showAt: (new Date(fechaInicial - msInHour)).getTime(),
 
             usuarioID: sub,
 

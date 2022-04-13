@@ -323,6 +323,7 @@ export const createUsuario = async (attributes, unathenticated, username) => {
 
 
 export async function handleGoogle() {
+
   Auth.federatedSignIn({ provider: "Google" })
     .catch(e => {
       Alert.alert("Error", "Error iniciando sesion con google")
@@ -1722,8 +1723,10 @@ export const shadowMarcada = {
   elevation: 23,
 
 }
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const verificarUbicacion = async () => {
+
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== 'granted') {
     console.log("Permisos no obtenidos para la ubicacion")
@@ -1732,6 +1735,7 @@ export const verificarUbicacion = async () => {
   } else {
     return true
   }
+
 }
 
 export const mapsAPIKey = "AIzaSyCaRZjZvo3u_3tLCK7cOGigyfFEF6kR4Hw"
@@ -1761,7 +1765,9 @@ export const wait = (timeout) => {
 }
 
 
-export const openCameraPickerAsync = async (aspect) => {
+export const openCameraPickerAsync = async (aspect, quality) => {
+  // Poner en los limites
+  quality = quality < 0 || quality > 1 ? 1 : quality
   let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
 
   if (permissionResult.granted === false) {
@@ -1772,13 +1778,12 @@ export const openCameraPickerAsync = async (aspect) => {
 
   let camResult
 
-  console.log(aspect)
   // Si se le paso un aspect ratio, respetarlo
   if (aspect) {
     camResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       allowsMultipleSelection: false,
-      aspect
+      aspect,
 
     })
 
@@ -1804,14 +1809,14 @@ export const openCameraPickerAsync = async (aspect) => {
           }
         }
       ],
-      { compress: 0.9, }
+      { compress: quality, }
     );
 
     return (camResult)
   }
 }
 
-export const openImagePickerAsync = async (denyVideos, aspect) => {
+export const openImagePickerAsync = async (denyVideos, aspect, quality) => {
   await ImagePicker.requestMediaLibraryPermissionsAsync()
   let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync()
 
@@ -1839,6 +1844,23 @@ export const openImagePickerAsync = async (denyVideos, aspect) => {
     return false;
   }
   else {
+    // Si se le paso un modificador a la calidad se comprime la imagen
+
+    if (!!quality && quality > 0 && quality < 1) {
+      pickerResult = await ImageManipulator.manipulateAsync(
+        pickerResult.uri,
+        [
+          {
+            resize: {
+              width: 1000
+            }
+          }
+        ],
+        { compress: quality, }
+      );
+
+    }
+
     return (pickerResult)
   }
 

@@ -11,11 +11,16 @@ import { FontAwesome5 } from '@expo/vector-icons';
 export default function ({
     setModalVisible,
     setImage,
+
+
+    // Parametros opcionales
     video,
     aventura,
 
+    // Parametros para camara
     cameraEnabled,
-    aspectRatio
+    aspectRatio,
+    quality
 }) {
     const [innerModal, setInnerModal] = useState(false);
 
@@ -42,7 +47,7 @@ export default function ({
     }
 
     async function handleDeviceImage() {
-        const image = await openImagePickerAsync(!!video ? false : true, aspectRatio)
+        const image = await openImagePickerAsync(!!video ? false : true, aspectRatio, quality = quality)
         if (!image) return
         setImage(image)
         handleCloseModal()
@@ -56,7 +61,8 @@ export default function ({
         }
         setImage({
             uri: linkImage,
-            key: linkImage
+            key: linkImage,
+            link: true
         })
         handleCloseModal()
     }
@@ -67,7 +73,7 @@ export default function ({
     }
 
     async function handleCamera() {
-        const image = await openCameraPickerAsync(aspectRatio)
+        const image = await openCameraPickerAsync(aspectRatio, quality)
         if (!image) return
         setImage(image)
 

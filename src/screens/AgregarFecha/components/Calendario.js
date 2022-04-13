@@ -264,7 +264,7 @@ export default ({
     if (!fechasExistentes) return <Loading indicator containerStyle={{
         height: 350,
     }} />
-
+    const fechaUnAño = new Date((Date.now() + 31540000000))
     return (
 
         <Calendar
@@ -274,7 +274,7 @@ export default ({
                 ...fechasExistentes
             }}
             minDate={Date()}
-            maxDate={(Date.now() + 31540000000)}
+            maxDate={fechaUnAño.toString()}
             onDayPress={handleDayPress}
             enableSwipeMonths={true}
             firstDay={1}
