@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "velpa98b1c29b_identitypool_98b1c29b",
+    "identityPoolName": "velpa01106a15_identitypool_01106a15",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "velpa98b1c29b",
-    "userPoolName": "velpa98b1c29b_userpool_98b1c29b",
+    "resourceNameTruncated": "velpa01106a15",
+    "userPoolName": "velpa01106a15_userpool_01106a15",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,25 +31,25 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "velpa998b1c29b_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "velpa001106a15_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
+    "sharedId": "01106a15",
+    "resourceName": "velpa01106a15",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "velpa98b1c29b",
-    "serviceName": "Cognito",
     "useDefault": "defaultSocial",
-    "sharedId": "98b1c29b",
-    "userPoolGroupList": [],
+    "hostedUI": true,
     "usernameAttributes": [
       "email"
     ],
-    "usernameCaseSensitive": false,
-    "hostedUI": true,
-    "hostedUIDomainName": "autenticacionvelpa",
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "triggers": {},
+    "hostedUIDomainName": "velpaauth",
     "authProvidersUserPool": [
       "Google"
     ],
-    "triggers": {},
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "useEnabledMfas": false,
     "authRoleArn": {
       "Fn::GetAtt": [
         "AuthRole",
@@ -62,14 +62,12 @@
         "Arn"
       ]
     },
-    "breakCircularDependency": true,
-    "useEnabledMfas": true,
+    "breakCircularDependency": false,
     "dependsOn": [],
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "hostedUIProviderCreds": "[]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"velpa://\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"velpa://\"]}"
   }
 }

@@ -15,6 +15,7 @@ export default function Register({ navigation, route }) {
 
 
     const [hidePassword, setHidePassword] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // Variables del texto
     const [email, setEmail] = useState(route.params.email ? route.params.email : "");
@@ -40,7 +41,7 @@ export default function Register({ navigation, route }) {
             return
         }
 
-
+        setLoading(true)
         Auth.signIn(email, password)
             .then(() => {
                 setError("")
@@ -79,7 +80,10 @@ export default function Register({ navigation, route }) {
 
                         break;
                 }
-            });
+            })
+            .finally(r => {
+                setLoading(true)
+            })
     }
 
     const handleRegistrarse = () => {
@@ -182,6 +186,7 @@ export default function Register({ navigation, route }) {
                 }}>{error}</Text> : <View style={{ paddingTop: 20, }} />}
 
                 <Boton
+                    loading={loading}
 
                     onPress={handleLogin}
                     titulo={"Iniciar sesion"}

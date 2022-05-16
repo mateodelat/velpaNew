@@ -67,58 +67,6 @@ export declare class CreateAcountResponse {
   constructor(init: ModelInit<CreateAcountResponse>);
 }
 
-type AventuraMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type AventuraSolicitudGuiaMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type SolicitudGuiaMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type AventuraUsuarioMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type UsuarioMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type MensajeMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type ChatRoomUsuarioMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type ChatRoomMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type ReservaMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type FechaMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type NotificacionMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type ComentarioMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
-type PublicidadMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
 export declare class Aventura {
   readonly id: string;
   readonly titulo: string;
@@ -145,20 +93,16 @@ export declare class Aventura {
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[];
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[];
   readonly Fechas?: (Fecha | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Aventura, AventuraMetaData>);
-  static copyOf(source: Aventura, mutator: (draft: MutableModel<Aventura, AventuraMetaData>) => MutableModel<Aventura, AventuraMetaData> | void): Aventura;
+  constructor(init: ModelInit<Aventura>);
+  static copyOf(source: Aventura, mutator: (draft: MutableModel<Aventura>) => MutableModel<Aventura> | void): Aventura;
 }
 
 export declare class AventuraSolicitudGuia {
   readonly id: string;
   readonly aventura: Aventura;
   readonly solicitudguia: SolicitudGuia;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<AventuraSolicitudGuia, AventuraSolicitudGuiaMetaData>);
-  static copyOf(source: AventuraSolicitudGuia, mutator: (draft: MutableModel<AventuraSolicitudGuia, AventuraSolicitudGuiaMetaData>) => MutableModel<AventuraSolicitudGuia, AventuraSolicitudGuiaMetaData> | void): AventuraSolicitudGuia;
+  constructor(init: ModelInit<AventuraSolicitudGuia>);
+  static copyOf(source: AventuraSolicitudGuia, mutator: (draft: MutableModel<AventuraSolicitudGuia>) => MutableModel<AventuraSolicitudGuia> | void): AventuraSolicitudGuia;
 }
 
 export declare class SolicitudGuia {
@@ -168,20 +112,16 @@ export declare class SolicitudGuia {
   readonly usuarioID?: string;
   readonly mensaje?: string;
   readonly Aventuras?: (AventuraSolicitudGuia | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<SolicitudGuia, SolicitudGuiaMetaData>);
-  static copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia, SolicitudGuiaMetaData>) => MutableModel<SolicitudGuia, SolicitudGuiaMetaData> | void): SolicitudGuia;
+  constructor(init: ModelInit<SolicitudGuia>);
+  static copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia>) => MutableModel<SolicitudGuia> | void): SolicitudGuia;
 }
 
 export declare class AventuraUsuario {
   readonly id: string;
   readonly aventura: Aventura;
   readonly usuario: Usuario;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<AventuraUsuario, AventuraUsuarioMetaData>);
-  static copyOf(source: AventuraUsuario, mutator: (draft: MutableModel<AventuraUsuario, AventuraUsuarioMetaData>) => MutableModel<AventuraUsuario, AventuraUsuarioMetaData> | void): AventuraUsuario;
+  constructor(init: ModelInit<AventuraUsuario>);
+  static copyOf(source: AventuraUsuario, mutator: (draft: MutableModel<AventuraUsuario>) => MutableModel<AventuraUsuario> | void): AventuraUsuario;
 }
 
 export declare class Usuario {
@@ -221,10 +161,8 @@ export declare class Usuario {
   readonly Notificaciones?: (Notificacion | null)[];
   readonly SolicitudesCreadas?: (SolicitudGuia | null)[];
   readonly Comentarios?: (Comentario | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Usuario, UsuarioMetaData>);
-  static copyOf(source: Usuario, mutator: (draft: MutableModel<Usuario, UsuarioMetaData>) => MutableModel<Usuario, UsuarioMetaData> | void): Usuario;
+  constructor(init: ModelInit<Usuario>);
+  static copyOf(source: Usuario, mutator: (draft: MutableModel<Usuario>) => MutableModel<Usuario> | void): Usuario;
 }
 
 export declare class Mensaje {
@@ -232,10 +170,8 @@ export declare class Mensaje {
   readonly content: string;
   readonly usuarioID?: string;
   readonly chatroomID?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Mensaje, MensajeMetaData>);
-  static copyOf(source: Mensaje, mutator: (draft: MutableModel<Mensaje, MensajeMetaData>) => MutableModel<Mensaje, MensajeMetaData> | void): Mensaje;
+  constructor(init: ModelInit<Mensaje>);
+  static copyOf(source: Mensaje, mutator: (draft: MutableModel<Mensaje>) => MutableModel<Mensaje> | void): Mensaje;
 }
 
 export declare class ChatRoomUsuario {
@@ -243,10 +179,8 @@ export declare class ChatRoomUsuario {
   readonly newMessages?: number;
   readonly chatroom: ChatRoom;
   readonly usuario: Usuario;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<ChatRoomUsuario, ChatRoomUsuarioMetaData>);
-  static copyOf(source: ChatRoomUsuario, mutator: (draft: MutableModel<ChatRoomUsuario, ChatRoomUsuarioMetaData>) => MutableModel<ChatRoomUsuario, ChatRoomUsuarioMetaData> | void): ChatRoomUsuario;
+  constructor(init: ModelInit<ChatRoomUsuario>);
+  static copyOf(source: ChatRoomUsuario, mutator: (draft: MutableModel<ChatRoomUsuario>) => MutableModel<ChatRoomUsuario> | void): ChatRoomUsuario;
 }
 
 export declare class ChatRoom {
@@ -258,10 +192,8 @@ export declare class ChatRoom {
   readonly guiaID?: string;
   readonly Mensajes?: (Mensaje | null)[];
   readonly Participantes?: (ChatRoomUsuario | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<ChatRoom, ChatRoomMetaData>);
-  static copyOf(source: ChatRoom, mutator: (draft: MutableModel<ChatRoom, ChatRoomMetaData>) => MutableModel<ChatRoom, ChatRoomMetaData> | void): ChatRoom;
+  constructor(init: ModelInit<ChatRoom>);
+  static copyOf(source: ChatRoom, mutator: (draft: MutableModel<ChatRoom>) => MutableModel<ChatRoom> | void): ChatRoom;
 }
 
 export declare class Reserva {
@@ -280,10 +212,8 @@ export declare class Reserva {
   readonly guiaID?: string;
   readonly tipoPago?: TipoPago | keyof typeof TipoPago;
   readonly materialChecked?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Reserva, ReservaMetaData>);
-  static copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva, ReservaMetaData>) => MutableModel<Reserva, ReservaMetaData> | void): Reserva;
+  constructor(init: ModelInit<Reserva>);
+  static copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva>) => MutableModel<Reserva> | void): Reserva;
 }
 
 export declare class Fecha {
@@ -313,10 +243,8 @@ export declare class Fecha {
   readonly dificultad?: number;
   readonly Reservas?: (Reserva | null)[];
   readonly ChatRoom?: (ChatRoom | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Fecha, FechaMetaData>);
-  static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
+  constructor(init: ModelInit<Fecha>);
+  static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha>) => MutableModel<Fecha> | void): Fecha;
 }
 
 export declare class Notificacion {
@@ -334,10 +262,8 @@ export declare class Notificacion {
   readonly aventuraID?: string;
   readonly guiaID?: string;
   readonly solicitudGuiaID?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Notificacion, NotificacionMetaData>);
-  static copyOf(source: Notificacion, mutator: (draft: MutableModel<Notificacion, NotificacionMetaData>) => MutableModel<Notificacion, NotificacionMetaData> | void): Notificacion;
+  constructor(init: ModelInit<Notificacion>);
+  static copyOf(source: Notificacion, mutator: (draft: MutableModel<Notificacion>) => MutableModel<Notificacion> | void): Notificacion;
 }
 
 export declare class Comentario {
@@ -346,10 +272,8 @@ export declare class Comentario {
   readonly body?: string;
   readonly calificacion: number;
   readonly creatorID?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Comentario, ComentarioMetaData>);
-  static copyOf(source: Comentario, mutator: (draft: MutableModel<Comentario, ComentarioMetaData>) => MutableModel<Comentario, ComentarioMetaData> | void): Comentario;
+  constructor(init: ModelInit<Comentario>);
+  static copyOf(source: Comentario, mutator: (draft: MutableModel<Comentario>) => MutableModel<Comentario> | void): Comentario;
 }
 
 export declare class Publicidad {
@@ -361,8 +285,6 @@ export declare class Publicidad {
   readonly video?: string;
   readonly linkAnuncio?: string;
   readonly aventuraID?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<Publicidad, PublicidadMetaData>);
-  static copyOf(source: Publicidad, mutator: (draft: MutableModel<Publicidad, PublicidadMetaData>) => MutableModel<Publicidad, PublicidadMetaData> | void): Publicidad;
+  constructor(init: ModelInit<Publicidad>);
+  static copyOf(source: Publicidad, mutator: (draft: MutableModel<Publicidad>) => MutableModel<Publicidad> | void): Publicidad;
 }

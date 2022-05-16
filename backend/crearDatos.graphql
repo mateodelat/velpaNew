@@ -1,70 +1,66 @@
-# """
-#         _deleted: null,
-#         _lastChangedAt: 1636650749646,
-#         _version: 1,
-#         updatedAt: "2021-11-11T17:12:29.627Z",
-#         createdAt: "2021-11-11T17:12:29.627Z"
-# """
-
 #############################################################################
 ##################################AVENTURAS##################################
 #############################################################################
 mutation createAventura {
     ####################Nevado De Colima####################
     NevadoDeColima : createAventura(input: {
-        titulo: "El nevado de colima",
-        imagenFondoIdx: 1
-        imagenDetalle: [
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://picsum.photos/400?random=1.jpg",
-            "https://picsum.photos/400?random=2.jpg",
-            "https://picsum.photos/400?random=494.jpg",
-        ],
-        precioMin: 500,
-        precioMax: 1000,
+        altitud: 4282,
+        categoria: APLINISMO,
+        altimetriaRecorrida: 706,
+        comision: 0.2,
+        coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}",
+        descripcion: "El nevado de toluca es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
+        dificultad: 2,
         duracion: "1-2 dias",
-        descripcion: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-        dificultad: 3,
-        ubicacionNombre: "Colima"
-        ubicacionLink: "https://www.google.com/maps/place/Nevado+de+Colima/"
-        comision: 0.2
-        estadoAventura: AUTORIZADO
-        coordenadas: "{\"latitude\": 20.696042,\"longitude\": -103.440991}"
-        altitud: 4700
-        distanciaRecorrida: 3
-        altimetriaRecorrida: 750
-        categoria: APLINISMO
-        }){
+        distanciaRecorrida: 3.5,
+        estadoAventura: RECHAZADO,
+        id: "4a39d115-3884-4275-a331-bd3486bbbbad",
+        imagenDetalle: [
+            "https://www.mexicodesconocido.com.mx/wp-content/uploads/2018/02/Nevado-de-Toluca-laguna.jpg",
+            "https://images.reporteindigo.com/wp-content/uploads/2021/04/Nevado-de-toluca.jpeg"
+        ],
+        imagenFondoIdx: 0,
+        incluidoDefault: [
+            "Barra de proteina"
+        ],
+        materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
+        precioMax: 1500,
+        precioMin: 400,
+        titulo: "Nevado de toluca",
+        ubicacionId: "ChIJt63PBM6azYURCUW6Sein9E4",
+        ubicacionLink: "https://maps.google.com/?cid=5689356845386974473",
+        ubicacionNombre: "Nevado de Toluca"
+    }){
     id
   }
 
     ####################Nevado De Toluca####################
     NevadoDeToluca : createAventura(input:{
-        titulo: "El nevado de toluca",
-        imagenFondoIdx: 1
-        imagenDetalle: [
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://picsum.photos/400?random=11.jpg",
-            "https://picsum.photos/400?random=15.jpg",
-            "https://picsum.photos/400?random=16.jpg",
-            "https://picsum.photos/400?random=35.jpg",
-        ],
-        precioMin: 400,
-        precioMax: 1000,
+        altitud: 5208,
+        categoria: APLINISMO,
+        altimetriaRecorrida: 1301,
+        comision: 0.2,
+        coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}",
+        descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion.",
+        dificultad: 5,
         duracion: "1-2 dias",
-        descripcion: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-        dificultad: 2,
-
-        ubicacionNombre: "Toluca"
-        ubicacionLink: "https://www.google.com/maps/place/Nevado+de+Toluca/"
-        comision: 0.2
-        estadoAventura: AUTORIZADO
-        coordenadas: "{\"latitude\": 20,\"longitude\": -103.440991}"
-        altitud: 4680
-        distanciaRecorrida: 2.5
-        altimetriaRecorrida: 500
-        categoria: APLINISMO
-
+        distanciaRecorrida: 6.22,
+        estadoAventura: AUTORIZADO,
+        id: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
+        imagenDetalle: [
+            "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg"
+        ],
+        imagenFondoIdx: 0,
+        incluidoDefault: [
+            "Electrolit"
+        ],
+        materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
+        precioMax: 5000,
+        precioMin: 1000,
+        titulo: "Iztacihuatl",
+        ubicacionId: "ChIJ-VT-R-EvzoURyFHTem1z86c",
+        ubicacionLink: "https://maps.google.com/?cid=12102143537723953608",
+        ubicacionNombre: "Iztaccihuatl"
     }){
     id titulo
   }
@@ -72,62 +68,95 @@ mutation createAventura {
 
     ###################Iztacihuatl##################
     Iztacihuatl: createAventura(input:{
-        titulo: "Iztacihuatl",
-        imagenFondoIdx: 1
+        altitud: 4218,
+        categoria: APLINISMO,
+        altimetriaRecorrida: 795,
+        comision: 0.2,
+        coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}",
+        descripcion: "Prepárate para tener una aventura en contacto con la naturaleza y en algunas épocas del año cubierto de nieve. \n\nEsta experiencia es ideal para principiantes en el hikking teniendo una altura no tan elevada para afectar la condición.",
+        dificultad: null,
+        duracion: "1 a 2 dias",
+        distanciaRecorrida: 4.33,
+        estadoAventura: AUTORIZADO,
+        id: "7c3fb58a-f977-4518-9991-f940fd72475e",
         imagenDetalle: [
-            "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg",
-            "https://picsum.photos/400?random=103.jpg",
-            "https://picsum.photos/400?random=107.jpg",
-            "https://picsum.photos/400?random=101.jpg",
-            "https://picsum.photos/400?random=394.jpg",
+            "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
+            "imagen-1 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDeV2HgX2RQk8pnjsF9I9uCO7WfthunrRI5Q&usqp=CAU",
+            "imagen-2 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
+            "imagen-4 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQkBlCs39q8DAIi3XqBnSvkeQBlOLsSSqKeg&usqp=CAU"
         ],
-        precioMin: 500,
-        precioMax: 1000,
-        duracion: "1-2 dias",
-        descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion.",
-        dificultad: 5,
-
-        ubicacionNombre: "Puebla"
-        ubicacionLink: "https://www.google.com/maps/place/Iztaccíhuatl/"
-        comision: 0.2
-        estadoAventura: AUTORIZADO
-        coordenadas: "{\"latitude\": 19.178481,\"longitude\": -98.642455}"
-        altitud: 5230
-        distanciaRecorrida: 7.4
-        altimetriaRecorrida: 1000
-        categoria: APLINISMO
+        imagenFondoIdx: 0,
+        incluidoDefault: null,
+        materialDefault: "[[\"Obligatorio\",[\"Chamarra para el frio\",\"Pantalon comodo\",\"Botas con buen agarre\",\"Calcetines gruesos\",\"Mochila practica\",\"Buena actitud\"]],[\"Alimentacion\",[\"Barras de proteína\",\"Agua (3 litros min)\",\"Atun\",\"Sandwich\",\"Fruta\"]],[\"Acampada\",[\"Casa de campaña\",\"Sleeping caliente\",\"Cena y desayuno\"]]]",
+        precioMax: 3000,
+        precioMin: 400,
+        titulo: "Nevado de Colima",
+        ubicacionId: "ChIJwSuFnVNhJYQRMtjXwq_1wgc",
+        ubicacionLink: "https://maps.google.com/?cid=559279438984370226",
+        ubicacionNombre: "Nevado de Colima"
     }){ id }
 
 
 
     ###################Chunpinaya##################
     Chupinaya: createAventura(input:{
-
-        titulo: "Shupin allá y shupinaca",
-        imagenFondoIdx: 1
+        altitud: 1537,
+        categoria: APLINISMO,
+        altimetriaRecorrida: 740,
+        comision: 0.2,
+        coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}",
+        descripcion: "Experimenta la imponente barranca de Huentitan trazada por el río Santiago\n\nAquí es un excelente lugar para ejercitarse y prepararse a montañas más difíciles. Es un parque natural dentro de la ciudad. Puedes ir a visitar el puente de arsediano o si lo prefieres adentrarte en el misterioso pueblo fantasma",
+        dificultad: null,
+        duracion: "5 horas",
+        distanciaRecorrida: 4,
+        estadoAventura: AUTORIZADO,
+        id: "236ebee2-da8b-4ed0-977c-630155c627fc",
         imagenDetalle: [
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-            "https://picsum.photos/400?random=134.jpg",
-            "https://picsum.photos/400?random=12.jpg",
-            "https://picsum.photos/400?random=10.jpg",
-            "https://picsum.photos/400?random=34.jpg",
+            "https://intothearmsofamerica.com/wp-content/uploads/2019/07/guadalajara-barranca-huentitan-color-2400x1200-1024x512.jpg",
+            "https://s0.wklcdn.com/image_124/3726685/28247253/18043266Master.jpg",
+            "https://guadalajaramidestino.com/wp-content/uploads/2019/10/tatiana_correr-15-1024x683.jpg",
+            "https://vagabundeandoenmexicomagico.files.wordpress.com/2018/05/mg_4936.jpg?w=393&h=&zoom=2"
         ],
-        precioMin: 500,
-        precioMax: 1000,
-        duracion: "1-2 dias",
-        descripcion: "El nevado de colima es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-        dificultad: 3,
-
-        ubicacionNombre: "Chapala"
-        ubicacionLink: "https://www.google.com/maps/place/La+Chupinaya/@20.3167307,-103.2749287,15z/data=!4m9!1m2!2m1!1schupinaya!3m5!1s0x842f44236fb42171:0x7b6338d77552362!8m2!3d20.3257625!4d-103.2758335!15sCgljaHVwaW5heWGSAQZzaHJpbmU!5m1!1e4"
-        comision: 0.2
-        estadoAventura: AUTORIZADO
-        coordenadas: "{\"latitude\": 20.80,\"longitude\": -103.440991}"
-        altitud: 2500
-        distanciaRecorrida: 5.8
-        altimetriaRecorrida: 1000
-        categoria: APLINISMO
-        }){id}
+        imagenFondoIdx: 1,
+        incluidoDefault: null,
+        materialDefault: "[[\"Obligatorio\",[\"Ropa deportiva ligera\",\"Tenis con buen agarre\",\"Mochila\",\"Bloqueador\",\"Gorra\",\"Buena actitud\"]],[\"Alimentacion\",[\"Snacks\",\"Agua (2 litros)\"]]]",
+        precioMax: 800,
+        precioMin: 50,
+        titulo: "Barranca de Huentitan",
+        ubicacionId: "ChIJAAAAAAAAAAARelODoN-ywjY",
+        ubicacionLink: "https://maps.google.com/?cid=3945912897070388090",
+        ubicacionNombre: "Tour por la barranca"
+    }){id}
+    ###################Chunpinaya##################
+    Chupinaya: createAventura(input:{
+        altitud: 2347,
+        categoria: APLINISMO,
+        altimetriaRecorrida: 768,
+        comision: 0.2,
+        coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}",
+        descripcion: "Disfruta de sus asombrosas cascadas en épocas de lluvias o si decides ir a dormir en la cima podrás contemplar un amanecer espectacular con una vista al lago.\n\nLa chupinaya es la sierra que se encuentra a un costado del Lago de Chapala por lo que tiene una vegetación muy verde y clima húmedo.",
+        dificultad: null,
+        duracion: "1 a 2 dias",
+        distanciaRecorrida: 3.77,
+        estadoAventura: AUTORIZADO,
+        id: "3c63109c-6fe4-418d-9f91-b3781947c8c2",
+        imagenDetalle: [
+            "imagen-0 ave-3c63109c-6fe4-418d-9f91-b3781947c8c2.jpg",
+            "https://i0.wp.com/ajijicpueblomagico.mx/wp-content/uploads/2021/08/tepalo3.jpg?w=700&ssl=1",
+            "https://s0.wklcdn.com/image_78/2368206/26878700/17170926Master.jpg"
+        ],
+        imagenFondoIdx: 2,
+        incluidoDefault: [],
+        materialDefault: "[[\"Obligatorio\",[\"Camisa deportiva\",\"Shorts o pants frescos\",\"Gorra\",\"Bloqueador\",\"Tenis con buen agarre o botas\"]],[\"Alimentacion\",[\"Barra de granola\",\"Sandwich\",\"Fruta\",\"Galletas\"]],[\"Acampada\",[\"Casa de campaña\",\"Sleeping bag\",\"Colchoneta\",\"Comida y cena\"]],[\"Opcional\",[\"Palos de senderismo\",\"Traje de baño\",\"Toalla\",\"Impermeable\"]]]",
+        precioMax: 2000,
+        precioMin: 60,
+        titulo: "La chupinaya",
+        ubicacionId: "ChIJcSG0byNEL4QRYiNVd40ztgc",
+        ubicacionLink: "https://maps.google.com/?cid=555688286712308578",
+        ubicacionNombre: "La Chupinaya"
+    }){id}
 
 }
 

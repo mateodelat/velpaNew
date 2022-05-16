@@ -1,27 +1,27 @@
 {
   "version": 1,
   "serviceConfiguration": {
+    "apiName": "velpaAPI",
     "serviceName": "AppSync",
+    "gqlSchemaPath": "/tmp/amplify-724dd4b3-7484-4dfb-94cf-62d45e0158b7/amplify/backend/api/velpaAPI/schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authvelpa98b1c29b"
+      "cognitoUserPoolId": "authvelpa01106a15"
     },
     "additionalAuthTypes": [
+      {
+        "mode": "AWS_IAM"
+      },
       {
         "mode": "API_KEY",
         "keyDescription": "api key description",
         "expirationTime": 30
-      },
-      {
-        "mode": "AWS_IAM"
       }
     ],
     "conflictResolution": {
       "defaultResolutionStrategy": {
         "type": "AUTOMERGE"
       }
-    },
-    "apiName": "VelpaApi",
-    "gqlSchemaPath": "/tmp/amplify-900e1f58-4333-4472-b27d-087b5967054f/amplify/backend/api/VelpaApi/schema.graphql"
+    }
   }
 }

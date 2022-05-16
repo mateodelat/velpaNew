@@ -1,11 +1,3 @@
 {
-  "lambdaLayers": [],
-  "permissions": {
-    "api": {
-      "VelpaApi": [
-        "Query",
-        "Mutation"
-      ]
-    }
-  }
+  "lambdaLayers": []
 }

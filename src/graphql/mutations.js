@@ -110,7 +110,6 @@ export const createAventura = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Fechas {
         items {
           id
@@ -142,7 +141,6 @@ export const createAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -157,7 +155,6 @@ export const createAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -172,7 +169,6 @@ export const createAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -213,7 +209,6 @@ export const updateAventura = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Fechas {
         items {
           id
@@ -245,7 +240,6 @@ export const updateAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -260,7 +254,6 @@ export const updateAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -275,7 +268,6 @@ export const updateAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -316,7 +308,6 @@ export const deleteAventura = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Fechas {
         items {
           id
@@ -348,7 +339,6 @@ export const deleteAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -363,7 +353,6 @@ export const deleteAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -378,7 +367,6 @@ export const deleteAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -412,7 +400,6 @@ export const createReserva = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -442,7 +429,6 @@ export const updateReserva = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -472,7 +458,6 @@ export const deleteReserva = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -533,12 +518,10 @@ export const createFecha = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
       }
-      owner
       ChatRoom {
         items {
           id
@@ -615,12 +598,10 @@ export const updateFecha = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
       }
-      owner
       ChatRoom {
         items {
           id
@@ -697,12 +678,10 @@ export const deleteFecha = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
       }
-      owner
       ChatRoom {
         items {
           id
@@ -783,7 +762,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -819,7 +797,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -835,7 +812,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -894,7 +870,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -909,7 +884,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -925,7 +899,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -994,7 +967,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1030,7 +1002,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1046,7 +1017,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1105,7 +1075,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1120,7 +1089,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1136,7 +1104,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1205,7 +1172,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1241,7 +1207,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1257,7 +1222,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1316,7 +1280,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1331,7 +1294,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1347,7 +1309,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1381,7 +1342,6 @@ export const createChatRoom = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       Mensajes {
         items {
@@ -1394,7 +1354,6 @@ export const createChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1410,7 +1369,6 @@ export const createChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1444,7 +1402,6 @@ export const updateChatRoom = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       Mensajes {
         items {
@@ -1457,7 +1414,6 @@ export const updateChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1473,7 +1429,6 @@ export const updateChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1507,7 +1462,6 @@ export const deleteChatRoom = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       Mensajes {
         items {
@@ -1520,7 +1474,6 @@ export const deleteChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1536,7 +1489,6 @@ export const deleteChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1559,7 +1511,6 @@ export const createMensaje = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1578,7 +1529,6 @@ export const updateMensaje = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1597,7 +1547,6 @@ export const deleteMensaje = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1628,7 +1577,6 @@ export const createSolicitudGuia = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1663,7 +1611,6 @@ export const updateSolicitudGuia = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1698,7 +1645,6 @@ export const deleteSolicitudGuia = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1806,7 +1752,6 @@ export const createComentario = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1826,7 +1771,6 @@ export const updateComentario = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1846,7 +1790,6 @@ export const deleteComentario = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1958,7 +1901,6 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -1989,7 +1931,6 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2035,7 +1976,6 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -2066,7 +2006,6 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2112,7 +2051,6 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -2143,7 +2081,6 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2189,7 +2126,6 @@ export const createAventuraUsuario = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -2270,7 +2206,6 @@ export const createAventuraUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2316,7 +2251,6 @@ export const updateAventuraUsuario = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -2397,7 +2331,6 @@ export const updateAventuraUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2443,7 +2376,6 @@ export const deleteAventuraUsuario = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -2524,7 +2456,6 @@ export const deleteAventuraUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2631,7 +2562,6 @@ export const createChatRoomUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         Mensajes {
           nextToken
@@ -2642,7 +2572,6 @@ export const createChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2749,7 +2678,6 @@ export const updateChatRoomUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         Mensajes {
           nextToken
@@ -2760,7 +2688,6 @@ export const updateChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;
@@ -2867,7 +2794,6 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         Mensajes {
           nextToken
@@ -2878,7 +2804,6 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
           startedAt
         }
       }
-      owner
     }
   }
 `;

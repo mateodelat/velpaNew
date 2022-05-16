@@ -31,7 +31,6 @@ export const getAventura = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Fechas {
         items {
           id
@@ -63,7 +62,6 @@ export const getAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -78,7 +76,6 @@ export const getAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -93,7 +90,6 @@ export const getAventura = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -136,7 +132,6 @@ export const listAventuras = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -196,7 +191,6 @@ export const syncAventuras = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Fechas {
           nextToken
           startedAt
@@ -238,7 +232,6 @@ export const getReserva = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -270,7 +263,6 @@ export const listReservas = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -311,7 +303,6 @@ export const syncReservas = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -372,12 +363,10 @@ export const getFecha = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
       }
-      owner
       ChatRoom {
         items {
           id
@@ -438,7 +427,6 @@ export const listFechas = /* GraphQL */ `
           nextToken
           startedAt
         }
-        owner
         ChatRoom {
           nextToken
           startedAt
@@ -496,7 +484,6 @@ export const syncFechas = /* GraphQL */ `
           nextToken
           startedAt
         }
-        owner
         ChatRoom {
           nextToken
           startedAt
@@ -565,7 +552,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -601,7 +587,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -617,7 +602,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -676,7 +660,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -691,7 +674,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -707,7 +689,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -902,7 +883,6 @@ export const getChatRoom = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       Mensajes {
         items {
@@ -915,7 +895,6 @@ export const getChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -931,7 +910,6 @@ export const getChatRoom = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -967,7 +945,6 @@ export const listChatRooms = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         Mensajes {
           nextToken
@@ -1017,7 +994,6 @@ export const syncChatRooms = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         Mensajes {
           nextToken
@@ -1045,7 +1021,6 @@ export const getMensaje = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1066,7 +1041,6 @@ export const listMensajes = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -1096,7 +1070,6 @@ export const syncMensajes = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -1127,7 +1100,6 @@ export const getSolicitudGuia = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1309,7 +1281,6 @@ export const getComentario = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -1331,7 +1302,6 @@ export const listComentarios = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -1362,7 +1332,6 @@ export const syncComentarios = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -1498,7 +1467,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         solicitudguia {
           id
@@ -1513,7 +1481,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           updatedAt
           owner
         }
-        owner
       }
       nextToken
       startedAt
@@ -1570,7 +1537,6 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         usuario {
           id
@@ -1607,7 +1573,6 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        owner
       }
       nextToken
       startedAt
@@ -1684,7 +1649,6 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        owner
       }
       nextToken
       startedAt

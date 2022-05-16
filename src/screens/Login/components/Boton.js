@@ -1,10 +1,18 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native'
 
-export default ({ titulo, backgroundColor, onPress }) => {
+export default ({ titulo, backgroundColor, onPress, loading }) => {
     return (
-        <Pressable onPress={onPress} style={{ ...styles.boton, backgroundColor }}>
-            <Text style={{ color: '#fff', fontSize: 18, }}>{titulo}</Text>
+        <Pressable onPress={loading ? null : onPress} style={{ ...styles.boton, backgroundColor }}>
+            {
+                loading ?
+                    <ActivityIndicator
+                        size={"small"}
+                        color="white"
+                    />
+
+                    : <Text style={{ color: '#fff', fontSize: 18, }}>{titulo}</Text>
+            }
         </Pressable>
     )
 }

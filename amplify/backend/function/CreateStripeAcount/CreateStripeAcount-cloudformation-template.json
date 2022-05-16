@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.2\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -15,18 +15,6 @@
     },
     "s3Key": {
       "Type": "String"
-    },
-    "apiVelpaApiGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apiVelpaApiGraphQLAPIIdOutput"
-    },
-    "apiVelpaApiGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apiVelpaApiGraphQLAPIEndpointOutput"
-    },
-    "apiVelpaApiGraphQLAPIKeyOutput": {
-      "Type": "String",
-      "Default": "apiVelpaApiGraphQLAPIKeyOutput"
     }
   },
   "Conditions": {
@@ -81,15 +69,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "API_VELPAAPI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apiVelpaApiGraphQLAPIIdOutput"
-            },
-            "API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apiVelpaApiGraphQLAPIEndpointOutput"
-            },
-            "API_VELPAAPI_GRAPHQLAPIKEYOUTPUT": {
-              "Ref": "apiVelpaApiGraphQLAPIKeyOutput"
             }
           }
         },
@@ -110,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "velpaLambdaRole3b0c0223",
+            "velpaLambdaRolef2a6fb0d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "velpaLambdaRole3b0c0223",
+                  "velpaLambdaRolef2a6fb0d",
                   "-",
                   {
                     "Ref": "env"
@@ -181,73 +160,6 @@
                   }
                 ]
               }
-            }
-          ]
-        }
-      }
-    },
-    "AmplifyResourcesPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "appsync:GraphQL"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apiVelpaApiGraphQLAPIIdOutput"
-                      },
-                      "/types/Query/*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apiVelpaApiGraphQLAPIIdOutput"
-                      },
-                      "/types/Mutation/*"
-                    ]
-                  ]
-                }
-              ]
             }
           ]
         }

@@ -27,6 +27,8 @@ export default ({ correo, setModal, navigation }) => {
             .catch(error => {
                 var errorMessage = error.message;
 
+                console.log(error)
+
                 switch (errorMessage) {
 
                     case "Username/client id combination not found.":
@@ -39,8 +41,12 @@ export default ({ correo, setModal, navigation }) => {
                         setCheck(false)
                         break;
 
+                    case "Cognito received the following":
+                        setError("Error, el usuario no esta verificado")
+                        setCheck(false)
+                        break;
+
                     default:
-                        console.log(errorMessage)
                         setError(errorMessage)
                         setCheck(false)
                         break;
@@ -68,7 +74,7 @@ export default ({ correo, setModal, navigation }) => {
                     alignSelf: 'flex-start',
                     color: 'red',
                     fontSize: 18,
-                    height: 20,
+                    height: 22,
                     marginBottom: 10,
                 }}>{error}</Text> : <Text style={{ fontSize: 18, height: 20, color: '#000', marginBottom: 10, }}>Nombre de usuario</Text>}
 

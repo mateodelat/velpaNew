@@ -1,11 +1,12 @@
 {
-  "AppSyncApiName": "VelpaApi",
+  "AppSyncApiName": "velpaAPI",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authvelpa98b1c29b",
+      "authvelpa01106a15",
       "Outputs.UserPoolId"
     ]
-  }
+  },
+  "AuthModeLastUpdated": "2022-04-27T03:33:35.233Z"
 }
