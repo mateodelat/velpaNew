@@ -292,14 +292,14 @@ export default () => {
 
 
                 <Tab.Screen
-                    name="Notificaciones"
+                    name="NotificacionesTab"
                     component={NotificationsTab}
                     options={({ navigation }) => ({
                         tabBarIcon: ({ color, focused }) => {
 
                             // Si se selecciona se quita la bolita roja
                             const handlePress = () => {
-                                navigation.navigate("Notificaciones")
+                                navigation.navigate("NotificacionesTab")
                                 setNewNotificaciones(false)
                                 setNewMessages(false)
                             }
