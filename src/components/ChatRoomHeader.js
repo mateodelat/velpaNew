@@ -9,23 +9,24 @@ import { DataStore } from "@aws-amplify/datastore";
 import API from "@aws-amplify/api";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
-export const getUsersInChat = /* GraphQL */ `
-    query getChatRoom($id: ID!) {
-        getChatRoom(id: $id) {
-            Participantes(limit: 3) {
-                items {
-                    usuario {
-                        nickname
-                    }
-                }
-            }
-        }
-    }
-`;
 
 
 export default ({ id, titulo, image }) => {
     const navigation = useNavigation()
+
+    const getUsersInChat = /* GraphQL */ `
+        query getChatRoom($id: ID!) {
+            getChatRoom(id: $id) {
+                Participantes(limit: 3) {
+                    items {
+                        usuario {
+                            nickname
+                        }
+                    }
+                }
+            }
+        }
+    `
 
     const handlePress = () => {
         navigation.pop()

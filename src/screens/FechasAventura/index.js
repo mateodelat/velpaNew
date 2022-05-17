@@ -13,7 +13,7 @@ import { Usuario } from '../../models';
 import { Loading } from '../../components/Loading';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default index = ({ route, navigation }) => {
+export default ({ route, navigation }) => {
     const { height, width } = Dimensions.get("screen")
 
     const scrollY = React.useRef(new Animated.Value(0)).current

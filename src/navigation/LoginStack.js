@@ -10,10 +10,10 @@ import Confirm from '../screens/Login/Confirm';
 import NewPassword from '../screens/Login/NewPassword';
 import { moradoOscuro } from '../../assets/constants';
 
-const Stack = createStackNavigator()
 
 
 export default function LoginStack() {
+    const Stack = createStackNavigator()
 
     return (
         <NavigationContainer>

@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
-export default index = ({
+export default ({
     titulo,
     scrollY,
     imagen,

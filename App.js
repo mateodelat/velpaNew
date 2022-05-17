@@ -1,78 +1,85 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import 'react-native-gesture-handler';
+
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-import { Linking, View, LogBox, StyleSheet, Button, Platform, Alert } from 'react-native';
+import {
+  Linking, View, StyleSheet, Button, Platform, Alert,
+  LogBox
+} from 'react-native';
 
-import LoginStack from './src/navigation/LoginStack';
-import Router from './src/navigation/Router';
-
-import { Auth, Hub, Amplify, } from "aws-amplify";
+import { Auth, Hub, Amplify } from "aws-amplify";
 
 import { DataStore } from '@aws-amplify/datastore';
 
 
 import awsconfig from "./src/aws-exports";
-// import * as WebBrowser from 'expo-web-browser';
-// import { createUsuario, getBlob, openImagePickerAsync } from './assets/constants';
-// import { Loading } from './src/components/Loading';
-// import { Aventura } from './src/models';
-// import { Publicidad } from './src/models';
-// import ModalOnboarding from './src/navigation/components/ModalOnboarding';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { Usuario } from './src/models';
-// import { Notificacion } from './src/models';
+import * as WebBrowser from 'expo-web-browser';
+import { Loading } from './src/components/Loading';
+import { Aventura } from './src/models';
+import { Publicidad } from './src/models';
+import ModalOnboarding from './src/navigation/components/ModalOnboarding';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Usuario } from './src/models';
+import { Notificacion } from './src/models';
+
+import LoginStack from './src/navigation/LoginStack';
+import Router from './src/navigation/Router';
 
 
-LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
+const url = "exp://127.0.0.1:19000/--/"
+LogBox.ignoreLogs(['Setting a timer for a long period of time, i.e. multiple minutes']);
 
-export default () => {
-  async function urlOpener(url, redirectUrl) {
-    console.log(redirectUrl)
-    const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
-      url,
-      redirectUrl
-    );
+async function urlOpener(url, redirectUrl) {
+  console.log(redirectUrl)
+  const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
+    url,
+    redirectUrl
+  );
 
-    if (type === 'success' && Platform.OS === 'ios') {
-      WebBrowser.dismissBrowser();
-      return Linking.openURL(newUrl);
-    }
+  if (type === 'success' && Platform.OS === 'ios') {
+    WebBrowser.dismissBrowser();
+    return Linking.openURL(newUrl);
   }
+}
 
-  const [
-    local,
-    expo,
-    standAlone,
-  ] = awsconfig.oauth.redirectSignOut.split(",");
+Amplify.configure({
+  ...awsconfig,
+  oauth: {
+    ...awsconfig.oauth,
+    urlOpener,
+    redirectSignIn: url,
+    redirectSignOut: url,
 
-  const url = local
+  }
+});
 
-  Amplify.configure({
-    ...awsconfig,
-    oauth: {
-      ...awsconfig.oauth,
-      urlOpener,
-      redirectSignIn: url,
-      redirectSignOut: url,
 
-    }
-  });
+export default function App() {
+
+
+  // const [
+  //   local,
+  //   expo,
+  //   standAlone,
+  // ] = awsconfig.oauth.redirectSignOut.split(",");
+
 
   let publicidadLoaded
   let aventuraLoaded
   let usuarioLoaded
   let notificacionLoaded
 
-  return <View style={{
-    backgroundColor: 'red',
-    flex: 1,
-  }} />
 
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cargandoModelos, setCargandoModelos] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(null);
+
+
+
+
 
   useEffect(() => {
     checkOnboarding()
@@ -84,9 +91,6 @@ export default () => {
           DataStore.start()
           setAuthenticated(true)
         }
-        //  else {
-        //   Auth.signOut()
-        // }
       }).catch(err => {
         setLoading(false)
         console.log("Error getting credentials", err)
@@ -96,7 +100,7 @@ export default () => {
     const auth = Hub.listen("auth", (data) => {
       console.log(data)
       const { event, message } = data.payload
-      // console.log(event, message)
+
       switch (event) {
         case "signIn":
           setCargandoModelos(true)
@@ -108,17 +112,16 @@ export default () => {
           setLoading(false)
           setAuthenticated(false)
           break;
-        case "cognitoHostedUI":
-          setLoading(false)
-          if (message.startsWith("A user google")) {
-            Auth.currentUserInfo()
-              .then(r => {
-                setCargandoModelos(true)
-                createUsuario(r.attributes, false, r.username)
-                setAuthenticated(true)
-              })
-          }
-          break;
+        // case "cognitoHostedUI":
+        //   setLoading(false)
+        //   if (message.startsWith("A user google")) {
+        //     Auth.currentUserInfo()
+        //       .then(r => {
+        //         setCargandoModelos(true)
+        //         setAuthenticated(true)
+        //       })
+        //   }
+        //   break;
 
         default:
           break;
@@ -163,6 +166,7 @@ export default () => {
 
 
 
+
   // Ver si ya se presento el onboarding
   async function checkOnboarding() {
     try {
@@ -178,13 +182,13 @@ export default () => {
     }
   }
 
+
   // Limpiar el elemento de onboardingShown
   async function handleDoneOnboarding() {
     setShowOnboarding(false)
     AsyncStorage.setItem("@onboardingShown", "t")
 
   }
-
 
 
   if (loading || cargandoModelos || showOnboarding === null) return (
@@ -202,6 +206,9 @@ export default () => {
     )
   }
 
+
+
+
   if (showOnboarding) {
     return <ModalOnboarding
       doneViewing={handleDoneOnboarding}
@@ -217,5 +224,6 @@ export default () => {
       <Router />
     </View>
   );
+
 
 }

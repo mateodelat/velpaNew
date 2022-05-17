@@ -16,27 +16,29 @@ import { Usuario } from '../../models';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHeaderHeight } from '@react-navigation/stack';
 
-const getUsersInChat = /* GraphQL */ `
-    query getChatRoom($id: ID!) {
-        getChatRoom(id: $id) {
-            Participantes {
-                items {
-                    id
-                    newMessages
-                    usuario {
+
+
+export default ({ route }) => {
+    const getUsersInChat = /* GraphQL */ `
+        query getChatRoom($id: ID!) {
+            getChatRoom(id: $id) {
+                Participantes {
+                    items {
                         id
-                        nickname
-                        foto
-                        notificationToken
+                        newMessages
+                        usuario {
+                            id
+                            nickname
+                            foto
+                            notificationToken
+                        }
                     }
                 }
             }
         }
-    }
-`;
+    `;
 
 
-export default ({ route }) => {
     const [message, setMessage] = useState("");
     const [usuarioID, setUsuarioID] = useState(null);
     const [listaUsuarios, setListaUsuarios] = useState([]);

@@ -15,10 +15,11 @@ import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../models';
 
 
-const Stack = createStackNavigator()
 
 
 export default function SolicitudStack({ navigation }) {
+    const Stack = createStackNavigator()
+
     const [loading, setLoading] = useState(true);
     const [requireDocumentos, setRequireDocumentos] = useState(true);
 

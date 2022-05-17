@@ -17,10 +17,11 @@ import { mayusFirstLetter } from '../../assets/constants';
 import Publicidad from '../screens/Admin/Publicidad';
 
 
-const Stack = createStackNavigator()
 
 
 export default function AdminStack() {
+    const Stack = createStackNavigator()
+
 
     return (
         <Stack.Navigator
