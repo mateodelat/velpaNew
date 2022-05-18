@@ -1,11 +1,4 @@
 /* Amplify Params - DO NOT EDIT
-	API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
-	API_VELPAAPI_GRAPHQLAPIIDOUTPUT
-	API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
-	AUTH_VELPA01106A15_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
     API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
     API_VELPAAPI_GRAPHQLAPIIDOUTPUT
     API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
@@ -54,9 +47,9 @@ function crearUsuario(attributes, sub) {
         nickname: attributes.nickname,
         owner: sub,
     }
+    console.log("Atributos recibidos en crear usuario: ", input)
 
     if (input.id) {
-        console.log("Atributos recibidos en crear usuario: ", input)
 
 
         // Informacion para conectarse a graphql
@@ -149,16 +142,18 @@ exports.handler = (event, context, callback) => {
         }
     }
     else {
-        // Si es una cuenta nativa solo se crea el usuario con la informacion que queremos
-        crearUsuario(event.request.userAttributes, event.sub)
+        // Auto confirmar el usuario solo si fue creado por cuenta de google, si lo llama desde nodejs
+        if (event.callerContext.awsSdkVersion.startsWith("aws-sdk-nodejs-")) {
+            event.response.autoConfirmUser = true;
+            // Set the email as verified if it is in the request
+            if (event.request.userAttributes.hasOwnProperty("email")) {
+                event.response.autoVerifyEmail = true;
+            }
+        } else {
+            // Si es una cuenta nativa solo se crea el usuario con la informacion que queremos
+            crearUsuario(event.request.userAttributes, event.userName)
 
 
-
-        // Auto confirmar el usuario
-        event.response.autoConfirmUser = true;
-        // Set the email as verified if it is in the request
-        if (event.request.userAttributes.hasOwnProperty("email")) {
-            event.response.autoVerifyEmail = true;
         }
 
     }

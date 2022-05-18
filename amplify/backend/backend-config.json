@@ -62,20 +62,6 @@
           ]
         }
       ]
-    },
-    "postAuthentication": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "velpa01106a15",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
     }
   },
   "api": {
@@ -94,19 +80,22 @@
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authvelpa01106a15"
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 365,
+              "apiKeyExpirationDate": "2023-05-18T20:03:40.069Z",
+              "description": ""
             }
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "API_KEY",
-              "apiKeyConfig": {
-                "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-05-18T16:03:43.123Z",
-                "description": ""
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authvelpa01106a15"
               }
+            },
+            {
+              "authenticationType": "AWS_IAM"
             }
           ]
         }

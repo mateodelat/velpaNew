@@ -2,14 +2,13 @@ type Aventura
   @model
   @auth(
     rules: [
-      # { allow: private, operations: [read] }
-      # { allow: public, operations: [read] }
       { allow: owner }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      { allow: private, operations: [read] }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -55,14 +54,14 @@ type Reserva
   @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
-      # { allow: private, operations: [read] }
       { allow: owner }
+      { allow: private, operations: [read] }
       # { allow: public, operations: [read] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -96,14 +95,14 @@ type Fecha
   @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
-      # { allow: private, operations: [read, update] }
       { allow: owner, ownerField: "owner" }
+      { allow: private, operations: [read, update] }
       # { allow: public, operations: [read] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -149,14 +148,13 @@ type Usuario
   @auth(
     rules: [
       { allow: owner, ownerField: "owner" }
-      # { allow: public, operations: [create] }
-
-      # { allow: private, operations: [read, update] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      { allow: public, operations: [create] }
+      { allow: private, operations: [read, update] }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -219,12 +217,7 @@ type Usuario
 
 type ChatRoom
   @model
-  @auth(
-    rules: [
-      # { allow: public, operations: [read] },
-      { allow: private }
-    ]
-  )
+  @auth(rules: [{ allow: private }])
   @key(name: "byFecha", fields: ["fechaID"]) {
   id: ID!
   name: String!
@@ -246,13 +239,13 @@ type Mensaje
   @auth(
     rules: [
       { allow: owner }
-      # { allow: private, operations: [read] }
-      # { allow: public, operations: [read] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -266,12 +259,11 @@ type SolicitudGuia
   @auth(
     rules: [
       { allow: owner, ownerField: "owner" }
-      # { allow: public, operations: [read] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   )
   @key(name: "byUsuario", fields: ["usuarioID"]) {
@@ -292,12 +284,12 @@ type Notificacion
   @auth(
     rules: [
       { allow: owner, ownerField: "owner" }
-      # { allow: public, operations: [create] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      { allow: public, operations: [create] }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -323,12 +315,7 @@ type Notificacion
 type Comentario
   @model
   @key(name: "byUsuario", fields: ["usuarioCalificadoID"])
-  @auth(
-    rules: [
-      { allow: owner }
-      # { allow: private, operations: [read] }
-    ]
-  ) {
+  @auth(rules: [{ allow: owner }, { allow: private, operations: [read] }]) {
   id: ID!
 
   usuarioCalificadoID: ID!
@@ -342,12 +329,11 @@ type Publicidad
   @auth(
     rules: [
       { allow: private, operations: [read] }
-      # { allow: public, operations: [read] }
-      # {
-      #   allow: groups
-      #   groups: ["Admin"]
-      #   operations: [read, create, update, delete]
-      # }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!

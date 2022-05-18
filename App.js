@@ -69,8 +69,6 @@ export default function App() {
   });
 
 
-
-
   let publicidadLoaded
   let aventuraLoaded
   let usuarioLoaded
