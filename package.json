@@ -58,7 +58,7 @@
     "unimodules-permissions-interface": "^6.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.17.12",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.67.6",
     "typescript": "~4.3.5",

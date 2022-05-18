@@ -42,12 +42,13 @@ import * as Notifications from 'expo-notifications';
 import { Button, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QRCode from '../screens/QRScan/QRCode';
-import { Auth } from 'aws-amplify';
+
 
 
 
 
 export default () => {
+
     const Stack = createStackNavigator()
 
 
@@ -66,66 +67,61 @@ export default () => {
 
 
 
-    // async function registerForPushNotificationsAsync() {
-    //     let token;
-    //     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    //     let finalStatus = existingStatus;
-    //     if (existingStatus !== 'granted') {
-    //         const { status } = await Notifications.requestPermissionsAsync();
-    //         finalStatus = status;
-    //     }
-    //     if (finalStatus !== 'granted') {
-    //         alert('Failed to get push token for push notification!');
-    //         return;
-    //     }
-    //     token = (await Notifications.getExpoPushTokenAsync()).data;
+    async function registerForPushNotificationsAsync() {
+        let token;
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
 
-    //     if (token) {
-    //         // Subir a datastore el token
-    //         const usuario = await DataStore.query(Usuario, await getUserSub())
-    //         await DataStore.save(Usuario.copyOf(usuario, usr => {
-    //             usr.notificationToken = token
-    //         }))
+        if (token) {
+            // Subir a datastore el token
+            const usuario = await DataStore.query(Usuario, await getUserSub())
+            await DataStore.save(Usuario.copyOf(usuario, usr => {
+                usr.notificationToken = token
+            }))
 
-    //     }
+        }
 
-    //     if (Platform.OS === 'android') {
-    //         Notifications.setNotificationChannelAsync('default', {
-    //             name: 'default',
-    //             importance: Notifications.AndroidImportance.MAX,
-    //             vibrationPattern: [0, 250, 250, 250],
-    //             lightColor: moradoOscuro,
-    //         });
-    //     }
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: moradoOscuro,
+            });
+        }
 
-    //     return token;
-    // }
-
-    // return <View >
-
-    //     <Button title='Cerrar sesion' onPress={() => Auth.signOut()} />
-    //     <Button title='Accion' onPress={accion} />
-    // </View>
+        return token;
+    }
 
 
-    // useEffect(() => {
-    //     // Subir token de notificaciones para el usuario
-    //     // registerForPushNotificationsAsync()
 
-    //     // This listener is fired whenever a notification is received while the app is foregrounded
-    //     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-    //         setNotification(notification);
-    //     });
+    useEffect(() => {
+        // Subir token de notificaciones para el usuario
+        // registerForPushNotificationsAsync()
 
-    //     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    //     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-    //     });
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
 
-    //     return () => {
-    //         Notifications.removeNotificationSubscription(notificationListener.current);
-    //         Notifications.removeNotificationSubscription(responseListener.current);
-    //     };
-    // }, []);
+        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+        };
+    }, []);
 
     return (
         <View style={{ flex: 1, }}>

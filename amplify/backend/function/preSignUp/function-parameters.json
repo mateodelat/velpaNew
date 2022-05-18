@@ -10,10 +10,7 @@
     },
     "api": {
       "velpaAPI": [
-        "create",
-        "read",
-        "update",
-        "delete"
+        "create"
       ]
     }
   },

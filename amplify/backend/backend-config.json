@@ -82,6 +82,15 @@
     "velpaAPI": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "velpa01106a15",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
       "output": {
         "authConfig": {
           "defaultAuthentication": {
@@ -92,27 +101,16 @@
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "apiKeyExpirationDays": 30,
-                "description": "api key description"
+                "apiKeyExpirationDays": 365,
+                "apiKeyExpirationDate": "2023-05-18T16:03:43.123Z",
+                "description": ""
               }
             }
           ]
         }
-      },
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "velpa01106a15",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
+      }
     }
   },
   "storage": {

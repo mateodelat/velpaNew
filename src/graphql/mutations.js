@@ -77,6 +77,25 @@ export const createStripeAcount = /* GraphQL */ `
     }
   }
 `;
+export const updateComentario = /* GraphQL */ `
+  mutation UpdateComentario(
+    $input: UpdateComentarioInput!
+    $condition: ModelComentarioConditionInput
+  ) {
+    updateComentario(input: $input, condition: $condition) {
+      id
+      usuarioCalificadoID
+      body
+      calificacion
+      creatorID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createAventura = /* GraphQL */ `
   mutation CreateAventura(
     $input: CreateAventuraInput!
@@ -85,6 +104,7 @@ export const createAventura = /* GraphQL */ `
     createAventura(input: $input, condition: $condition) {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -114,6 +134,7 @@ export const createAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -150,6 +171,7 @@ export const createAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -164,6 +186,7 @@ export const createAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -184,6 +207,7 @@ export const updateAventura = /* GraphQL */ `
     updateAventura(input: $input, condition: $condition) {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -213,6 +237,7 @@ export const updateAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -249,6 +274,7 @@ export const updateAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -263,6 +289,7 @@ export const updateAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -283,6 +310,7 @@ export const deleteAventura = /* GraphQL */ `
     deleteAventura(input: $input, condition: $condition) {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -312,6 +340,7 @@ export const deleteAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -348,6 +377,7 @@ export const deleteAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -362,6 +392,7 @@ export const deleteAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -381,6 +412,7 @@ export const createReserva = /* GraphQL */ `
   ) {
     createReserva(input: $input, condition: $condition) {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -410,6 +442,7 @@ export const updateReserva = /* GraphQL */ `
   ) {
     updateReserva(input: $input, condition: $condition) {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -439,6 +472,7 @@ export const deleteReserva = /* GraphQL */ `
   ) {
     deleteReserva(input: $input, condition: $condition) {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -469,6 +503,7 @@ export const createFecha = /* GraphQL */ `
     createFecha(input: $input, condition: $condition) {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -499,6 +534,7 @@ export const createFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -549,6 +585,7 @@ export const updateFecha = /* GraphQL */ `
     updateFecha(input: $input, condition: $condition) {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -579,6 +616,7 @@ export const updateFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -629,6 +667,7 @@ export const deleteFecha = /* GraphQL */ `
     deleteFecha(input: $input, condition: $condition) {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -659,6 +698,7 @@ export const deleteFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -743,6 +783,7 @@ export const createUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -770,6 +811,7 @@ export const createUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -818,6 +860,7 @@ export const createUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -828,7 +871,6 @@ export const createUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -879,6 +921,7 @@ export const createUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -894,6 +937,7 @@ export const createUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -948,6 +992,7 @@ export const updateUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -975,6 +1020,7 @@ export const updateUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -1023,6 +1069,7 @@ export const updateUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -1033,7 +1080,6 @@ export const updateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1084,6 +1130,7 @@ export const updateUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1099,6 +1146,7 @@ export const updateUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1153,6 +1201,7 @@ export const deleteUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -1180,6 +1229,7 @@ export const deleteUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -1228,6 +1278,7 @@ export const deleteUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -1238,7 +1289,6 @@ export const deleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1289,6 +1339,7 @@ export const deleteUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1304,6 +1355,7 @@ export const deleteUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1364,6 +1416,7 @@ export const createChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1424,6 +1477,7 @@ export const updateChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1484,6 +1538,7 @@ export const deleteChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1556,6 +1611,7 @@ export const createSolicitudGuia = /* GraphQL */ `
     $condition: ModelSolicitudGuiaConditionInput
   ) {
     createSolicitudGuia(input: $input, condition: $condition) {
+      owner
       id
       status
       evaluadorID
@@ -1566,12 +1622,12 @@ export const createSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1590,6 +1646,7 @@ export const updateSolicitudGuia = /* GraphQL */ `
     $condition: ModelSolicitudGuiaConditionInput
   ) {
     updateSolicitudGuia(input: $input, condition: $condition) {
+      owner
       id
       status
       evaluadorID
@@ -1600,12 +1657,12 @@ export const updateSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1624,6 +1681,7 @@ export const deleteSolicitudGuia = /* GraphQL */ `
     $condition: ModelSolicitudGuiaConditionInput
   ) {
     deleteSolicitudGuia(input: $input, condition: $condition) {
+      owner
       id
       status
       evaluadorID
@@ -1634,12 +1692,12 @@ export const deleteSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1755,25 +1813,6 @@ export const createComentario = /* GraphQL */ `
     }
   }
 `;
-export const updateComentario = /* GraphQL */ `
-  mutation UpdateComentario(
-    $input: UpdateComentarioInput!
-    $condition: ModelComentarioConditionInput
-  ) {
-    updateComentario(input: $input, condition: $condition) {
-      id
-      usuarioCalificadoID
-      body
-      calificacion
-      creatorID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const deleteComentario = /* GraphQL */ `
   mutation DeleteComentario(
     $input: DeleteComentarioInput!
@@ -1868,6 +1907,7 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1876,6 +1916,7 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -1915,6 +1956,7 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -1925,7 +1967,6 @@ export const createAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1943,6 +1984,7 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1951,6 +1993,7 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -1990,6 +2033,7 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -2000,7 +2044,6 @@ export const updateAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -2018,6 +2061,7 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2026,6 +2070,7 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2065,6 +2110,7 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -2075,7 +2121,6 @@ export const deleteAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -2093,6 +2138,7 @@ export const createAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2101,6 +2147,7 @@ export const createAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2218,6 +2265,7 @@ export const updateAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2226,6 +2274,7 @@ export const updateAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2343,6 +2392,7 @@ export const deleteAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2351,6 +2401,7 @@ export const deleteAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2469,6 +2520,7 @@ export const createChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2585,6 +2637,7 @@ export const updateChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2701,6 +2754,7 @@ export const deleteChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt

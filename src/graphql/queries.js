@@ -6,6 +6,7 @@ export const getAventura = /* GraphQL */ `
     getAventura(id: $id) {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -35,6 +36,7 @@ export const getAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -71,6 +73,7 @@ export const getAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -85,6 +88,7 @@ export const getAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -107,6 +111,7 @@ export const listAventuras = /* GraphQL */ `
       items {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -166,6 +171,7 @@ export const syncAventuras = /* GraphQL */ `
       items {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -213,6 +219,7 @@ export const getReserva = /* GraphQL */ `
   query GetReserva($id: ID!) {
     getReserva(id: $id) {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -244,6 +251,7 @@ export const listReservas = /* GraphQL */ `
     listReservas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        owner
         total
         comision
         pagadoAlGuia
@@ -284,6 +292,7 @@ export const syncReservas = /* GraphQL */ `
     ) {
       items {
         id
+        owner
         total
         comision
         pagadoAlGuia
@@ -314,6 +323,7 @@ export const getFecha = /* GraphQL */ `
     getFecha(id: $id) {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -344,6 +354,7 @@ export const getFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -396,6 +407,7 @@ export const listFechas = /* GraphQL */ `
       items {
         id
         personasTotales
+        owner
         fechaInicial
         fechaFinal
         precio
@@ -453,6 +465,7 @@ export const syncFechas = /* GraphQL */ `
       items {
         id
         personasTotales
+        owner
         fechaInicial
         fechaFinal
         precio
@@ -533,6 +546,7 @@ export const getUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -560,6 +574,7 @@ export const getUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -608,6 +623,7 @@ export const getUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -618,7 +634,6 @@ export const getUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -669,6 +684,7 @@ export const getUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -684,6 +700,7 @@ export const getUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -905,6 +922,7 @@ export const getChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1079,6 +1097,7 @@ export const syncMensajes = /* GraphQL */ `
 export const getSolicitudGuia = /* GraphQL */ `
   query GetSolicitudGuia($id: ID!) {
     getSolicitudGuia(id: $id) {
+      owner
       id
       status
       evaluadorID
@@ -1089,12 +1108,12 @@ export const getSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1115,6 +1134,7 @@ export const listSolicitudGuias = /* GraphQL */ `
   ) {
     listSolicitudGuias(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        owner
         id
         status
         evaluadorID
@@ -1125,7 +1145,6 @@ export const listSolicitudGuias = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1150,6 +1169,7 @@ export const syncSolicitudGuias = /* GraphQL */ `
       lastSync: $lastSync
     ) {
       items {
+        owner
         id
         status
         evaluadorID
@@ -1160,7 +1180,6 @@ export const syncSolicitudGuias = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1434,6 +1453,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
         id
         aventuraID
         solicitudguiaID
+        owner
         _version
         _deleted
         _lastChangedAt
@@ -1442,6 +1462,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
         aventura {
           id
           titulo
+          owner
           imagenFondoIdx
           imagenDetalle
           precioMin
@@ -1469,6 +1490,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           updatedAt
         }
         solicitudguia {
+          owner
           id
           status
           evaluadorID
@@ -1479,7 +1501,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
       }
       nextToken
@@ -1504,6 +1525,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         id
         aventuraID
         usuarioID
+        owner
         _version
         _deleted
         _lastChangedAt
@@ -1512,6 +1534,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         aventura {
           id
           titulo
+          owner
           imagenFondoIdx
           imagenDetalle
           precioMin
@@ -1597,6 +1620,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
         chatroomID
         usuarioID
         newMessages
+        owner
         _version
         _deleted
         _lastChangedAt

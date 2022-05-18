@@ -6,6 +6,7 @@ export const onCreateAventura = /* GraphQL */ `
     onCreateAventura {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -35,6 +36,7 @@ export const onCreateAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -71,6 +73,7 @@ export const onCreateAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -85,6 +88,7 @@ export const onCreateAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -102,6 +106,7 @@ export const onUpdateAventura = /* GraphQL */ `
     onUpdateAventura {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -131,6 +136,7 @@ export const onUpdateAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -167,6 +173,7 @@ export const onUpdateAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -181,6 +188,7 @@ export const onUpdateAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -198,6 +206,7 @@ export const onDeleteAventura = /* GraphQL */ `
     onDeleteAventura {
       id
       titulo
+      owner
       imagenFondoIdx
       imagenDetalle
       precioMin
@@ -227,6 +236,7 @@ export const onDeleteAventura = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -263,6 +273,7 @@ export const onDeleteAventura = /* GraphQL */ `
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -277,6 +288,7 @@ export const onDeleteAventura = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -293,6 +305,7 @@ export const onCreateReserva = /* GraphQL */ `
   subscription OnCreateReserva {
     onCreateReserva {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -319,6 +332,7 @@ export const onUpdateReserva = /* GraphQL */ `
   subscription OnUpdateReserva {
     onUpdateReserva {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -345,6 +359,7 @@ export const onDeleteReserva = /* GraphQL */ `
   subscription OnDeleteReserva {
     onDeleteReserva {
       id
+      owner
       total
       comision
       pagadoAlGuia
@@ -372,6 +387,7 @@ export const onCreateFecha = /* GraphQL */ `
     onCreateFecha {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -402,6 +418,7 @@ export const onCreateFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -449,6 +466,7 @@ export const onUpdateFecha = /* GraphQL */ `
     onUpdateFecha {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -479,6 +497,7 @@ export const onUpdateFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -526,6 +545,7 @@ export const onDeleteFecha = /* GraphQL */ `
     onDeleteFecha {
       id
       personasTotales
+      owner
       fechaInicial
       fechaFinal
       precio
@@ -556,6 +576,7 @@ export const onDeleteFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -637,6 +658,7 @@ export const onCreateUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -664,6 +686,7 @@ export const onCreateUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -712,6 +735,7 @@ export const onCreateUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -722,7 +746,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -773,6 +796,7 @@ export const onCreateUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -788,6 +812,7 @@ export const onCreateUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -839,6 +864,7 @@ export const onUpdateUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -866,6 +892,7 @@ export const onUpdateUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -914,6 +941,7 @@ export const onUpdateUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -924,7 +952,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -975,6 +1002,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -990,6 +1018,7 @@ export const onUpdateUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1041,6 +1070,7 @@ export const onDeleteUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          owner
           total
           comision
           pagadoAlGuia
@@ -1068,6 +1098,7 @@ export const onDeleteUsuario = /* GraphQL */ `
         items {
           id
           personasTotales
+          owner
           fechaInicial
           fechaFinal
           precio
@@ -1116,6 +1147,7 @@ export const onDeleteUsuario = /* GraphQL */ `
       }
       SolicitudesCreadas {
         items {
+          owner
           id
           status
           evaluadorID
@@ -1126,7 +1158,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _lastChangedAt
           createdAt
           updatedAt
-          owner
         }
         nextToken
         startedAt
@@ -1177,6 +1208,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           id
           aventuraID
           usuarioID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1192,6 +1224,7 @@ export const onDeleteUsuario = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1249,6 +1282,7 @@ export const onCreateChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1306,6 +1340,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1363,6 +1398,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
           chatroomID
           usuarioID
           newMessages
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1423,6 +1459,7 @@ export const onDeleteMensaje = /* GraphQL */ `
 export const onCreateSolicitudGuia = /* GraphQL */ `
   subscription OnCreateSolicitudGuia($owner: String) {
     onCreateSolicitudGuia(owner: $owner) {
+      owner
       id
       status
       evaluadorID
@@ -1433,12 +1470,12 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1454,6 +1491,7 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
 export const onUpdateSolicitudGuia = /* GraphQL */ `
   subscription OnUpdateSolicitudGuia($owner: String) {
     onUpdateSolicitudGuia(owner: $owner) {
+      owner
       id
       status
       evaluadorID
@@ -1464,12 +1502,12 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1485,6 +1523,7 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
 export const onDeleteSolicitudGuia = /* GraphQL */ `
   subscription OnDeleteSolicitudGuia($owner: String) {
     onDeleteSolicitudGuia(owner: $owner) {
+      owner
       id
       status
       evaluadorID
@@ -1495,12 +1534,12 @@ export const onDeleteSolicitudGuia = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       Aventuras {
         items {
           id
           aventuraID
           solicitudguiaID
+          owner
           _version
           _deleted
           _lastChangedAt
@@ -1699,6 +1738,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1707,6 +1747,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -1746,6 +1787,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -1756,7 +1798,6 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1771,6 +1812,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1779,6 +1821,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -1818,6 +1861,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -1828,7 +1872,6 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1843,6 +1886,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
       id
       aventuraID
       solicitudguiaID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1851,6 +1895,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -1890,6 +1935,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         }
       }
       solicitudguia {
+        owner
         id
         status
         evaluadorID
@@ -1900,7 +1946,6 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
         Aventuras {
           nextToken
           startedAt
@@ -1915,6 +1960,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -1923,6 +1969,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2037,6 +2084,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2045,6 +2093,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2159,6 +2208,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
       id
       aventuraID
       usuarioID
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2167,6 +2217,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
       aventura {
         id
         titulo
+        owner
         imagenFondoIdx
         imagenDetalle
         precioMin
@@ -2282,6 +2333,7 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2395,6 +2447,7 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt
@@ -2508,6 +2561,7 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
       chatroomID
       usuarioID
       newMessages
+      owner
       _version
       _deleted
       _lastChangedAt

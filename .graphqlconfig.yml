@@ -1,15 +1,4 @@
 projects:
-  VelpaApi:
-    schemaPath: amplify/backend/api/VelpaApi/build/schema.graphql
-    includes:
-      - src/graphql/**/*.js
-    excludes:
-      - ./amplify/**
-    extensions:
-      amplify:
-        codeGenTarget: javascript
-        generatedFileName: ''
-        docsFilePath: src/graphql
   velpaAPI:
     schemaPath: src/graphql/schema.json
     includes:
