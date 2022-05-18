@@ -1,10 +1,5 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
-export enum AccountType {
-  INDIVIDUAL = "INDIVIDUAL",
-  COMPANY = "COMPANY"
-}
-
 export enum EstadoAventura {
   AUTORIZADO = "AUTORIZADO",
   PENDIENTE = "PENDIENTE",
@@ -55,6 +50,11 @@ export enum TipoPublicidad {
   ACTUALIZACION = "ACTUALIZACION"
 }
 
+export enum AccountType {
+  INDIVIDUAL = "INDIVIDUAL",
+  COMPANY = "COMPANY"
+}
+
 export declare class PaymentIntent {
   readonly id?: string;
   readonly clientSecret?: string;
@@ -70,7 +70,6 @@ export declare class CreateAcountResponse {
 export declare class Aventura {
   readonly id: string;
   readonly titulo: string;
-  readonly owner?: string;
   readonly imagenFondoIdx: number;
   readonly imagenDetalle: (string | null)[];
   readonly precioMin?: number;

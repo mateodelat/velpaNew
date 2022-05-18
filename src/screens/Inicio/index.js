@@ -56,11 +56,13 @@ export default ({ navigation }) => {
             return
         }
 
+
         timer = setTimeout(() => {
-            flatList?.current.scrollToIndex({
+            publicidad?.length !== 0 && (flatList?.current?.scrollToIndex({
                 index: actualIdx < (publicidad?.length) ? actualIdx : 0
-            })
-            setActualIdx(actualIdx < (publicidad?.length - 1) ? actualIdx + 1 : 0)
+            }) &&
+                setActualIdx(actualIdx < (publicidad?.length - 1) ? actualIdx + 1 : 0)
+            )
         }, duration);
     }
 
@@ -133,8 +135,8 @@ export default ({ navigation }) => {
                 ,
                 {
                     sort: e => e
-                        .experience("DESCENDING")
-                        .updatedAt("ASCENDING"),
+                        .experience("DESCENDING"),
+                    // .createdAt("ASCENDING"),
                     limit: 4
                 }
             )
@@ -255,9 +257,14 @@ export default ({ navigation }) => {
 
                         </View>
                         :
-                        publicidad.length === 0 ? <View style={{ height: height * 0.25, }}>
+                        publicidad.length === 0 ?
+                            <View style={{
+                                height:
+                                    10
+                                // height * 0.25,
+                            }}>
 
-                        </View> :
+                            </View> :
                             <>
                                 <Animated.FlatList
                                     pagingEnabled

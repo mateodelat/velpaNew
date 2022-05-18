@@ -33,6 +33,7 @@ import { Usuario } from '../../models';
 
 import { AndroidNotificationPriority, cancelAllScheduledNotificationsAsync, getAllScheduledNotificationsAsync, getPresentedNotificationsAsync, scheduleNotificationAsync } from 'expo-notifications';
 
+
 import { sendPushNotification } from '../../../assets/constants/constant';
 
 

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
+import 'react-native-gesture-handler';
+
+
 import {
   Linking, View, StyleSheet, Button, Platform, Alert,
   LogBox
@@ -26,7 +29,7 @@ import Router from './src/navigation/Router';
 
 
 
-LogBox.ignoreLogs(['.*will be removed from React Native. Migrate to $', 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
+LogBox.ignoreLogs(['.*$will be removed from React Native. Migrate to ', 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
 
 
 export default function App() {
