@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Pressable, TextInput, StyleSheet, Text, View } from 'react-native'
 import { container, formatDateShort, getUserSub, moradoOscuro } from '../../../assets/constants'
 import MessageComponent from './components/Message';
 

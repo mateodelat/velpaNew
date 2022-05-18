@@ -1,6 +1,5 @@
 import React from 'react'
-import { Alert, Modal, StyleSheet, Text, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
+import { Alert, Modal, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { calculateLvl, colorFondo, levels, moradoOscuro } from '../../assets/constants';
 import HeaderModal from '../screens/AgregarFecha/components/HeaderModal';
 

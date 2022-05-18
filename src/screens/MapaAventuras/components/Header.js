@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { Alert, Dimensions, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ScrollView, Dimensions, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 
 
 import { Feather, Entypo, } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
 import { colorFondo } from '../../../../assets/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

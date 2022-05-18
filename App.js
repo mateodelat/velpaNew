@@ -26,42 +26,46 @@ import Router from './src/navigation/Router';
 
 
 
-const url = "exp://127.0.0.1:19000/--/"
-LogBox.ignoreLogs(['Setting a timer for a long period of time, i.e. multiple minutes']);
-
-async function urlOpener(url, redirectUrl) {
-  console.log(redirectUrl)
-  const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
-    url,
-    redirectUrl
-  );
-
-  if (type === 'success' && Platform.OS === 'ios') {
-    WebBrowser.dismissBrowser();
-    return Linking.openURL(newUrl);
-  }
-}
-
-Amplify.configure({
-  ...awsconfig,
-  oauth: {
-    ...awsconfig.oauth,
-    urlOpener,
-    redirectSignIn: url,
-    redirectSignOut: url,
-
-  }
-});
+LogBox.ignoreLogs(['.*will be removed from React Native. Migrate to $', 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
 
 
 export default function App() {
 
+  const [
+    local,
+    expo,
+    standAlone,
+  ] = awsconfig.oauth.redirectSignOut.split(",");
 
-  // const [
-  //   local,
-  //   expo,
-  //   standAlone,
-  // ] = awsconfig.oauth.redirectSignOut.split(",");
+
+  const url = local
+
+
+  async function urlOpener(url, redirectUrl) {
+    console.log(redirectUrl)
+    const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
+      url,
+      redirectUrl
+    );
+
+    if (type === 'success' && Platform.OS === 'ios') {
+      WebBrowser.dismissBrowser();
+      return Linking.openURL(newUrl);
+    }
+  }
+
+  Amplify.configure({
+    ...awsconfig,
+    oauth: {
+      ...awsconfig.oauth,
+      urlOpener,
+      redirectSignIn: url,
+      redirectSignOut: url,
+
+    }
+  });
+
+
 
 
   let publicidadLoaded
@@ -77,8 +81,6 @@ export default function App() {
 
 
 
-
-
   useEffect(() => {
     checkOnboarding()
     // Ver si el usuario esta autenticado
@@ -86,7 +88,7 @@ export default function App() {
       .then(user => {
         setLoading(false)
         if (user.authenticated) {
-          DataStore.start()
+          // DataStore.start()
           setAuthenticated(true)
         }
       }).catch(err => {
@@ -96,7 +98,6 @@ export default function App() {
 
     // Escuchar a actualizaciones de auth
     const auth = Hub.listen("auth", (data) => {
-      console.log(data)
       const { event, message } = data.payload
 
       switch (event) {
@@ -130,6 +131,7 @@ export default function App() {
     // Crear listener para cuando se acaben de obtener los modelos de datastore
     const listener = Hub.listen("datastore", async hubData => {
       const { event, data } = hubData.payload;
+      console.log(event)
       if (event === "modelSynced" && data?.model === Aventura) {
         aventuraLoaded = true
       }

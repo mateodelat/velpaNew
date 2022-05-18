@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { colorFondo, moradoOscuro } from '../../../assets/constants'
 import { vibrar } from '../../../assets/constants/constant'
 

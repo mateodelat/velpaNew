@@ -19,23 +19,23 @@ const { request, GraphQLClient } = require('graphql-request')
 
 
 const crearUsr = `
-  mutation CreateUsuario(
-    $input: CreateUsuarioInput!
-  ) {
-    createUsuario(input: $input) {
-      id
-    }
-  }
-`
+      mutation CreateUsuario(
+        $input: CreateUsuarioInput!
+      ) {
+        createUsuario(input: $input) {
+          id
+        }
+      }
+    `
 const crearNotificacion = `
-  mutation CreateNotificacion(
-    $input: CreateNotificacionInput!
-  ) {
-    createNotificacion(input: $input) {
-      id
-    }
-  }
-`;
+      mutation CreateNotificacion(
+        $input: CreateNotificacionInput!
+      ) {
+        createNotificacion(input: $input) {
+          id
+        }
+      }
+    `;
 
 
 function crearUsuario(attributes, sub) {
@@ -48,35 +48,56 @@ function crearUsuario(attributes, sub) {
         owner: sub,
     }
 
-    console.log("Atributos recibidos en crear usuario: ", input)
+    if (input.id) {
+        console.log("Atributos recibidos en crear usuario: ", input)
 
 
-    // Informacion para conectarse a graphql
-    const endpoint = process.env.API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
-    const headers = {
-        "x-api-key": process.env.API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
-    };
+        // Informacion para conectarse a graphql
+        const endpoint = process.env.API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
+        const headers = {
+            "x-api-key": process.env.API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+        };
 
-    const client = new GraphQLClient(endpoint, { headers });
+        const client = new GraphQLClient(endpoint, { headers });
 
-    client.request(crearUsr, { input })
-        .then(r => {
-            console.log("Resultado crear usuario: ", r)
-            // Crear la notificacion de bienvenida si no existia el usuario
-            console.log("Crear la notificacion de bienvenida")
+        client.request(crearUsr, { input })
+            .then(r => {
+                console.log("Resultado crear usuario: ", r)
 
+            })
+            .catch(err => {
+                console.log('Error creando usuario: ', err);
+
+            })
+
+
+        // Crear la notificacion de bienvenida cuando no existia el usuario
+        client.request(crearNotificacion, {
+            input: {
+                tipo: "BIENVENIDA",
+
+                titulo: "Velpa adventures",
+                descripcion: (attributes.name ? attributes.name : attributes.nickname) + " gracias por registrarte en Velpa.\nAqui vas a encontrar experiencias increibles",
+
+                usuarioID: sub,
+                owner: sub,
+            }
         })
-        .catch(err => {
-            console.log('Error creando usuario: ', err);
 
-        })
+
+
+    }
+    else {
+        console.log("Error creando el usuario")
+    }
+
 
 }
 
 
 exports.handler = (event, context, callback) => {
 
-    console.log("Input funcion: ", event, "\nContext: ", context);
+    console.log("Input funcion: ", event);
 
     // Obtener el client id de la respuesta
     const ClientId = event.callerContext.clientId
@@ -119,7 +140,8 @@ exports.handler = (event, context, callback) => {
                 }
             });
         }
-    } else {
+    }
+    else {
         // Si es una cuenta nativa solo se crea el usuario con la informacion que queremos
         crearUsuario(event.request.userAttributes, event.sub)
 
@@ -216,7 +238,8 @@ function linkUsers(usersData, event) {
                 }
             }
         }
-    } else {
+    }
+    else {
         console.log("linkUsers: UserData was NULL or Empty")
     }
 }

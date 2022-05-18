@@ -345,7 +345,12 @@ enum TipoUsuario {
   GUIAINDIVIDUAL
 }
 
-type AventuraSolicitudGuia @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+type AventuraSolicitudGuia @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) 
+@auth(rules: [
+    {allow: private, operations: [read]}, 
+    {allow: owner}, 
+    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
+  ]) {
   id: ID!
   aventuraID: ID!
   solicitudguiaID: ID!
@@ -353,7 +358,14 @@ type AventuraSolicitudGuia @model(queries: null) @key(name: "byAventura", fields
   solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
 }
 
-type AventuraUsuario @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}]) {
+type AventuraUsuario @model(queries: null) 
+  @key(name: "byAventura", fields: ["aventuraID", "usuarioID"]) 
+  @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) 
+  @auth(rules: [
+    {allow: private, operations: [read]},
+    {allow: owner},
+    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
+  ]) {
   id: ID!
   aventuraID: ID!
   usuarioID: ID!
@@ -361,7 +373,14 @@ type AventuraUsuario @model(queries: null) @key(name: "byAventura", fields: ["av
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
 
-type ChatRoomUsuario @model(queries: null) @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"]) @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"]) @auth(rules: [{allow: public, operations: [read]}, {allow: private}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, {allow: owner}]) {
+type ChatRoomUsuario @model(queries: null) 
+@key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"]) 
+@key(name: "byUsuario", fields: ["usuarioID", "chatroomID"]) 
+@auth(rules: [
+    {allow: private, operations: [read]}, 
+    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
+    {allow: owner}
+  ]) {
   id: ID!
   chatroomID: ID!
   usuarioID: ID!

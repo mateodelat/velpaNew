@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
+import { Alert, FlatList, TextInput, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { colorFondo, container, getImageUrl, getUserSub, wait } from '../../../assets/constants'
 import ChatRoomItem from './components/ChatRoomItem';
 

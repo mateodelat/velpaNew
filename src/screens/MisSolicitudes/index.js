@@ -1,8 +1,7 @@
 import API from '@aws-amplify/api';
 import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
+import { Dimensions, ScrollView, Image, Pressable, StyleSheet, Text, View, } from 'react-native'
 import { colorFondo, container, formatAMPM, formatDateShort, getImageUrl, getUserSub, listSolicitudes, mayusFirstLetter, meses, moradoOscuro } from '../../../assets/constants'
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';

@@ -11,6 +11,7 @@ import {
     Modal,
     TextInput,
     ActivityIndicator,
+    TouchableOpacity
 } from 'react-native'
 import {
     colorFondo,
@@ -43,7 +44,6 @@ import CommentItem from './components/CommentItem';
 import ModalComentarios from './components/ModalComentarios';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import ModalTipoImagen from '../../components/ModalTipoImagen';
 import ImageFullScreen from '../../components/ImageFullScreen';
 

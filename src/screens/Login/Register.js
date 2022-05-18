@@ -21,6 +21,8 @@ export default function Register({ navigation }) {
     const [errorPassword, setErrorPassword] = useState();
     const [error, setError] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
 
     const clearError = () => {
         setErrorPassword(false)
@@ -50,6 +52,7 @@ export default function Register({ navigation }) {
             return
         }
 
+        setLoading(true)
 
         Auth.signUp({
             username: email,
@@ -60,17 +63,12 @@ export default function Register({ navigation }) {
             }
         }).then((user) => {
             //Una vez le damos a registrar, se crea el nuevo perfil con la api key
-            createUsuario({
-                nickname: nombre,
-                sub: user.userSub
-            }, true).then(r => {
-                navigation.navigate("Confirm", { email })
-                clearError()
+            navigation.navigate("Confirm", { email })
+            clearError()
 
-                setNombre("")
-                setEmail("")
-                setPassword("")
-            })
+            setNombre("")
+            setEmail("")
+            setPassword("")
 
 
         }).catch((error) => {
@@ -130,7 +128,7 @@ export default function Register({ navigation }) {
                     setError(error.message)
                     break;
             }
-        });
+        }).finally(() => setLoading(false))
 
     }
 
@@ -218,6 +216,7 @@ export default function Register({ navigation }) {
                 }}>{error}</Text> : <View style={{ marginTop: 20, }} />}
 
                 <Boton
+                    loading={loading}
                     onPress={handleRegistrarse}
                     titulo={"Registrarse"}
                     backgroundColor={moradoOscuro}

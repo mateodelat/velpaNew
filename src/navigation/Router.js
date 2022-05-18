@@ -39,16 +39,22 @@ import { Usuario } from '../models';
 import { getUserSub, moradoOscuro } from '../../assets/constants';
 
 import * as Notifications from 'expo-notifications';
-import { View } from 'react-native';
+import { Button, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QRCode from '../screens/QRScan/QRCode';
+import { Auth } from 'aws-amplify';
 
-const Stack = createStackNavigator()
 
 
 
 export default () => {
+    const Stack = createStackNavigator()
 
+
+    function accion() {
+        DataStore.start()
+        console.log("detenido")
+    }
 
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -63,44 +69,53 @@ export default () => {
         }),
     });
 
-    async function registerForPushNotificationsAsync() {
-        let token;
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!');
-            return;
-        }
-        token = (await Notifications.getExpoPushTokenAsync()).data;
 
-        if (token) {
-            // Subir a datastore el token
-            const usuario = await DataStore.query(Usuario, await getUserSub())
-            await DataStore.save(Usuario.copyOf(usuario, usr => {
-                usr.notificationToken = token
-            }))
 
-        }
+    // async function registerForPushNotificationsAsync() {
+    //     let token;
+    //     const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    //     let finalStatus = existingStatus;
+    //     if (existingStatus !== 'granted') {
+    //         const { status } = await Notifications.requestPermissionsAsync();
+    //         finalStatus = status;
+    //     }
+    //     if (finalStatus !== 'granted') {
+    //         alert('Failed to get push token for push notification!');
+    //         return;
+    //     }
+    //     token = (await Notifications.getExpoPushTokenAsync()).data;
 
-        if (Platform.OS === 'android') {
-            Notifications.setNotificationChannelAsync('default', {
-                name: 'default',
-                importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250],
-                lightColor: moradoOscuro,
-            });
-        }
+    //     if (token) {
+    //         // Subir a datastore el token
+    //         const usuario = await DataStore.query(Usuario, await getUserSub())
+    //         await DataStore.save(Usuario.copyOf(usuario, usr => {
+    //             usr.notificationToken = token
+    //         }))
 
-        return token;
-    }
+    //     }
+
+    //     if (Platform.OS === 'android') {
+    //         Notifications.setNotificationChannelAsync('default', {
+    //             name: 'default',
+    //             importance: Notifications.AndroidImportance.MAX,
+    //             vibrationPattern: [0, 250, 250, 250],
+    //             lightColor: moradoOscuro,
+    //         });
+    //     }
+
+    //     return token;
+    // }
+
+    return <View >
+
+        <Button title='Cerrar sesion' onPress={() => Auth.signOut()} />
+        <Button title='Accion' onPress={accion} />
+    </View>
+
 
     useEffect(() => {
         // Subir token de notificaciones para el usuario
-        registerForPushNotificationsAsync()
+        // registerForPushNotificationsAsync()
 
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
