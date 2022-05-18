@@ -1,43 +1,117 @@
 /* Amplify Params - DO NOT EDIT
-	API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
-	API_VELPAAPI_GRAPHQLAPIIDOUTPUT
-	API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
-	AUTH_VELPA01106A15_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */const AWS = require('aws-sdk')
+    API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
+    API_VELPAAPI_GRAPHQLAPIIDOUTPUT
+    API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+    AUTH_VELPA01106A15_USERPOOLID
+    ENV
+    REGION
+Amplify Params - DO NOT EDIT */
+
+const AWS = require('aws-sdk')
 const cognito = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
 
 
-// NOTE: This is not site specific; however, at this time it is only set to work with Facebook
+const axios = require('axios');
+const { request, GraphQLClient } = require('graphql-request')
+
+
+
+
+
+const crearUsr = `
+  mutation CreateUsuario(
+    $input: CreateUsuarioInput!
+  ) {
+    createUsuario(input: $input) {
+      id
+    }
+  }
+`
+const crearNotificacion = `
+  mutation CreateNotificacion(
+    $input: CreateNotificacionInput!
+  ) {
+    createNotificacion(input: $input) {
+      id
+    }
+  }
+`;
+
+
+function crearUsuario(attributes, sub) {
+    const input = {
+        nombre: attributes.name ? attributes.name : attributes.nickname,
+        apellido: attributes.family_name ? attributes.family_name : null,
+        id: sub,
+        foto: attributes.picture ? attributes.picture : null,
+        nickname: attributes.nickname,
+        owner: sub,
+    }
+
+    console.log("Atributos recibidos en crear usuario: ", input)
+
+
+    // Informacion para conectarse a graphql
+    const endpoint = process.env.API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
+    const headers = {
+        "x-api-key": process.env.API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+    };
+
+    const client = new GraphQLClient(endpoint, { headers });
+
+    client.request(crearUsr, { input })
+        .then(r => {
+            console.log("Resultado crear usuario: ", r)
+            // Crear la notificacion de bienvenida si no existia el usuario
+            console.log("Crear la notificacion de bienvenida")
+
+        })
+        .catch(err => {
+            console.log('Error creando usuario: ', err);
+
+        })
+
+}
+
+
 exports.handler = (event, context, callback) => {
-    console.log('exports.handler - event:');
-    console.log(event);
+
+    console.log("Input funcion: ", event, "\nContext: ", context);
 
     // Obtener el client id de la respuesta
     const ClientId = event.callerContext.clientId
+    const userPoolId = event.userPoolId
+
 
     if (event.triggerSource.includes('ExternalProvider')) {
-        // ExternalProvider (ie. Social)
+        // Si es lanzado por un login con google
+
         if (event.request.userAttributes.hasOwnProperty("email")) {
-            // Create Native User Always
             var params = {
                 ClientId,
                 Password: generatePassword(),
                 Username: event.request.userAttributes.email
             };
+
+
+            // Intentar crear usuario nativo siempre
             cognito.signUp(params, function (err, data) {
                 if (err) {
-                    console.log('cognito.signUp:');
-                    console.log(err, err.stack);
+                    console.log('cognito.signUp error:');
+                    console.log(err);
+
+
+                    // Si ya existe el usuario, se obtiene y se liga a la cuenta de google
                     if (err.code === 'UsernameExistsException') {
-                        // Get and Link Existing User
-                        getUsersAndLink(event.userPoolId, event.request.userAttributes.email, event);
+                        getUsersAndLink(userPoolId, event.request.userAttributes.email, event);
                     }
                 }
                 else {
-                    console.log('cognito.signUp:');
+                    console.log('cognito.signUp sucess:');
                     console.log(data);
+                    // Si es cuenta de google y no existe ya el usuario se crea el usuario con los datos necesarios
+                    crearUsuario(event.request.userAttributes, data.UserSub)
+
                     if (data.UserConfirmed) {
                         // Link Newly Created User
                         linkUser(data.UserSub, event);
@@ -46,14 +120,20 @@ exports.handler = (event, context, callback) => {
             });
         }
     } else {
-        // All Others (ie. Native Accounts)
-        // Auto Confirm The User
+        // Si es una cuenta nativa solo se crea el usuario con la informacion que queremos
+        crearUsuario(event.request.userAttributes, event.sub)
+
+
+
+        // Auto confirmar el usuario
         event.response.autoConfirmUser = true;
         // Set the email as verified if it is in the request
         if (event.request.userAttributes.hasOwnProperty("email")) {
             event.response.autoVerifyEmail = true;
         }
+
     }
+
     // Return to Amazon Cognito
     callback(null, event);
 };
@@ -73,6 +153,8 @@ function generatePassword() {
 }
 
 function getUsersAndLink(userPoolId, email, event) {
+    // Obtiene un usuario con el mismo correo que el email en caso que ya exista
+
     var params = {
         UserPoolId: userPoolId,
         AttributesToGet: ['sub', 'email', 'cognito:user_status'],
@@ -92,6 +174,8 @@ function getUsersAndLink(userPoolId, email, event) {
 }
 
 function linkUser(userName, event) {
+    // Se liga el usuario cuando es creado localmente
+
     var destinationValue = userName;
     var sourceValue = event.userName.split("_")[1];
     console.log('destinationValue: ' + destinationValue);
