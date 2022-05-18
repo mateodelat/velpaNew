@@ -115,5 +115,11 @@
       ]
     }
   },
-  "storage": {}
+  "storage": {
+    "velpaBucket": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
+  }
 }

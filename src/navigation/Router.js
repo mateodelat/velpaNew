@@ -51,11 +51,6 @@ export default () => {
     const Stack = createStackNavigator()
 
 
-    function accion() {
-        DataStore.start()
-        console.log("detenido")
-    }
-
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
@@ -106,31 +101,31 @@ export default () => {
     //     return token;
     // }
 
-    return <View >
+    // return <View >
 
-        <Button title='Cerrar sesion' onPress={() => Auth.signOut()} />
-        <Button title='Accion' onPress={accion} />
-    </View>
+    //     <Button title='Cerrar sesion' onPress={() => Auth.signOut()} />
+    //     <Button title='Accion' onPress={accion} />
+    // </View>
 
 
-    useEffect(() => {
-        // Subir token de notificaciones para el usuario
-        // registerForPushNotificationsAsync()
+    // useEffect(() => {
+    //     // Subir token de notificaciones para el usuario
+    //     // registerForPushNotificationsAsync()
 
-        // This listener is fired whenever a notification is received while the app is foregrounded
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-            setNotification(notification);
-        });
+    //     // This listener is fired whenever a notification is received while the app is foregrounded
+    //     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    //         setNotification(notification);
+    //     });
 
-        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        });
+    //     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    //     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    //     });
 
-        return () => {
-            Notifications.removeNotificationSubscription(notificationListener.current);
-            Notifications.removeNotificationSubscription(responseListener.current);
-        };
-    }, []);
+    //     return () => {
+    //         Notifications.removeNotificationSubscription(notificationListener.current);
+    //         Notifications.removeNotificationSubscription(responseListener.current);
+    //     };
+    // }, []);
 
     return (
         <View style={{ flex: 1, }}>

@@ -26,7 +26,7 @@
         },
         "preSignUp": {
           "deploymentBucketName": "amplify-velpa-dev-32225-deployment",
-          "s3Key": "amplify-builds/preSignUp-50496f7573574f79506e-build.zip"
+          "s3Key": "amplify-builds/preSignUp-38336858745174536855-build.zip"
         },
         "postAuthentication": {
           "deploymentBucketName": "amplify-velpa-dev-32225-deployment",

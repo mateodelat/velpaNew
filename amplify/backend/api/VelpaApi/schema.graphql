@@ -1,11 +1,14 @@
 type Aventura @model @auth(rules: [
    {allow: private, operations: [read]},
-   {allow: owner}, 
+   {allow: owner, ownerField:"owner"}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
 
   id: ID!
   titulo: String!
+
+  owner:String
+  
   imagenFondoIdx: Int!
   imagenDetalle: [String]!
 
@@ -45,11 +48,14 @@ type Reserva @model
 @key(name: "byUsuario", fields: ["usuarioID"]) 
 @auth(rules: [
    {allow: private, operations: [read]}, 
-   {allow: owner}, 
+   {allow: owner, ownerField:"owner"}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
 
   id: ID!
+  
+
+  owner:String
   
   total: Float!
   comision: Float!
@@ -77,12 +83,15 @@ type Fecha @model
 @key(name: "byUsuario", fields: ["usuarioID"]) 
 @auth(rules: [
    {allow: private, operations: [read,update]}, 
-   {allow: owner}, 
+   {allow: owner, ownerField:"owner"}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ]) {
 
   id: ID!
   personasTotales: Int!
+
+  owner:String
+  
   fechaInicial: AWSTimestamp!
   fechaFinal: AWSTimestamp!
   precio: Float!
@@ -216,11 +225,14 @@ type Mensaje @model
 
 type SolicitudGuia @model 
 @auth(rules: [
-   {allow: owner}, 
+   {allow: owner, ownerField:"owner"}, 
    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}
   ])
 @key(name: "byUsuario", fields: ["usuarioID"])
  {
+
+
+owner:String
 
   id: ID!
   status: StatusSolicitud!
@@ -348,12 +360,15 @@ enum TipoUsuario {
 type AventuraSolicitudGuia @model(queries: null) @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"]) @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"]) 
 @auth(rules: [
     {allow: private, operations: [read]}, 
-    {allow: owner}, 
+    {allow: owner, ownerField:"owner"}, 
     {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
   ]) {
   id: ID!
   aventuraID: ID!
   solicitudguiaID: ID!
+
+  owner:String
+  
   aventura: Aventura! @connection(fields: ["aventuraID"])
   solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
 }
@@ -363,12 +378,15 @@ type AventuraUsuario @model(queries: null)
   @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"]) 
   @auth(rules: [
     {allow: private, operations: [read]},
-    {allow: owner},
+    {allow: owner, ownerField:"owner"},
     {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
   ]) {
   id: ID!
   aventuraID: ID!
   usuarioID: ID!
+
+  owner:String
+  
   aventura: Aventura! @connection(fields: ["aventuraID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }
@@ -379,12 +397,15 @@ type ChatRoomUsuario @model(queries: null)
 @auth(rules: [
     {allow: private, operations: [read]}, 
     {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}, 
-    {allow: owner}
+    {allow: owner, ownerField:"owner"}
   ]) {
   id: ID!
   chatroomID: ID!
   usuarioID: ID!
   newMessages:Int
+
+  owner:String
+  
   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
   usuario: Usuario! @connection(fields: ["usuarioID"])
 }

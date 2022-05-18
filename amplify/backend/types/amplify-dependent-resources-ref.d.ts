@@ -44,5 +44,11 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }
+    },
+    "storage": {
+        "velpaBucket": {
+            "BucketName": "string",
+            "Region": "string"
+        }
     }
 }

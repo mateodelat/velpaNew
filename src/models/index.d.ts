@@ -70,6 +70,7 @@ export declare class CreateAcountResponse {
 export declare class Aventura {
   readonly id: string;
   readonly titulo: string;
+  readonly owner?: string;
   readonly imagenFondoIdx: number;
   readonly imagenDetalle: (string | null)[];
   readonly precioMin?: number;
@@ -99,6 +100,7 @@ export declare class Aventura {
 
 export declare class AventuraSolicitudGuia {
   readonly id: string;
+  readonly owner?: string;
   readonly aventura: Aventura;
   readonly solicitudguia: SolicitudGuia;
   constructor(init: ModelInit<AventuraSolicitudGuia>);
@@ -107,6 +109,7 @@ export declare class AventuraSolicitudGuia {
 
 export declare class SolicitudGuia {
   readonly id: string;
+  readonly owner?: string;
   readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
   readonly evaluadorID?: string;
   readonly usuarioID?: string;
@@ -118,6 +121,7 @@ export declare class SolicitudGuia {
 
 export declare class AventuraUsuario {
   readonly id: string;
+  readonly owner?: string;
   readonly aventura: Aventura;
   readonly usuario: Usuario;
   constructor(init: ModelInit<AventuraUsuario>);
@@ -177,6 +181,7 @@ export declare class Mensaje {
 export declare class ChatRoomUsuario {
   readonly id: string;
   readonly newMessages?: number;
+  readonly owner?: string;
   readonly chatroom: ChatRoom;
   readonly usuario: Usuario;
   constructor(init: ModelInit<ChatRoomUsuario>);
@@ -198,6 +203,7 @@ export declare class ChatRoom {
 
 export declare class Reserva {
   readonly id: string;
+  readonly owner?: string;
   readonly total: number;
   readonly comision: number;
   readonly pagadoAlGuia: number;
@@ -219,6 +225,7 @@ export declare class Reserva {
 export declare class Fecha {
   readonly id: string;
   readonly personasTotales: number;
+  readonly owner?: string;
   readonly fechaInicial: number;
   readonly fechaFinal: number;
   readonly precio: number;

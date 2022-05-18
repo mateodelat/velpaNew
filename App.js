@@ -131,7 +131,6 @@ export default function App() {
     // Crear listener para cuando se acaben de obtener los modelos de datastore
     const listener = Hub.listen("datastore", async hubData => {
       const { event, data } = hubData.payload;
-      console.log(event)
       if (event === "modelSynced" && data?.model === Aventura) {
         aventuraLoaded = true
       }

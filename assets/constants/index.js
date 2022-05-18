@@ -703,19 +703,20 @@ export const listAventurasAutorizadas = async (maxItems, page) => {
     .then(async r => {
 
 
-      r = await Promise.all(r.map(async ave => {
-        // Obtener urls de Storage
-        const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
-          uri: await getImageUrl(e),
-          key: e
-        }
-        )))
+      console.log(r)
+      // r = await Promise.all(r.map(async ave => {
+      //   // Obtener urls de Storage
+      //   const imagenDetalle = await Promise.all(ave.imagenDetalle.map(async e => ({
+      //     uri: await getImageUrl(e),
+      //     key: e
+      //   }
+      //   )))
 
-        return {
-          ...ave,
-          imagenDetalle,
-        }
-      }))
+      //   return {
+      //     ...ave,
+      //     imagenDetalle,
+      //   }
+      // }))
       return r
     })
     .catch(e => {

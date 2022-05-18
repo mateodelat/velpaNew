@@ -30,7 +30,7 @@ import Indicador from './components/Indicador';
 
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import { AventuraUsuario } from '../../models';
+
 import { getLastKnownPositionAsync } from 'expo-location';
 
 
