@@ -1,46 +1,46 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import { NavigationContainer } from '@react-navigation/native';
 
-import NavBar from './NavBar';
+// import NavBar from './NavBar';
 
-import { MaterialIcons } from '@expo/vector-icons';
-import ChatRoomHeader from '../components/ChatRoomHeader';
+// import { MaterialIcons } from '@expo/vector-icons';
+// import ChatRoomHeader from '../components/ChatRoomHeader';
 
-import SolicitudStack from './SolicitudStack';
-import AdminStack from './AdminStack';
+// import SolicitudStack from './SolicitudStack';
+// import AdminStack from './AdminStack';
 
-import BuscarAventura from '../screens/BuscarAventura';
-import DetalleAventura from '../screens/DetalleAventura';
-import FechasAventura from '../screens/FechasAventura';
+// import BuscarAventura from '../screens/BuscarAventura';
+// import DetalleAventura from '../screens/DetalleAventura';
+// import FechasAventura from '../screens/FechasAventura';
 
-import Logistica from '../screens/Logistica';
-import Pagar from '../screens/Pagar';
-import Exito from '../screens/ExitoScreen';
-import ChatRoom from '../screens/ChatRoom';
-import DetalleChatRoom from '../screens/DetalleChatRoom';
-import Perfil from '../screens/Perfil';
-import AgregarAventura from '../screens/AgregarAventura';
-import AgregarFecha from '../screens/AgregarFecha';
-import SeleccionaAventura from '../screens/SeleccionaAventura';
-import Agregar2 from '../screens/AgregarFecha/Agregar2';
-import Agregar3 from '../screens/AgregarFecha/Agregar3';
-import MisReservas from '../screens/MisReservas';
-import MisFechas from '../screens/MisFechas';
-import MisSolicitudes from '../screens/MisSolicitudes';
-import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
-import AgregarAventura3 from '../screens/AgregarAventura/AgregarAventura3';
-import Configuracion from '../screens/Configuracion';
-import Saldo from '../screens/Saldo';
-import DetalleReserva from '../screens/DetalleReserva';
-import DetalleFecha from '../screens/DetalleFecha';
-import { DataStore } from '@aws-amplify/datastore';
-import { Usuario } from '../models';
+// import Logistica from '../screens/Logistica';
+// import Pagar from '../screens/Pagar';
+// import Exito from '../screens/ExitoScreen';
+// import ChatRoom from '../screens/ChatRoom';
+// import DetalleChatRoom from '../screens/DetalleChatRoom';
+// import Perfil from '../screens/Perfil';
+// import AgregarAventura from '../screens/AgregarAventura';
+// import AgregarFecha from '../screens/AgregarFecha';
+// import SeleccionaAventura from '../screens/SeleccionaAventura';
+// import Agregar2 from '../screens/AgregarFecha/Agregar2';
+// import Agregar3 from '../screens/AgregarFecha/Agregar3';
+// import MisReservas from '../screens/MisReservas';
+// import MisFechas from '../screens/MisFechas';
+// import MisSolicitudes from '../screens/MisSolicitudes';
+// import AgregarAventura2 from '../screens/AgregarAventura/AgregarAventura2';
+// import AgregarAventura3 from '../screens/AgregarAventura/AgregarAventura3';
+// import Configuracion from '../screens/Configuracion';
+// import Saldo from '../screens/Saldo';
+// import DetalleReserva from '../screens/DetalleReserva';
+// import DetalleFecha from '../screens/DetalleFecha';
+// import { DataStore } from '@aws-amplify/datastore';
+// import { Usuario } from '../models';
 import { getUserSub, moradoOscuro } from '../../assets/constants';
 
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 import { Button, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QRCode from '../screens/QRScan/QRCode';
 
 
@@ -48,6 +48,8 @@ import QRCode from '../screens/QRScan/QRCode';
 
 
 export default () => {
+
+    return <View />
 
     const Stack = createStackNavigator()
 
@@ -106,7 +108,7 @@ export default () => {
 
     useEffect(() => {
         // Subir token de notificaciones para el usuario
-        // registerForPushNotificationsAsync()
+        registerForPushNotificationsAsync()
 
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {

@@ -84,12 +84,15 @@ export default function App() {
 
   useEffect(() => {
     checkOnboarding()
+
+    DataStore.clear()
+
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
         setLoading(false)
         if (user.authenticated) {
-          // DataStore.start()
+          DataStore.start()
           setAuthenticated(true)
         }
       }).catch(err => {

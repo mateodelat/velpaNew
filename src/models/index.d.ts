@@ -99,7 +99,6 @@ export declare class Aventura {
 
 export declare class AventuraSolicitudGuia {
   readonly id: string;
-  readonly owner?: string;
   readonly aventura: Aventura;
   readonly solicitudguia: SolicitudGuia;
   constructor(init: ModelInit<AventuraSolicitudGuia>);
@@ -202,7 +201,6 @@ export declare class ChatRoom {
 
 export declare class Reserva {
   readonly id: string;
-  readonly owner?: string;
   readonly total: number;
   readonly comision: number;
   readonly pagadoAlGuia: number;
@@ -224,7 +222,6 @@ export declare class Reserva {
 export declare class Fecha {
   readonly id: string;
   readonly personasTotales: number;
-  readonly owner?: string;
   readonly fechaInicial: number;
   readonly fechaFinal: number;
   readonly precio: number;
@@ -277,6 +274,7 @@ export declare class Comentario {
   readonly usuarioCalificadoID: string;
   readonly body?: string;
   readonly calificacion: number;
+  readonly owner?: string;
   readonly creatorID?: string;
   constructor(init: ModelInit<Comentario>);
   static copyOf(source: Comentario, mutator: (draft: MutableModel<Comentario>) => MutableModel<Comentario> | void): Comentario;
