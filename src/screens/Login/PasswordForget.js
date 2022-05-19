@@ -76,14 +76,14 @@ export default ({ correo, setModal, navigation }) => {
                     fontSize: 18,
                     height: 22,
                     marginBottom: 10,
-                }}>{error}</Text> : <Text style={{ fontSize: 18, height: 20, color: '#000', marginBottom: 10, }}>Nombre de usuario</Text>}
+                }}>{error}</Text> : <Text style={{ fontSize: 18, height: 20, color: '#000', marginBottom: 10, }}>Correo electronico</Text>}
 
 
                 <View style={{ ...styles.textInput, borderWidth: error !== "" ? 1 : 0, }}>
                     <TextInput
                         style={{ flex: 1, }}
                         value={email}
-                        placeholder="Nombre de usuario"
+                        placeholder="Correo electronico"
                         onChangeText={text => setEmail(text)}
                         editable={!check}
                         onEndEditing={() => setError("")}

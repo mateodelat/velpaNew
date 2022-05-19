@@ -1,163 +1,165 @@
 #############################################################################
 ##################################AVENTURAS##################################
 #############################################################################
-mutation createAventura {
-    ####################Nevado De Colima####################
-    NevadoDeColima : createAventura(input: {
-        altitud: 4282,
-        categoria: APLINISMO,
-        altimetriaRecorrida: 706,
-        comision: 0.2,
-        coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}",
-        descripcion: "El nevado de toluca es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve.",
-        dificultad: 2,
-        duracion: "1-2 dias",
-        distanciaRecorrida: 3.5,
-        estadoAventura: RECHAZADO,
-        id: "4a39d115-3884-4275-a331-bd3486bbbbad",
-        imagenDetalle: [
-            "https://www.mexicodesconocido.com.mx/wp-content/uploads/2018/02/Nevado-de-Toluca-laguna.jpg",
-            "https://images.reporteindigo.com/wp-content/uploads/2021/04/Nevado-de-toluca.jpeg"
-        ],
-        imagenFondoIdx: 0,
-        incluidoDefault: [
-            "Barra de proteina"
-        ],
-        materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
-        precioMax: 1500,
-        precioMin: 400,
-        titulo: "Nevado de toluca",
-        ubicacionId: "ChIJt63PBM6azYURCUW6Sein9E4",
-        ubicacionLink: "https://maps.google.com/?cid=5689356845386974473",
-        ubicacionNombre: "Nevado de Toluca"
-    }){
-    id
+
+mutation MyMutation {
+  ave1: createAventura(
+    input: {
+      altimetriaRecorrida: 706
+      altitud: 4282
+      categoria: APLINISMO
+      comision: 0.2
+      coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}"
+      descripcion: "El nevado de toluca es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve."
+      dificultad: 2
+      distanciaRecorrida: 3.5
+      duracion: "1-2 dias"
+      estadoAventura: RECHAZADO
+      id: "4a39d115-3884-4275-a331-bd3486bbbbad"
+      imagenDetalle: [
+        "https://www.mexicodesconocido.com.mx/wp-content/uploads/2018/02/Nevado-de-Toluca-laguna.jpg"
+        "https://images.reporteindigo.com/wp-content/uploads/2021/04/Nevado-de-toluca.jpeg"
+      ]
+      imagenFondoIdx: 0
+      incluidoDefault: ["Barra de proteina"]
+      materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]"
+      precioMax: 1500
+      precioMin: 400
+      titulo: "Nevado de toluca"
+      ubicacionId: "ChIJt63PBM6azYURCUW6Sein9E4"
+      ubicacionLink: "https://maps.google.com/?cid=5689356845386974473"
+      ubicacionNombre: "Nevado de Toluca"
+    }
+  ) {
+    altitud
   }
 
-    ####################Nevado De Toluca####################
-    NevadoDeToluca : createAventura(input:{
-        altitud: 5208,
-        categoria: APLINISMO,
-        altimetriaRecorrida: 1301,
-        comision: 0.2,
-        coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}",
-        descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion.",
-        dificultad: 5,
-        duracion: "1-2 dias",
-        distanciaRecorrida: 6.22,
-        estadoAventura: AUTORIZADO,
-        id: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96",
-        imagenDetalle: [
-            "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg"
-        ],
-        imagenFondoIdx: 0,
-        incluidoDefault: [
-            "Electrolit"
-        ],
-        materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]",
-        precioMax: 5000,
-        precioMin: 1000,
-        titulo: "Iztacihuatl",
-        ubicacionId: "ChIJ-VT-R-EvzoURyFHTem1z86c",
-        ubicacionLink: "https://maps.google.com/?cid=12102143537723953608",
-        ubicacionNombre: "Iztaccihuatl"
-    }){
-    id titulo
+  ave2: createAventura(
+    input: {
+      altimetriaRecorrida: 1301
+      altitud: 5208
+      categoria: APLINISMO
+      comision: 0.2
+      coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}"
+      descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion."
+      dificultad: 5
+      distanciaRecorrida: 6.22
+      duracion: "1-2 dias"
+      estadoAventura: AUTORIZADO
+      id: "5b10a5bf-5374-4a4a-b179-7b9e0209dd96"
+      imagenDetalle: [
+        "https://cdn.britannica.com/84/120884-004-D21DFB10/Iztaccihuatl-Mexico.jpg"
+      ]
+      imagenFondoIdx: 0
+      incluidoDefault: ["Electrolit"]
+      materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]"
+      precioMax: 5000
+      precioMin: 1000
+      titulo: "Iztacihuatl"
+      ubicacionId: "ChIJ-VT-R-EvzoURyFHTem1z86c"
+      ubicacionLink: "https://maps.google.com/?cid=12102143537723953608"
+      ubicacionNombre: "Iztaccihuatl"
+    }
+  ) {
+    altitud
   }
-
-
-    ###################Iztacihuatl##################
-    Iztacihuatl: createAventura(input:{
-        altitud: 4218,
-        categoria: APLINISMO,
-        altimetriaRecorrida: 795,
-        comision: 0.2,
-        coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}",
-        descripcion: "Prepárate para tener una aventura en contacto con la naturaleza y en algunas épocas del año cubierto de nieve. \n\nEsta experiencia es ideal para principiantes en el hikking teniendo una altura no tan elevada para afectar la condición.",
-        dificultad: null,
-        duracion: "1 a 2 dias",
-        distanciaRecorrida: 4.33,
-        estadoAventura: AUTORIZADO,
-        id: "7c3fb58a-f977-4518-9991-f940fd72475e",
-        imagenDetalle: [
-            "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg",
-            "imagen-1 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDeV2HgX2RQk8pnjsF9I9uCO7WfthunrRI5Q&usqp=CAU",
-            "imagen-2 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
-            "imagen-4 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQkBlCs39q8DAIi3XqBnSvkeQBlOLsSSqKeg&usqp=CAU"
-        ],
-        imagenFondoIdx: 0,
-        incluidoDefault: null,
-        materialDefault: "[[\"Obligatorio\",[\"Chamarra para el frio\",\"Pantalon comodo\",\"Botas con buen agarre\",\"Calcetines gruesos\",\"Mochila practica\",\"Buena actitud\"]],[\"Alimentacion\",[\"Barras de proteína\",\"Agua (3 litros min)\",\"Atun\",\"Sandwich\",\"Fruta\"]],[\"Acampada\",[\"Casa de campaña\",\"Sleeping caliente\",\"Cena y desayuno\"]]]",
-        precioMax: 3000,
-        precioMin: 400,
-        titulo: "Nevado de Colima",
-        ubicacionId: "ChIJwSuFnVNhJYQRMtjXwq_1wgc",
-        ubicacionLink: "https://maps.google.com/?cid=559279438984370226",
-        ubicacionNombre: "Nevado de Colima"
-    }){ id }
-
-
-
-    ###################Chunpinaya##################
-    Chupinaya: createAventura(input:{
-        altitud: 1537,
-        categoria: APLINISMO,
-        altimetriaRecorrida: 740,
-        comision: 0.2,
-        coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}",
-        descripcion: "Experimenta la imponente barranca de Huentitan trazada por el río Santiago\n\nAquí es un excelente lugar para ejercitarse y prepararse a montañas más difíciles. Es un parque natural dentro de la ciudad. Puedes ir a visitar el puente de arsediano o si lo prefieres adentrarte en el misterioso pueblo fantasma",
-        dificultad: null,
-        duracion: "5 horas",
-        distanciaRecorrida: 4,
-        estadoAventura: AUTORIZADO,
-        id: "236ebee2-da8b-4ed0-977c-630155c627fc",
-        imagenDetalle: [
-            "https://intothearmsofamerica.com/wp-content/uploads/2019/07/guadalajara-barranca-huentitan-color-2400x1200-1024x512.jpg",
-            "https://s0.wklcdn.com/image_124/3726685/28247253/18043266Master.jpg",
-            "https://guadalajaramidestino.com/wp-content/uploads/2019/10/tatiana_correr-15-1024x683.jpg",
-            "https://vagabundeandoenmexicomagico.files.wordpress.com/2018/05/mg_4936.jpg?w=393&h=&zoom=2"
-        ],
-        imagenFondoIdx: 1,
-        incluidoDefault: null,
-        materialDefault: "[[\"Obligatorio\",[\"Ropa deportiva ligera\",\"Tenis con buen agarre\",\"Mochila\",\"Bloqueador\",\"Gorra\",\"Buena actitud\"]],[\"Alimentacion\",[\"Snacks\",\"Agua (2 litros)\"]]]",
-        precioMax: 800,
-        precioMin: 50,
-        titulo: "Barranca de Huentitan",
-        ubicacionId: "ChIJAAAAAAAAAAARelODoN-ywjY",
-        ubicacionLink: "https://maps.google.com/?cid=3945912897070388090",
-        ubicacionNombre: "Tour por la barranca"
-    }){id}
-    ###################Chunpinaya##################
-    Chupinaya: createAventura(input:{
-        altitud: 2347,
-        categoria: APLINISMO,
-        altimetriaRecorrida: 768,
-        comision: 0.2,
-        coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}",
-        descripcion: "Disfruta de sus asombrosas cascadas en épocas de lluvias o si decides ir a dormir en la cima podrás contemplar un amanecer espectacular con una vista al lago.\n\nLa chupinaya es la sierra que se encuentra a un costado del Lago de Chapala por lo que tiene una vegetación muy verde y clima húmedo.",
-        dificultad: null,
-        duracion: "1 a 2 dias",
-        distanciaRecorrida: 3.77,
-        estadoAventura: AUTORIZADO,
-        id: "3c63109c-6fe4-418d-9f91-b3781947c8c2",
-        imagenDetalle: [
-            "imagen-0 ave-3c63109c-6fe4-418d-9f91-b3781947c8c2.jpg",
-            "https://i0.wp.com/ajijicpueblomagico.mx/wp-content/uploads/2021/08/tepalo3.jpg?w=700&ssl=1",
-            "https://s0.wklcdn.com/image_78/2368206/26878700/17170926Master.jpg"
-        ],
-        imagenFondoIdx: 2,
-        incluidoDefault: [],
-        materialDefault: "[[\"Obligatorio\",[\"Camisa deportiva\",\"Shorts o pants frescos\",\"Gorra\",\"Bloqueador\",\"Tenis con buen agarre o botas\"]],[\"Alimentacion\",[\"Barra de granola\",\"Sandwich\",\"Fruta\",\"Galletas\"]],[\"Acampada\",[\"Casa de campaña\",\"Sleeping bag\",\"Colchoneta\",\"Comida y cena\"]],[\"Opcional\",[\"Palos de senderismo\",\"Traje de baño\",\"Toalla\",\"Impermeable\"]]]",
-        precioMax: 2000,
-        precioMin: 60,
-        titulo: "La chupinaya",
-        ubicacionId: "ChIJcSG0byNEL4QRYiNVd40ztgc",
-        ubicacionLink: "https://maps.google.com/?cid=555688286712308578",
-        ubicacionNombre: "La Chupinaya"
-    }){id}
-
+  ave3: createAventura(
+    input: {
+      altimetriaRecorrida: 795
+      altitud: 4218
+      categoria: APLINISMO
+      comision: 0.2
+      coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}"
+      descripcion: "Prepárate para tener una aventura en contacto con la naturaleza y en algunas épocas del año cubierto de nieve. nnEsta experiencia es ideal para principiantes en el hikking teniendo una altura no tan elevada para afectar la condición."
+      dificultad: null
+      distanciaRecorrida: 4.33
+      duracion: "1 a 2 dias"
+      estadoAventura: AUTORIZADO
+      id: "7c3fb58a-f977-4518-9991-f940fd72475e"
+      imagenDetalle: [
+        "https://cdn.pixabay.com/photo/2017/08/09/09/39/mountain-2613928_1280.jpg"
+        "imagen-1 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg"
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDeV2HgX2RQk8pnjsF9I9uCO7WfthunrRI5Q&usqp=CAU"
+        "imagen-2 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg"
+        "imagen-4 ave-7c3fb58a-f977-4518-9991-f940fd72475e.jpg"
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQkBlCs39q8DAIi3XqBnSvkeQBlOLsSSqKeg&usqp=CAU"
+      ]
+      imagenFondoIdx: 0
+      incluidoDefault: null
+      materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]"
+      precioMax: 3000
+      precioMin: 400
+      titulo: "Nevado de Colima"
+      ubicacionId: "ChIJwSuFnVNhJYQRMtjXwq_1wgc"
+      ubicacionLink: "https://maps.google.com/?cid=559279438984370226"
+      ubicacionNombre: "Nevado de Colima"
+    }
+  ) {
+    altitud
+  }
+  ave4: createAventura(
+    input: {
+      altimetriaRecorrida: 740
+      altitud: 1537
+      categoria: APLINISMO
+      comision: 0.2
+      coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}"
+      descripcion: "Experimenta la imponente barranca de Huentitan trazada por el río SantiagonnAquí es un excelente lugar para ejercitarse y prepararse a montañas más difíciles. Es un parque natural dentro de la ciudad. Puedes ir a visitar el puente de arsediano o si lo prefieres adentrarte en el misterioso pueblo fantasma"
+      dificultad: null
+      distanciaRecorrida: 4
+      duracion: "5 horas"
+      estadoAventura: AUTORIZADO
+      id: "236ebee2-da8b-4ed0-977c-630155c627fc"
+      imagenDetalle: [
+        "https://intothearmsofamerica.com/wp-content/uploads/2019/07/guadalajara-barranca-huentitan-color-2400x1200-1024x512.jpg"
+        "https://s0.wklcdn.com/image_124/3726685/28247253/18043266Master.jpg"
+        "https://guadalajaramidestino.com/wp-content/uploads/2019/10/tatiana_correr-15-1024x683.jpg"
+        "https://vagabundeandoenmexicomagico.files.wordpress.com/2018/05/mg_4936.jpg?w=393&h=&zoom=2"
+      ]
+      imagenFondoIdx: 1
+      incluidoDefault: null
+      materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]"
+      precioMax: 800
+      precioMin: 50
+      titulo: "Barranca de Huentitan"
+      ubicacionId: "ChIJAAAAAAAAAAARelODoN-ywjY"
+      ubicacionLink: "https://maps.google.com/?cid=3945912897070388090"
+      ubicacionNombre: "Tour por la barranca"
+    }
+  ) {
+    altitud
+  }
+  ave5: createAventura(
+    input: {
+      altimetriaRecorrida: 768
+      altitud: 2347
+      categoria: APLINISMO
+      comision: 0.2
+      coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}"
+      descripcion: "Disfruta de sus asombrosas cascadas en épocas de lluvias o si decides ir a dormir en la cima podrás contemplar un amanecer espectacular con una vista al lago.nnLa chupinaya es la sierra que se encuentra a un costado del Lago de Chapala por lo que tiene una vegetación muy verde y clima húmedo."
+      dificultad: null
+      distanciaRecorrida: 3.77
+      duracion: "1 a 2 dias"
+      estadoAventura: AUTORIZADO
+      id: "3c63109c-6fe4-418d-9f91-b3781947c8c2"
+      imagenDetalle: [
+        "imagen-0 ave-3c63109c-6fe4-418d-9f91-b3781947c8c2.jpg"
+        "https://i0.wp.com/ajijicpueblomagico.mx/wp-content/uploads/2021/08/tepalo3.jpg?w=700&ssl=1"
+        "https://s0.wklcdn.com/image_78/2368206/26878700/17170926Master.jpg"
+      ]
+      imagenFondoIdx: 2
+      incluidoDefault: []
+      materialDefault: "[[\"Obligatorio\",[\"Botas o tenis\",\"Impermeable\",\"Chamarra\",\"Camisa deportiva\",\"Mochila\"]],[\"Alimentacion\",[\"Bote con agua\",\"Barras o snacks\"]],[\"Acampada\",[\"Casa de campaña\",\"Colchoneta para dormir\",\"Casa de campaña\"]]]"
+      precioMax: 2000
+      precioMin: 60
+      titulo: "La chupinaya"
+      ubicacionId: "ChIJcSG0byNEL4QRYiNVd40ztgc"
+      ubicacionLink: "https://maps.google.com/?cid=555688286712308578"
+      ubicacionNombre: "La Chupinaya"
+    }
+  ) {
+    altitud
+  }
 }
 
 # #############################################################################
@@ -188,274 +190,242 @@ mutation createAventura {
 #     ########################Nevado De Toluca###############################
 #     Toluca1: createFecha(input: {
 #         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 3, 
-#         precio: 500, 
-#         fechaInicial: "2021-02-01", 
+#         personasTotales: 3,
+#         precio: 500,
+#         fechaInicial: "2021-02-01",
 #         fechaFinal: "2021-02-03",
 #         id:"Toluca1"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Toluca2: createFecha(input: {
 #         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 6, 
-#         precio: 700, 
-#         fechaInicial: "2020-03-15", 
+#         personasTotales: 6,
+#         precio: 700,
+#         fechaInicial: "2020-03-15",
 #         fechaFinal: "2020-03-19",
 #         id:"Toluca2"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Toluca3: createFecha(input: {
 #         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 7, 
-#         precio: 620, 
-#         fechaInicial: "2021-08-01", 
+#         personasTotales: 7,
+#         precio: 620,
+#         fechaInicial: "2021-08-01",
 #         fechaFinal: "2021-08-03",
 #         id:"Toluca3"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Toluca4: createFecha(input: {
 #         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 9, 
-#         precio: 765, 
-#         fechaInicial: "2021-09-30", 
+#         personasTotales: 9,
+#         precio: 765,
+#         fechaInicial: "2021-09-30",
 #         fechaFinal: "2021-09-30",
 #         id:"Toluca4"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     #######################################################################
 #     ########################Nevado De Colima###############################
 #     #######################################################################
 #     Colima1: createFecha(input: {
 #         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 3, 
-#         precio: 600, 
-#         fechaInicial: "2021-02-01", 
+#         personasTotales: 3,
+#         precio: 600,
+#         fechaInicial: "2021-02-01",
 #         fechaFinal: "2021-02-03",
 #         id:"Colima1"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Colima2: createFecha(input: {
 #         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 6, 
-#         precio: 700, 
-#         fechaInicial: "2020-02-15", 
+#         personasTotales: 6,
+#         precio: 700,
+#         fechaInicial: "2020-02-15",
 #         fechaFinal: "2020-02-19",
 #         id:"Colima2"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Colima3: createFecha(input: {
 #         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 7, 
-#         precio: 620, 
-#         fechaInicial: "2021-08-01", 
+#         personasTotales: 7,
+#         precio: 620,
+#         fechaInicial: "2021-08-01",
 #         fechaFinal: "2021-08-03",
 #         id:"Colima3"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Colima4: createFecha(input: {
 #         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 9, 
-#         precio: 765, 
-#         fechaInicial: "2021-09-30", 
+#         personasTotales: 9,
+#         precio: 765,
+#         fechaInicial: "2021-09-30",
 #         fechaFinal: "2021-09-30",
 #         id:"Colima4"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Colima5: createFecha(input: {
 #         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 4, 
-#         precio: 650, 
-#         fechaInicial: "2021-10-31", 
+#         personasTotales: 4,
+#         precio: 650,
+#         fechaInicial: "2021-10-31",
 #         fechaFinal: "2021-11-03",
 #         id:"Colima5"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     #######################################################################
 #     ########################Iztacihuatl###############################
 #     #######################################################################
 #     Izta1: createFecha(input: {
 #         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 3, 
-#         precio: 600, 
-#         fechaInicial: "2021-02-01", 
+#         personasTotales: 3,
+#         precio: 600,
+#         fechaInicial: "2021-02-01",
 #         fechaFinal: "2021-02-03",
 #         id:"Izta1"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Izta2: createFecha(input: {
 #         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 6, 
-#         precio: 700, 
-#         fechaInicial: "2020-03-15", 
+#         personasTotales: 6,
+#         precio: 700,
+#         fechaInicial: "2020-03-15",
 #         fechaFinal: "2020-03-19",
 #         id:"Izta2"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     Izta3: createFecha(input: {
 #         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 7, 
-#         precio: 620, 
-#         fechaInicial: "2021-08-01", 
+#         personasTotales: 7,
+#         precio: 620,
+#         fechaInicial: "2021-08-01",
 #         fechaFinal: "2021-08-03",
 #         id:"Izta3"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     #######################################################################
 #     ########################Chupinaya######################################
 #     #######################################################################
 #     chupi1: createFecha(input: {
 #         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 3, 
-#         precio: 600, 
-#         fechaInicial: "2021-02-01", 
+#         personasTotales: 3,
+#         precio: 600,
+#         fechaInicial: "2021-02-01",
 #         fechaFinal: "2021-02-03",
 #         id:"chupi1"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     chupi2: createFecha(input: {
 #         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 6, 
-#         precio: 700, 
-#         fechaInicial: "2020-03-15", 
+#         personasTotales: 6,
+#         precio: 700,
+#         fechaInicial: "2020-03-15",
 #         fechaFinal: "2020-03-19",
 #         id:"chupi2"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     chupi3: createFecha(input: {
 #         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 7, 
-#         precio: 620, 
-#         fechaInicial: "2021-08-01", 
+#         personasTotales: 7,
+#         precio: 620,
+#         fechaInicial: "2021-08-01",
 #         fechaFinal: "2021-08-03",
 #         id:"chupi3"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     chupi4: createFecha(input: {
 #         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 4, 
-#         precio: 650, 
-#         fechaInicial: "2021-07-01", 
+#         personasTotales: 4,
+#         precio: 650,
+#         fechaInicial: "2021-07-01",
 #         fechaFinal: "2021-07-03",
 #         id:"chupi4"
 #         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #     }) {
 #     id
 #   }
-    
+
 #     ######################################################
-
-
 
 #     chupi5: createFecha(input: {
 #         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 4, 
-#         precio: 620, 
-#         fechaInicial: "2021-08-06", 
+#         personasTotales: 4,
+#         precio: 620,
+#         fechaInicial: "2021-08-06",
 #         fechaFinal: "2021-08-07",
 #         id:"chupi5"
 #         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
@@ -465,14 +435,13 @@ mutation createAventura {
 #     ######################################################
 # }
 
-
 # #############################################################################
 # ################################RESERVACIONES################################
 # #############################################################################
 # mutation crearReservaciones {
 #   res1: createReservaciones(input: {
 #         id:"res1"
-#         total: 2900, 
+#         total: 2900,
 #         personas: 2,
 #         fechaID:"Colima1"
 #         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
@@ -482,8 +451,8 @@ mutation createAventura {
 
 #   res2: createReservaciones(input: {
 #         id:"res2"
-#         total: 3500, 
-#         personas: 3, 
+#         total: 3500,
+#         personas: 3,
 #         fechaID:"Colima2"
 #         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #   }) {
@@ -491,8 +460,8 @@ mutation createAventura {
 #   }
 #   res3: createReservaciones(input: {
 #         id:"res3"
-#         total: 3500, 
-#         personas: 7, 
+#         total: 3500,
+#         personas: 7,
 #         fechaID:"Colima3"
 #         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #   }) {
@@ -500,8 +469,8 @@ mutation createAventura {
 #   }
 #   res4: createReservaciones(input: {
 #         id:"res4"
-#         total: 750, 
-#         personas: 1, 
+#         total: 750,
+#         personas: 1,
 #         fechaID:"Colima4"
 #         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
 #   }) {

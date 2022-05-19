@@ -9,7 +9,7 @@ import {
   LogBox
 } from 'react-native';
 
-import { Auth, Hub, Amplify } from "aws-amplify";
+import { Auth, Hub, Amplify, AuthModeStrategyType } from "aws-amplify";
 
 import { DataStore } from '@aws-amplify/datastore';
 
@@ -65,7 +65,12 @@ export default function App() {
       redirectSignIn: url,
       redirectSignOut: url,
 
+    },
+
+    DataStore: {
+      authModeStrategyType: AuthModeStrategyType.MULTI_AUTH
     }
+
   });
 
 

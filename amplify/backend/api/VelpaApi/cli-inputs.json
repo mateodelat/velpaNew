@@ -5,18 +5,15 @@
     "serviceName": "AppSync",
     "gqlSchemaPath": "C:\\Users\\mateo\\Desktop\\velpaNew\\amplify\\backend\\api\\velpaAPI\\schema.graphql",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 365,
-      "apiKeyExpirationDate": "2023-05-18T20:03:40.069Z",
-      "keyDescription": ""
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authvelpa01106a15"
     },
     "additionalAuthTypes": [
       {
-        "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authvelpa01106a15"
-      },
-      {
-        "mode": "AWS_IAM"
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-05-19T20:01:13.245Z",
+        "keyDescription": ""
       }
     ],
     "conflictResolution": {

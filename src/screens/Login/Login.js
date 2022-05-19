@@ -18,7 +18,7 @@ export default function Register({ navigation, route }) {
     const [loading, setLoading] = useState(false);
 
     // Variables del texto
-    const [email, setEmail] = useState(route.params.email ? route.params.email : "");
+    const [email, setEmail] = useState(route?.params?.email ? route.params.email : "");
     const [password, setPassword] = useState("");
 
     const [errorEmail, setErrorEmail] = useState();

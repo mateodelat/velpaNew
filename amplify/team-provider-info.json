@@ -18,15 +18,15 @@
       "function": {
         "CreatePaymentIntent": {
           "deploymentBucketName": "amplify-velpa-dev-32225-deployment",
-          "s3Key": "amplify-builds/CreatePaymentIntent-584e494774394a484e6f-build.zip"
+          "s3Key": "amplify-builds/CreatePaymentIntent-664d4f382b4577764641-build.zip"
         },
         "CreateStripeAcount": {
           "deploymentBucketName": "amplify-velpa-dev-32225-deployment",
-          "s3Key": "amplify-builds/CreateStripeAcount-6d61643771304670414b-build.zip"
+          "s3Key": "amplify-builds/CreateStripeAcount-7363784f4f5778714c4d-build.zip"
         },
         "preSignUp": {
           "deploymentBucketName": "amplify-velpa-dev-32225-deployment",
-          "s3Key": "amplify-builds/preSignUp-3751544d7978416a3055-build.zip"
+          "s3Key": "amplify-builds/preSignUp-473635685635664f536b-build.zip"
         }
       }
     }

@@ -1,156 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getAventura = /* GraphQL */ `
-  query GetAventura($id: ID!) {
-    getAventura(id: $id) {
-      id
-      titulo
-      imagenFondoIdx
-      imagenDetalle
-      precioMin
-      precioMax
-      duracion
-      descripcion
-      dificultad
-      ubicacionNombre
-      ubicacionId
-      ubicacionLink
-      coordenadas
-      comision
-      estadoAventura
-      altitud
-      distanciaRecorrida
-      altimetriaRecorrida
-      categoria
-      materialDefault
-      incluidoDefault
-      usuarioID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      Fechas {
-        items {
-          id
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          experienciaPorPersona
-          itinerario
-          puntoReunionNombre
-          puntoReunionId
-          puntoReunionLink
-          puntoReunionCoords
-          allowTercera
-          allowNinos
-          material
-          incluido
-          titulo
-          descripcion
-          imagenRuta
-          imagenFondo
-          tituloAventura
-          aventuraID
-          usuarioID
-          dificultad
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-      SolicitudGuias {
-        items {
-          id
-          aventuraID
-          solicitudguiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-      UsuariosAutorizados {
-        items {
-          id
-          aventuraID
-          usuarioID
-          owner
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-    }
-  }
-`;
-export const listAventuras = /* GraphQL */ `
-  query ListAventuras(
-    $filter: ModelAventuraFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAventuras(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        titulo
-        imagenFondoIdx
-        imagenDetalle
-        precioMin
-        precioMax
-        duracion
-        descripcion
-        dificultad
-        ubicacionNombre
-        ubicacionId
-        ubicacionLink
-        coordenadas
-        comision
-        estadoAventura
-        altitud
-        distanciaRecorrida
-        altimetriaRecorrida
-        categoria
-        materialDefault
-        incluidoDefault
-        usuarioID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Fechas {
-          nextToken
-          startedAt
-        }
-        SolicitudGuias {
-          nextToken
-          startedAt
-        }
-        UsuariosAutorizados {
-          nextToken
-          startedAt
-        }
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const syncAventuras = /* GraphQL */ `
   query SyncAventuras(
     $filter: ModelAventuraFilterInput
@@ -187,15 +37,6 @@ export const syncAventuras = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Fechas {
-          nextToken
-          startedAt
-        }
         SolicitudGuias {
           nextToken
           startedAt
@@ -204,6 +45,205 @@ export const syncAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getAventura = /* GraphQL */ `
+  query GetAventura($id: ID!) {
+    getAventura(id: $id) {
+      id
+      titulo
+      imagenFondoIdx
+      imagenDetalle
+      precioMin
+      precioMax
+      duracion
+      descripcion
+      dificultad
+      ubicacionNombre
+      ubicacionId
+      ubicacionLink
+      coordenadas
+      comision
+      estadoAventura
+      altitud
+      distanciaRecorrida
+      altimetriaRecorrida
+      categoria
+      materialDefault
+      incluidoDefault
+      usuarioID
+      SolicitudGuias {
+        items {
+          id
+          aventuraID
+          solicitudguiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      UsuariosAutorizados {
+        items {
+          id
+          aventuraID
+          usuarioID
+          owner
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Fechas {
+        items {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          aventuraID
+          usuarioID
+          dificultad
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAventuras = /* GraphQL */ `
+  query ListAventuras(
+    $filter: ModelAventuraFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAventuras(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        titulo
+        imagenFondoIdx
+        imagenDetalle
+        precioMin
+        precioMax
+        duracion
+        descripcion
+        dificultad
+        ubicacionNombre
+        ubicacionId
+        ubicacionLink
+        coordenadas
+        comision
+        estadoAventura
+        altitud
+        distanciaRecorrida
+        altimetriaRecorrida
+        categoria
+        materialDefault
+        incluidoDefault
+        usuarioID
+        SolicitudGuias {
+          nextToken
+          startedAt
+        }
+        UsuariosAutorizados {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncReservas = /* GraphQL */ `
+  query SyncReservas(
+    $filter: ModelReservaFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncReservas(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        total
+        comision
+        pagadoAlGuia
+        tercera
+        ninos
+        adultos
+        pagoID
+        ingreso
+        horaIngreso
+        fechaID
+        usuarioID
+        guiaID
+        tipoPago
+        materialChecked
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -270,14 +310,14 @@ export const listReservas = /* GraphQL */ `
     }
   }
 `;
-export const syncReservas = /* GraphQL */ `
-  query SyncReservas(
-    $filter: ModelReservaFilterInput
+export const syncFechas = /* GraphQL */ `
+  query SyncFechas(
+    $filter: ModelFechaFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncReservas(
+    syncFechas(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -285,20 +325,37 @@ export const syncReservas = /* GraphQL */ `
     ) {
       items {
         id
-        total
+        personasTotales
+        fechaInicial
+        fechaFinal
+        precio
         comision
-        pagadoAlGuia
-        tercera
-        ninos
-        adultos
-        pagoID
-        ingreso
-        horaIngreso
-        fechaID
+        experienciaPorPersona
+        itinerario
+        puntoReunionNombre
+        puntoReunionId
+        puntoReunionLink
+        puntoReunionCoords
+        allowTercera
+        allowNinos
+        material
+        incluido
+        titulo
+        descripcion
+        imagenRuta
+        imagenFondo
+        tituloAventura
+        aventuraID
         usuarioID
-        guiaID
-        tipoPago
-        materialChecked
+        dificultad
+        Reservas {
+          nextToken
+          startedAt
+        }
+        ChatRoom {
+          nextToken
+          startedAt
+        }
         _version
         _deleted
         _lastChangedAt
@@ -337,11 +394,6 @@ export const getFecha = /* GraphQL */ `
       aventuraID
       usuarioID
       dificultad
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       Reservas {
         items {
           id
@@ -384,6 +436,11 @@ export const getFecha = /* GraphQL */ `
         nextToken
         startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -419,11 +476,6 @@ export const listFechas = /* GraphQL */ `
         aventuraID
         usuarioID
         dificultad
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
         Reservas {
           nextToken
           startedAt
@@ -432,20 +484,25 @@ export const listFechas = /* GraphQL */ `
           nextToken
           startedAt
         }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
     }
   }
 `;
-export const syncFechas = /* GraphQL */ `
-  query SyncFechas(
-    $filter: ModelFechaFilterInput
+export const syncUsuarios = /* GraphQL */ `
+  query SyncUsuarios(
+    $filter: ModelUsuarioFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncFechas(
+    syncUsuarios(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -453,42 +510,70 @@ export const syncFechas = /* GraphQL */ `
     ) {
       items {
         id
-        personasTotales
-        fechaInicial
-        fechaFinal
-        precio
-        comision
-        experienciaPorPersona
-        itinerario
-        puntoReunionNombre
-        puntoReunionId
-        puntoReunionLink
-        puntoReunionCoords
-        allowTercera
-        allowNinos
-        material
-        incluido
-        titulo
-        descripcion
-        imagenRuta
+        tipo
+        guia
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
         imagenFondo
-        tituloAventura
-        aventuraID
-        usuarioID
-        dificultad
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        owner
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
-        ChatRoom {
-          nextToken
-          startedAt
-        }
       }
       nextToken
       startedAt
@@ -526,11 +611,52 @@ export const getUsuario = /* GraphQL */ `
       notificationToken
       owner
       newMessages
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
+      AventurasAutorizadas {
+        items {
+          id
+          aventuraID
+          usuarioID
+          owner
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      Mensajes {
+        items {
+          id
+          content
+          usuarioID
+          chatroomID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      ChatRooms {
+        items {
+          id
+          chatroomID
+          usuarioID
+          newMessages
+          owner
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
       Reservas {
         items {
           id
@@ -592,12 +718,22 @@ export const getUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Mensajes {
+      Notificaciones {
         items {
           id
-          content
+          tipo
+          titulo
+          descripcion
           usuarioID
-          chatroomID
+          imagen
+          owner
+          leido
+          showAt
+          reservaID
+          fechaID
+          aventuraID
+          guiaID
+          solicitudGuiaID
           _version
           _deleted
           _lastChangedAt
@@ -624,31 +760,6 @@ export const getUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      Notificaciones {
-        items {
-          id
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          imagen
-          owner
-          leido
-          showAt
-          reservaID
-          fechaID
-          aventuraID
-          guiaID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
       Comentarios {
         items {
           id
@@ -666,37 +777,11 @@ export const getUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
-      AventurasAutorizadas {
-        items {
-          id
-          aventuraID
-          usuarioID
-          owner
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-      ChatRooms {
-        items {
-          id
-          chatroomID
-          usuarioID
-          newMessages
-          owner
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -736,11 +821,18 @@ export const listUsuarios = /* GraphQL */ `
         notificationToken
         owner
         newMessages
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
         Reservas {
           nextToken
           startedAt
@@ -749,7 +841,7 @@ export const listUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Mensajes {
+        Notificaciones {
           nextToken
           startedAt
         }
@@ -757,36 +849,29 @@ export const listUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
         Comentarios {
           nextToken
           startedAt
         }
-        AventurasAutorizadas {
-          nextToken
-          startedAt
-        }
-        ChatRooms {
-          nextToken
-          startedAt
-        }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
     }
   }
 `;
-export const syncUsuarios = /* GraphQL */ `
-  query SyncUsuarios(
-    $filter: ModelUsuarioFilterInput
+export const syncChatRooms = /* GraphQL */ `
+  query SyncChatRooms(
+    $filter: ModelChatRoomFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncUsuarios(
+    syncChatRooms(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -794,70 +879,34 @@ export const syncUsuarios = /* GraphQL */ `
     ) {
       items {
         id
-        tipo
-        guia
-        calificacion
-        numResenas
-        nombre
-        apellido
-        foto
-        imagenFondo
-        nickname
-        experience
-        stripeID
-        admin
-        selfie
-        ID
-        certificaciones
-        telefono
-        sitioWeb
-        CuentaBancaria
-        fechaNacimiento
-        direccion
-        rfcIndividual
-        rfcCompania
-        capacidadMaxima
-        comentariosAdicionales
-        notificationToken
-        owner
-        newMessages
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
-        Fechas {
-          nextToken
-          startedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        SolicitudesCreadas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
-        Comentarios {
-          nextToken
-          startedAt
-        }
-        AventurasAutorizadas {
-          nextToken
-          startedAt
-        }
-        ChatRooms {
-          nextToken
-          startedAt
-        }
       }
       nextToken
       startedAt
@@ -870,13 +919,6 @@ export const getChatRoom = /* GraphQL */ `
       id
       name
       picture
-      fechaID
-      guiaID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
       lastMessage {
         id
         content
@@ -888,6 +930,8 @@ export const getChatRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      fechaID
+      guiaID
       Mensajes {
         items {
           id
@@ -919,6 +963,11 @@ export const getChatRoom = /* GraphQL */ `
         nextToken
         startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -933,13 +982,6 @@ export const listChatRooms = /* GraphQL */ `
         id
         name
         picture
-        fechaID
-        guiaID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
         lastMessage {
           id
           content
@@ -951,6 +993,8 @@ export const listChatRooms = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        fechaID
+        guiaID
         Mensajes {
           nextToken
           startedAt
@@ -959,20 +1003,25 @@ export const listChatRooms = /* GraphQL */ `
           nextToken
           startedAt
         }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
     }
   }
 `;
-export const syncChatRooms = /* GraphQL */ `
-  query SyncChatRooms(
-    $filter: ModelChatRoomFilterInput
+export const syncMensajes = /* GraphQL */ `
+  query SyncMensajes(
+    $filter: ModelMensajeFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncChatRooms(
+    syncMensajes(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -980,34 +1029,14 @@ export const syncChatRooms = /* GraphQL */ `
     ) {
       items {
         id
-        name
-        picture
-        fechaID
-        guiaID
+        content
+        usuarioID
+        chatroomID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        lastMessage {
-          id
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        Participantes {
-          nextToken
-          startedAt
-        }
       }
       nextToken
       startedAt
@@ -1052,95 +1081,6 @@ export const listMensajes = /* GraphQL */ `
     }
   }
 `;
-export const syncMensajes = /* GraphQL */ `
-  query SyncMensajes(
-    $filter: ModelMensajeFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMensajes(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        content
-        usuarioID
-        chatroomID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getSolicitudGuia = /* GraphQL */ `
-  query GetSolicitudGuia($id: ID!) {
-    getSolicitudGuia(id: $id) {
-      owner
-      id
-      status
-      evaluadorID
-      usuarioID
-      mensaje
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      Aventuras {
-        items {
-          id
-          aventuraID
-          solicitudguiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        nextToken
-        startedAt
-      }
-    }
-  }
-`;
-export const listSolicitudGuias = /* GraphQL */ `
-  query ListSolicitudGuias(
-    $filter: ModelSolicitudGuiaFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listSolicitudGuias(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        owner
-        id
-        status
-        evaluadorID
-        usuarioID
-        mensaje
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Aventuras {
-          nextToken
-          startedAt
-        }
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const syncSolicitudGuias = /* GraphQL */ `
   query SyncSolicitudGuias(
     $filter: ModelSolicitudGuiaFilterInput
@@ -1161,15 +1101,114 @@ export const syncSolicitudGuias = /* GraphQL */ `
         evaluadorID
         usuarioID
         mensaje
+        Aventuras {
+          nextToken
+          startedAt
+        }
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getSolicitudGuia = /* GraphQL */ `
+  query GetSolicitudGuia($id: ID!) {
+    getSolicitudGuia(id: $id) {
+      owner
+      id
+      status
+      evaluadorID
+      usuarioID
+      mensaje
+      Aventuras {
+        items {
+          id
+          aventuraID
+          solicitudguiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSolicitudGuias = /* GraphQL */ `
+  query ListSolicitudGuias(
+    $filter: ModelSolicitudGuiaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSolicitudGuias(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        owner
+        id
+        status
+        evaluadorID
+        usuarioID
+        mensaje
         Aventuras {
           nextToken
           startedAt
         }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncNotificacions = /* GraphQL */ `
+  query SyncNotificacions(
+    $filter: ModelNotificacionFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncNotificacions(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        tipo
+        titulo
+        descripcion
+        usuarioID
+        imagen
+        owner
+        leido
+        showAt
+        reservaID
+        fechaID
+        aventuraID
+        guiaID
+        solicitudGuiaID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -1234,14 +1273,14 @@ export const listNotificacions = /* GraphQL */ `
     }
   }
 `;
-export const syncNotificacions = /* GraphQL */ `
-  query SyncNotificacions(
-    $filter: ModelNotificacionFilterInput
+export const syncComentarios = /* GraphQL */ `
+  query SyncComentarios(
+    $filter: ModelComentarioFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncNotificacions(
+    syncComentarios(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -1249,19 +1288,11 @@ export const syncNotificacions = /* GraphQL */ `
     ) {
       items {
         id
-        tipo
-        titulo
-        descripcion
-        usuarioID
-        imagen
+        usuarioCalificadoID
+        body
+        calificacion
         owner
-        leido
-        showAt
-        reservaID
-        fechaID
-        aventuraID
-        guiaID
-        solicitudGuiaID
+        creatorID
         _version
         _deleted
         _lastChangedAt
@@ -1315,14 +1346,14 @@ export const listComentarios = /* GraphQL */ `
     }
   }
 `;
-export const syncComentarios = /* GraphQL */ `
-  query SyncComentarios(
-    $filter: ModelComentarioFilterInput
+export const syncPublicidads = /* GraphQL */ `
+  query SyncPublicidads(
+    $filter: ModelPublicidadFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncComentarios(
+    syncPublicidads(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -1330,11 +1361,13 @@ export const syncComentarios = /* GraphQL */ `
     ) {
       items {
         id
-        usuarioCalificadoID
-        body
-        calificacion
-        owner
-        creatorID
+        tipo
+        titulo
+        descripcion
+        imagenFondo
+        video
+        linkAnuncio
+        aventuraID
         _version
         _deleted
         _lastChangedAt
@@ -1392,179 +1425,6 @@ export const listPublicidads = /* GraphQL */ `
     }
   }
 `;
-export const syncPublicidads = /* GraphQL */ `
-  query SyncPublicidads(
-    $filter: ModelPublicidadFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncPublicidads(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        tipo
-        titulo
-        descripcion
-        imagenFondo
-        video
-        linkAnuncio
-        aventuraID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getAventuraSolicitudGuia = /* GraphQL */ `
-  query GetAventuraSolicitudGuia($id: ID!) {
-    getAventuraSolicitudGuia(id: $id) {
-      id
-      aventuraID
-      solicitudguiaID
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      aventura {
-        id
-        titulo
-        imagenFondoIdx
-        imagenDetalle
-        precioMin
-        precioMax
-        duracion
-        descripcion
-        dificultad
-        ubicacionNombre
-        ubicacionId
-        ubicacionLink
-        coordenadas
-        comision
-        estadoAventura
-        altitud
-        distanciaRecorrida
-        altimetriaRecorrida
-        categoria
-        materialDefault
-        incluidoDefault
-        usuarioID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Fechas {
-          nextToken
-          startedAt
-        }
-        SolicitudGuias {
-          nextToken
-          startedAt
-        }
-        UsuariosAutorizados {
-          nextToken
-          startedAt
-        }
-      }
-      solicitudguia {
-        owner
-        id
-        status
-        evaluadorID
-        usuarioID
-        mensaje
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Aventuras {
-          nextToken
-          startedAt
-        }
-      }
-    }
-  }
-`;
-export const listAventuraSolicitudGuias = /* GraphQL */ `
-  query ListAventuraSolicitudGuias(
-    $filter: ModelAventuraSolicitudGuiaFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAventuraSolicitudGuias(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        aventuraID
-        solicitudguiaID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        aventura {
-          id
-          titulo
-          imagenFondoIdx
-          imagenDetalle
-          precioMin
-          precioMax
-          duracion
-          descripcion
-          dificultad
-          ubicacionNombre
-          ubicacionId
-          ubicacionLink
-          coordenadas
-          comision
-          estadoAventura
-          altitud
-          distanciaRecorrida
-          altimetriaRecorrida
-          categoria
-          materialDefault
-          incluidoDefault
-          usuarioID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        solicitudguia {
-          owner
-          id
-          status
-          evaluadorID
-          usuarioID
-          mensaje
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const syncAventuraSolicitudGuias = /* GraphQL */ `
   query SyncAventuraSolicitudGuias(
     $filter: ModelAventuraSolicitudGuiaFilterInput
@@ -1582,11 +1442,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
         id
         aventuraID
         solicitudguiaID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
         aventura {
           id
           titulo
@@ -1629,220 +1484,11 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           createdAt
           updatedAt
         }
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getAventuraUsuario = /* GraphQL */ `
-  query GetAventuraUsuario($id: ID!) {
-    getAventuraUsuario(id: $id) {
-      id
-      aventuraID
-      usuarioID
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      aventura {
-        id
-        titulo
-        imagenFondoIdx
-        imagenDetalle
-        precioMin
-        precioMax
-        duracion
-        descripcion
-        dificultad
-        ubicacionNombre
-        ubicacionId
-        ubicacionLink
-        coordenadas
-        comision
-        estadoAventura
-        altitud
-        distanciaRecorrida
-        altimetriaRecorrida
-        categoria
-        materialDefault
-        incluidoDefault
-        usuarioID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Fechas {
-          nextToken
-          startedAt
-        }
-        SolicitudGuias {
-          nextToken
-          startedAt
-        }
-        UsuariosAutorizados {
-          nextToken
-          startedAt
-        }
-      }
-      usuario {
-        id
-        tipo
-        guia
-        calificacion
-        numResenas
-        nombre
-        apellido
-        foto
-        imagenFondo
-        nickname
-        experience
-        stripeID
-        admin
-        selfie
-        ID
-        certificaciones
-        telefono
-        sitioWeb
-        CuentaBancaria
-        fechaNacimiento
-        direccion
-        rfcIndividual
-        rfcCompania
-        capacidadMaxima
-        comentariosAdicionales
-        notificationToken
-        owner
-        newMessages
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
-        Fechas {
-          nextToken
-          startedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        SolicitudesCreadas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
-        Comentarios {
-          nextToken
-          startedAt
-        }
-        AventurasAutorizadas {
-          nextToken
-          startedAt
-        }
-        ChatRooms {
-          nextToken
-          startedAt
-        }
-      }
-    }
-  }
-`;
-export const listAventuraUsuarios = /* GraphQL */ `
-  query ListAventuraUsuarios(
-    $filter: ModelAventuraUsuarioFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAventuraUsuarios(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        aventuraID
-        usuarioID
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        aventura {
-          id
-          titulo
-          imagenFondoIdx
-          imagenDetalle
-          precioMin
-          precioMax
-          duracion
-          descripcion
-          dificultad
-          ubicacionNombre
-          ubicacionId
-          ubicacionLink
-          coordenadas
-          comision
-          estadoAventura
-          altitud
-          distanciaRecorrida
-          altimetriaRecorrida
-          categoria
-          materialDefault
-          incluidoDefault
-          usuarioID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        usuario {
-          id
-          tipo
-          guia
-          calificacion
-          numResenas
-          nombre
-          apellido
-          foto
-          imagenFondo
-          nickname
-          experience
-          stripeID
-          admin
-          selfie
-          ID
-          certificaciones
-          telefono
-          sitioWeb
-          CuentaBancaria
-          fechaNacimiento
-          direccion
-          rfcIndividual
-          rfcCompania
-          capacidadMaxima
-          comentariosAdicionales
-          notificationToken
-          owner
-          newMessages
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
       }
       nextToken
       startedAt
@@ -1867,11 +1513,6 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         aventuraID
         usuarioID
         owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
         aventura {
           id
           titulo
@@ -1936,195 +1577,11 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           createdAt
           updatedAt
         }
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getChatRoomUsuario = /* GraphQL */ `
-  query GetChatRoomUsuario($id: ID!) {
-    getChatRoomUsuario(id: $id) {
-      id
-      chatroomID
-      usuarioID
-      newMessages
-      owner
-      _version
-      _deleted
-      _lastChangedAt
-      createdAt
-      updatedAt
-      usuario {
-        id
-        tipo
-        guia
-        calificacion
-        numResenas
-        nombre
-        apellido
-        foto
-        imagenFondo
-        nickname
-        experience
-        stripeID
-        admin
-        selfie
-        ID
-        certificaciones
-        telefono
-        sitioWeb
-        CuentaBancaria
-        fechaNacimiento
-        direccion
-        rfcIndividual
-        rfcCompania
-        capacidadMaxima
-        comentariosAdicionales
-        notificationToken
-        owner
-        newMessages
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
-        Reservas {
-          nextToken
-          startedAt
-        }
-        Fechas {
-          nextToken
-          startedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        SolicitudesCreadas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
-        Comentarios {
-          nextToken
-          startedAt
-        }
-        AventurasAutorizadas {
-          nextToken
-          startedAt
-        }
-        ChatRooms {
-          nextToken
-          startedAt
-        }
-      }
-      chatroom {
-        id
-        name
-        picture
-        fechaID
-        guiaID
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        lastMessage {
-          id
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        Participantes {
-          nextToken
-          startedAt
-        }
-      }
-    }
-  }
-`;
-export const listChatRoomUsuarios = /* GraphQL */ `
-  query ListChatRoomUsuarios(
-    $filter: ModelChatRoomUsuarioFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listChatRoomUsuarios(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        chatroomID
-        usuarioID
-        newMessages
-        owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
-        usuario {
-          id
-          tipo
-          guia
-          calificacion
-          numResenas
-          nombre
-          apellido
-          foto
-          imagenFondo
-          nickname
-          experience
-          stripeID
-          admin
-          selfie
-          ID
-          certificaciones
-          telefono
-          sitioWeb
-          CuentaBancaria
-          fechaNacimiento
-          direccion
-          rfcIndividual
-          rfcCompania
-          capacidadMaxima
-          comentariosAdicionales
-          notificationToken
-          owner
-          newMessages
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
-        chatroom {
-          id
-          name
-          picture
-          fechaID
-          guiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
       }
       nextToken
       startedAt
@@ -2150,11 +1607,18 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
         usuarioID
         newMessages
         owner
-        _version
-        _deleted
-        _lastChangedAt
-        createdAt
-        updatedAt
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          _version
+          _deleted
+          _lastChangedAt
+          createdAt
+          updatedAt
+        }
         usuario {
           id
           tipo
@@ -2190,18 +1654,11 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        chatroom {
-          id
-          name
-          picture
-          fechaID
-          guiaID
-          _version
-          _deleted
-          _lastChangedAt
-          createdAt
-          updatedAt
-        }
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
       }
       nextToken
       startedAt
