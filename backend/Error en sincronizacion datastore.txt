@@ -1,0 +1,11 @@
+Error en sincronizacion datastore
+
+1) Jala si dejo solo un @auth 
+
+2) Agregado el usuario al grupo "Admin"
+2) Poner el owner al final: no jalo
+
+3) Agregar solo un auth
+
+SOLUCION: Pushear el schema con todos los tipos de authorizacion pero despues, localmente, se
+borra el que no es de owner

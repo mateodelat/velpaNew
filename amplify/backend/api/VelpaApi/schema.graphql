@@ -2,9 +2,11 @@ type Aventura
   @model
   @auth(
     rules: [
-      { allow: private, operations: [create, read] }
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner }
+      {
+        allow: private # operations: [create, read]
+      }
+      # { allow: groups, groups: ["Admin"] }
+      # { allow: owner }
     ]
   ) {
   id: ID!
@@ -50,9 +52,12 @@ type Reserva
   @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
-      { allow: private, operations: [read, delete] }
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner }
+      {
+        allow: private
+        # ,operations: [read, delete]
+      }
+      # { allow: groups, groups: ["Admin"] }
+      # { allow: owner }
     ]
   ) {
   id: ID!
@@ -84,9 +89,12 @@ type Fecha
   @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
-      { allow: private, operations: [create, read] }
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner }
+      {
+        allow: private
+        # , operations: [create, read]
+      }
+      # { allow: groups, groups: ["Admin"] }
+      # { allow: owner }
     ]
   ) {
   id: ID!
@@ -129,10 +137,13 @@ type Usuario
   @model
   @auth(
     rules: [
-      { allow: public, operations: [create] }
-      { allow: private, operations: [read] }
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner, ownerField: "owner" }
+      {
+        allow: public
+        # , operations: [create]
+      }
+      # { allow: private, operations: [read] }
+      # { allow: groups, groups: ["Admin"] }
+      # { allow: owner, ownerField: "owner" }
     ]
   ) {
   id: ID!
@@ -214,7 +225,15 @@ type Mensaje
   @model
   @key(name: "byUsuario", fields: ["usuarioID"])
   @key(name: "byChatRoom", fields: ["chatroomID"])
-  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  @auth(
+    rules: [
+      {
+        allow: private
+        # , operations: [read]
+      }
+      #  , { allow: owner }
+    ]
+  ) {
   id: ID!
   content: String!
   usuarioID: ID
@@ -223,13 +242,7 @@ type Mensaje
 
 type SolicitudGuia
   @model
-  @auth(
-    rules: [
-      { allow: private, operations: [create] }
-      { allow: owner }
-      { allow: groups, groups: ["Admin"] }
-    ]
-  )
+  @auth(rules: [{ allow: private }])
   @key(name: "byUsuario", fields: ["usuarioID"]) {
   owner: String
 
@@ -276,8 +289,11 @@ type Comentario
   @key(name: "byUsuario", fields: ["usuarioCalificadoID"])
   @auth(
     rules: [
-      { allow: private, operations: [read] }
-      { allow: owner, ownerField: "onwer" }
+      {
+        allow: private
+        # , operations: [read]
+      }
+      # { allow: owner}
     ]
   ) {
   id: ID!
@@ -286,8 +302,6 @@ type Comentario
   body: String
   calificacion: Float!
 
-  owner: String
-
   creatorID: ID
 }
 
@@ -295,8 +309,8 @@ type Publicidad
   @model
   @auth(
     rules: [
-      { allow: private, operations: [read] }
       { allow: groups, groups: ["Admin"] }
+      { allow: private, operations: [read] }
     ]
   ) {
   id: ID!
