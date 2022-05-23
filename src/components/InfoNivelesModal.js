@@ -23,11 +23,11 @@ export default function ({
             animationType="slide"
             transparent={false}
             visible={modalVisible}
+            style={{ flex: 1, }}
             onRequestClose={() => {
                 setModalVisible(!modalVisible);
             }}
         >
-
             <HeaderModal
                 rightIcon={
                     <Entypo
@@ -50,7 +50,6 @@ export default function ({
                 handleCerrar={() => setModalVisible(false)}
                 titulo={"Informacion niveles"}
             />
-
 
             {/* Cuerpo */}
             <ScrollView
@@ -91,17 +90,19 @@ export default function ({
                         marginLeft: 10,
                     }}>
                         {
-                            [...Array(6).keys()].map(e => (
-                                <View
-                                    key={e}
-                                    style={styles.levelContainer}>
-                                    {lvl === e + 1 && <View style={styles.badgeLevel} />}
+                            [...Array(Object.keys(levels).length).keys()].map(e => {
+                                return (
+                                    <View
+                                        key={e}
+                                        style={styles.levelContainer}>
+                                        {lvl === e + 1 && <View style={styles.badgeLevel} />}
 
-                                    <Text style={styles.tituloNivel}>Nivel {e + 1}</Text>
-                                    <Text style={styles.descripcion}>Ganancia: <Text style={{ fontWeight: 'bold', }}>{100 - levels[e + 1].comisionVelpa * 100}%</Text></Text>
-                                    <Text style={styles.descripcion}>Experiencia necesaria: <Text style={{ fontWeight: 'bold', }}>{levels[e + 1].expBaseLevel} exp</Text></Text>
-                                </View>
-                            ))
+                                        <Text style={styles.tituloNivel}>Nivel {e + 1}</Text>
+                                        <Text style={styles.descripcion}>Ganancia: <Text style={{ fontWeight: 'bold', }}>{100 - levels[e + 1].comisionVelpa * 100}%</Text></Text>
+                                        <Text style={styles.descripcion}>Experiencia necesaria: <Text style={{ fontWeight: 'bold', }}>{levels[e + 1].expBaseLevel} exp</Text></Text>
+                                    </View>
+                                )
+                            })
                         }
 
 
@@ -120,7 +121,6 @@ export default function ({
 const styles = StyleSheet.create({
     body: {
         padding: 20,
-        flex: 1,
     },
 
     tituloNivel: {

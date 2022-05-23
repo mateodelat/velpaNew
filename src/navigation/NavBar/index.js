@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, getUserSub, moradoOscuro, sendAdminNotification, userEsGuia } from '../../../assets/constants';
+import { colorFondo, getUserSub, moradoOscuro, userEsGuia } from '../../../assets/constants';
 import Inicio from '../../screens/Inicio';
 import HeaderNav from './../components/HeaderNav';
 

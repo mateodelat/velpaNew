@@ -2,14 +2,18 @@ type Aventura
   @model
   @auth(
     rules: [
+      { allow: owner, ownerField: "owner" }
       {
         allow: private # operations: [create, read]
       }
       # { allow: groups, groups: ["Admin"] }
-      # { allow: owner }
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   titulo: String!
 
   imagenFondoIdx: Int!
@@ -27,7 +31,6 @@ type Aventura
   ubicacionLink: String
   coordenadas: AWSJSON!
 
-  comision: Float!
   estadoAventura: EstadoAventura!
   altitud: Float
   distanciaRecorrida: Float
@@ -38,6 +41,8 @@ type Aventura
   incluidoDefault: [String]
 
   usuarioID: String
+
+  owner: String
 
   SolicitudGuias: [AventuraSolicitudGuia]
     @connection(keyName: "byAventura", fields: ["id"])
@@ -61,6 +66,9 @@ type Reserva
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 
   total: Float!
   comision: Float!
@@ -98,6 +106,10 @@ type Fecha
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   personasTotales: Int!
 
   fechaInicial: AWSTimestamp!
@@ -147,6 +159,10 @@ type Usuario
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   tipo: TipoUsuario
   guia: Boolean
 
@@ -209,6 +225,10 @@ type ChatRoom
   @auth(rules: [{ allow: private }])
   @key(name: "byFecha", fields: ["fechaID"]) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   name: String!
   picture: String
   lastMessage: Mensaje @connection
@@ -235,6 +255,10 @@ type Mensaje
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   content: String!
   usuarioID: ID
   chatroomID: ID
@@ -242,11 +266,20 @@ type Mensaje
 
 type SolicitudGuia
   @model
-  @auth(rules: [{ allow: private }])
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: owner, ownerField: "owner" }
+    ]
+  )
   @key(name: "byUsuario", fields: ["usuarioID"]) {
+  id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   owner: String
 
-  id: ID!
   status: StatusSolicitud!
   evaluadorID: ID
   usuarioID: ID
@@ -265,6 +298,10 @@ type Notificacion
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   tipo: TipoNotificacion!
   titulo: String!
   descripcion: String
@@ -298,6 +335,9 @@ type Comentario
   ) {
   id: ID!
 
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   usuarioCalificadoID: ID!
   body: String
   calificacion: Float!
@@ -314,6 +354,10 @@ type Publicidad
     ]
   ) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   tipo: TipoPublicidad!
 
   titulo: String!
@@ -376,11 +420,15 @@ enum TipoUsuario {
 }
 
 type AventuraSolicitudGuia
-  @model(queries: null)
+  @model #(queries: null)
   @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"])
   @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"])
   @auth(rules: [{ allow: private }]) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   aventuraID: ID!
   solicitudguiaID: ID!
 
@@ -389,11 +437,15 @@ type AventuraSolicitudGuia
 }
 
 type AventuraUsuario
-  @model(queries: null)
+  @model #(queries: null)
   @key(name: "byAventura", fields: ["aventuraID", "usuarioID"])
   @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"])
   @auth(rules: [{ allow: private }]) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   aventuraID: ID!
   usuarioID: ID!
 
@@ -404,11 +456,15 @@ type AventuraUsuario
 }
 
 type ChatRoomUsuario
-  @model(queries: null)
+  @model #(queries: null)
   @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"])
   @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"])
   @auth(rules: [{ allow: private }]) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+
   chatroomID: ID!
   usuarioID: ID!
   newMessages: Int

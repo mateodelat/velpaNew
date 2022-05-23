@@ -1305,48 +1305,25 @@ export const levels = {
     expBaseLevel: 0,
     expNextLevel: 100,
 
-    comisionVelpa: 0.35,
+    comisionVelpa: 0.15,
   },
 
   2: {
     lvl: 2,
-    expBaseLevel: 100,
-    expNextLevel: 200,
+    expBaseLevel: 150,
+    expNextLevel: 300,
 
-    comisionVelpa: 0.30,
+    comisionVelpa: 0.10,
   },
 
   3: {
     lvl: 3,
-    expBaseLevel: 200,
-    expNextLevel: 350,
+    expBaseLevel: 300,
+    expNextLevel: 999,
 
-    comisionVelpa: 0.25,
+    comisionVelpa: 0.05,
   },
 
-  4: {
-    lvl: 4,
-    expBaseLevel: 350,
-    expNextLevel: 500,
-
-    comisionVelpa: 0.15,
-  },
-
-  5: {
-    lvl: 5,
-    expBaseLevel: 500,
-    expNextLevel: 650,
-
-    comisionVelpa: 0.08,
-  },
-
-  6: {
-    lvl: 6,
-    expBaseLevel: 650,
-    expNextLevel: 1000,
-
-    comisionVelpa: 0.04,
-  },
 }
 
 
@@ -1356,28 +1333,16 @@ export function calculateLvl(experience) {
     return levels[1]
   }
 
-  if (experience < 100) {
+  if (experience < levels[2].expBaseLevel) {
     return levels[1]
   }
 
-  else if (experience < 200) {
+  else if (experience < levels[3].expBaseLevel) {
     return levels[2]
   }
 
-  else if (experience < 350) {
-    return levels[3]
-  }
-
-  else if (experience < 500) {
-    return levels[4]
-  }
-
-  else if (experience < 650) {
-    return levels[5]
-  }
-
   else {
-    return levels[6]
+    return levels[3]
   }
 
 }
@@ -1738,7 +1703,6 @@ export const verificarUbicacion = async () => {
 }
 
 export const mapsAPIKey = "AIzaSyCaRZjZvo3u_3tLCK7cOGigyfFEF6kR4Hw"
-export const comisionVelpa = 0.2
 
 
 export const shadowMedia = {

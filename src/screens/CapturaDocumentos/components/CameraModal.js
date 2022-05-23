@@ -332,7 +332,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
             <Modal
                 animationType="slide"
                 transparent={false}
-                visible={false}
+                visible={modalInfoVisible}
                 onRequestClose={() => {
                     setModalInfoVisible(false);
                 }}

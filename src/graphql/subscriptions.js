@@ -5,6 +5,8 @@ export const onCreateAventura = /* GraphQL */ `
   subscription OnCreateAventura {
     onCreateAventura {
       id
+      createdAt
+      updatedAt
       titulo
       imagenFondoIdx
       imagenDetalle
@@ -17,7 +19,6 @@ export const onCreateAventura = /* GraphQL */ `
       ubicacionId
       ubicacionLink
       coordenadas
-      comision
       estadoAventura
       altitud
       distanciaRecorrida
@@ -26,16 +27,17 @@ export const onCreateAventura = /* GraphQL */ `
       materialDefault
       incluidoDefault
       usuarioID
+      owner
       SolicitudGuias {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -43,14 +45,14 @@ export const onCreateAventura = /* GraphQL */ `
       UsuariosAutorizados {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -58,6 +60,8 @@ export const onCreateAventura = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -84,8 +88,6 @@ export const onCreateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -93,8 +95,6 @@ export const onCreateAventura = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -102,6 +102,8 @@ export const onUpdateAventura = /* GraphQL */ `
   subscription OnUpdateAventura {
     onUpdateAventura {
       id
+      createdAt
+      updatedAt
       titulo
       imagenFondoIdx
       imagenDetalle
@@ -114,7 +116,6 @@ export const onUpdateAventura = /* GraphQL */ `
       ubicacionId
       ubicacionLink
       coordenadas
-      comision
       estadoAventura
       altitud
       distanciaRecorrida
@@ -123,16 +124,17 @@ export const onUpdateAventura = /* GraphQL */ `
       materialDefault
       incluidoDefault
       usuarioID
+      owner
       SolicitudGuias {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -140,14 +142,14 @@ export const onUpdateAventura = /* GraphQL */ `
       UsuariosAutorizados {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -155,6 +157,8 @@ export const onUpdateAventura = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -181,8 +185,6 @@ export const onUpdateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -190,8 +192,6 @@ export const onUpdateAventura = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -199,6 +199,8 @@ export const onDeleteAventura = /* GraphQL */ `
   subscription OnDeleteAventura {
     onDeleteAventura {
       id
+      createdAt
+      updatedAt
       titulo
       imagenFondoIdx
       imagenDetalle
@@ -211,7 +213,6 @@ export const onDeleteAventura = /* GraphQL */ `
       ubicacionId
       ubicacionLink
       coordenadas
-      comision
       estadoAventura
       altitud
       distanciaRecorrida
@@ -220,16 +221,17 @@ export const onDeleteAventura = /* GraphQL */ `
       materialDefault
       incluidoDefault
       usuarioID
+      owner
       SolicitudGuias {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -237,14 +239,14 @@ export const onDeleteAventura = /* GraphQL */ `
       UsuariosAutorizados {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -252,6 +254,8 @@ export const onDeleteAventura = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -278,8 +282,6 @@ export const onDeleteAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -287,8 +289,6 @@ export const onDeleteAventura = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -296,6 +296,8 @@ export const onCreateReserva = /* GraphQL */ `
   subscription OnCreateReserva {
     onCreateReserva {
       id
+      createdAt
+      updatedAt
       total
       comision
       pagadoAlGuia
@@ -313,8 +315,6 @@ export const onCreateReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -322,6 +322,8 @@ export const onUpdateReserva = /* GraphQL */ `
   subscription OnUpdateReserva {
     onUpdateReserva {
       id
+      createdAt
+      updatedAt
       total
       comision
       pagadoAlGuia
@@ -339,8 +341,6 @@ export const onUpdateReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -348,6 +348,8 @@ export const onDeleteReserva = /* GraphQL */ `
   subscription OnDeleteReserva {
     onDeleteReserva {
       id
+      createdAt
+      updatedAt
       total
       comision
       pagadoAlGuia
@@ -365,8 +367,6 @@ export const onDeleteReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -374,6 +374,8 @@ export const onCreateFecha = /* GraphQL */ `
   subscription OnCreateFecha {
     onCreateFecha {
       id
+      createdAt
+      updatedAt
       personasTotales
       fechaInicial
       fechaFinal
@@ -400,6 +402,8 @@ export const onCreateFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -417,8 +421,6 @@ export const onCreateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -426,6 +428,8 @@ export const onCreateFecha = /* GraphQL */ `
       ChatRoom {
         items {
           id
+          createdAt
+          updatedAt
           name
           picture
           fechaID
@@ -433,8 +437,6 @@ export const onCreateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -442,8 +444,6 @@ export const onCreateFecha = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -451,6 +451,8 @@ export const onUpdateFecha = /* GraphQL */ `
   subscription OnUpdateFecha {
     onUpdateFecha {
       id
+      createdAt
+      updatedAt
       personasTotales
       fechaInicial
       fechaFinal
@@ -477,6 +479,8 @@ export const onUpdateFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -494,8 +498,6 @@ export const onUpdateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -503,6 +505,8 @@ export const onUpdateFecha = /* GraphQL */ `
       ChatRoom {
         items {
           id
+          createdAt
+          updatedAt
           name
           picture
           fechaID
@@ -510,8 +514,6 @@ export const onUpdateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -519,8 +521,6 @@ export const onUpdateFecha = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -528,6 +528,8 @@ export const onDeleteFecha = /* GraphQL */ `
   subscription OnDeleteFecha {
     onDeleteFecha {
       id
+      createdAt
+      updatedAt
       personasTotales
       fechaInicial
       fechaFinal
@@ -554,6 +556,8 @@ export const onDeleteFecha = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -571,8 +575,6 @@ export const onDeleteFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -580,6 +582,8 @@ export const onDeleteFecha = /* GraphQL */ `
       ChatRoom {
         items {
           id
+          createdAt
+          updatedAt
           name
           picture
           fechaID
@@ -587,8 +591,6 @@ export const onDeleteFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -596,8 +598,6 @@ export const onDeleteFecha = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -605,32 +605,34 @@ export const onCreateChatRoom = /* GraphQL */ `
   subscription OnCreateChatRoom {
     onCreateChatRoom {
       id
+      createdAt
+      updatedAt
       name
       picture
       lastMessage {
         id
+        createdAt
+        updatedAt
         content
         usuarioID
         chatroomID
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       fechaID
       guiaID
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -638,6 +640,8 @@ export const onCreateChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -645,8 +649,6 @@ export const onCreateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -654,8 +656,6 @@ export const onCreateChatRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -663,32 +663,34 @@ export const onUpdateChatRoom = /* GraphQL */ `
   subscription OnUpdateChatRoom {
     onUpdateChatRoom {
       id
+      createdAt
+      updatedAt
       name
       picture
       lastMessage {
         id
+        createdAt
+        updatedAt
         content
         usuarioID
         chatroomID
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       fechaID
       guiaID
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -696,6 +698,8 @@ export const onUpdateChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -703,8 +707,6 @@ export const onUpdateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -712,8 +714,6 @@ export const onUpdateChatRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -721,32 +721,34 @@ export const onDeleteChatRoom = /* GraphQL */ `
   subscription OnDeleteChatRoom {
     onDeleteChatRoom {
       id
+      createdAt
+      updatedAt
       name
       picture
       lastMessage {
         id
+        createdAt
+        updatedAt
         content
         usuarioID
         chatroomID
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       fechaID
       guiaID
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -754,6 +756,8 @@ export const onDeleteChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -761,8 +765,6 @@ export const onDeleteChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -770,8 +772,6 @@ export const onDeleteChatRoom = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -779,14 +779,14 @@ export const onCreateMensaje = /* GraphQL */ `
   subscription OnCreateMensaje {
     onCreateMensaje {
       id
+      createdAt
+      updatedAt
       content
       usuarioID
       chatroomID
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -794,14 +794,14 @@ export const onUpdateMensaje = /* GraphQL */ `
   subscription OnUpdateMensaje {
     onUpdateMensaje {
       id
+      createdAt
+      updatedAt
       content
       usuarioID
       chatroomID
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -809,22 +809,24 @@ export const onDeleteMensaje = /* GraphQL */ `
   subscription OnDeleteMensaje {
     onDeleteMensaje {
       id
+      createdAt
+      updatedAt
       content
       usuarioID
       chatroomID
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
 export const onCreateSolicitudGuia = /* GraphQL */ `
-  subscription OnCreateSolicitudGuia {
-    onCreateSolicitudGuia {
-      owner
+  subscription OnCreateSolicitudGuia($owner: String) {
+    onCreateSolicitudGuia(owner: $owner) {
       id
+      createdAt
+      updatedAt
+      owner
       status
       evaluadorID
       usuarioID
@@ -832,13 +834,13 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
       Aventuras {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -846,16 +848,16 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
 export const onUpdateSolicitudGuia = /* GraphQL */ `
-  subscription OnUpdateSolicitudGuia {
-    onUpdateSolicitudGuia {
-      owner
+  subscription OnUpdateSolicitudGuia($owner: String) {
+    onUpdateSolicitudGuia(owner: $owner) {
       id
+      createdAt
+      updatedAt
+      owner
       status
       evaluadorID
       usuarioID
@@ -863,13 +865,13 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
       Aventuras {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -877,16 +879,16 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
 export const onDeleteSolicitudGuia = /* GraphQL */ `
-  subscription OnDeleteSolicitudGuia {
-    onDeleteSolicitudGuia {
-      owner
+  subscription OnDeleteSolicitudGuia($owner: String) {
+    onDeleteSolicitudGuia(owner: $owner) {
       id
+      createdAt
+      updatedAt
+      owner
       status
       evaluadorID
       usuarioID
@@ -894,13 +896,13 @@ export const onDeleteSolicitudGuia = /* GraphQL */ `
       Aventuras {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           solicitudguiaID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -908,8 +910,6 @@ export const onDeleteSolicitudGuia = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -917,6 +917,8 @@ export const onCreateNotificacion = /* GraphQL */ `
   subscription OnCreateNotificacion($owner: String!) {
     onCreateNotificacion(owner: $owner) {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -933,8 +935,6 @@ export const onCreateNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -942,6 +942,8 @@ export const onUpdateNotificacion = /* GraphQL */ `
   subscription OnUpdateNotificacion($owner: String!) {
     onUpdateNotificacion(owner: $owner) {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -958,8 +960,6 @@ export const onUpdateNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -967,6 +967,8 @@ export const onDeleteNotificacion = /* GraphQL */ `
   subscription OnDeleteNotificacion($owner: String!) {
     onDeleteNotificacion(owner: $owner) {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -983,8 +985,6 @@ export const onDeleteNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -992,6 +992,8 @@ export const onCreateComentario = /* GraphQL */ `
   subscription OnCreateComentario {
     onCreateComentario {
       id
+      createdAt
+      updatedAt
       usuarioCalificadoID
       body
       calificacion
@@ -999,8 +1001,6 @@ export const onCreateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1008,6 +1008,8 @@ export const onUpdateComentario = /* GraphQL */ `
   subscription OnUpdateComentario {
     onUpdateComentario {
       id
+      createdAt
+      updatedAt
       usuarioCalificadoID
       body
       calificacion
@@ -1015,8 +1017,6 @@ export const onUpdateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1024,6 +1024,8 @@ export const onDeleteComentario = /* GraphQL */ `
   subscription OnDeleteComentario {
     onDeleteComentario {
       id
+      createdAt
+      updatedAt
       usuarioCalificadoID
       body
       calificacion
@@ -1031,8 +1033,6 @@ export const onDeleteComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1040,6 +1040,8 @@ export const onCreatePublicidad = /* GraphQL */ `
   subscription OnCreatePublicidad {
     onCreatePublicidad {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -1050,8 +1052,6 @@ export const onCreatePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1059,6 +1059,8 @@ export const onUpdatePublicidad = /* GraphQL */ `
   subscription OnUpdatePublicidad {
     onUpdatePublicidad {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -1069,8 +1071,6 @@ export const onUpdatePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1078,6 +1078,8 @@ export const onDeletePublicidad = /* GraphQL */ `
   subscription OnDeletePublicidad {
     onDeletePublicidad {
       id
+      createdAt
+      updatedAt
       tipo
       titulo
       descripcion
@@ -1088,8 +1090,6 @@ export const onDeletePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1097,10 +1097,14 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
   subscription OnCreateAventuraSolicitudGuia {
     onCreateAventuraSolicitudGuia {
       id
+      createdAt
+      updatedAt
       aventuraID
       solicitudguiaID
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1113,7 +1117,6 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1122,6 +1125,7 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1137,12 +1141,12 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       solicitudguia {
-        owner
         id
+        createdAt
+        updatedAt
+        owner
         status
         evaluadorID
         usuarioID
@@ -1154,14 +1158,10 @@ export const onCreateAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1169,10 +1169,14 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
   subscription OnUpdateAventuraSolicitudGuia {
     onUpdateAventuraSolicitudGuia {
       id
+      createdAt
+      updatedAt
       aventuraID
       solicitudguiaID
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1185,7 +1189,6 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1194,6 +1197,7 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1209,12 +1213,12 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       solicitudguia {
-        owner
         id
+        createdAt
+        updatedAt
+        owner
         status
         evaluadorID
         usuarioID
@@ -1226,14 +1230,10 @@ export const onUpdateAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1241,10 +1241,14 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
   subscription OnDeleteAventuraSolicitudGuia {
     onDeleteAventuraSolicitudGuia {
       id
+      createdAt
+      updatedAt
       aventuraID
       solicitudguiaID
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1257,7 +1261,6 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1266,6 +1269,7 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1281,12 +1285,12 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       solicitudguia {
-        owner
         id
+        createdAt
+        updatedAt
+        owner
         status
         evaluadorID
         usuarioID
@@ -1298,14 +1302,10 @@ export const onDeleteAventuraSolicitudGuia = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -1313,11 +1313,15 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
   subscription OnCreateAventuraUsuario {
     onCreateAventuraUsuario {
       id
+      createdAt
+      updatedAt
       aventuraID
       usuarioID
       owner
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1330,7 +1334,6 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1339,6 +1342,7 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1354,16 +1358,14 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -1426,8 +1428,6 @@ export const onCreateAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -1436,11 +1436,15 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
   subscription OnUpdateAventuraUsuario {
     onUpdateAventuraUsuario {
       id
+      createdAt
+      updatedAt
       aventuraID
       usuarioID
       owner
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1453,7 +1457,6 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1462,6 +1465,7 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1477,16 +1481,14 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -1549,8 +1551,6 @@ export const onUpdateAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -1559,11 +1559,15 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
   subscription OnDeleteAventuraUsuario {
     onDeleteAventuraUsuario {
       id
+      createdAt
+      updatedAt
       aventuraID
       usuarioID
       owner
       aventura {
         id
+        createdAt
+        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1576,7 +1580,6 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         ubicacionId
         ubicacionLink
         coordenadas
-        comision
         estadoAventura
         altitud
         distanciaRecorrida
@@ -1585,6 +1588,7 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
+        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1600,16 +1604,14 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -1672,8 +1674,6 @@ export const onDeleteAventuraUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -1682,24 +1682,28 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
   subscription OnCreateChatRoomUsuario {
     onCreateChatRoomUsuario {
       id
+      createdAt
+      updatedAt
       chatroomID
       usuarioID
       newMessages
       owner
       chatroom {
         id
+        createdAt
+        updatedAt
         name
         picture
         lastMessage {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         fechaID
         guiaID
@@ -1714,16 +1718,14 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -1786,8 +1788,6 @@ export const onCreateChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -1796,24 +1796,28 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
   subscription OnUpdateChatRoomUsuario {
     onUpdateChatRoomUsuario {
       id
+      createdAt
+      updatedAt
       chatroomID
       usuarioID
       newMessages
       owner
       chatroom {
         id
+        createdAt
+        updatedAt
         name
         picture
         lastMessage {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         fechaID
         guiaID
@@ -1828,16 +1832,14 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -1900,8 +1902,6 @@ export const onUpdateChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -1910,24 +1910,28 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
   subscription OnDeleteChatRoomUsuario {
     onDeleteChatRoomUsuario {
       id
+      createdAt
+      updatedAt
       chatroomID
       usuarioID
       newMessages
       owner
       chatroom {
         id
+        createdAt
+        updatedAt
         name
         picture
         lastMessage {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         fechaID
         guiaID
@@ -1942,16 +1946,14 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       usuario {
         id
+        createdAt
+        updatedAt
         tipo
         guia
         calificacion
@@ -2014,8 +2016,6 @@ export const onDeleteChatRoomUsuario = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
     }
   }
@@ -2024,6 +2024,8 @@ export const onCreateUsuario = /* GraphQL */ `
   subscription OnCreateUsuario {
     onCreateUsuario {
       id
+      createdAt
+      updatedAt
       tipo
       guia
       calificacion
@@ -2054,14 +2056,14 @@ export const onCreateUsuario = /* GraphQL */ `
       AventurasAutorizadas {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2069,14 +2071,14 @@ export const onCreateUsuario = /* GraphQL */ `
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2084,6 +2086,8 @@ export const onCreateUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -2091,8 +2095,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2100,6 +2102,8 @@ export const onCreateUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -2117,8 +2121,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2126,6 +2128,8 @@ export const onCreateUsuario = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -2152,8 +2156,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2161,6 +2163,8 @@ export const onCreateUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
+          createdAt
+          updatedAt
           tipo
           titulo
           descripcion
@@ -2177,16 +2181,16 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
       }
       SolicitudesCreadas {
         items {
-          owner
           id
+          createdAt
+          updatedAt
+          owner
           status
           evaluadorID
           usuarioID
@@ -2194,8 +2198,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2203,6 +2205,8 @@ export const onCreateUsuario = /* GraphQL */ `
       Comentarios {
         items {
           id
+          createdAt
+          updatedAt
           usuarioCalificadoID
           body
           calificacion
@@ -2210,8 +2214,6 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2219,8 +2221,6 @@ export const onCreateUsuario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -2228,6 +2228,8 @@ export const onUpdateUsuario = /* GraphQL */ `
   subscription OnUpdateUsuario {
     onUpdateUsuario {
       id
+      createdAt
+      updatedAt
       tipo
       guia
       calificacion
@@ -2258,14 +2260,14 @@ export const onUpdateUsuario = /* GraphQL */ `
       AventurasAutorizadas {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2273,14 +2275,14 @@ export const onUpdateUsuario = /* GraphQL */ `
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2288,6 +2290,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -2295,8 +2299,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2304,6 +2306,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -2321,8 +2325,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2330,6 +2332,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -2356,8 +2360,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2365,6 +2367,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
+          createdAt
+          updatedAt
           tipo
           titulo
           descripcion
@@ -2381,16 +2385,16 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
       }
       SolicitudesCreadas {
         items {
-          owner
           id
+          createdAt
+          updatedAt
+          owner
           status
           evaluadorID
           usuarioID
@@ -2398,8 +2402,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2407,6 +2409,8 @@ export const onUpdateUsuario = /* GraphQL */ `
       Comentarios {
         items {
           id
+          createdAt
+          updatedAt
           usuarioCalificadoID
           body
           calificacion
@@ -2414,8 +2418,6 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2423,8 +2425,6 @@ export const onUpdateUsuario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -2432,6 +2432,8 @@ export const onDeleteUsuario = /* GraphQL */ `
   subscription OnDeleteUsuario {
     onDeleteUsuario {
       id
+      createdAt
+      updatedAt
       tipo
       guia
       calificacion
@@ -2462,14 +2464,14 @@ export const onDeleteUsuario = /* GraphQL */ `
       AventurasAutorizadas {
         items {
           id
+          createdAt
+          updatedAt
           aventuraID
           usuarioID
           owner
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2477,14 +2479,14 @@ export const onDeleteUsuario = /* GraphQL */ `
       Mensajes {
         items {
           id
+          createdAt
+          updatedAt
           content
           usuarioID
           chatroomID
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2492,6 +2494,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
+          createdAt
+          updatedAt
           chatroomID
           usuarioID
           newMessages
@@ -2499,8 +2503,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2508,6 +2510,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
+          createdAt
+          updatedAt
           total
           comision
           pagadoAlGuia
@@ -2525,8 +2529,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2534,6 +2536,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       Fechas {
         items {
           id
+          createdAt
+          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -2560,8 +2564,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2569,6 +2571,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
+          createdAt
+          updatedAt
           tipo
           titulo
           descripcion
@@ -2585,16 +2589,16 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
       }
       SolicitudesCreadas {
         items {
-          owner
           id
+          createdAt
+          updatedAt
+          owner
           status
           evaluadorID
           usuarioID
@@ -2602,8 +2606,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2611,6 +2613,8 @@ export const onDeleteUsuario = /* GraphQL */ `
       Comentarios {
         items {
           id
+          createdAt
+          updatedAt
           usuarioCalificadoID
           body
           calificacion
@@ -2618,8 +2622,6 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          createdAt
-          updatedAt
         }
         nextToken
         startedAt
@@ -2627,8 +2629,6 @@ export const onDeleteUsuario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;

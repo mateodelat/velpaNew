@@ -26,14 +26,15 @@ export default function AdminStack() {
     return (
         <Stack.Navigator
             screenOptions={{
-                header: ({ scene, previous, navigation }) => {
-                    const { options } = scene.descriptor;
+                header: (params) => {
+
+                    const { options } = params;
                     const title =
                         options.headerTitle !== undefined
                             ? options.headerTitle
                             : options.title !== undefined
                                 ? options.title
-                                : scene.route.name;
+                                : "titulo";
 
                     return (
                         <Header title={title} />

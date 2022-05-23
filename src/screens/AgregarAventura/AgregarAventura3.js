@@ -10,7 +10,7 @@ import {
 
 
 import Boton from '../../components/Boton';
-import { comisionVelpa, getUserSub, moradoClaro, sendAdminNotification } from '../../../assets/constants';
+import { getUserSub, moradoClaro, sendAdminNotification } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import Header from '../../components/header';
@@ -45,7 +45,6 @@ export default ({ navigation, route }) => {
         const aventuraAEnviar = {
             ...aventura,
             materialDefault: JSON.stringify(newMaterial),
-            comision: comisionVelpa,
             estadoAventura: EstadoAventura.PENDIENTE,
             usuarioID: sub,
         }

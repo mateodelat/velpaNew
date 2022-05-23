@@ -75,6 +75,7 @@ export default function Register({ navigation, route }) {
                     default:
                         console.log(error)
                         setError(error.message)
+                        setLoading(false)
                         setErrorEmail(false)
                         setErrorPassword(false)
 

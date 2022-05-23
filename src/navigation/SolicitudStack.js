@@ -57,14 +57,14 @@ export default function SolicitudStack({ navigation }) {
         <Stack.Navigator
             initialRouteName={requireDocumentos ? "CapturaDocumentos1" : "SeleccionaAventura"}
             screenOptions={{
-                header: ({ scene, previous, navigation }) => {
-                    const { options } = scene.descriptor;
+                header: (params) => {
+                    const { options } = params;
                     const title =
                         options.headerTitle !== undefined
                             ? options.headerTitle
                             : options.title !== undefined
                                 ? options.title
-                                : scene.route.name;
+                                : params?.route?.name;
 
                     return (
                         <Header title={title} />

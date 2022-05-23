@@ -256,7 +256,7 @@ export default ({ navigation }) => {
     return (
         <View style={styles.container}>
             {solicitudes.length === 0 ?
-                <Text>No hay solicitudes pendientes</Text>
+                <Text style={{ fontSize: 16, }}>No hay solicitudes pendientes</Text>
                 :
                 <FlatList
                     showsVerticalScrollIndicator={false}

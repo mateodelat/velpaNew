@@ -754,7 +754,7 @@ export default ({ route }) => {
 
 
                 <Modal
-                    animationType="slide"
+                    animationType="none"
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(false)}

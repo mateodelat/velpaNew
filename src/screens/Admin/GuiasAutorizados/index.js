@@ -22,7 +22,7 @@ import ImageFullScreen from '../../../components/ImageFullScreen';
 import ModalAventura from './ModalAventura';
 
 
-const index = ({ navigation }) => {
+export default ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [aventuras, setAventuras] = useState([]);
 
@@ -312,7 +312,6 @@ const index = ({ navigation }) => {
     )
 }
 
-export default index
 
 const styles = StyleSheet.create({
     container: {

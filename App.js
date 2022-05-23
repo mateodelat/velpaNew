@@ -26,6 +26,7 @@ import { Notificacion } from './src/models';
 
 import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 
 
@@ -89,8 +90,6 @@ export default function App() {
 
   useEffect(() => {
     checkOnboarding()
-
-    DataStore.stop()
 
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
@@ -228,8 +227,15 @@ export default function App() {
     <View style={{
       flex: 1, backgroundColor: '#fff',
     }}>
-      <StatusBar hidden={true} />
-      <Router />
+      < StripeProvider
+        publishableKey="pk_live_51J7OwUFIERW56TAETjQ7dMTgYLXQnjLxuss5HmvufxrC3kl0jv6jnQQmTsLCn6UhG3vQPeryjQi04xSQm1XUhs4900866NxYwP"
+        // urlScheme={localRedirectSignIn} // required for 3D Secure and bank redirects
+        merchantIdentifier="merchant.com.velpa" // required for Apple Pay
+      >
+
+        <StatusBar hidden={true} />
+        <Router />
+      </StripeProvider>
     </View>
   );
 

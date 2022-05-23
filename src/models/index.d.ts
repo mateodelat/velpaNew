@@ -69,6 +69,8 @@ export declare class CreateAcountResponse {
 
 export declare class Aventura {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly titulo: string;
   readonly imagenFondoIdx: number;
   readonly imagenDetalle: (string | null)[];
@@ -81,7 +83,6 @@ export declare class Aventura {
   readonly ubicacionId: string;
   readonly ubicacionLink?: string | null;
   readonly coordenadas: string;
-  readonly comision: number;
   readonly estadoAventura: EstadoAventura | keyof typeof EstadoAventura;
   readonly altitud?: number | null;
   readonly distanciaRecorrida?: number | null;
@@ -90,6 +91,7 @@ export declare class Aventura {
   readonly materialDefault?: string | null;
   readonly incluidoDefault?: (string | null)[] | null;
   readonly usuarioID?: string | null;
+  readonly owner?: string | null;
   readonly SolicitudGuias?: (AventuraSolicitudGuia | null)[] | null;
   readonly UsuariosAutorizados?: (AventuraUsuario | null)[] | null;
   readonly Fechas?: (Fecha | null)[] | null;
@@ -99,6 +101,8 @@ export declare class Aventura {
 
 export declare class AventuraSolicitudGuia {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly aventura: Aventura;
   readonly solicitudguia: SolicitudGuia;
   constructor(init: ModelInit<AventuraSolicitudGuia>);
@@ -107,6 +111,8 @@ export declare class AventuraSolicitudGuia {
 
 export declare class SolicitudGuia {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly owner?: string | null;
   readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
   readonly evaluadorID?: string | null;
@@ -119,6 +125,8 @@ export declare class SolicitudGuia {
 
 export declare class AventuraUsuario {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly owner?: string | null;
   readonly aventura: Aventura;
   readonly usuario: Usuario;
@@ -128,6 +136,8 @@ export declare class AventuraUsuario {
 
 export declare class Usuario {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly tipo?: TipoUsuario | keyof typeof TipoUsuario | null;
   readonly guia?: boolean | null;
   readonly calificacion?: number | null;
@@ -169,6 +179,8 @@ export declare class Usuario {
 
 export declare class Mensaje {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly content: string;
   readonly usuarioID?: string | null;
   readonly chatroomID?: string | null;
@@ -178,6 +190,8 @@ export declare class Mensaje {
 
 export declare class ChatRoomUsuario {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly newMessages?: number | null;
   readonly owner?: string | null;
   readonly chatroom: ChatRoom;
@@ -188,6 +202,8 @@ export declare class ChatRoomUsuario {
 
 export declare class ChatRoom {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly name: string;
   readonly picture?: string | null;
   readonly lastMessage?: Mensaje | null;
@@ -201,6 +217,8 @@ export declare class ChatRoom {
 
 export declare class Reserva {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly total: number;
   readonly comision: number;
   readonly pagadoAlGuia: number;
@@ -221,6 +239,8 @@ export declare class Reserva {
 
 export declare class Fecha {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly personasTotales: number;
   readonly fechaInicial: number;
   readonly fechaFinal: number;
@@ -252,6 +272,8 @@ export declare class Fecha {
 
 export declare class Notificacion {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly tipo: TipoNotificacion | keyof typeof TipoNotificacion;
   readonly titulo: string;
   readonly descripcion?: string | null;
@@ -271,6 +293,8 @@ export declare class Notificacion {
 
 export declare class Comentario {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly usuarioCalificadoID: string;
   readonly body?: string | null;
   readonly calificacion: number;
@@ -281,6 +305,8 @@ export declare class Comentario {
 
 export declare class Publicidad {
   readonly id: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly tipo: TipoPublicidad | keyof typeof TipoPublicidad;
   readonly titulo: string;
   readonly descripcion?: string | null;

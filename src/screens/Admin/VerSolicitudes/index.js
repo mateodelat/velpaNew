@@ -15,7 +15,7 @@ import { DataStore, DataStoreClass } from '@aws-amplify/datastore';
 
 
 
-const index = ({ navigation }) => {
+export default ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [solicitudes, setSolicitudes] = useState([]);
 
@@ -84,7 +84,7 @@ const index = ({ navigation }) => {
                     <Text style={styles.texto}>No hay solicitudes para ser guia</Text> :
                     solicitudes.map((e, i) => (
                         <View
-                            key={"Solcii", i}
+                            key={"Solcii" + i}
                             style={styles.solicitudContainer}>
                             <View style={styles.bodyContainer}>
 
@@ -172,7 +172,7 @@ const index = ({ navigation }) => {
                                 {e.Aventuras?.map((e, i) => {
 
                                     return <View
-                                        key={"Aventura", i}
+                                        key={"Aventura" + i}
                                         style={styles.aventuraContainer}>
                                         <Text>{i + 1}-  {e.titulo}</Text>
                                     </View>
@@ -209,8 +209,6 @@ const index = ({ navigation }) => {
         </ScrollView >
     )
 }
-
-export default index
 
 const styles = StyleSheet.create({
     container: {
