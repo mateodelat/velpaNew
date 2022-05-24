@@ -1,6 +1,6 @@
 {
   "auth": {
-    "velpa01106a15": {
+    "velpa5e0b2d9f": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -29,6 +29,41 @@
       }
     }
   },
+  "api": {
+    "velpaAPI": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "velpa5e0b2d9f",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7,
+              "apiKeyExpirationDate": "2022-05-31T02:05:13.431Z",
+              "description": ""
+            }
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authvelpa5e0b2d9f"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
   "function": {
     "CreatePaymentIntent": {
       "build": true,
@@ -46,13 +81,6 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "velpa01106a15",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
           "category": "api",
           "resourceName": "velpaAPI",
           "attributes": [
@@ -64,43 +92,8 @@
       ]
     }
   },
-  "api": {
-    "velpaAPI": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "velpa01106a15",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ],
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authvelpa01106a15"
-            }
-          },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "API_KEY",
-              "apiKeyConfig": {
-                "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-05-19T20:01:13.245Z",
-                "description": ""
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
   "storage": {
-    "velpaBucket": {
+    "Storage": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

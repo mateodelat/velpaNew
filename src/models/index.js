@@ -57,22 +57,22 @@ const AccountType = {
   "COMPANY": "COMPANY"
 };
 
-const { Aventura, AventuraSolicitudGuia, SolicitudGuia, AventuraUsuario, Usuario, Mensaje, ChatRoomUsuario, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, PaymentIntent, CreateAcountResponse } = initSchema(schema);
+const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, ChatRoomUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
   Aventura,
-  AventuraSolicitudGuia,
   SolicitudGuia,
-  AventuraUsuario,
   Usuario,
   Mensaje,
-  ChatRoomUsuario,
   ChatRoom,
   Reserva,
   Fecha,
   Notificacion,
   Comentario,
   Publicidad,
+  AventuraSolicitudGuias,
+  AventuraUsuarios,
+  ChatRoomUsuarios,
   EstadoAventura,
   Categorias,
   StatusSolicitud,

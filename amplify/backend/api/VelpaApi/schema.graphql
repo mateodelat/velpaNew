@@ -44,17 +44,16 @@ type Aventura
 
   owner: String
 
-  SolicitudGuias: [AventuraSolicitudGuia]
-    @connection(keyName: "byAventura", fields: ["id"])
-  UsuariosAutorizados: [AventuraUsuario]
-    @connection(keyName: "byAventura", fields: ["id"])
-  Fechas: [Fecha] @connection(keyName: "byAventura", fields: ["id"])
+  SolicitudGuias: [SolicitudGuia]
+    @manyToMany(relationName: "AventuraSolicitudGuias")
+
+  UsuariosAutorizados: [Usuario] @manyToMany(relationName: "AventuraUsuarios")
+
+  Fechas: [Fecha] @hasMany(indexName: "byAventura", fields: ["id"])
 }
 
 type Reserva
   @model
-  @key(name: "byFecha", fields: ["fechaID"])
-  @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
       {
@@ -82,8 +81,8 @@ type Reserva
   ingreso: Boolean
   horaIngreso: AWSDateTime
 
-  fechaID: ID
-  usuarioID: ID
+  fechaID: ID @index(name: "byFecha")
+  usuarioID: ID @index(name: "byUsuario")
   guiaID: ID
 
   tipoPago: tipoPago
@@ -93,8 +92,6 @@ type Reserva
 
 type Fecha
   @model
-  @key(name: "byAventura", fields: ["aventuraID"])
-  @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
       {
@@ -136,13 +133,13 @@ type Fecha
   imagenFondo: String
   tituloAventura: String
 
-  aventuraID: ID!
-  usuarioID: ID!
+  aventuraID: ID! @index(name: "byAventura")
+  usuarioID: ID! @index(name: "byUsuario")
 
   dificultad: Int
 
-  Reservas: [Reserva] @connection(keyName: "byFecha", fields: ["id"])
-  ChatRoom: [ChatRoom] @connection(keyName: "byFecha", fields: ["id"])
+  Reservas: [Reserva] @hasMany(indexName: "byFecha", fields: ["id"])
+  ChatRoom: [ChatRoom] @hasMany(indexName: "byFecha", fields: ["id"])
 }
 
 type Usuario
@@ -207,23 +204,26 @@ type Usuario
 
   newMessages: Int
 
-  AventurasAutorizadas: [AventuraUsuario]
-    @connection(keyName: "byUsuario", fields: ["id"])
-  Mensajes: [Mensaje] @connection(keyName: "byUsuario", fields: ["id"])
-  ChatRooms: [ChatRoomUsuario] @connection(keyName: "byUsuario", fields: ["id"])
-  Reservas: [Reserva] @connection(keyName: "byUsuario", fields: ["id"])
-  Fechas: [Fecha] @connection(keyName: "byUsuario", fields: ["id"])
+  AventurasAutorizadas: [Aventura] @manyToMany(relationName: "AventuraUsuarios")
+
+  Mensajes: [Mensaje] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  ChatRooms: [ChatRoom] @manyToMany(relationName: "ChatRoomUsuarios")
+
+  Reservas: [Reserva] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Fechas: [Fecha] @hasMany(indexName: "byUsuario", fields: ["id"])
+
   Notificaciones: [Notificacion]
-    @connection(keyName: "byUsuario", fields: ["id"])
+    @hasMany(indexName: "byUsuario", fields: ["id"])
+
   SolicitudesCreadas: [SolicitudGuia]
-    @connection(keyName: "byUsuario", fields: ["id"])
-  Comentarios: [Comentario] @connection(keyName: "byUsuario", fields: ["id"])
+    @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Comentarios: [Comentario] @hasMany(indexName: "byUsuario", fields: ["id"])
 }
 
-type ChatRoom
-  @model
-  @auth(rules: [{ allow: private }])
-  @key(name: "byFecha", fields: ["fechaID"]) {
+type ChatRoom @model @auth(rules: [{ allow: private }]) {
   id: ID!
 
   createdAt: AWSDateTime!
@@ -231,20 +231,21 @@ type ChatRoom
 
   name: String!
   picture: String
-  lastMessage: Mensaje @connection
+  lastMessage: Mensaje @hasOne
 
-  fechaID: ID
+  fechaID: ID @index(name: "byFecha")
   guiaID: ID
 
-  Mensajes: [Mensaje] @connection(keyName: "byChatRoom", fields: ["id"])
-  Participantes: [ChatRoomUsuario]
-    @connection(keyName: "byChatRoom", fields: ["id"])
+  Mensajes: [Mensaje]
+    @hasMany(
+      indexName: "byChatRoom" #, fields: ["id"]
+    )
+
+  Participantes: [Usuario] @manyToMany(relationName: "ChatRoomUsuarios")
 }
 
 type Mensaje
   @model
-  @key(name: "byUsuario", fields: ["usuarioID"])
-  @key(name: "byChatRoom", fields: ["chatroomID"])
   @auth(
     rules: [
       {
@@ -260,8 +261,8 @@ type Mensaje
   updatedAt: AWSDateTime!
 
   content: String!
-  usuarioID: ID
-  chatroomID: ID
+  usuarioID: ID @index(name: "byUsuario")
+  chatroomID: ID @index(name: "byChatRoom")
 }
 
 type SolicitudGuia
@@ -271,8 +272,7 @@ type SolicitudGuia
       { allow: groups, groups: ["Admin"] }
       { allow: owner, ownerField: "owner" }
     ]
-  )
-  @key(name: "byUsuario", fields: ["usuarioID"]) {
+  ) {
   id: ID!
 
   createdAt: AWSDateTime!
@@ -282,15 +282,13 @@ type SolicitudGuia
 
   status: StatusSolicitud!
   evaluadorID: ID
-  usuarioID: ID
+  usuarioID: ID @index(name: "byUsuario")
   mensaje: String
-  Aventuras: [AventuraSolicitudGuia]
-    @connection(keyName: "bySolicitudGuia", fields: ["id"])
+  Aventuras: [Aventura] @manyToMany(relationName: "AventuraSolicitudGuias")
 }
 
 type Notificacion
   @model
-  @key(name: "byUsuario", fields: ["usuarioID"])
   @auth(
     rules: [
       { allow: owner, ownerField: "owner" }
@@ -305,7 +303,7 @@ type Notificacion
   tipo: TipoNotificacion!
   titulo: String!
   descripcion: String
-  usuarioID: ID!
+  usuarioID: ID! @index(name: "byUsuario")
 
   imagen: String
 
@@ -323,7 +321,6 @@ type Notificacion
 
 type Comentario
   @model
-  @key(name: "byUsuario", fields: ["usuarioCalificadoID"])
   @auth(
     rules: [
       {
@@ -338,7 +335,7 @@ type Comentario
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 
-  usuarioCalificadoID: ID!
+  usuarioCalificadoID: ID! @index(name: "byUsuario")
   body: String
   calificacion: Float!
 
@@ -419,61 +416,61 @@ enum TipoUsuario {
   GUIAINDIVIDUAL
 }
 
-type AventuraSolicitudGuia
-  @model #(queries: null)
-  @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"])
-  @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"])
-  @auth(rules: [{ allow: private }]) {
-  id: ID!
+# type AventuraSolicitudGuia
+#   @model #(queries: null)
+#   @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"])
+#   @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"])
+#   @auth(rules: [{ allow: private }]) {
+#   id: ID!
 
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+#   createdAt: AWSDateTime!
+#   updatedAt: AWSDateTime!
 
-  aventuraID: ID!
-  solicitudguiaID: ID!
+#   aventuraID: ID!
+#   solicitudguiaID: ID!
 
-  aventura: Aventura! @connection(fields: ["aventuraID"])
-  solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
-}
+#   aventura: Aventura! @connection(fields: ["aventuraID"])
+#   solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
+# }
 
-type AventuraUsuario
-  @model #(queries: null)
-  @key(name: "byAventura", fields: ["aventuraID", "usuarioID"])
-  @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"])
-  @auth(rules: [{ allow: private }]) {
-  id: ID!
+# type AventuraUsuario
+#   @model #(queries: null)
+#   @key(name: "byAventura", fields: ["aventuraID", "usuarioID"])
+#   @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"])
+#   @auth(rules: [{ allow: private }]) {
+#   id: ID!
 
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+#   createdAt: AWSDateTime!
+#   updatedAt: AWSDateTime!
 
-  aventuraID: ID!
-  usuarioID: ID!
+#   aventuraID: ID!
+#   usuarioID: ID!
 
-  owner: String
+#   owner: String
 
-  aventura: Aventura! @connection(fields: ["aventuraID"])
-  usuario: Usuario! @connection(fields: ["usuarioID"])
-}
+#   aventura: Aventura! @connection(fields: ["aventuraID"])
+#   usuario: Usuario! @connection(fields: ["usuarioID"])
+# }
 
-type ChatRoomUsuario
-  @model #(queries: null)
-  @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"])
-  @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"])
-  @auth(rules: [{ allow: private }]) {
-  id: ID!
+# type ChatRoomUsuario
+#   @model #(queries: null)
+#   @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"])
+#   @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"])
+#   @auth(rules: [{ allow: private }]) {
+#   id: ID!
 
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+#   createdAt: AWSDateTime!
+#   updatedAt: AWSDateTime!
 
-  chatroomID: ID!
-  usuarioID: ID!
-  newMessages: Int
+#   chatroomID: ID!
+#   usuarioID: ID!
+#   newMessages: Int
 
-  owner: String
+#   owner: String
 
-  chatroom: ChatRoom! @connection(fields: ["chatroomID"])
-  usuario: Usuario! @connection(fields: ["usuarioID"])
-}
+#   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
+#   usuario: Usuario! @connection(fields: ["usuarioID"])
+# }
 
 # ########################################################
 # ########################FUNCIONES#######################

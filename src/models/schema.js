@@ -181,7 +181,7 @@ export const schema = {
                     "name": "SolicitudGuias",
                     "isArray": true,
                     "type": {
-                        "model": "AventuraSolicitudGuia"
+                        "model": "AventuraSolicitudGuias"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -195,7 +195,7 @@ export const schema = {
                     "name": "UsuariosAutorizados",
                     "isArray": true,
                     "type": {
-                        "model": "AventuraUsuario"
+                        "model": "AventuraUsuarios"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -242,94 +242,7 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "AventuraSolicitudGuia": {
-            "name": "AventuraSolicitudGuia",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "aventura": {
-                    "name": "aventura",
-                    "isArray": false,
-                    "type": {
-                        "model": "Aventura"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "aventuraID"
-                    }
-                },
-                "solicitudguia": {
-                    "name": "solicitudguia",
-                    "isArray": false,
-                    "type": {
-                        "model": "SolicitudGuia"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "solicitudguiaID"
-                    }
-                }
-            },
-            "syncable": true,
-            "pluralName": "AventuraSolicitudGuias",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAventura",
-                        "fields": [
-                            "aventuraID",
-                            "solicitudguiaID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "bySolicitudGuia",
-                        "fields": [
-                            "solicitudguiaID",
-                            "aventuraID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
+                            },
                             {
                                 "allow": "private",
                                 "operations": [
@@ -409,14 +322,14 @@ export const schema = {
                     "name": "Aventuras",
                     "isArray": true,
                     "type": {
-                        "model": "AventuraSolicitudGuia"
+                        "model": "AventuraSolicitudGuias"
                     },
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
                         "connectionType": "HAS_MANY",
-                        "associatedWith": "solicitudguia"
+                        "associatedWith": "solicitudGuia"
                     }
                 }
             },
@@ -459,109 +372,6 @@ export const schema = {
                                 "ownerField": "owner",
                                 "allow": "owner",
                                 "identityClaim": "cognito:username",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "AventuraUsuario": {
-            "name": "AventuraUsuario",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "aventura": {
-                    "name": "aventura",
-                    "isArray": false,
-                    "type": {
-                        "model": "Aventura"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "aventuraID"
-                    }
-                },
-                "usuario": {
-                    "name": "usuario",
-                    "isArray": false,
-                    "type": {
-                        "model": "Usuario"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "usuarioID"
-                    }
-                }
-            },
-            "syncable": true,
-            "pluralName": "AventuraUsuarios",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAventura",
-                        "fields": [
-                            "aventuraID",
-                            "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byUsuario",
-                        "fields": [
-                            "usuarioID",
-                            "aventuraID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "private",
                                 "operations": [
                                     "create",
                                     "update",
@@ -795,7 +605,7 @@ export const schema = {
                     "name": "AventurasAutorizadas",
                     "isArray": true,
                     "type": {
-                        "model": "AventuraUsuario"
+                        "model": "AventuraUsuarios"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -823,7 +633,7 @@ export const schema = {
                     "name": "ChatRooms",
                     "isArray": true,
                     "type": {
-                        "model": "ChatRoomUsuario"
+                        "model": "ChatRoomUsuarios"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -973,6 +783,13 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "chatRoomMensajesId": {
+                    "name": "chatRoomMensajesId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -996,116 +813,6 @@ export const schema = {
                     "properties": {
                         "name": "byChatRoom",
                         "fields": [
-                            "chatroomID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "ChatRoomUsuario": {
-            "name": "ChatRoomUsuario",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "newMessages": {
-                    "name": "newMessages",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "chatroom": {
-                    "name": "chatroom",
-                    "isArray": false,
-                    "type": {
-                        "model": "ChatRoom"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "chatroomID"
-                    }
-                },
-                "usuario": {
-                    "name": "usuario",
-                    "isArray": false,
-                    "type": {
-                        "model": "Usuario"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "usuarioID"
-                    }
-                }
-            },
-            "syncable": true,
-            "pluralName": "ChatRoomUsuarios",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byChatRoom",
-                        "fields": [
-                            "chatroomID",
-                            "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byUsuario",
-                        "fields": [
-                            "usuarioID",
                             "chatroomID"
                         ]
                     }
@@ -1175,7 +882,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "association": {
-                        "connectionType": "BELONGS_TO",
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id",
                         "targetName": "chatRoomLastMessageId"
                     }
                 },
@@ -1204,22 +912,29 @@ export const schema = {
                     "isArrayNullable": true,
                     "association": {
                         "connectionType": "HAS_MANY",
-                        "associatedWith": "chatroomID"
+                        "associatedWith": "chatRoomMensajesId"
                     }
                 },
                 "Participantes": {
                     "name": "Participantes",
                     "isArray": true,
                     "type": {
-                        "model": "ChatRoomUsuario"
+                        "model": "ChatRoomUsuarios"
                     },
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
                         "connectionType": "HAS_MANY",
-                        "associatedWith": "chatroom"
+                        "associatedWith": "chatRoom"
                     }
+                },
+                "chatRoomLastMessageId": {
+                    "name": "chatRoomLastMessageId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -2040,6 +1755,246 @@ export const schema = {
                     }
                 }
             ]
+        },
+        "AventuraSolicitudGuias": {
+            "name": "AventuraSolicitudGuias",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "aventura": {
+                    "name": "aventura",
+                    "isArray": false,
+                    "type": {
+                        "model": "Aventura"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "aventuraID"
+                    }
+                },
+                "solicitudGuia": {
+                    "name": "solicitudGuia",
+                    "isArray": false,
+                    "type": {
+                        "model": "SolicitudGuia"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "solicitudGuiaID"
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "AventuraSolicitudGuias",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAventura",
+                        "fields": [
+                            "aventuraID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "bySolicitudGuia",
+                        "fields": [
+                            "solicitudGuiaID"
+                        ]
+                    }
+                }
+            ]
+        },
+        "AventuraUsuarios": {
+            "name": "AventuraUsuarios",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "aventura": {
+                    "name": "aventura",
+                    "isArray": false,
+                    "type": {
+                        "model": "Aventura"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "aventuraID"
+                    }
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "usuarioID"
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "AventuraUsuarios",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAventura",
+                        "fields": [
+                            "aventuraID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                }
+            ]
+        },
+        "ChatRoomUsuarios": {
+            "name": "ChatRoomUsuarios",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "usuarioID"
+                    }
+                },
+                "chatRoom": {
+                    "name": "chatRoom",
+                    "isArray": false,
+                    "type": {
+                        "model": "ChatRoom"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "chatRoomID"
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "ChatRoomUsuarios",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byChatRoom",
+                        "fields": [
+                            "chatRoomID"
+                        ]
+                    }
+                }
+            ]
         }
     },
     "enums": {
@@ -2155,5 +2110,5 @@ export const schema = {
             }
         }
     },
-    "version": "08da1c14304830bc1d5c62b7774347a8"
+    "version": "6f02af4b68b4f93d709f36c129f88170"
 };
