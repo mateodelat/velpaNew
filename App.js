@@ -39,7 +39,7 @@ export default function App() {
     local,
     expo,
     standAlone,
-  ] = awsconfig.oauth.redirectSignOut.split(",");
+  ] = awsconfig.oauth.redirectSignIn.split(",");
 
 
   const url = local
@@ -90,7 +90,7 @@ export default function App() {
 
   useEffect(() => {
     checkOnboarding()
-
+    // DataStore.stop()
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
@@ -119,16 +119,6 @@ export default function App() {
           setLoading(false)
           setAuthenticated(false)
           break;
-        // case "cognitoHostedUI":
-        //   setLoading(false)
-        //   if (message.startsWith("A user google")) {
-        //     Auth.currentUserInfo()
-        //       .then(r => {
-        //         setCargandoModelos(true)
-        //         setAuthenticated(true)
-        //       })
-        //   }
-        //   break;
 
         default:
           break;
@@ -139,6 +129,9 @@ export default function App() {
     // Crear listener para cuando se acaben de obtener los modelos de datastore
     const listener = Hub.listen("datastore", async hubData => {
       const { event, data } = hubData.payload;
+
+      // console.log(data)
+
       if (event === "modelSynced" && data?.model === Aventura) {
         aventuraLoaded = true
       }

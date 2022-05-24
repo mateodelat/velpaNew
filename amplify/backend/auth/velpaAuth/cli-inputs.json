@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "velpa7c39d9b3_identitypool_7c39d9b3",
+    "identityPoolName": "velpa1006687d_identitypool_1006687d",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "velpa7c39d9b3",
-    "userPoolName": "velpa7c39d9b3_userpool_7c39d9b3",
+    "resourceNameTruncated": "velpa1006687d",
+    "userPoolName": "velpa1006687d_userpool_1006687d",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Tu codigo de verificacion",
+    "emailVerificationMessage": "Tu codigo de verificacion de Velpa es {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -31,17 +31,23 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "velpa77c39d9b3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "velpaA1006687d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "7c39d9b3",
-    "resourceName": "velpa7c39d9b3",
+    "sharedId": "1006687d",
+    "resourceName": "velpaAuth",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "defaultSocial",
-    "hostedUI": true,
+    "useDefault": "manual",
+    "thirdPartyAuth": true,
+    "authProviders": [
+      "accounts.google.com"
+    ],
     "usernameAttributes": [
       "email"
     ],
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": {},
+    "hostedUI": true,
     "hostedUIDomainName": "velpaauth",
     "authProvidersUserPool": [
       "Google"
@@ -65,10 +71,12 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
+    "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
+    "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn",
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://127.0.0.1:19000/--/\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"],\"LogoutURLs\":[\"exp://exp.host/@mateodelat/Velpa/\",\"exp://127.0.0.1:19000/--/\",\"Velpa://\"]}"
   }
 }

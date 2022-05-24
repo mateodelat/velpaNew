@@ -2,11 +2,14 @@ type Aventura
   @model
   @auth(
     rules: [
-      { allow: owner, ownerField: "owner" }
+      { allow: public, operations: [read] }
       {
-        allow: private # operations: [create, read]
+        allow: owner
+        ownerField: "owner"
+        operations: [create, read, update, delete]
       }
-      # { allow: groups, groups: ["Admin"] }#
+      { allow: private, operations: [create, read] }
+      # { allow: groups, groups: ["Admin"] }
     ]
   ) {
   id: ID!
@@ -56,12 +59,10 @@ type Reserva
   @model
   @auth(
     rules: [
-      {
-        allow: private
-        # ,operations: [read, delete]
-      }
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read, update, delete] }
       # { allow: groups, groups: ["Admin"] }
-      # { allow: owner }
+      { allow: owner, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID!
@@ -94,12 +95,10 @@ type Fecha
   @model
   @auth(
     rules: [
-      {
-        allow: private
-        # , operations: [create, read]
-      }
+      { allow: public, operations: [read] }
+      { allow: private, operations: [create, read, update, delete] }
       # { allow: groups, groups: ["Admin"] }
-      # { allow: owner }
+      { allow: owner, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID!
@@ -146,13 +145,18 @@ type Usuario
   @model
   @auth(
     rules: [
+      { allow: public, operations: [create, read] }
+      { allow: private, operations: [read] }
       {
-        allow: public
-        # , operations: [create]
+        allow: groups
+        groups: ["Admin"]
+        operations: [create, read, update, delete]
       }
-      # { allow: private, operations: [read] }
-      # { allow: groups, groups: ["Admin"] }
-      # { allow: owner, ownerField: "owner" }
+      {
+        allow: owner
+        ownerField: "owner"
+        operations: [create, read, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -223,7 +227,14 @@ type Usuario
   Comentarios: [Comentario] @hasMany(indexName: "byUsuario", fields: ["id"])
 }
 
-type ChatRoom @model @auth(rules: [{ allow: private }]) {
+type ChatRoom
+  @model
+  @auth(
+    rules: [
+      { allow: private, operations: [create, read, update, delete] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
   id: ID!
 
   createdAt: AWSDateTime!
@@ -248,11 +259,9 @@ type Mensaje
   @model
   @auth(
     rules: [
-      {
-        allow: private
-        # , operations: [read]
-      }
-      #  , { allow: owner }
+      { allow: public, operations: [read] }
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID!
@@ -269,8 +278,14 @@ type SolicitudGuia
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner, ownerField: "owner" }
+      { allow: public, operations: [read] }
+      # { allow: groups, groups: ["Admin"] }
+      {
+        allow: owner
+        ownerField: "owner"
+        operations: [create, read, update, delete]
+      }
+      { allow: private, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID!
@@ -291,8 +306,12 @@ type Notificacion
   @model
   @auth(
     rules: [
-      { allow: owner, ownerField: "owner" }
-      { allow: public, operations: [create] }
+      {
+        allow: owner
+        ownerField: "owner"
+        operations: [create, read, update, delete]
+      }
+      { allow: public, operations: [create, read] }
     ]
   ) {
   id: ID!
@@ -323,11 +342,9 @@ type Comentario
   @model
   @auth(
     rules: [
-      {
-        allow: private
-        # , operations: [read]
-      }
-      # { allow: owner}
+      { allow: public, operations: [read] }
+      { allow: private, operations: [read] }
+      { allow: owner, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID!
@@ -346,7 +363,12 @@ type Publicidad
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["Admin"] }
+      { allow: public, operations: [read] }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [create, read, update, delete]
+      }
       { allow: private, operations: [read] }
     ]
   ) {
@@ -415,120 +437,82 @@ enum TipoUsuario {
   AGENCIA
   GUIAINDIVIDUAL
 }
-
-# type AventuraSolicitudGuia
-#   @model #(queries: null)
-#   @key(name: "byAventura", fields: ["aventuraID", "solicitudguiaID"])
-#   @key(name: "bySolicitudGuia", fields: ["solicitudguiaID", "aventuraID"])
-#   @auth(rules: [{ allow: private }]) {
+########################################################
+###################TABLAS MANY TO MANY##################
+########################################################
+# type ChatRoomUsuarios @model @auth(rules: [{ allow: private }]) {
 #   id: ID!
 
 #   createdAt: AWSDateTime!
 #   updatedAt: AWSDateTime!
 
-#   aventuraID: ID!
-#   solicitudguiaID: ID!
-
-#   aventura: Aventura! @connection(fields: ["aventuraID"])
-#   solicitudguia: SolicitudGuia! @connection(fields: ["solicitudguiaID"])
-# }
-
-# type AventuraUsuario
-#   @model #(queries: null)
-#   @key(name: "byAventura", fields: ["aventuraID", "usuarioID"])
-#   @key(name: "byUsuario", fields: ["usuarioID", "aventuraID"])
-#   @auth(rules: [{ allow: private }]) {
-#   id: ID!
-
-#   createdAt: AWSDateTime!
-#   updatedAt: AWSDateTime!
-
-#   aventuraID: ID!
-#   usuarioID: ID!
-
-#   owner: String
-
-#   aventura: Aventura! @connection(fields: ["aventuraID"])
-#   usuario: Usuario! @connection(fields: ["usuarioID"])
-# }
-
-# type ChatRoomUsuario
-#   @model #(queries: null)
-#   @key(name: "byChatRoom", fields: ["chatroomID", "usuarioID"])
-#   @key(name: "byUsuario", fields: ["usuarioID", "chatroomID"])
-#   @auth(rules: [{ allow: private }]) {
-#   id: ID!
-
-#   createdAt: AWSDateTime!
-#   updatedAt: AWSDateTime!
-
-#   chatroomID: ID!
-#   usuarioID: ID!
+#   chatroomID: ID! @index(name: "byChatRoom")
+#   usuarioID: ID! @index(name: "byUsuario")
 #   newMessages: Int
 
 #   owner: String
 
-#   chatroom: ChatRoom! @connection(fields: ["chatroomID"])
-#   usuario: Usuario! @connection(fields: ["usuarioID"])
+#   chatroom: ChatRoom! @hasOne(fields: ["chatroomID"])
+#   usuario: Usuario! @hasOne(fields: ["usuarioID"])
 # }
 
-# ########################################################
-# ########################FUNCIONES#######################
-# ########################################################
-# type Mutation {
-#   createPaymentIntent(
-#     amount: Float!
-#     destinationStripeID: String!
-#     comision: Float!
-#     fechaID: String!
-#     usuarioID: String!
-#   ): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+########################################################
+########################FUNCIONES#######################
+########################################################
+type Mutation {
+  createPaymentIntent(
+    amount: Float!
+    destinationStripeID: String!
+    comision: Float!
+    fechaID: String!
+    usuarioID: String!
+  ): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
 
-#   createStripeAccount(
-#     email: AWSEmail!
-#     phone: AWSPhone!
+  createStripeAccount(
+    email: AWSEmail!
+    phone: AWSPhone!
 
-#     first_name: String!
-#     last_name: String!
+    first_name: String!
+    last_name: String!
 
-#     # Cuenta bancaria
-#     accountNumber: String!
+    # Cuenta bancaria
+    accountNumber: String!
 
-#     # Sub usuario
-#     userSub: ID!
+    # Sub usuario
+    userSub: ID!
 
-#     # Imagenes de verificacion
-#     documentIdBack: String!
-#     documentIdFront: String!
+    # Imagenes de verificacion
+    documentIdBack: String!
+    documentIdFront: String!
 
-#     # Fecha nacimiento
-#     day: Int!
-#     month: Int!
-#     year: Int!
+    # Fecha nacimiento
+    day: Int!
+    month: Int!
+    year: Int!
 
-#     # Adress
-#     city: String!
-#     country: String!
-#     line1: String!
-#     postal_code: Int!
-#     state: String!
+    # Adress
+    city: String!
+    country: String!
+    line1: String!
+    postal_code: Int!
+    state: String!
 
-#     # Terms of service agree
-#     ip: AWSIPAddress!
-#     date: AWSTimestamp!
+    # Terms of service agree
+    ip: AWSIPAddress!
+    date: AWSTimestamp!
 
-#     # Datos si es compañia
-#     companyName: String
-#     url: AWSURL
+    # Datos si es compañia
+    companyName: String
+    url: AWSURL
 
-#     # Cuenta individual o de compañia
-#     accountType: AccountType!
+    # Cuenta individual o de compañia
+    accountType: AccountType!
 
-#     # RFC infdividual que se agregara al perfil del dueño si se especifican varios
-#     rfcIndividual: String
-#     rfcCompania: String
-#   ): CreateAcountResponse @function(name: "CreateStripeAccount-${env}")
-# }
+    # RFC infdividual que se agregara al perfil del dueño si se especifican varios
+    rfcIndividual: String
+    rfcCompania: String
+  ): CreateAcountResponse @function(name: "CreateStripeAccount-${env}")
+}
 
 enum AccountType {
   INDIVIDUAL

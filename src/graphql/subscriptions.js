@@ -89,6 +89,7 @@ export const onCreateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -187,6 +188,7 @@ export const onUpdateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -285,6 +287,7 @@ export const onDeleteAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -296,8 +299,8 @@ export const onDeleteAventura = /* GraphQL */ `
   }
 `;
 export const onCreateReserva = /* GraphQL */ `
-  subscription OnCreateReserva {
-    onCreateReserva {
+  subscription OnCreateReserva($owner: String) {
+    onCreateReserva(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -318,12 +321,13 @@ export const onCreateReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onUpdateReserva = /* GraphQL */ `
-  subscription OnUpdateReserva {
-    onUpdateReserva {
+  subscription OnUpdateReserva($owner: String) {
+    onUpdateReserva(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -344,12 +348,13 @@ export const onUpdateReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onDeleteReserva = /* GraphQL */ `
-  subscription OnDeleteReserva {
-    onDeleteReserva {
+  subscription OnDeleteReserva($owner: String) {
+    onDeleteReserva(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -370,12 +375,13 @@ export const onDeleteReserva = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onCreateFecha = /* GraphQL */ `
-  subscription OnCreateFecha {
-    onCreateFecha {
+  subscription OnCreateFecha($owner: String) {
+    onCreateFecha(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -424,6 +430,7 @@ export const onCreateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -448,12 +455,13 @@ export const onCreateFecha = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onUpdateFecha = /* GraphQL */ `
-  subscription OnUpdateFecha {
-    onUpdateFecha {
+  subscription OnUpdateFecha($owner: String) {
+    onUpdateFecha(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -502,6 +510,7 @@ export const onUpdateFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -526,12 +535,13 @@ export const onUpdateFecha = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onDeleteFecha = /* GraphQL */ `
-  subscription OnDeleteFecha {
-    onDeleteFecha {
+  subscription OnDeleteFecha($owner: String) {
+    onDeleteFecha(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -580,6 +590,7 @@ export const onDeleteFecha = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -597,6 +608,631 @@ export const onDeleteFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+  }
+`;
+export const onCreateUsuario = /* GraphQL */ `
+  subscription OnCreateUsuario($owner: String) {
+    onCreateUsuario(owner: $owner) {
+      id
+      createdAt
+      updatedAt
+      tipo
+      guia
+      calificacion
+      numResenas
+      nombre
+      apellido
+      foto
+      imagenFondo
+      nickname
+      experience
+      stripeID
+      admin
+      selfie
+      ID
+      certificaciones
+      telefono
+      sitioWeb
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
+      notificationToken
+      owner
+      newMessages
+      AventurasAutorizadas {
+        items {
+          id
+          aventuraID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Mensajes {
+        items {
+          id
+          createdAt
+          updatedAt
+          content
+          usuarioID
+          chatroomID
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomMensajesId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      ChatRooms {
+        items {
+          id
+          usuarioID
+          chatRoomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Reservas {
+        items {
+          id
+          createdAt
+          updatedAt
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Fechas {
+        items {
+          id
+          createdAt
+          updatedAt
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          aventuraID
+          usuarioID
+          dificultad
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          createdAt
+          updatedAt
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          imagen
+          owner
+          leido
+          showAt
+          reservaID
+          fechaID
+          aventuraID
+          guiaID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      SolicitudesCreadas {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+          status
+          evaluadorID
+          usuarioID
+          mensaje
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          createdAt
+          updatedAt
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateUsuario = /* GraphQL */ `
+  subscription OnUpdateUsuario($owner: String) {
+    onUpdateUsuario(owner: $owner) {
+      id
+      createdAt
+      updatedAt
+      tipo
+      guia
+      calificacion
+      numResenas
+      nombre
+      apellido
+      foto
+      imagenFondo
+      nickname
+      experience
+      stripeID
+      admin
+      selfie
+      ID
+      certificaciones
+      telefono
+      sitioWeb
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
+      notificationToken
+      owner
+      newMessages
+      AventurasAutorizadas {
+        items {
+          id
+          aventuraID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Mensajes {
+        items {
+          id
+          createdAt
+          updatedAt
+          content
+          usuarioID
+          chatroomID
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomMensajesId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      ChatRooms {
+        items {
+          id
+          usuarioID
+          chatRoomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Reservas {
+        items {
+          id
+          createdAt
+          updatedAt
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Fechas {
+        items {
+          id
+          createdAt
+          updatedAt
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          aventuraID
+          usuarioID
+          dificultad
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          createdAt
+          updatedAt
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          imagen
+          owner
+          leido
+          showAt
+          reservaID
+          fechaID
+          aventuraID
+          guiaID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      SolicitudesCreadas {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+          status
+          evaluadorID
+          usuarioID
+          mensaje
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          createdAt
+          updatedAt
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteUsuario = /* GraphQL */ `
+  subscription OnDeleteUsuario($owner: String) {
+    onDeleteUsuario(owner: $owner) {
+      id
+      createdAt
+      updatedAt
+      tipo
+      guia
+      calificacion
+      numResenas
+      nombre
+      apellido
+      foto
+      imagenFondo
+      nickname
+      experience
+      stripeID
+      admin
+      selfie
+      ID
+      certificaciones
+      telefono
+      sitioWeb
+      CuentaBancaria
+      fechaNacimiento
+      direccion
+      rfcIndividual
+      rfcCompania
+      capacidadMaxima
+      comentariosAdicionales
+      notificationToken
+      owner
+      newMessages
+      AventurasAutorizadas {
+        items {
+          id
+          aventuraID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Mensajes {
+        items {
+          id
+          createdAt
+          updatedAt
+          content
+          usuarioID
+          chatroomID
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomMensajesId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      ChatRooms {
+        items {
+          id
+          usuarioID
+          chatRoomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Reservas {
+        items {
+          id
+          createdAt
+          updatedAt
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Fechas {
+        items {
+          id
+          createdAt
+          updatedAt
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          aventuraID
+          usuarioID
+          dificultad
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      Notificaciones {
+        items {
+          id
+          createdAt
+          updatedAt
+          tipo
+          titulo
+          descripcion
+          usuarioID
+          imagen
+          owner
+          leido
+          showAt
+          reservaID
+          fechaID
+          aventuraID
+          guiaID
+          solicitudGuiaID
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      SolicitudesCreadas {
+        items {
+          id
+          createdAt
+          updatedAt
+          owner
+          status
+          evaluadorID
+          usuarioID
+          mensaje
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comentarios {
+        items {
+          id
+          createdAt
+          updatedAt
+          usuarioCalificadoID
+          body
+          calificacion
+          creatorID
+          _version
+          _deleted
+          _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -626,6 +1262,7 @@ export const onCreateChatRoom = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomMensajesId
+        owner
       }
       fechaID
       guiaID
@@ -641,6 +1278,7 @@ export const onCreateChatRoom = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         nextToken
         startedAt
@@ -655,6 +1293,7 @@ export const onCreateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -685,6 +1324,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomMensajesId
+        owner
       }
       fechaID
       guiaID
@@ -700,6 +1340,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         nextToken
         startedAt
@@ -714,6 +1355,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -744,6 +1386,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomMensajesId
+        owner
       }
       fechaID
       guiaID
@@ -759,6 +1402,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         nextToken
         startedAt
@@ -773,6 +1417,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          owner
         }
         nextToken
         startedAt
@@ -785,8 +1430,8 @@ export const onDeleteChatRoom = /* GraphQL */ `
   }
 `;
 export const onCreateMensaje = /* GraphQL */ `
-  subscription OnCreateMensaje {
-    onCreateMensaje {
+  subscription OnCreateMensaje($owner: String) {
+    onCreateMensaje(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -797,12 +1442,13 @@ export const onCreateMensaje = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomMensajesId
+      owner
     }
   }
 `;
 export const onUpdateMensaje = /* GraphQL */ `
-  subscription OnUpdateMensaje {
-    onUpdateMensaje {
+  subscription OnUpdateMensaje($owner: String) {
+    onUpdateMensaje(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -813,12 +1459,13 @@ export const onUpdateMensaje = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomMensajesId
+      owner
     }
   }
 `;
 export const onDeleteMensaje = /* GraphQL */ `
-  subscription OnDeleteMensaje {
-    onDeleteMensaje {
+  subscription OnDeleteMensaje($owner: String) {
+    onDeleteMensaje(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -829,6 +1476,7 @@ export const onDeleteMensaje = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomMensajesId
+      owner
     }
   }
 `;
@@ -1004,8 +1652,8 @@ export const onDeleteNotificacion = /* GraphQL */ `
   }
 `;
 export const onCreateComentario = /* GraphQL */ `
-  subscription OnCreateComentario {
-    onCreateComentario {
+  subscription OnCreateComentario($owner: String) {
+    onCreateComentario(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -1016,12 +1664,13 @@ export const onCreateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onUpdateComentario = /* GraphQL */ `
-  subscription OnUpdateComentario {
-    onUpdateComentario {
+  subscription OnUpdateComentario($owner: String) {
+    onUpdateComentario(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -1032,12 +1681,13 @@ export const onUpdateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onDeleteComentario = /* GraphQL */ `
-  subscription OnDeleteComentario {
-    onDeleteComentario {
+  subscription OnDeleteComentario($owner: String) {
+    onDeleteComentario(owner: $owner) {
       id
       createdAt
       updatedAt
@@ -1048,6 +1698,7 @@ export const onDeleteComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
@@ -1324,615 +1975,6 @@ export const onDeleteAventuraSolicitudGuias = /* GraphQL */ `
       _deleted
       _lastChangedAt
       owner
-    }
-  }
-`;
-export const onCreateUsuario = /* GraphQL */ `
-  subscription OnCreateUsuario {
-    onCreateUsuario {
-      id
-      createdAt
-      updatedAt
-      tipo
-      guia
-      calificacion
-      numResenas
-      nombre
-      apellido
-      foto
-      imagenFondo
-      nickname
-      experience
-      stripeID
-      admin
-      selfie
-      ID
-      certificaciones
-      telefono
-      sitioWeb
-      CuentaBancaria
-      fechaNacimiento
-      direccion
-      rfcIndividual
-      rfcCompania
-      capacidadMaxima
-      comentariosAdicionales
-      notificationToken
-      owner
-      newMessages
-      AventurasAutorizadas {
-        items {
-          id
-          aventuraID
-          usuarioID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          owner
-        }
-        nextToken
-        startedAt
-      }
-      Mensajes {
-        items {
-          id
-          createdAt
-          updatedAt
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomMensajesId
-        }
-        nextToken
-        startedAt
-      }
-      ChatRooms {
-        items {
-          id
-          usuarioID
-          chatRoomID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Reservas {
-        items {
-          id
-          createdAt
-          updatedAt
-          total
-          comision
-          pagadoAlGuia
-          tercera
-          ninos
-          adultos
-          pagoID
-          ingreso
-          horaIngreso
-          fechaID
-          usuarioID
-          guiaID
-          tipoPago
-          materialChecked
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Fechas {
-        items {
-          id
-          createdAt
-          updatedAt
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          experienciaPorPersona
-          itinerario
-          puntoReunionNombre
-          puntoReunionId
-          puntoReunionLink
-          puntoReunionCoords
-          allowTercera
-          allowNinos
-          material
-          incluido
-          titulo
-          descripcion
-          imagenRuta
-          imagenFondo
-          tituloAventura
-          aventuraID
-          usuarioID
-          dificultad
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Notificaciones {
-        items {
-          id
-          createdAt
-          updatedAt
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          imagen
-          owner
-          leido
-          showAt
-          reservaID
-          fechaID
-          aventuraID
-          guiaID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      SolicitudesCreadas {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-          status
-          evaluadorID
-          usuarioID
-          mensaje
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Comentarios {
-        items {
-          id
-          createdAt
-          updatedAt
-          usuarioCalificadoID
-          body
-          calificacion
-          creatorID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onUpdateUsuario = /* GraphQL */ `
-  subscription OnUpdateUsuario {
-    onUpdateUsuario {
-      id
-      createdAt
-      updatedAt
-      tipo
-      guia
-      calificacion
-      numResenas
-      nombre
-      apellido
-      foto
-      imagenFondo
-      nickname
-      experience
-      stripeID
-      admin
-      selfie
-      ID
-      certificaciones
-      telefono
-      sitioWeb
-      CuentaBancaria
-      fechaNacimiento
-      direccion
-      rfcIndividual
-      rfcCompania
-      capacidadMaxima
-      comentariosAdicionales
-      notificationToken
-      owner
-      newMessages
-      AventurasAutorizadas {
-        items {
-          id
-          aventuraID
-          usuarioID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          owner
-        }
-        nextToken
-        startedAt
-      }
-      Mensajes {
-        items {
-          id
-          createdAt
-          updatedAt
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomMensajesId
-        }
-        nextToken
-        startedAt
-      }
-      ChatRooms {
-        items {
-          id
-          usuarioID
-          chatRoomID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Reservas {
-        items {
-          id
-          createdAt
-          updatedAt
-          total
-          comision
-          pagadoAlGuia
-          tercera
-          ninos
-          adultos
-          pagoID
-          ingreso
-          horaIngreso
-          fechaID
-          usuarioID
-          guiaID
-          tipoPago
-          materialChecked
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Fechas {
-        items {
-          id
-          createdAt
-          updatedAt
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          experienciaPorPersona
-          itinerario
-          puntoReunionNombre
-          puntoReunionId
-          puntoReunionLink
-          puntoReunionCoords
-          allowTercera
-          allowNinos
-          material
-          incluido
-          titulo
-          descripcion
-          imagenRuta
-          imagenFondo
-          tituloAventura
-          aventuraID
-          usuarioID
-          dificultad
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Notificaciones {
-        items {
-          id
-          createdAt
-          updatedAt
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          imagen
-          owner
-          leido
-          showAt
-          reservaID
-          fechaID
-          aventuraID
-          guiaID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      SolicitudesCreadas {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-          status
-          evaluadorID
-          usuarioID
-          mensaje
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Comentarios {
-        items {
-          id
-          createdAt
-          updatedAt
-          usuarioCalificadoID
-          body
-          calificacion
-          creatorID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onDeleteUsuario = /* GraphQL */ `
-  subscription OnDeleteUsuario {
-    onDeleteUsuario {
-      id
-      createdAt
-      updatedAt
-      tipo
-      guia
-      calificacion
-      numResenas
-      nombre
-      apellido
-      foto
-      imagenFondo
-      nickname
-      experience
-      stripeID
-      admin
-      selfie
-      ID
-      certificaciones
-      telefono
-      sitioWeb
-      CuentaBancaria
-      fechaNacimiento
-      direccion
-      rfcIndividual
-      rfcCompania
-      capacidadMaxima
-      comentariosAdicionales
-      notificationToken
-      owner
-      newMessages
-      AventurasAutorizadas {
-        items {
-          id
-          aventuraID
-          usuarioID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          owner
-        }
-        nextToken
-        startedAt
-      }
-      Mensajes {
-        items {
-          id
-          createdAt
-          updatedAt
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomMensajesId
-        }
-        nextToken
-        startedAt
-      }
-      ChatRooms {
-        items {
-          id
-          usuarioID
-          chatRoomID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Reservas {
-        items {
-          id
-          createdAt
-          updatedAt
-          total
-          comision
-          pagadoAlGuia
-          tercera
-          ninos
-          adultos
-          pagoID
-          ingreso
-          horaIngreso
-          fechaID
-          usuarioID
-          guiaID
-          tipoPago
-          materialChecked
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Fechas {
-        items {
-          id
-          createdAt
-          updatedAt
-          personasTotales
-          fechaInicial
-          fechaFinal
-          precio
-          comision
-          experienciaPorPersona
-          itinerario
-          puntoReunionNombre
-          puntoReunionId
-          puntoReunionLink
-          puntoReunionCoords
-          allowTercera
-          allowNinos
-          material
-          incluido
-          titulo
-          descripcion
-          imagenRuta
-          imagenFondo
-          tituloAventura
-          aventuraID
-          usuarioID
-          dificultad
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Notificaciones {
-        items {
-          id
-          createdAt
-          updatedAt
-          tipo
-          titulo
-          descripcion
-          usuarioID
-          imagen
-          owner
-          leido
-          showAt
-          reservaID
-          fechaID
-          aventuraID
-          guiaID
-          solicitudGuiaID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      SolicitudesCreadas {
-        items {
-          id
-          createdAt
-          updatedAt
-          owner
-          status
-          evaluadorID
-          usuarioID
-          mensaje
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Comentarios {
-        items {
-          id
-          createdAt
-          updatedAt
-          usuarioCalificadoID
-          body
-          calificacion
-          creatorID
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -2306,8 +2348,8 @@ export const onDeleteAventuraUsuarios = /* GraphQL */ `
   }
 `;
 export const onCreateChatRoomUsuarios = /* GraphQL */ `
-  subscription OnCreateChatRoomUsuarios {
-    onCreateChatRoomUsuarios {
+  subscription OnCreateChatRoomUsuarios($owner: String) {
+    onCreateChatRoomUsuarios(owner: $owner) {
       id
       usuarioID
       chatRoomID
@@ -2395,6 +2437,7 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         fechaID
         guiaID
@@ -2416,12 +2459,13 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onUpdateChatRoomUsuarios = /* GraphQL */ `
-  subscription OnUpdateChatRoomUsuarios {
-    onUpdateChatRoomUsuarios {
+  subscription OnUpdateChatRoomUsuarios($owner: String) {
+    onUpdateChatRoomUsuarios(owner: $owner) {
       id
       usuarioID
       chatRoomID
@@ -2509,6 +2553,7 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         fechaID
         guiaID
@@ -2530,12 +2575,13 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;
 export const onDeleteChatRoomUsuarios = /* GraphQL */ `
-  subscription OnDeleteChatRoomUsuarios {
-    onDeleteChatRoomUsuarios {
+  subscription OnDeleteChatRoomUsuarios($owner: String) {
+    onDeleteChatRoomUsuarios(owner: $owner) {
       id
       usuarioID
       chatRoomID
@@ -2623,6 +2669,7 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomMensajesId
+          owner
         }
         fechaID
         guiaID
@@ -2644,6 +2691,7 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      owner
     }
   }
 `;

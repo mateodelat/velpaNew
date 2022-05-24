@@ -6,9 +6,9 @@ mutation MyMutation {
   ave1: createAventura(
     input: {
       altimetriaRecorrida: 706
+      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
       altitud: 4282
       categoria: APLINISMO
-      comision: 0.2
       coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}"
       descripcion: "El nevado de toluca es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve."
       dificultad: 2
@@ -37,9 +37,9 @@ mutation MyMutation {
   ave2: createAventura(
     input: {
       altimetriaRecorrida: 1301
+      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
       altitud: 5208
       categoria: APLINISMO
-      comision: 0.2
       coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}"
       descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion."
       dificultad: 5
@@ -66,9 +66,9 @@ mutation MyMutation {
   ave3: createAventura(
     input: {
       altimetriaRecorrida: 795
+      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
       altitud: 4218
       categoria: APLINISMO
-      comision: 0.2
       coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}"
       descripcion: "Prepárate para tener una aventura en contacto con la naturaleza y en algunas épocas del año cubierto de nieve. nnEsta experiencia es ideal para principiantes en el hikking teniendo una altura no tan elevada para afectar la condición."
       dificultad: null
@@ -100,9 +100,9 @@ mutation MyMutation {
   ave4: createAventura(
     input: {
       altimetriaRecorrida: 740
+      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
       altitud: 1537
       categoria: APLINISMO
-      comision: 0.2
       coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}"
       descripcion: "Experimenta la imponente barranca de Huentitan trazada por el río SantiagonnAquí es un excelente lugar para ejercitarse y prepararse a montañas más difíciles. Es un parque natural dentro de la ciudad. Puedes ir a visitar el puente de arsediano o si lo prefieres adentrarte en el misterioso pueblo fantasma"
       dificultad: null
@@ -132,9 +132,9 @@ mutation MyMutation {
   ave5: createAventura(
     input: {
       altimetriaRecorrida: 768
+      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
       altitud: 2347
       categoria: APLINISMO
-      comision: 0.2
       coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}"
       descripcion: "Disfruta de sus asombrosas cascadas en épocas de lluvias o si decides ir a dormir en la cima podrás contemplar un amanecer espectacular con una vista al lago.nnLa chupinaya es la sierra que se encuentra a un costado del Lago de Chapala por lo que tiene una vegetación muy verde y clima húmedo."
       dificultad: null

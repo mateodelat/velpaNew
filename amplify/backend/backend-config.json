@@ -1,6 +1,6 @@
 {
   "auth": {
-    "velpa7c39d9b3": {
+    "velpaAuth": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -36,7 +36,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpa7c39d9b3",
+          "resourceName": "velpaAuth",
           "attributes": [
             "UserPoolId"
           ]
@@ -45,18 +45,18 @@
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authvelpa7c39d9b3"
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7,
+              "apiKeyExpirationDate": "2022-05-31T20:45:04.166Z",
+              "description": ""
             }
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "API_KEY",
-              "apiKeyConfig": {
-                "apiKeyExpirationDays": 7,
-                "apiKeyExpirationDate": "2022-05-31T02:42:57.145Z",
-                "description": ""
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authvelpaAuth"
               }
             }
           ]
@@ -82,7 +82,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpa7c39d9b3",
+          "resourceName": "velpaAuth",
           "attributes": [
             "UserPoolId"
           ]

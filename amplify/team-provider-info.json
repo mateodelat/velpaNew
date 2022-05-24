@@ -12,10 +12,6 @@
       "AmplifyAppId": "d22ws0aq3y06vn"
     },
     "categories": {
-      "auth": {
-        "velpa7c39d9b3": {},
-        "true": {}
-      },
       "function": {
         "CreatePaymentIntent": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
@@ -27,7 +23,13 @@
         },
         "preSignUp": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
-          "s3Key": "amplify-builds/preSignUp-6e50424752366b2b4969-build.zip"
+          "s3Key": "amplify-builds/preSignUp-39704d79774e646e7976-build.zip"
+        }
+      },
+      "auth": {
+        "velpaAuth": {
+          "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
+          "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn"
         }
       }
     }

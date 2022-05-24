@@ -16,10 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "authvelpa7c39d9b3UserPoolId": {
-      "Type": "String",
-      "Default": "authvelpa7c39d9b3UserPoolId"
-    },
     "apivelpaAPIGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apivelpaAPIGraphQLAPIIdOutput"
@@ -31,6 +27,10 @@
     "apivelpaAPIGraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apivelpaAPIGraphQLAPIKeyOutput"
+    },
+    "authvelpaAuthUserPoolId": {
+      "Type": "String",
+      "Default": "authvelpaAuthUserPoolId"
     }
   },
   "Conditions": {
@@ -86,9 +86,6 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "AUTH_VELPA7C39D9B3_USERPOOLID": {
-              "Ref": "authvelpa7c39d9b3UserPoolId"
-            },
             "API_VELPAAPI_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apivelpaAPIGraphQLAPIIdOutput"
             },
@@ -97,6 +94,9 @@
             },
             "API_VELPAAPI_GRAPHQLAPIKEYOUTPUT": {
               "Ref": "apivelpaAPIGraphQLAPIKeyOutput"
+            },
+            "AUTH_VELPAAUTH_USERPOOLID": {
+              "Ref": "authvelpaAuthUserPoolId"
             }
           }
         },
@@ -308,7 +308,7 @@
                       },
                       ":userpool/",
                       {
-                        "Ref": "authvelpa7c39d9b3UserPoolId"
+                        "Ref": "authvelpaAuthUserPoolId"
                       }
                     ]
                   ]

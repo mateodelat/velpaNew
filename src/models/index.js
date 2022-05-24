@@ -2,6 +2,11 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const AccountType = {
+  "INDIVIDUAL": "INDIVIDUAL",
+  "COMPANY": "COMPANY"
+};
+
 const EstadoAventura = {
   "AUTORIZADO": "AUTORIZADO",
   "PENDIENTE": "PENDIENTE",
@@ -52,11 +57,6 @@ const TipoPublicidad = {
   "ACTUALIZACION": "ACTUALIZACION"
 };
 
-const AccountType = {
-  "INDIVIDUAL": "INDIVIDUAL",
-  "COMPANY": "COMPANY"
-};
-
 const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, ChatRoomUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
@@ -73,6 +73,7 @@ export {
   AventuraSolicitudGuias,
   AventuraUsuarios,
   ChatRoomUsuarios,
+  AccountType,
   EstadoAventura,
   Categorias,
   StatusSolicitud,
@@ -80,7 +81,6 @@ export {
   TipoPago,
   TipoNotificacion,
   TipoPublicidad,
-  AccountType,
   PaymentIntent,
   CreateAcountResponse
 };

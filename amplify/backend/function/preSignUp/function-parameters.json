@@ -2,7 +2,7 @@
   "lambdaLayers": [],
   "permissions": {
     "auth": {
-      "velpa7c39d9b3": [
+      "velpaAuth": [
         "create",
         "read",
         "update",
