@@ -1,10 +1,4 @@
 /* Amplify Params - DO NOT EDIT
-	API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
-	API_VELPAAPI_GRAPHQLAPIIDOUTPUT
-	API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT *//* Amplify Params - DO NOT EDIT
     API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
     API_VELPAAPI_GRAPHQLAPIIDOUTPUT
     API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
@@ -17,7 +11,6 @@ const AWS = require('aws-sdk')
 const cognito = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
 
 
-const axios = require('axios');
 const { request, GraphQLClient } = require('graphql-request')
 
 

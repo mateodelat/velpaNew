@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "velpaLambdaRole6bc7ee31",
+            "velpaLambdaRole9fcbbfd3",
             {
               "Fn::Join": [
                 "",
                 [
-                  "velpaLambdaRole6bc7ee31",
+                  "velpaLambdaRole9fcbbfd3",
                   "-",
                   {
                     "Ref": "env"

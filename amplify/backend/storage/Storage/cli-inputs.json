@@ -1,13 +1,12 @@
 {
-  "resourceName": "Storage",
-  "policyUUID": "25147f3e",
+  "resourceName": "storage",
+  "policyUUID": "9bf4dfc7",
   "bucketName": "velpabucket",
   "storageAccess": "auth",
   "guestAccess": [],
   "authAccess": [
     "CREATE_AND_UPDATE",
-    "READ",
-    "DELETE"
+    "READ"
   ],
   "triggerFunction": "NONE",
   "groupAccess": {}

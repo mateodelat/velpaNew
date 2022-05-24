@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "velpa5e0b2d9f": {
+        "velpa7c39d9b3": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -26,7 +26,7 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "CreateStripeAcount": {
+        "CreateStripeAccount": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -40,7 +40,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "Storage": {
+        "storage": {
             "BucketName": "string",
             "Region": "string"
         }

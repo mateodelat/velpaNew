@@ -1,6 +1,6 @@
 {
   "auth": {
-    "velpa5e0b2d9f": {
+    "velpa7c39d9b3": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -36,7 +36,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpa5e0b2d9f",
+          "resourceName": "velpa7c39d9b3",
           "attributes": [
             "UserPoolId"
           ]
@@ -45,18 +45,18 @@
       "output": {
         "authConfig": {
           "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7,
-              "apiKeyExpirationDate": "2022-05-31T02:05:13.431Z",
-              "description": ""
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authvelpa7c39d9b3"
             }
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authvelpa5e0b2d9f"
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 7,
+                "apiKeyExpirationDate": "2022-05-31T02:42:57.145Z",
+                "description": ""
               }
             }
           ]
@@ -70,7 +70,7 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "CreateStripeAcount": {
+    "CreateStripeAccount": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -80,6 +80,13 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "velpa7c39d9b3",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
         {
           "category": "api",
           "resourceName": "velpaAPI",
@@ -93,7 +100,7 @@
     }
   },
   "storage": {
-    "Storage": {
+    "storage": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

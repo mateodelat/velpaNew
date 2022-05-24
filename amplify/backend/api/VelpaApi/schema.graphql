@@ -6,7 +6,7 @@ type Aventura
       {
         allow: private # operations: [create, read]
       }
-      # { allow: groups, groups: ["Admin"] }
+      # { allow: groups, groups: ["Admin"] }#
     ]
   ) {
   id: ID!
@@ -484,7 +484,7 @@ enum TipoUsuario {
 #     usuarioID: String!
 #   ): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
 
-#   createStripeAcount(
+#   createStripeAccount(
 #     email: AWSEmail!
 #     phone: AWSPhone!
 
@@ -527,7 +527,7 @@ enum TipoUsuario {
 #     # RFC infdividual que se agregara al perfil del dueño si se especifican varios
 #     rfcIndividual: String
 #     rfcCompania: String
-#   ): CreateAcountResponse @function(name: "CreateStripeAcount-${env}")
+#   ): CreateAcountResponse @function(name: "CreateStripeAccount-${env}")
 # }
 
 enum AccountType {

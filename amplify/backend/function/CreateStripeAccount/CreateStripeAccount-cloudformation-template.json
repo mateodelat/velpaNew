@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "CreateStripeAcount",
+            "CreateStripeAccount",
             {
               "Fn::Join": [
                 "",
                 [
-                  "CreateStripeAcount",
+                  "CreateStripeAccount",
                   "-",
                   {
                     "Ref": "env"
@@ -89,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "velpaLambdaRolea90a02dc",
+            "velpaLambdaRole4dbbdc16",
             {
               "Fn::Join": [
                 "",
                 [
-                  "velpaLambdaRolea90a02dc",
+                  "velpaLambdaRole4dbbdc16",
                   "-",
                   {
                     "Ref": "env"
