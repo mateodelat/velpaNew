@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Animated, Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, formatDateShort, getBlob, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInMinute, } from '../../../assets/constants'
+import { colorFondo, formatDateShort, getBlob, getUserSub, meses, moradoClaro, moradoOscuro, msInHour, msInDay, } from '../../../assets/constants'
 
 
 import { Entypo, Feather, AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -12,13 +12,14 @@ import ModalRuta from '../FechasAventura/components/ModalRuta';
 import QueLlevar from './components/QueLlevar';
 import Incluido from './components/Incluido';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoomUsuario, Fecha, Notificacion, TipoNotificacion } from '../../models';
+import { ChatRoomUsuarios, Fecha, Notificacion, TipoNotificacion } from '../../models';
 
 import { ChatRoom } from '../../models';
 import { Usuario } from '../../models';
 
 import uuid from 'react-native-uuid';
-import Storage from '@aws-amplify/storage';
+import { Storage } from '@aws-amplify/storage';
+import { AndroidNotificationPriority, scheduleNotificationAsync } from 'expo-notifications';
 
 const { height } = Dimensions.get("screen")
 
@@ -182,7 +183,7 @@ export default function ({ navigation, route }) {
         scheduleNotificationAsync({
             content: {
                 title: "Estas a nada de irte",
-                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes!!",
+                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes y utiliza la app para registrar su entrada con codigo QR!!",
                 priority: AndroidNotificationPriority.MAX,
                 vibrate: true,
 
@@ -230,6 +231,8 @@ export default function ({ navigation, route }) {
 
             titulo,
             descripcion,
+
+            efectivo,
 
             aventuraID,
             comision,
@@ -287,6 +290,8 @@ export default function ({ navigation, route }) {
                 tituloAventura,
                 imagenFondo,
 
+                efectivo,
+
                 titulo,
                 descripcion,
                 imagenRuta: imagenRutaKey ? imagenRutaKey : null,
@@ -298,21 +303,25 @@ export default function ({ navigation, route }) {
                 new Fecha(fecha)
             )
                 .then(async fecha => {
-                    // Crear chatRoom
-                    const chatroom = await DataStore.save(new ChatRoom({
+
+
+                    // Crear chatroom
+                    const chatRoom = await DataStore.save(new ChatRoom({
                         name: (tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal)),
                         picture: imagenFondo,
                         fechaID: fecha.id,
                         guiaID: sub
                     }))
 
+
+
                     // Obtener usuario del guia
                     const usuario = await DataStore.query(Usuario, sub)
 
                     // Agregar guia al chat
-                    await DataStore.save(new ChatRoomUsuario({
-                        chatroom,
-                        usuario
+                    await DataStore.save(new ChatRoomUsuarios({
+                        chatroom: chatRoom,
+                        usuario: usuario
                     }))
 
                     // Crear notificacion

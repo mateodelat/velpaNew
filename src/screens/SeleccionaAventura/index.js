@@ -29,11 +29,12 @@ import CuadradoImagen from '../../components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
 import Boton from '../../components/Boton';
 import AddElemento from './components/AddElemento';
-import { AventuraSolicitudGuia, Categorias, Notificacion, StatusSolicitud, TipoNotificacion, Usuario } from '../../models';
+import { AventuraSolicitudGuias, Categorias, Notificacion, StatusSolicitud, TipoNotificacion, Usuario } from '../../models';
 import { DataStore } from '@aws-amplify/datastore';
-import { AventuraUsuario } from '../../models';
-import Auth from '@aws-amplify/auth';
+import { AventuraUsuarios } from '../../models';
+import { Auth } from '@aws-amplify/auth';
 import { SolicitudGuia } from '../../models';
+import { Aventura } from '../../models';
 
 
 const { height, width } = Dimensions.get("window")
@@ -85,9 +86,8 @@ export default ({
 
                 // Obtener relaciones con usuario
                 let aventurasAutorizadasAlUsr = (await DataStore
-                    .query(AventuraUsuario)
+                    .query(AventuraUsuarios)
                     .catch(e => {
-                        console.log(e)
                         Alert.alert("Error", "Error obteniendo aventuras autorizadas")
                     })).filter(c => c.usuario.id === sub).map(c => c.aventura.id)
 
@@ -174,16 +174,16 @@ export default ({
 
 
 
-        const solicitudguia = await DataStore.save(new SolicitudGuia({
+        const solicitudGuia = await DataStore.save(new SolicitudGuia({
             status: StatusSolicitud.PENDIENTE,
             usuarioID: sub
         }))
 
         // Crear relaciones a aventura para cada una
         await Promise.all(listaAventuras.map(aventura => {
-            return DataStore.save(new AventuraSolicitudGuia({
+            return DataStore.save(new AventuraSolicitudGuias({
                 aventura,
-                solicitudguia
+                solicitudGuia
             }))
         }))
 
@@ -243,66 +243,74 @@ export default ({
     }
 
     const handleAventuraNoAutorizado = (aventura) => {
+
+
         async function handleSendSolicitud() {
-            const sub = await getUserSub()
+            try {
 
-            // Verificar que no exista una solicitud pendiente para esa aventura
-            const aventuras = await DataStore.query(AventuraSolicitudGuia)
-                .then(r => {
-                    return r.filter(e => {
+                const sub = await getUserSub()
 
-                        // Si el id de la aventura es igual a la solicitada y la solicitud esta en pendiente
-                        return (e.aventura.id === aventura.id && e.solicitudguia.status === StatusSolicitud.PENDIENTE)
+                // Verificar que no exista una solicitud pendiente para esa aventura
+                const aventuras = await DataStore.query(AventuraSolicitudGuias)
+                    .then(r => {
+                        return r.filter(e => {
+
+                            // Si el id de la aventura es igual a la solicitada y la solicitud esta en pendiente
+                            return (e.aventura.id === aventura.id && e.solicitudGuia.status === StatusSolicitud.PENDIENTE)
+                        })
                     })
+                if (aventuras.length !== 0) {
+                    Alert.alert("Error", "Ya enviaste una solicitud para esa aventura", [
+                        {
+                            text: "Cancelar"
+                        },
+                        {
+                            text: "Ver",
+                            onPress: () => navigation.navigate("MisSolicitudes")
+                        },
+                    ])
+                    return
+                }
+
+                aventura = await DataStore.query(Aventura, aventura.id)
+                const solicitudGuia = await DataStore.save(new SolicitudGuia({
+                    status: StatusSolicitud.PENDIENTE,
+                    usuarioID: sub
+                }))
+                // Crear relaciones a aventura para cada una
+                await DataStore.save(new AventuraSolicitudGuias({
+                    aventura: aventura,
+                    solicitudGuia: solicitudGuia
+                }))
+
+
+                // Notificacion a admins
+                sendAdminNotification({
+                    usuarioID: sub,
+                    titulo: "Nueva solicitud guia",
+                    descripcion: "Nueva solicitud para guia en: " + aventura.titulo,
                 })
-            if (aventuras.length !== 0) {
-                Alert.alert("Error", "Ya enviaste una solicitud para esa aventura", [
-                    {
-                        text: "Cancelar"
-                    },
-                    {
-                        text: "Ver",
-                        onPress: () => navigation.navigate("MisSolicitudes")
-                    },
-                ])
-                return
+
+
+                // Mandar notificacion
+                await DataStore.save(new Notificacion({
+                    tipo: TipoNotificacion.SOLICITUDGUIA,
+
+                    titulo: "Nueva solicitud",
+                    descripcion: "Se ha creado una solicitud de guia para " + aventura.titulo + ", espera nuestra llamada!!",
+
+                    usuarioID: sub,
+                    showAt: new Date().getTime(),
+                }))
+
+                navigation.navigate("ExitoScreen", {
+                    txtExito: "Solicitud enviada con exito, espera nuestra llamada!!",
+                    txtOnPress: "Volver al incio",
+                })
+            } catch (error) {
+                Alert.alert("Error", "Error creando solicitud")
+                console.log(error)
             }
-
-
-            const solicitudguia = await DataStore.save(new SolicitudGuia({
-                status: StatusSolicitud.PENDIENTE,
-                usuarioID: sub
-            }))
-
-            // Crear relaciones a aventura para cada una
-            await DataStore.save(new AventuraSolicitudGuia({
-                aventura,
-                solicitudguia
-            }))
-
-            // Notificacion a admins
-            sendAdminNotification({
-                usuarioID: sub,
-                titulo: "Nueva solicitud guia",
-                descripcion: "Nueva solicitud para guia en: " + aventura.titulo,
-            })
-
-
-            // Mandar notificacion
-            await DataStore.save(new Notificacion({
-                tipo: TipoNotificacion.SOLICITUDGUIA,
-
-                titulo: "Nueva solicitud",
-                descripcion: "Se ha creado una solicitud de guia para " + aventura.titulo + ", espera nuestra llamada!!",
-
-                usuarioID: sub,
-                showAt: new Date().getTime(),
-            }))
-
-            navigation.navigate("ExitoScreen", {
-                txtExito: "Solicitud enviada con exito, espera nuestra llamada!!",
-                txtOnPress: "Volver al incio",
-            })
         }
 
         Alert.alert("Error", "No estas autorizado a esta aventura, deseas enviar una solicitud?",
@@ -547,7 +555,7 @@ export default ({
                                         {categorias.map((item, index) => (
                                             <Pressable
                                                 onPress={() => handleSelectCategoria(index)}
-                                                key={"Cat-", index}
+                                                key={"Cat-" + index}
                                                 style={{
                                                     alignItems: 'center',
                                                     width: 70,
@@ -602,7 +610,7 @@ export default ({
                                 :
                                 [...Array(Math.round(aventurasAMostrar.length / 2))].map((_, row) => (
                                     <View
-                                        key={"row", row}
+                                        key={"row" + row}
                                         style={{
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
@@ -639,7 +647,7 @@ export default ({
                                                     selected={esSelector ? selectedItems[row][column]?.selected : undefined}
                                                     tamañoCuadrado={(width / 2 - 30)}
                                                     item={e}
-                                                    key={"Ave", column}
+                                                    key={"Ave" + column}
                                                     onPress={() => e.notAllowed ? handleAventuraNoAutorizado(e) : handlePressAventura(e, row, column)}
                                                 />
                                             )

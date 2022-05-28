@@ -8,11 +8,6 @@
         "update",
         "delete"
       ]
-    },
-    "api": {
-      "velpaAPI": [
-        "Mutation"
-      ]
     }
   }
 }

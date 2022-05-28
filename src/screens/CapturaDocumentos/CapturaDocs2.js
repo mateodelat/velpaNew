@@ -9,6 +9,7 @@ import {
     TextInput,
     Alert,
     KeyboardAvoidingView,
+    Platform,
 } from 'react-native'
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -253,7 +254,7 @@ export default ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: colorFondo, }}>
             <KeyboardAvoidingView
-                behavior="padding"
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={{ flex: 1, }}
             >
                 {/* Cuerpo */}

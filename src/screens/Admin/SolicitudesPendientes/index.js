@@ -28,11 +28,12 @@ import { StatusSolicitud, Usuario } from '../../../models';
 import Selector from '../../../components/Selector';
 import Line from '../../../components/Line';
 import { SolicitudGuia } from '../../../models';
-import { AventuraUsuario } from '../../../models';
+import { AventuraUsuarios } from '../../../models';
 import { TipoNotificacion } from '../../../models';
 import { Notificacion } from '../../../models';
 import SelectorInput from '../../../components/SelectorInput';
 import { sendPushNotification } from '../../../../assets/constants/constant';
+import { AventuraSolicitudGuias } from '../../../models';
 
 
 export default ({ navigation }) => {
@@ -84,7 +85,7 @@ export default ({ navigation }) => {
 
             // Agregar al guia a aventuras verificadas
             await Promise.all(solicitud.Aventuras.map(async ave => {
-                DataStore.save(new AventuraUsuario({
+                DataStore.save(new AventuraUsuarios({
                     aventura: ave,
                     usuario
                 }))
@@ -114,7 +115,6 @@ export default ({ navigation }) => {
 
 
                 usuarioID: solicitud.usuarioID,
-                owner: solicitud.owner,
 
                 solicitudGuiaID: solicitud.id
             }))
@@ -213,7 +213,7 @@ export default ({ navigation }) => {
         const mes = meses[fecha.getMonth()]
         const dia = fecha.getDate()
 
-        const hora = formatAMPM(fecha)
+        const hora = formatAMPM(fecha, false, true)
 
         return (dia + "/" + mes + "/" + año + " " + hora)
     }
@@ -224,12 +224,14 @@ export default ({ navigation }) => {
     }
 
     const fetch = async () => {
+
         API.graphql({ query: listSolicitudGuiasPendientes })
             .then(async r => {
+
                 r = r.data.listSolicitudGuias.items
                 r = (await Promise.all(r.filter(e => !e._deleted).map(async solicitud => {
                     const usuario = await DataStore.query(Usuario, solicitud.usuarioID)
-
+                    setCapacidadMaxima(usuario.capacidadMaxima ? usuario.capacidadMaxima : 0)
                     return {
                         ...solicitud,
                         Aventuras: solicitud.Aventuras.items.map(e => {

@@ -32,7 +32,7 @@ import { DataStore } from '@aws-amplify/datastore';
 import Boton from '../../../components/Boton';
 import { EstadoAventura } from '../../../models';
 import { vibrar } from '../../../../assets/constants/constant';
-import { AventuraUsuario } from '../../../models';
+import { AventuraUsuarios } from '../../../models';
 
 
 
@@ -270,7 +270,7 @@ export default ({
                 // Si la aventura estaba en pendiente se autoriza al usuario creador
                 if (modelAventura.estadoAventura === EstadoAventura.PENDIENTE) {
                     const modelUsuario = await DataStore.query(Usuario, modelAventura.usuarioID)
-                    DataStore.save(new AventuraUsuario({
+                    DataStore.save(new AventuraUsuarios({
                         aventura: modelAventura,
                         usuario: modelUsuario
                     }))

@@ -7,7 +7,7 @@ import ChatRoomItem from './components/ChatRoomItem';
 import { Entypo } from '@expo/vector-icons';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
 
-import { ChatRoomUsuario } from '../../models';
+import { ChatRoomUsuarios } from '../../models';
 import { Loading } from '../../components/Loading';
 import { Mensaje } from '../../models';
 import { Usuario } from '../../models';
@@ -34,7 +34,9 @@ export default ({ navigation }) => {
         const sub = await getUserSub()
 
         // Obtener todos los chatrooms que pertenecen al usuario
-        const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuario))
+        const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuarios)
+
+        )
             .filter(e => e.usuario.id === sub)
             .sort((a, b) => a.chatroom.updatedAt < b.chatroom.updatedAt)
             .map(async e => {
@@ -87,7 +89,7 @@ export default ({ navigation }) => {
             newChats[index].newMessages = 0
             setChats(newChats)
 
-            DataStore.save(ChatRoomUsuario.copyOf(chat.chatRoomUsuario, n => {
+            DataStore.save(ChatRoomUsuarios.copyOf(chat.chatRoomUsuario, n => {
                 n.newMessages = 0
             }))
         } catch (e) {

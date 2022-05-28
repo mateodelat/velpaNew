@@ -50,7 +50,6 @@ export default ({
                                         key={i.toString()}
                                         style={styles.container}>
                                         <View style={styles.containerItem}
-                                            key={"mo-" + index}
                                         >
                                             <Text
                                                 style={styles.text}>{item}</Text>

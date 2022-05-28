@@ -14,6 +14,11 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
+        "AdminQueries": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
+        },
         "velpaAPI": {
             "GraphQLAPIKeyOutput": "string",
             "GraphQLAPIIdOutput": "string",
@@ -34,6 +39,12 @@ export type AmplifyDependentResourcesAttributes = {
             "LambdaExecutionRole": "string"
         },
         "preSignUp": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "AdminQueries9184a6d2": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

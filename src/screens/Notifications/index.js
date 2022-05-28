@@ -1,12 +1,15 @@
 import { DataStore } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, getUserSub, wait } from '../../../assets/constants'
+import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { colorFondo, container, getUserSub, moradoOscuro, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
 import Element from './components/Element'
 import { TipoNotificacion } from '../../models'
+
+
+import { Entypo } from '@expo/vector-icons';
 
 import moment from "moment";
 import 'moment/locale/es'
@@ -26,6 +29,8 @@ export default () => {
     // Modal para calificar al guia
     const [modalVisible, setModalVisible] = useState(false);
     const [modalData, setModalData] = useState({});
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     const [notificaciones, setNotificaciones] = useState(null);
 
@@ -49,8 +54,23 @@ export default () => {
         })
     }
 
-    const handleBorrarNotificacion = () => {
-        const notificationToErase = notificaciones[modalData.notificacionIdx]
+    const deleteAll = () => {
+
+        if (confirmDelete) {
+            notificaciones.forEach(n => {
+                handleBorrarNotificacion(n)
+            });
+            setConfirmDelete(false)
+            setNotificaciones([])
+        } else {
+            setConfirmDelete(true)
+
+        }
+
+
+    }
+
+    const handleBorrarNotificacion = (notificationToErase) => {
         if (notificationToErase) {
             let newNotifications = [...notificaciones]
             newNotifications.splice(modalData.notificacionIdx, 1)
@@ -171,27 +191,67 @@ export default () => {
     }
 
     if (notificaciones.length === 0) {
-        return <View
-            style={styles.container}
+        return <ScrollView
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
+            contentContainerStyle={styles.container}
         >
             <Text style={styles.noHayTxt}>No hay notificaciones</Text>
-        </View>
+        </ScrollView>
     }
 
-    return (<View style={{ flex: 1, }}>
+    return (<Pressable
+        onPress={() => setConfirmDelete(false)}
+        style={{ flex: 1, backgroundColor: colorFondo, }}>
+
 
         <FlatList
             showsVerticalScrollIndicator={false}
+            ListHeaderComponent={() => <View
+                style={{
+                    alignItems: 'center',
+                    // paddingRight: 20,
+                    padding: 10,
+                }}
+            >
+                <Pressable
+                    onPress={deleteAll}
+                    style={{
+                        backgroundColor: '#fff',
+                        alignItems: 'center', justifyContent: 'center',
+                        borderRadius: 20,
+                        height: 35,
+                        padding: 5,
+                    }}>
+                    {
+                        confirmDelete ?
+                            <Text style={{
+                                fontWeight: 'bold',
+                                fontSize: 16,
+                                paddingHorizontal: 5,
+                                color: moradoOscuro
+                            }}>BORRAR</Text>
+                            :
+                            <Entypo
+                                name="cross" size={25} color={moradoOscuro} />
+                    }
+
+
+                </Pressable>
+            </View>}
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />}
 
-            style={container}
+            style={{ ...container, paddingTop: 0, }}
 
 
-            data={notificaciones}
+            data={notificaciones ? notificaciones : []}
             initialNumToRender={6}
             renderItem={({ item, index }) => {
                 const { tipo } = item
@@ -216,9 +276,9 @@ export default () => {
             usuarioID={modalData.usuarioID}
             aventuraID={modalData.aventuraID}
 
-            borrarNotificacion={handleBorrarNotificacion}
+            borrarNotificacion={() => handleBorrarNotificacion(notificaciones[modalData.notificacionIdx])}
         />}
-    </View>
+    </Pressable>
     )
 }
 

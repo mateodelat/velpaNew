@@ -10,9 +10,10 @@ import {
 } from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import { Loading } from '../../../components/Loading';
-import { Storage } from 'aws-amplify';
+
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { obtenerUriImagenesGuia } from '../../../../assets/constants';
+
 
 
 // Funcion para ver las imagenes en pantalla completa
@@ -23,6 +24,7 @@ export default ({ setModalVisible, data }) => {
 
     // Obtener los links de las imagenes
     useEffect(() => {
+
         fetch()
     }, []);
 

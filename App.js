@@ -9,7 +9,7 @@ import {
   LogBox
 } from 'react-native';
 
-import { Auth, Hub, Amplify, AuthModeStrategyType } from "aws-amplify";
+import { Auth, Hub, Amplify, AuthModeStrategyType, syncExpression } from "aws-amplify";
 
 import { DataStore } from '@aws-amplify/datastore';
 
@@ -27,10 +27,12 @@ import { Notificacion } from './src/models';
 import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
 import { StripeProvider } from '@stripe/stripe-react-native';
+import { getUserSub } from './assets/constants';
+import { ChatRoomUsuarios } from './src/models';
 
 
 
-LogBox.ignoreLogs(['.*$will be removed from React Native. Migrate to ', 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
+LogBox.ignoreLogs(["`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method", 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
 
 
 export default function App() {
@@ -75,6 +77,7 @@ export default function App() {
   });
 
 
+
   let publicidadLoaded
   let aventuraLoaded
   let usuarioLoaded
@@ -87,16 +90,25 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(null);
 
 
+  async function startDatastore() {
+    // const sub = await getUserSub()
+
+
+    DataStore.start()
+
+  }
 
   useEffect(() => {
     checkOnboarding()
-    // DataStore.stop()
+
+    // DataStore.clear()
+
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
         setLoading(false)
         if (user.authenticated) {
-          DataStore.start()
+          startDatastore()
           setAuthenticated(true)
         }
       }).catch(err => {
@@ -111,7 +123,7 @@ export default function App() {
       switch (event) {
         case "signIn":
           setCargandoModelos(true)
-          DataStore.start()
+          startDatastore()
           setLoading(false)
           setAuthenticated(true)
           break;

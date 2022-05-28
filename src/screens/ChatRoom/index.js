@@ -10,10 +10,11 @@ import { Loading } from '../../components/Loading';
 
 import API from '@aws-amplify/api';
 import { sendPushNotification } from '../../../assets/constants/constant';
-import { ChatRoomUsuario } from '../../models';
+
 import { Usuario } from '../../models';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHeaderHeight } from '@react-navigation/stack';
+import { ChatRoomUsuarios } from '../../models';
 
 
 
@@ -66,12 +67,12 @@ export default ({ route }) => {
             }))
 
             // Mandar notificaciones de nuevo mensaje a todos los participantes del grupo
-            // Agregar 1 a cada newMessages chatRoomUsuario de los participantes
+            // Agregar 1 a cada newMessages chatRoomUsuarios de los participantes
             listaUsuarios.filter(e => e.id !== usuarioID).map(async e => {
                 // Actualizar nuevos mensajes del Chat
-                const model = await DataStore.query(ChatRoomUsuario, e.usuarioChatRoomId)
+                const model = await DataStore.query(ChatRoomUsuarios, e.usuarioChatRoomId)
                 const newMessages = !model.newMessages ? 0 : model.newMessages
-                DataStore.save(ChatRoomUsuario.copyOf(model, n => {
+                DataStore.save(ChatRoomUsuarios.copyOf(model, n => {
                     n.newMessages = newMessages + 1
                 }))
 
@@ -161,7 +162,7 @@ export default ({ route }) => {
 
         return strTime;
     }
-    const headerHeight = useHeaderHeight()
+    const headerHeight = 33
     const insets = useSafeAreaInsets()
     return (
         <KeyboardAvoidingView

@@ -23,11 +23,12 @@ import Line from '../../components/Line';
 import { AntDesign } from '@expo/vector-icons';
 import RadioButton from '../../components/RadioButton';
 import API from '@aws-amplify/api';
-import { createStripeAcount } from '../../graphql/mutations';
+import { createStripeAccount } from '../../graphql/mutations';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { DataStore } from '@aws-amplify/datastore';
 import { TipoUsuario, Usuario } from '../../models';
 import { vibrar } from '../../../assets/constants/constant';
+import { getAmplifyUserAgent } from '@aws-amplify/core';
 
 const containerColor = "#fff"
 const colorFondo = "#F4F6F6"
@@ -127,7 +128,7 @@ export default ({ navigation, route }) => {
         try {
             // Crear cuenta en stripe
             API.graphql({
-                query: createStripeAcount, variables: {
+                query: createStripeAccount, variables: {
                     email,
                     phone: telefono,
 
@@ -163,7 +164,7 @@ export default ({ navigation, route }) => {
                     rfcCompania: !RFCAgencia ? null : RFCAgencia,
                 }
             }).then(async r => {
-                r = r.data.createStripeAcount
+                r = r.data.createStripeAccount
                 if (r.errors) {
                     setButtonLoading(false)
                     Alert.alert("Error", "Hubo un error creando tu cuenta bancaria")
@@ -209,6 +210,7 @@ export default ({ navigation, route }) => {
             })
         } catch (error) {
             setButtonLoading(false)
+            Alert.alert("Error", "Error creando cuenta")
             console.log(error)
         }
 

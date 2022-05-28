@@ -19,7 +19,7 @@ import ComponentePrueba from '../../components/ComponentePrueba';
 import ModalAgregar from './../components/ModalAgregar';
 import { useNavigation } from '@react-navigation/native';
 import MapaAventuras from '../../screens/MapaAventuras';
-import { DataStore } from '@aws-amplify/datastore';
+import { DataStore, OpType } from '@aws-amplify/datastore';
 import { Notificacion } from '../../models';
 import { Usuario } from '../../models';
 
@@ -133,8 +133,12 @@ export default () => {
                 .showAt("lt", new Date())
             )
                 .subscribe(msg => {
-                    setNewNotificaciones(true)
-                    console.log("new notificacion de subscripcion")
+
+                    if (msg.opType !== OpType.DELETE) {
+                        setNewNotificaciones(true)
+                        console.log("new notificacion de subscripcion")
+
+                    }
                 })
 
             verNuevosMensajes(sub)

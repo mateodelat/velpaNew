@@ -8,7 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import { DataStore } from '@aws-amplify/datastore';
-import Storage from '@aws-amplify/storage';
+import { Storage } from '@aws-amplify/storage';
 
 import { TipoPublicidad } from '../../../../models';
 import { Aventura } from '../../../../models';
@@ -92,14 +92,14 @@ export default function ({
 
             }))
         } else {
-            await DataStore.save(new Publicidad({
+            e.id = await DataStore.save(new Publicidad({
                 aventuraID: e.aventuraID,
                 descripcion: e.descripcion,
                 imagenFondo: e.imagenFondo.key,
                 linkAnuncio: e.linkAnuncio,
                 tipo: e.tipo,
                 titulo: e.titulo,
-            }))
+            })).then(r => r.id)
 
         }
 

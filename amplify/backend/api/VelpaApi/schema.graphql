@@ -1,21 +1,9 @@
 type Aventura
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      {
-        allow: owner
-        ownerField: "owner"
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [create, read] }
-      # { allow: groups, groups: ["Admin"] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   titulo: String!
 
@@ -45,8 +33,6 @@ type Aventura
 
   usuarioID: String
 
-  owner: String
-
   SolicitudGuias: [SolicitudGuia]
     @manyToMany(relationName: "AventuraSolicitudGuias")
 
@@ -58,17 +44,9 @@ type Aventura
 type Reserva
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      { allow: private, operations: [create, read, update, delete] }
-      # { allow: groups, groups: ["Admin"] }
-      { allow: owner, operations: [create, read, update, delete] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   total: Float!
   comision: Float!
@@ -84,6 +62,9 @@ type Reserva
 
   fechaID: ID @index(name: "byFecha")
   usuarioID: ID @index(name: "byUsuario")
+
+  usuario: @belongsTo
+
   guiaID: ID
 
   tipoPago: tipoPago
@@ -94,17 +75,9 @@ type Reserva
 type Fecha
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      { allow: private, operations: [create, read, update, delete] }
-      # { allow: groups, groups: ["Admin"] }
-      { allow: owner, operations: [create, read, update, delete] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   personasTotales: Int!
 
@@ -123,6 +96,8 @@ type Fecha
 
   allowTercera: Boolean!
   allowNinos: Boolean!
+  efectivo: Boolean!
+
   material: String
   incluido: String!
   titulo: String
@@ -135,6 +110,8 @@ type Fecha
   aventuraID: ID! @index(name: "byAventura")
   usuarioID: ID! @index(name: "byUsuario")
 
+  usuario:@belongsTo
+
   dificultad: Int
 
   Reservas: [Reserva] @hasMany(indexName: "byFecha", fields: ["id"])
@@ -144,25 +121,9 @@ type Fecha
 type Usuario
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [create, read] }
-      { allow: private, operations: [read] }
-      {
-        allow: groups
-        groups: ["Admin"]
-        operations: [create, read, update, delete]
-      }
-      {
-        allow: owner
-        ownerField: "owner"
-        operations: [create, read, update, delete]
-      }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   tipo: TipoUsuario
   guia: Boolean
@@ -204,15 +165,13 @@ type Usuario
 
   notificationToken: String
 
-  owner: String
-
   newMessages: Int
 
   AventurasAutorizadas: [Aventura] @manyToMany(relationName: "AventuraUsuarios")
 
   Mensajes: [Mensaje] @hasMany(indexName: "byUsuario", fields: ["id"])
 
-  ChatRooms: [ChatRoom] @manyToMany(relationName: "ChatRoomUsuarios")
+  ChatRooms: [ChatRoomUsuarios] @hasMany(indexName: "byUsuario", fields: ["id"])
 
   Reservas: [Reserva] @hasMany(indexName: "byUsuario", fields: ["id"])
 
@@ -230,15 +189,9 @@ type Usuario
 type ChatRoom
   @model
   @auth(
-    rules: [
-      { allow: private, operations: [create, read, update, delete] }
-      { allow: public, operations: [read] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   name: String!
   picture: String
@@ -247,27 +200,18 @@ type ChatRoom
   fechaID: ID @index(name: "byFecha")
   guiaID: ID
 
-  Mensajes: [Mensaje]
-    @hasMany(
-      indexName: "byChatRoom" #, fields: ["id"]
-    )
+  Mensajes: [Mensaje] @hasMany(indexName: "byChatRoom", fields: ["id"])
 
-  Participantes: [Usuario] @manyToMany(relationName: "ChatRoomUsuarios")
+  Participantes: [ChatRoomUsuarios]
+    @hasMany(indexName: "byChatRoom", fields: ["id"])
 }
 
 type Mensaje
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      { allow: private, operations: [read] }
-      { allow: owner, operations: [create, read, update, delete] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   content: String!
   usuarioID: ID @index(name: "byUsuario")
@@ -277,23 +221,9 @@ type Mensaje
 type SolicitudGuia
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      # { allow: groups, groups: ["Admin"] }
-      {
-        allow: owner
-        ownerField: "owner"
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [create, read, update, delete] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-
-  owner: String
 
   status: StatusSolicitud!
   evaluadorID: ID
@@ -305,19 +235,9 @@ type SolicitudGuia
 type Notificacion
   @model
   @auth(
-    rules: [
-      {
-        allow: owner
-        ownerField: "owner"
-        operations: [create, read, update, delete]
-      }
-      { allow: public, operations: [create, read] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   tipo: TipoNotificacion!
   titulo: String!
@@ -341,16 +261,9 @@ type Notificacion
 type Comentario
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      { allow: private, operations: [read] }
-      { allow: owner, operations: [create, read, update, delete] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   usuarioCalificadoID: ID! @index(name: "byUsuario")
   body: String
@@ -362,20 +275,9 @@ type Comentario
 type Publicidad
   @model
   @auth(
-    rules: [
-      { allow: public, operations: [read] }
-      {
-        allow: groups
-        groups: ["Admin"]
-        operations: [create, read, update, delete]
-      }
-      { allow: private, operations: [read] }
-    ]
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
   ) {
   id: ID!
-
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
 
   tipo: TipoPublicidad!
 
@@ -440,21 +342,20 @@ enum TipoUsuario {
 ########################################################
 ###################TABLAS MANY TO MANY##################
 ########################################################
-# type ChatRoomUsuarios @model @auth(rules: [{ allow: private }]) {
-#   id: ID!
+type ChatRoomUsuarios
+  @model
+  @auth(
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
+  ) {
+  id: ID!
 
-#   createdAt: AWSDateTime!
-#   updatedAt: AWSDateTime!
+  chatRoomParticipantesId: ID! @index(name: "byChatRoom")
+  usuarioChatRoomsId: ID! @index(name: "byUsuario")
+  newMessages: Int
 
-#   chatroomID: ID! @index(name: "byChatRoom")
-#   usuarioID: ID! @index(name: "byUsuario")
-#   newMessages: Int
-
-#   owner: String
-
-#   chatroom: ChatRoom! @hasOne(fields: ["chatroomID"])
-#   usuario: Usuario! @hasOne(fields: ["usuarioID"])
-# }
+  chatroom: ChatRoom @belongsTo
+  usuario: Usuario @belongsTo
+}
 
 ########################################################
 ########################FUNCIONES#######################

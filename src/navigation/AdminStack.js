@@ -15,6 +15,7 @@ import ModificarAventuras from '../screens/Admin/ModificarAventuras';
 import EditarAventura1 from '../screens/Admin/EditarAventura/EditarAventura1';
 import { mayusFirstLetter } from '../../assets/constants';
 import Publicidad from '../screens/Admin/Publicidad';
+import Usuarios from '../screens/Admin/Usuarios';
 
 
 
@@ -25,6 +26,8 @@ export default function AdminStack() {
 
     return (
         <Stack.Navigator
+            // initialRouteName='Usuarios'
+
             screenOptions={{
                 header: (params) => {
 
@@ -109,6 +112,15 @@ export default function AdminStack() {
                 component={Publicidad}
                 options={{
                     headerShown: false
+                }}
+            />
+
+            <Stack.Screen
+                name={"Usuarios"}
+                component={Usuarios}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Usuarios"
                 }}
             />
 

@@ -101,12 +101,12 @@ export default ({ route, navigation }) => {
         })
             .then(async r => {
 
-
                 r = await Promise.all(r.map(async fecha => {
+                    console.log(fecha.Reservas)
                     let personasReservadas = []
                     let totalPersonasReservadas = 0
                     // Obtener todas las reservaciones en la fecha
-                    const reservaciones = await DataStore.query(Reserva, res => res.fechaID("eq", fecha.id))
+                    const reservaciones = fecha.Reservas ? fecha.Reservas : []
 
                     // Primero mapear todas las reservaciones y sacar las que esten llenas
                     reservaciones.map(res => {

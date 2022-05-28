@@ -23,7 +23,7 @@ import { useNavigation } from '@react-navigation/native';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../../models';
 
-import Storage from '@aws-amplify/storage';
+import { Storage } from '@aws-amplify/storage';
 import { reverseGeocodeAsync } from 'expo-location';
 import ModalMap from '../../../components/ModalMap';
 import { Foundation } from '@expo/vector-icons';
@@ -119,13 +119,6 @@ export default function ({ fecha,
                         <Text
                             style={styles.precio}
                         >{precio}$</Text>
-                        <Text
-                            style={{
-                                textAlign: 'right',
-                                fontSize: 10,
-                                color: '#666',
-                            }}
-                        >*aprox</Text>
                     </View>
 
                 </View>

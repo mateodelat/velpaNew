@@ -69,6 +69,16 @@ export default ({ navigation }) => {
                 <Text style={styles.textoBoton}>Anuncios</Text>
             </Pressable>
 
+            {/* Ver usuarios*/}
+            <Pressable
+                onPress={() => navigation.navigate("Usuarios")}
+                style={styles.buttonContainer}>
+                <View style={styles.icon}>
+                    <Ionicons name="person" size={24} color="#fff" />
+                </View>
+                <Text style={styles.textoBoton}>Usuarios</Text>
+            </Pressable>
+
 
             {/* Modificar fechas por aventuras y reservaciones*/}
             {/* <Pressable

@@ -52,22 +52,9 @@ export default function ({ navigation,
 
     const scrollY = React.useRef(new Animated.Value(0)).current
 
-    const [usuario, setUsuario] = useState(null);
+    const usuario = route.params?.usuario
+
     const [modalVisible, setModalVisible] = useState(false);
-
-    useEffect(() => {
-        try {
-            getUserSub()
-                .then(sub => {
-                    return DataStore.query(Usuario, sub).then(setUsuario)
-                })
-        } catch (error) {
-            console.log(error)
-            Alert.alert("Error obteniendo el usuario")
-
-        }
-    }, []);
-
 
 
 
@@ -81,7 +68,10 @@ export default function ({ navigation,
 
     // Permitir tercera edad / niños
     const [allowNinos, setAllowNinos] = useState(true);
-    const [allowTercera, setAllowTercera] = useState(true);
+    const [allowTercera, setAllowTercera] = useState(true); 7
+
+    // Permitir pagos en efectivo
+    const [allowEfectivo, setAllowEfectivo] = useState(false);
 
     // Dificultad de la fecha
     const [dificuldad, setDificuldad] = useState(3);
@@ -122,6 +112,8 @@ export default function ({ navigation,
             descripcion,
 
             dificuldad,
+
+            efectivo: allowEfectivo,
 
             comision: comisionVelpa / 100,
             experienciaPorPersona: expPerPerson,
@@ -338,8 +330,50 @@ export default function ({ navigation,
 
                         </Pressable>
 
+
+
                     </View>
 
+
+                    <View style={{
+                        marginBottom: 20,
+                        padding: 5,
+                        paddingHorizontal: 10,
+                        backgroundColor: '#fff',
+                    }}>
+                        {/* Efectivo */}
+                        <Pressable
+                            onPress={() => {
+                                const change = () => setAllowEfectivo(!allowEfectivo)
+
+                                if (!allowEfectivo) {
+                                    Alert.alert("Atencion", "Al permitir pagos en efectivo te arriesgas a que los clientes reserven y no se presenten\n¿Deseas continuar?", [
+                                        {
+                                            text: "Cancelar",
+                                            style: "cancel"
+                                        },
+                                        {
+                                            text: "OK",
+                                            onPress: change
+                                        },
+                                    ])
+                                }
+
+                                else {
+                                    change()
+                                }
+
+                            }}
+                            style={styles.allowInnerContainer}>
+                            <Text style={styles.textAllow}>Permitir pagos en efectivo</Text>
+                            <RadioButton
+                                checked={allowEfectivo}
+                                setChecked={setAllowEfectivo}
+                            />
+
+                        </Pressable>
+
+                    </View>
 
 
 

@@ -57,13 +57,14 @@ const TipoPublicidad = {
   "ACTUALIZACION": "ACTUALIZACION"
 };
 
-const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, ChatRoomUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
+const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoomUsuarios, ChatRoom, Reserva, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
   Aventura,
   SolicitudGuia,
   Usuario,
   Mensaje,
+  ChatRoomUsuarios,
   ChatRoom,
   Reserva,
   Fecha,
@@ -72,7 +73,6 @@ export {
   Publicidad,
   AventuraSolicitudGuias,
   AventuraUsuarios,
-  ChatRoomUsuarios,
   AccountType,
   EstadoAventura,
   Categorias,

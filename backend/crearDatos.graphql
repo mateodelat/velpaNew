@@ -1,12 +1,53 @@
-#############################################################################
-##################################AVENTURAS##################################
-#############################################################################
-
 mutation MyMutation {
+  #############################################################################
+  ###################################USUARIOS##################################
+  #############################################################################
+  usr1: createUsuario(
+    input: {
+      ID: [
+        "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-IDFrente.jpg"
+        "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-IDAtras.jpg"
+      ]
+      CuentaBancaria: "012320015149702582"
+      admin: true
+      apellido: "delat"
+      calificacion: null
+      certificaciones: null
+      capacidadMaxima: 10
+      comentariosAdicionales: null
+      direccion: "{\"country\":\"MX\",\"city\":\"Jzbdb que\",\"state\":\"Sbdbs\",\"postal_code\":\"64949\",\"line1\":\"Jzbdb\"}"
+      experience: 3
+      fechaNacimiento: "{\"month\":4,\"year\":2009,\"day\":28}"
+      foto: "https://lh3.googleusercontent.com/a/AATXAJyPur3pemWzbDpmahJ2fAoNY47KgG3K1ZxyViM2=s96-c"
+      guia: true
+      id: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      imagenFondo: null
+      newMessages: null
+      nickname: "mateo delat"
+      nombre: "mateo"
+      notificationToken: "ExponentPushToken[ZzPRLzCzWN-H0VX6j1n0A9]"
+      numResenas: null
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      rfcCompania: null
+      rfcIndividual: null
+      selfie: "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-Selfie.jpg"
+      sitioWeb: null
+      stripeID: "acct_1L3A1u2VePn1HSRf"
+      telefono: "+523324963705"
+      tipo: GUIAINDIVIDUAL
+    }
+  ) {
+    id
+    nickname
+  }
+
+  #############################################################################
+  ##################################AVENTURAS##################################
+  #############################################################################
   ave1: createAventura(
     input: {
       altimetriaRecorrida: 706
-      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 4282
       categoria: APLINISMO
       coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}"
@@ -37,7 +78,7 @@ mutation MyMutation {
   ave2: createAventura(
     input: {
       altimetriaRecorrida: 1301
-      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 5208
       categoria: APLINISMO
       coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}"
@@ -66,7 +107,7 @@ mutation MyMutation {
   ave3: createAventura(
     input: {
       altimetriaRecorrida: 795
-      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 4218
       categoria: APLINISMO
       coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}"
@@ -100,7 +141,7 @@ mutation MyMutation {
   ave4: createAventura(
     input: {
       altimetriaRecorrida: 740
-      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 1537
       categoria: APLINISMO
       coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}"
@@ -132,7 +173,7 @@ mutation MyMutation {
   ave5: createAventura(
     input: {
       altimetriaRecorrida: 768
-      owner: "a3bd6f70-cee6-48c5-b557-1dc6e95ad28c"
+      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 2347
       categoria: APLINISMO
       coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}"
@@ -161,319 +202,3 @@ mutation MyMutation {
     altitud
   }
 }
-
-# #############################################################################
-# ###################################USUARIOS##################################
-# #############################################################################
-# mutation CrearUsuarios{
-#     createUsuario(input: {
-#         nickname:"mateodelatorre",
-#         id:"cb4babd0-7db8-4328-a7e3-58489d3d22c7",
-#     }){
-#         id
-#         nickname
-#     }
-#     createUsuario(input: {
-#         nickname:"mateo delat",
-#         id:"bd30bfdc-6803-4f06-8175-9d8745063fa0",
-#     }){
-#         id
-#         nickname
-#     }
-# }
-
-# #############################################################################
-# ####################################FECHAS###################################
-# #############################################################################
-# mutation crearFechas{
-
-#     ########################Nevado De Toluca###############################
-#     Toluca1: createFecha(input: {
-#         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 3,
-#         precio: 500,
-#         fechaInicial: "2021-02-01",
-#         fechaFinal: "2021-02-03",
-#         id:"Toluca1"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Toluca2: createFecha(input: {
-#         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 6,
-#         precio: 700,
-#         fechaInicial: "2020-03-15",
-#         fechaFinal: "2020-03-19",
-#         id:"Toluca2"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Toluca3: createFecha(input: {
-#         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 7,
-#         precio: 620,
-#         fechaInicial: "2021-08-01",
-#         fechaFinal: "2021-08-03",
-#         id:"Toluca3"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Toluca4: createFecha(input: {
-#         aventuraID: "5ea1a317-1522-43de-a1cb-f430a602d7aa",
-#         personasTotales: 9,
-#         precio: 765,
-#         fechaInicial: "2021-09-30",
-#         fechaFinal: "2021-09-30",
-#         id:"Toluca4"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     #######################################################################
-#     ########################Nevado De Colima###############################
-#     #######################################################################
-#     Colima1: createFecha(input: {
-#         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 3,
-#         precio: 600,
-#         fechaInicial: "2021-02-01",
-#         fechaFinal: "2021-02-03",
-#         id:"Colima1"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Colima2: createFecha(input: {
-#         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 6,
-#         precio: 700,
-#         fechaInicial: "2020-02-15",
-#         fechaFinal: "2020-02-19",
-#         id:"Colima2"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Colima3: createFecha(input: {
-#         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 7,
-#         precio: 620,
-#         fechaInicial: "2021-08-01",
-#         fechaFinal: "2021-08-03",
-#         id:"Colima3"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Colima4: createFecha(input: {
-#         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 9,
-#         precio: 765,
-#         fechaInicial: "2021-09-30",
-#         fechaFinal: "2021-09-30",
-#         id:"Colima4"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Colima5: createFecha(input: {
-#         aventuraID: "221f0c54-fa47-49d9-abae-261544a58db3",
-#         personasTotales: 4,
-#         precio: 650,
-#         fechaInicial: "2021-10-31",
-#         fechaFinal: "2021-11-03",
-#         id:"Colima5"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     #######################################################################
-#     ########################Iztacihuatl###############################
-#     #######################################################################
-#     Izta1: createFecha(input: {
-#         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 3,
-#         precio: 600,
-#         fechaInicial: "2021-02-01",
-#         fechaFinal: "2021-02-03",
-#         id:"Izta1"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Izta2: createFecha(input: {
-#         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 6,
-#         precio: 700,
-#         fechaInicial: "2020-03-15",
-#         fechaFinal: "2020-03-19",
-#         id:"Izta2"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     Izta3: createFecha(input: {
-#         aventuraID: "b8788de4-eb04-4dcf-96cd-8547d4c27326",
-#         personasTotales: 7,
-#         precio: 620,
-#         fechaInicial: "2021-08-01",
-#         fechaFinal: "2021-08-03",
-#         id:"Izta3"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     #######################################################################
-#     ########################Chupinaya######################################
-#     #######################################################################
-#     chupi1: createFecha(input: {
-#         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 3,
-#         precio: 600,
-#         fechaInicial: "2021-02-01",
-#         fechaFinal: "2021-02-03",
-#         id:"chupi1"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     chupi2: createFecha(input: {
-#         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 6,
-#         precio: 700,
-#         fechaInicial: "2020-03-15",
-#         fechaFinal: "2020-03-19",
-#         id:"chupi2"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     chupi3: createFecha(input: {
-#         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 7,
-#         precio: 620,
-#         fechaInicial: "2021-08-01",
-#         fechaFinal: "2021-08-03",
-#         id:"chupi3"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     chupi4: createFecha(input: {
-#         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 4,
-#         precio: 650,
-#         fechaInicial: "2021-07-01",
-#         fechaFinal: "2021-07-03",
-#         id:"chupi4"
-#         guiaID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#     }) {
-#     id
-#   }
-
-#     ######################################################
-
-#     chupi5: createFecha(input: {
-#         aventuraID: "d8d8b921-f3e6-45d8-aa10-5c3aeb300ff7",
-#         personasTotales: 4,
-#         precio: 620,
-#         fechaInicial: "2021-08-06",
-#         fechaFinal: "2021-08-07",
-#         id:"chupi5"
-#         guiaID:"cb4babd0-7db8-4328-a7e3-58489d3d22c7"
-#     }) {
-#     id
-#   }
-#     ######################################################
-# }
-
-# #############################################################################
-# ################################RESERVACIONES################################
-# #############################################################################
-# mutation crearReservaciones {
-#   res1: createReservaciones(input: {
-#         id:"res1"
-#         total: 2900,
-#         personas: 2,
-#         fechaID:"Colima1"
-#         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#   }) {
-#     id
-#   }
-
-#   res2: createReservaciones(input: {
-#         id:"res2"
-#         total: 3500,
-#         personas: 3,
-#         fechaID:"Colima2"
-#         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#   }) {
-#     id
-#   }
-#   res3: createReservaciones(input: {
-#         id:"res3"
-#         total: 3500,
-#         personas: 7,
-#         fechaID:"Colima3"
-#         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#   }) {
-#     id
-#   }
-#   res4: createReservaciones(input: {
-#         id:"res4"
-#         total: 750,
-#         personas: 1,
-#         fechaID:"Colima4"
-#         usuarioID:"bd30bfdc-6803-4f06-8175-9d8745063fa0"
-#   }) {
-#     id
-#   }
-# }

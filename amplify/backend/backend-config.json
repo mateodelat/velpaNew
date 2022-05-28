@@ -30,6 +30,28 @@
     }
   },
   "api": {
+    "AdminQueries": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "velpaAuth",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "AdminQueries9184a6d2",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ]
+    },
     "velpaAPI": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
@@ -48,7 +70,7 @@
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 7,
-              "apiKeyExpirationDate": "2022-05-31T20:45:04.166Z",
+              "apiKeyExpirationDate": "2022-06-01T20:22:43.026Z",
               "description": ""
             }
           },
@@ -86,14 +108,19 @@
           "attributes": [
             "UserPoolId"
           ]
-        },
+        }
+      ]
+    },
+    "AdminQueries9184a6d2": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "velpaAPI",
+          "category": "auth",
+          "resourceName": "velpaAuth",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "UserPoolId"
           ]
         }
       ]

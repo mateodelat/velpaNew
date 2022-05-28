@@ -4,7 +4,7 @@ import Messages from '../screens/Messages';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { colorFondo, getUserSub, moradoOscuro } from '../../assets/constants';
-import { DataStore } from '@aws-amplify/datastore';
+import { DataStore, OpType } from '@aws-amplify/datastore';
 import { Notificacion } from '../models';
 import { Usuario } from '../models';
 
@@ -44,7 +44,10 @@ export default function () {
             verNuevasNotificaciones(sub)
             subscripcionNotificaciones = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
                 .subscribe(msg => {
-                    setNewNotificaciones(true)
+                    if (msg.opType !== OpType.DELETE) {
+                        setNewNotificaciones(true)
+
+                    }
                 })
 
             verNuevosMensajes(sub)

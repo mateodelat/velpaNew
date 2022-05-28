@@ -39,8 +39,12 @@ export default function ({ navigation, route }) {
 
         // Verificar si el guia tiene autorizado llevar gente y si tiene una cuenta de stripe
         const sub = await getUserSub()
-        const usuario = await DataStore.query(Usuario, sub)
-        const { stripeID, capacidadMaxima } = usuario
+        const usr = await DataStore.query(Usuario, sub)
+        const { stripeID, capacidadMaxima } = usr
+
+        setUsuario(usr)
+
+
 
         if (!stripeID) {
             Alert.alert("Error", "Ocurrio un error, no tienes cuenta bancaria asociada, vuelve a mandar tus datos", [
@@ -86,6 +90,8 @@ export default function ({ navigation, route }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoModal, setTipoModal] = useState("puntoReunion");
+
+    const [usuario, setUsuario] = useState(null);
 
 
     // Verificar cuanta gente puede llevar el guia
@@ -230,6 +236,8 @@ export default function ({ navigation, route }) {
 
                 itinerario,
             },
+
+            usuario,
 
             incluidoDefault,
             materialDefault,

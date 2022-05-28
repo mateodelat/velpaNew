@@ -176,13 +176,11 @@ export const listSolicitudGuiasPendientes = /* GraphQL */ `
           id
           createdAt
           usuarioID
-          owner
           Aventuras {
             items {
               aventura {
                 titulo
                 id
-                owner
                 createdAt
                 updatedAt
             }
@@ -1303,7 +1301,7 @@ export const levels = {
   1: {
     lvl: 1,
     expBaseLevel: 0,
-    expNextLevel: 100,
+    expNextLevel: 150,
 
     comisionVelpa: 0.15,
   },
@@ -1884,6 +1882,27 @@ export async function uploadImageToStripe(uri) {
     console.log("Selecciona una imagen");
   }
 };
+
+
+export const AsyncAlert = async (title, body) => new Promise((resolve, reject) => {
+  Alert.alert(title, body,
+    [
+      {
+        text: "CANCELAR",
+        onPress: () => {
+          reject("Cancelada");
+        },
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          resolve("Resuelta");
+        },
+      },
+
+    ],
+  );
+});
 
 
 

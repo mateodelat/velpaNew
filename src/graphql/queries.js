@@ -5,8 +5,6 @@ export const getAventura = /* GraphQL */ `
   query GetAventura($id: ID!) {
     getAventura(id: $id) {
       id
-      createdAt
-      updatedAt
       titulo
       imagenFondoIdx
       imagenDetalle
@@ -27,7 +25,6 @@ export const getAventura = /* GraphQL */ `
       materialDefault
       incluidoDefault
       usuarioID
-      owner
       SolicitudGuias {
         items {
           id
@@ -38,7 +35,6 @@ export const getAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -53,7 +49,6 @@ export const getAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -61,8 +56,6 @@ export const getAventura = /* GraphQL */ `
       Fechas {
         items {
           id
-          createdAt
-          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -76,6 +69,7 @@ export const getAventura = /* GraphQL */ `
           puntoReunionCoords
           allowTercera
           allowNinos
+          efectivo
           material
           incluido
           titulo
@@ -86,14 +80,17 @@ export const getAventura = /* GraphQL */ `
           aventuraID
           usuarioID
           dificultad
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -109,8 +106,6 @@ export const listAventuras = /* GraphQL */ `
     listAventuras(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -131,7 +126,6 @@ export const listAventuras = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
-        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -144,6 +138,8 @@ export const listAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -168,8 +164,6 @@ export const syncAventuras = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -190,7 +184,6 @@ export const syncAventuras = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
-        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -203,6 +196,8 @@ export const syncAventuras = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -216,8 +211,6 @@ export const getReserva = /* GraphQL */ `
   query GetReserva($id: ID!) {
     getReserva(id: $id) {
       id
-      createdAt
-      updatedAt
       total
       comision
       pagadoAlGuia
@@ -232,10 +225,11 @@ export const getReserva = /* GraphQL */ `
       guiaID
       tipoPago
       materialChecked
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -248,8 +242,6 @@ export const listReservas = /* GraphQL */ `
     listReservas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         total
         comision
         pagadoAlGuia
@@ -264,10 +256,11 @@ export const listReservas = /* GraphQL */ `
         guiaID
         tipoPago
         materialChecked
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -289,8 +282,6 @@ export const syncReservas = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         total
         comision
         pagadoAlGuia
@@ -305,10 +296,11 @@ export const syncReservas = /* GraphQL */ `
         guiaID
         tipoPago
         materialChecked
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -319,8 +311,6 @@ export const getFecha = /* GraphQL */ `
   query GetFecha($id: ID!) {
     getFecha(id: $id) {
       id
-      createdAt
-      updatedAt
       personasTotales
       fechaInicial
       fechaFinal
@@ -334,6 +324,7 @@ export const getFecha = /* GraphQL */ `
       puntoReunionCoords
       allowTercera
       allowNinos
+      efectivo
       material
       incluido
       titulo
@@ -347,8 +338,6 @@ export const getFecha = /* GraphQL */ `
       Reservas {
         items {
           id
-          createdAt
-          updatedAt
           total
           comision
           pagadoAlGuia
@@ -363,10 +352,11 @@ export const getFecha = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -374,12 +364,12 @@ export const getFecha = /* GraphQL */ `
       ChatRoom {
         items {
           id
-          createdAt
-          updatedAt
           name
           picture
           fechaID
           guiaID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -388,10 +378,11 @@ export const getFecha = /* GraphQL */ `
         nextToken
         startedAt
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -404,8 +395,6 @@ export const listFechas = /* GraphQL */ `
     listFechas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         personasTotales
         fechaInicial
         fechaFinal
@@ -419,6 +408,7 @@ export const listFechas = /* GraphQL */ `
         puntoReunionCoords
         allowTercera
         allowNinos
+        efectivo
         material
         incluido
         titulo
@@ -437,10 +427,11 @@ export const listFechas = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -462,8 +453,6 @@ export const syncFechas = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         personasTotales
         fechaInicial
         fechaFinal
@@ -477,6 +466,7 @@ export const syncFechas = /* GraphQL */ `
         puntoReunionCoords
         allowTercera
         allowNinos
+        efectivo
         material
         incluido
         titulo
@@ -495,10 +485,11 @@ export const syncFechas = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -509,8 +500,6 @@ export const getUsuario = /* GraphQL */ `
   query GetUsuario($id: ID!) {
     getUsuario(id: $id) {
       id
-      createdAt
-      updatedAt
       tipo
       guia
       calificacion
@@ -536,7 +525,6 @@ export const getUsuario = /* GraphQL */ `
       capacidadMaxima
       comentariosAdicionales
       notificationToken
-      owner
       newMessages
       AventurasAutorizadas {
         items {
@@ -548,7 +536,6 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -556,16 +543,14 @@ export const getUsuario = /* GraphQL */ `
       Mensajes {
         items {
           id
-          createdAt
-          updatedAt
           content
           usuarioID
           chatroomID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          chatRoomMensajesId
-          owner
         }
         nextToken
         startedAt
@@ -573,14 +558,14 @@ export const getUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          usuarioID
-          chatRoomID
+          chatRoomParticipantesId
+          usuarioChatRoomsId
+          newMessages
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -588,8 +573,6 @@ export const getUsuario = /* GraphQL */ `
       Reservas {
         items {
           id
-          createdAt
-          updatedAt
           total
           comision
           pagadoAlGuia
@@ -604,10 +587,11 @@ export const getUsuario = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -615,8 +599,6 @@ export const getUsuario = /* GraphQL */ `
       Fechas {
         items {
           id
-          createdAt
-          updatedAt
           personasTotales
           fechaInicial
           fechaFinal
@@ -630,6 +612,7 @@ export const getUsuario = /* GraphQL */ `
           puntoReunionCoords
           allowTercera
           allowNinos
+          efectivo
           material
           incluido
           titulo
@@ -640,10 +623,11 @@ export const getUsuario = /* GraphQL */ `
           aventuraID
           usuarioID
           dificultad
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
@@ -651,8 +635,6 @@ export const getUsuario = /* GraphQL */ `
       Notificaciones {
         items {
           id
-          createdAt
-          updatedAt
           tipo
           titulo
           descripcion
@@ -666,6 +648,8 @@ export const getUsuario = /* GraphQL */ `
           aventuraID
           guiaID
           solicitudGuiaID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -676,13 +660,12 @@ export const getUsuario = /* GraphQL */ `
       SolicitudesCreadas {
         items {
           id
-          createdAt
-          updatedAt
-          owner
           status
           evaluadorID
           usuarioID
           mensaje
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -693,20 +676,21 @@ export const getUsuario = /* GraphQL */ `
       Comentarios {
         items {
           id
-          createdAt
-          updatedAt
           usuarioCalificadoID
           body
           calificacion
           creatorID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -722,8 +706,6 @@ export const listUsuarios = /* GraphQL */ `
     listUsuarios(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         guia
         calificacion
@@ -749,7 +731,6 @@ export const listUsuarios = /* GraphQL */ `
         capacidadMaxima
         comentariosAdicionales
         notificationToken
-        owner
         newMessages
         AventurasAutorizadas {
           nextToken
@@ -783,6 +764,8 @@ export const listUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -807,8 +790,6 @@ export const syncUsuarios = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         guia
         calificacion
@@ -834,7 +815,6 @@ export const syncUsuarios = /* GraphQL */ `
         capacidadMaxima
         comentariosAdicionales
         notificationToken
-        owner
         newMessages
         AventurasAutorizadas {
           nextToken
@@ -868,6 +848,8 @@ export const syncUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -881,38 +863,32 @@ export const getChatRoom = /* GraphQL */ `
   query GetChatRoom($id: ID!) {
     getChatRoom(id: $id) {
       id
-      createdAt
-      updatedAt
       name
       picture
       lastMessage {
         id
-        createdAt
-        updatedAt
         content
         usuarioID
         chatroomID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        chatRoomMensajesId
-        owner
       }
       fechaID
       guiaID
       Mensajes {
         items {
           id
-          createdAt
-          updatedAt
           content
           usuarioID
           chatroomID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          chatRoomMensajesId
-          owner
         }
         nextToken
         startedAt
@@ -920,18 +896,20 @@ export const getChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
-          usuarioID
-          chatRoomID
+          chatRoomParticipantesId
+          usuarioChatRoomsId
+          newMessages
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -948,22 +926,18 @@ export const listChatRooms = /* GraphQL */ `
     listChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         name
         picture
         lastMessage {
           id
-          createdAt
-          updatedAt
           content
           usuarioID
           chatroomID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          chatRoomMensajesId
-          owner
         }
         fechaID
         guiaID
@@ -975,6 +949,8 @@ export const listChatRooms = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1000,22 +976,18 @@ export const syncChatRooms = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         name
         picture
         lastMessage {
           id
-          createdAt
-          updatedAt
           content
           usuarioID
           chatroomID
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
-          chatRoomMensajesId
-          owner
         }
         fechaID
         guiaID
@@ -1027,6 +999,8 @@ export const syncChatRooms = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1041,16 +1015,14 @@ export const getMensaje = /* GraphQL */ `
   query GetMensaje($id: ID!) {
     getMensaje(id: $id) {
       id
-      createdAt
-      updatedAt
       content
       usuarioID
       chatroomID
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      chatRoomMensajesId
-      owner
     }
   }
 `;
@@ -1063,16 +1035,14 @@ export const listMensajes = /* GraphQL */ `
     listMensajes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         content
         usuarioID
         chatroomID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        chatRoomMensajesId
-        owner
       }
       nextToken
       startedAt
@@ -1094,16 +1064,14 @@ export const syncMensajes = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         content
         usuarioID
         chatroomID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        chatRoomMensajesId
-        owner
       }
       nextToken
       startedAt
@@ -1114,9 +1082,6 @@ export const getSolicitudGuia = /* GraphQL */ `
   query GetSolicitudGuia($id: ID!) {
     getSolicitudGuia(id: $id) {
       id
-      createdAt
-      updatedAt
-      owner
       status
       evaluadorID
       usuarioID
@@ -1131,11 +1096,12 @@ export const getSolicitudGuia = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
-          owner
         }
         nextToken
         startedAt
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -1151,9 +1117,6 @@ export const listSolicitudGuias = /* GraphQL */ `
     listSolicitudGuias(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
-        owner
         status
         evaluadorID
         usuarioID
@@ -1162,6 +1125,8 @@ export const listSolicitudGuias = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1186,9 +1151,6 @@ export const syncSolicitudGuias = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
-        owner
         status
         evaluadorID
         usuarioID
@@ -1197,6 +1159,8 @@ export const syncSolicitudGuias = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1210,8 +1174,6 @@ export const getNotificacion = /* GraphQL */ `
   query GetNotificacion($id: ID!) {
     getNotificacion(id: $id) {
       id
-      createdAt
-      updatedAt
       tipo
       titulo
       descripcion
@@ -1225,6 +1187,8 @@ export const getNotificacion = /* GraphQL */ `
       aventuraID
       guiaID
       solicitudGuiaID
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -1240,8 +1204,6 @@ export const listNotificacions = /* GraphQL */ `
     listNotificacions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         titulo
         descripcion
@@ -1255,6 +1217,8 @@ export const listNotificacions = /* GraphQL */ `
         aventuraID
         guiaID
         solicitudGuiaID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1279,8 +1243,6 @@ export const syncNotificacions = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         titulo
         descripcion
@@ -1294,6 +1256,8 @@ export const syncNotificacions = /* GraphQL */ `
         aventuraID
         guiaID
         solicitudGuiaID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1307,16 +1271,15 @@ export const getComentario = /* GraphQL */ `
   query GetComentario($id: ID!) {
     getComentario(id: $id) {
       id
-      createdAt
-      updatedAt
       usuarioCalificadoID
       body
       calificacion
       creatorID
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -1329,16 +1292,15 @@ export const listComentarios = /* GraphQL */ `
     listComentarios(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         usuarioCalificadoID
         body
         calificacion
         creatorID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -1360,16 +1322,15 @@ export const syncComentarios = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         usuarioCalificadoID
         body
         calificacion
         creatorID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -1380,8 +1341,6 @@ export const getPublicidad = /* GraphQL */ `
   query GetPublicidad($id: ID!) {
     getPublicidad(id: $id) {
       id
-      createdAt
-      updatedAt
       tipo
       titulo
       descripcion
@@ -1389,6 +1348,8 @@ export const getPublicidad = /* GraphQL */ `
       video
       linkAnuncio
       aventuraID
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
@@ -1404,8 +1365,6 @@ export const listPublicidads = /* GraphQL */ `
     listPublicidads(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         titulo
         descripcion
@@ -1413,6 +1372,8 @@ export const listPublicidads = /* GraphQL */ `
         video
         linkAnuncio
         aventuraID
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1437,8 +1398,6 @@ export const syncPublicidads = /* GraphQL */ `
     ) {
       items {
         id
-        createdAt
-        updatedAt
         tipo
         titulo
         descripcion
@@ -1446,6 +1405,271 @@ export const syncPublicidads = /* GraphQL */ `
         video
         linkAnuncio
         aventuraID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getChatRoomUsuarios = /* GraphQL */ `
+  query GetChatRoomUsuarios($id: ID!) {
+    getChatRoomUsuarios(id: $id) {
+      id
+      chatRoomParticipantesId
+      usuarioChatRoomsId
+      newMessages
+      chatroom {
+        id
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        chatRoomLastMessageId
+      }
+      usuario {
+        id
+        tipo
+        guia
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listChatRoomUsuarios = /* GraphQL */ `
+  query ListChatRoomUsuarios(
+    $filter: ModelChatRoomUsuariosFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatRoomUsuarios(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        chatRoomParticipantesId
+        usuarioChatRoomsId
+        newMessages
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        usuario {
+          id
+          tipo
+          guia
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncChatRoomUsuarios = /* GraphQL */ `
+  query SyncChatRoomUsuarios(
+    $filter: ModelChatRoomUsuariosFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncChatRoomUsuarios(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        chatRoomParticipantesId
+        usuarioChatRoomsId
+        newMessages
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        usuario {
+          id
+          tipo
+          guia
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1463,8 +1687,6 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
       solicitudGuiaID
       aventura {
         id
-        createdAt
-        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1485,7 +1707,6 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
-        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1498,15 +1719,14 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
       }
       solicitudGuia {
         id
-        createdAt
-        updatedAt
-        owner
         status
         evaluadorID
         usuarioID
@@ -1515,6 +1735,8 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1524,7 +1746,6 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -1545,8 +1766,6 @@ export const listAventuraSolicitudGuias = /* GraphQL */ `
         solicitudGuiaID
         aventura {
           id
-          createdAt
-          updatedAt
           titulo
           imagenFondoIdx
           imagenDetalle
@@ -1567,20 +1786,20 @@ export const listAventuraSolicitudGuias = /* GraphQL */ `
           materialDefault
           incluidoDefault
           usuarioID
-          owner
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
         }
         solicitudGuia {
           id
-          createdAt
-          updatedAt
-          owner
           status
           evaluadorID
           usuarioID
           mensaje
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -1590,7 +1809,6 @@ export const listAventuraSolicitudGuias = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -1616,8 +1834,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
         solicitudGuiaID
         aventura {
           id
-          createdAt
-          updatedAt
           titulo
           imagenFondoIdx
           imagenDetalle
@@ -1638,20 +1854,20 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           materialDefault
           incluidoDefault
           usuarioID
-          owner
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
         }
         solicitudGuia {
           id
-          createdAt
-          updatedAt
-          owner
           status
           evaluadorID
           usuarioID
           mensaje
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -1661,7 +1877,6 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -1676,8 +1891,6 @@ export const getAventuraUsuarios = /* GraphQL */ `
       usuarioID
       aventura {
         id
-        createdAt
-        updatedAt
         titulo
         imagenFondoIdx
         imagenDetalle
@@ -1698,7 +1911,6 @@ export const getAventuraUsuarios = /* GraphQL */ `
         materialDefault
         incluidoDefault
         usuarioID
-        owner
         SolicitudGuias {
           nextToken
           startedAt
@@ -1711,14 +1923,14 @@ export const getAventuraUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
       }
       usuario {
         id
-        createdAt
-        updatedAt
         tipo
         guia
         calificacion
@@ -1744,7 +1956,6 @@ export const getAventuraUsuarios = /* GraphQL */ `
         capacidadMaxima
         comentariosAdicionales
         notificationToken
-        owner
         newMessages
         AventurasAutorizadas {
           nextToken
@@ -1778,6 +1989,8 @@ export const getAventuraUsuarios = /* GraphQL */ `
           nextToken
           startedAt
         }
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
@@ -1787,7 +2000,6 @@ export const getAventuraUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -1808,8 +2020,6 @@ export const listAventuraUsuarios = /* GraphQL */ `
         usuarioID
         aventura {
           id
-          createdAt
-          updatedAt
           titulo
           imagenFondoIdx
           imagenDetalle
@@ -1830,15 +2040,14 @@ export const listAventuraUsuarios = /* GraphQL */ `
           materialDefault
           incluidoDefault
           usuarioID
-          owner
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
         }
         usuario {
           id
-          createdAt
-          updatedAt
           tipo
           guia
           calificacion
@@ -1864,8 +2073,9 @@ export const listAventuraUsuarios = /* GraphQL */ `
           capacidadMaxima
           comentariosAdicionales
           notificationToken
-          owner
           newMessages
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -1875,7 +2085,6 @@ export const listAventuraUsuarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -1901,8 +2110,6 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         usuarioID
         aventura {
           id
-          createdAt
-          updatedAt
           titulo
           imagenFondoIdx
           imagenDetalle
@@ -1923,15 +2130,14 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           materialDefault
           incluidoDefault
           usuarioID
-          owner
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
         }
         usuario {
           id
-          createdAt
-          updatedAt
           tipo
           guia
           calificacion
@@ -1957,8 +2163,9 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           capacidadMaxima
           comentariosAdicionales
           notificationToken
-          owner
           newMessages
+          createdAt
+          updatedAt
           _version
           _deleted
           _lastChangedAt
@@ -1968,275 +2175,6 @@ export const syncAventuraUsuarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const getChatRoomUsuarios = /* GraphQL */ `
-  query GetChatRoomUsuarios($id: ID!) {
-    getChatRoomUsuarios(id: $id) {
-      id
-      usuarioID
-      chatRoomID
-      usuario {
-        id
-        createdAt
-        updatedAt
-        tipo
-        guia
-        calificacion
-        numResenas
-        nombre
-        apellido
-        foto
-        imagenFondo
-        nickname
-        experience
-        stripeID
-        admin
-        selfie
-        ID
-        certificaciones
-        telefono
-        sitioWeb
-        CuentaBancaria
-        fechaNacimiento
-        direccion
-        rfcIndividual
-        rfcCompania
-        capacidadMaxima
-        comentariosAdicionales
-        notificationToken
-        owner
-        newMessages
-        AventurasAutorizadas {
-          nextToken
-          startedAt
-        }
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        ChatRooms {
-          nextToken
-          startedAt
-        }
-        Reservas {
-          nextToken
-          startedAt
-        }
-        Fechas {
-          nextToken
-          startedAt
-        }
-        Notificaciones {
-          nextToken
-          startedAt
-        }
-        SolicitudesCreadas {
-          nextToken
-          startedAt
-        }
-        Comentarios {
-          nextToken
-          startedAt
-        }
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      chatRoom {
-        id
-        createdAt
-        updatedAt
-        name
-        picture
-        lastMessage {
-          id
-          createdAt
-          updatedAt
-          content
-          usuarioID
-          chatroomID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomMensajesId
-          owner
-        }
-        fechaID
-        guiaID
-        Mensajes {
-          nextToken
-          startedAt
-        }
-        Participantes {
-          nextToken
-          startedAt
-        }
-        _version
-        _deleted
-        _lastChangedAt
-        chatRoomLastMessageId
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-  }
-`;
-export const listChatRoomUsuarios = /* GraphQL */ `
-  query ListChatRoomUsuarios(
-    $filter: ModelChatRoomUsuariosFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listChatRoomUsuarios(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        usuarioID
-        chatRoomID
-        usuario {
-          id
-          createdAt
-          updatedAt
-          tipo
-          guia
-          calificacion
-          numResenas
-          nombre
-          apellido
-          foto
-          imagenFondo
-          nickname
-          experience
-          stripeID
-          admin
-          selfie
-          ID
-          certificaciones
-          telefono
-          sitioWeb
-          CuentaBancaria
-          fechaNacimiento
-          direccion
-          rfcIndividual
-          rfcCompania
-          capacidadMaxima
-          comentariosAdicionales
-          notificationToken
-          owner
-          newMessages
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        chatRoom {
-          id
-          createdAt
-          updatedAt
-          name
-          picture
-          fechaID
-          guiaID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomLastMessageId
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncChatRoomUsuarios = /* GraphQL */ `
-  query SyncChatRoomUsuarios(
-    $filter: ModelChatRoomUsuariosFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncChatRoomUsuarios(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        usuarioID
-        chatRoomID
-        usuario {
-          id
-          createdAt
-          updatedAt
-          tipo
-          guia
-          calificacion
-          numResenas
-          nombre
-          apellido
-          foto
-          imagenFondo
-          nickname
-          experience
-          stripeID
-          admin
-          selfie
-          ID
-          certificaciones
-          telefono
-          sitioWeb
-          CuentaBancaria
-          fechaNacimiento
-          direccion
-          rfcIndividual
-          rfcCompania
-          capacidadMaxima
-          comentariosAdicionales
-          notificationToken
-          owner
-          newMessages
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        chatRoom {
-          id
-          createdAt
-          updatedAt
-          name
-          picture
-          fechaID
-          guiaID
-          _version
-          _deleted
-          _lastChangedAt
-          chatRoomLastMessageId
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
       }
       nextToken
       startedAt

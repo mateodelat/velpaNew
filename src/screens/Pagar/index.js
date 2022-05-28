@@ -14,7 +14,7 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { colorFondo, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
+import { AsyncAlert, colorFondo, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
 import {
@@ -26,7 +26,7 @@ import API from '@aws-amplify/api';
 import ElementoPersonas from './components/ElementoPersonas';
 import { createPaymentIntent } from '../../graphql/mutations';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoom, ChatRoomUsuario, Notificacion, Reserva, TipoNotificacion } from '../../models';
+import { ChatRoom, ChatRoomUsuarios, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
 
@@ -51,6 +51,9 @@ export default function ({ route, navigation }) {
         fechaFinal,
         fechaInicial,
         descripcion,
+
+        efectivo,
+
         imagenFondo,
         calificacionGuia,
         stripeID,
@@ -459,6 +462,12 @@ export default function ({ route, navigation }) {
                             return
                         }
                     }
+                    // else {
+                    //     setButtonLoading(false)
+                    //     await AsyncAlert("Atencion", `Pagaras ${precioTotal}$ en efectivo el dia de la aventura`)
+                    //         .then(() => setButtonLoading(true))
+
+                    // }
 
                     const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
 
@@ -472,11 +481,11 @@ export default function ({ route, navigation }) {
                     const usuario = await DataStore.query(Usuario, sub)
 
 
-                    // Verificar que el usuario no este agregado ya al chatRoom
-                    const relacion = (await DataStore.query(ChatRoomUsuario)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
+                    // Verificar que el usuario no este agregado ya al chatroom
+                    const relacion = (await DataStore.query(ChatRoomUsuarios)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
                     if (!relacion) {
                         // Si no esta el usuario se agrega
-                        DataStore.save(new ChatRoomUsuario({
+                        DataStore.save(new ChatRoomUsuarios({
                             usuario,
                             chatroom
                         }))
@@ -539,7 +548,6 @@ export default function ({ route, navigation }) {
                         showAt: new Date().getTime(),
 
                         // Autorizar al guia a ver la misma
-                        owner: fecha?.owner,
                         usuarioID: fecha?.usuarioID,
 
                         fechaID: fecha?.id,
@@ -571,8 +579,11 @@ export default function ({ route, navigation }) {
                     setButtonLoading(false)
                 }
             } catch (error) {
+                if (error !== "Cancelada") {
+                    Alert.alert("Error", "Error creando la reservacion")
+                    console.log(error)
+                }
                 setButtonLoading(false)
-                console.log(error)
             }
         }
 
@@ -728,7 +739,7 @@ export default function ({ route, navigation }) {
                         marginHorizontal: 30,
                     }} />
 
-                    <Pressable
+                    {efectivo && <Pressable
                         onPress={() => {
                             setTipoPago("EFECTIVO")
                         }}
@@ -743,7 +754,7 @@ export default function ({ route, navigation }) {
                         <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
                             {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
                         </View>
-                    </Pressable>
+                    </Pressable>}
 
                 </View>
                 <View style={{ height: 40, }} />

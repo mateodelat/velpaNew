@@ -91,6 +91,7 @@ export default ({ navigation }) => {
         publicidades
             .map(async (e, idx) => {
                 if (e.selected) {
+                    console.log(e.id)
                     // Borrar las selecionadas
                     nPublicidades.splice(idx - itemsDeleted, 1)
                     itemsDeleted += 1
