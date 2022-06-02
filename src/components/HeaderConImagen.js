@@ -60,26 +60,6 @@ export default ({
                     width: '100%',
                 }} />
 
-                {/* Controles*/}
-                <View style={{
-                    justifyContent: 'space-between',
-                    padding: 20,
-                    paddingTop: insets.top + 20,
-                    flexDirection: 'row',
-                }}>
-                    <MaterialIcons
-                        onPress={() => navigation.pop()}
-                        name={"keyboard-arrow-left"}
-                        size={32}
-                        color={"#fff"}
-                    />
-
-                    {showFilter && <AntDesign
-                        onPress={() => Alert.alert("Mostrar filtros", "Filtros por rango fecha, personas, duracion, precio")}
-                        name="filter"
-                        size={30}
-                        color="white" />}
-                </View>
                 <View style={{
                     position: 'absolute',
                     bottom: 20,
@@ -89,7 +69,7 @@ export default ({
                     <Animated.View
                         style={{
                             width: tituloIzquierda,
-                            maxWidth: 75
+                            maxWidth: 75,
                         }}
                     />
                     <Animated.Text
@@ -102,6 +82,36 @@ export default ({
                         }}>{titulo}</Animated.Text>
 
                 </View>
+
+
+                {/* Controles*/}
+                <View style={{
+                    justifyContent: 'space-between',
+                    padding: 20,
+                    paddingTop: insets.top + 20,
+                    flexDirection: 'row',
+                }}>
+                    <MaterialIcons
+                        onPress={() => navigation.pop()}
+                        name={"keyboard-arrow-left"}
+                        size={32}
+                        color={"#fff"}
+                        style={{
+                            // backgroundColor: 'red',
+                            position: 'absolute',
+                            left: 10,
+                            top: 10,
+                            padding: 10,
+                        }}
+                    />
+
+                    {showFilter && <AntDesign
+                        onPress={() => Alert.alert("Mostrar filtros", "Filtros por rango fecha, personas, duracion, precio")}
+                        name="filter"
+                        size={30}
+                        color="white" />}
+                </View>
+
 
             </ImageBackground>
         </Animated.View>

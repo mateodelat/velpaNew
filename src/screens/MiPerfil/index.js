@@ -1,7 +1,7 @@
 import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView, RefreshControl } from 'react-native'
 import { colorFondo, getImageUrl, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
@@ -42,7 +42,8 @@ export default ({ route, navigation }) => {
     const [guia, setGuia] = useState(false);
     const [admin, setAdmin] = useState(false);
 
-    const [buttonLoading, setButtonLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -154,6 +155,16 @@ export default ({ route, navigation }) => {
         setModalVisible(true)
     }
 
+    function onRefresh() {
+
+        setRefreshing(true)
+        setCurrentUserData()
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 300);
+
+    }
+
     return (
         <SafeAreaView style={{
             flex: 1,
@@ -164,6 +175,11 @@ export default ({ route, navigation }) => {
                 key={route.params ? route.params.key : 12}
                 style={styles.container}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />}
 
             >
 

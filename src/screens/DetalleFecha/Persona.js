@@ -30,7 +30,7 @@ export default function ({ onPress, usuario }) {
             </View>
 
             <View style={{ alignItems: 'flex-start', flex: 1, marginLeft: 15, }}>
-                {usuario.nombre || usuario.apellido && <Text numberOfLines={1} style={{ fontSize: 16, }}>{usuario?.nombre} {usuario?.apellido}</Text>}
+                {(usuario.nombre || usuario.apellido) && <Text numberOfLines={1} style={{ fontSize: 16, }}>{usuario?.nombre} {usuario?.apellido}</Text>}
                 <Text numberOfLines={1} style={styles.nickname}>@{usuario?.nickname}</Text>
             </View>
 
@@ -40,7 +40,7 @@ export default function ({ onPress, usuario }) {
             />}
 
 
-        </Pressable>
+        </Pressable >
     )
 }
 

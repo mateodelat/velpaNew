@@ -102,11 +102,10 @@ export default ({ route, navigation }) => {
             .then(async r => {
 
                 r = await Promise.all(r.map(async fecha => {
-                    console.log(fecha.Reservas)
                     let personasReservadas = []
                     let totalPersonasReservadas = 0
                     // Obtener todas las reservaciones en la fecha
-                    const reservaciones = fecha.Reservas ? fecha.Reservas : []
+                    const reservaciones = await DataStore.query(Reserva, res => res.fechaID("eq", fecha.id))
 
                     // Primero mapear todas las reservaciones y sacar las que esten llenas
                     reservaciones.map(res => {
@@ -185,16 +184,18 @@ export default ({ route, navigation }) => {
                 )}
                 refreshControl={
                     <RefreshControl
+                        tintColor="transparent"
+                        colors={['transparent']}
+
                         style={{
-                            position: 'absolute',
-                            elevation: 20
+                            backgroundColor: 'transparent',
                         }}
                         refreshing={refreshing}
                         onRefresh={onRefresh}
                     />
                 }
-
                 showsVerticalScrollIndicator={false}
+
                 style={{
                     padding: 20,
                 }}>

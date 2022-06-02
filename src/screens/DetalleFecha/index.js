@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
+    ActivityIndicator,
     Alert,
     Animated,
     Dimensions,
@@ -12,12 +13,14 @@ import {
 } from 'react-native'
 
 
-import { formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
+import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear, shadowMarcada } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 import { Entypo } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import Line from '../../components/Line';
 
@@ -31,8 +34,12 @@ import MapView, { Marker } from 'react-native-maps';
 
 import { Fecha } from '../../models';
 import DetalleReserva from './DetalleReserva';
-import QRIcon from './components/QRIcon';
+
 import QRScan from '../QRScan';
+import Calendario, { calculateMarkedDays } from './components/Calendario';
+import ModalMap from '../../components/ModalMap';
+import HourEditor from './components/HourEditor';
+import Header from '../../components/header';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -57,7 +64,6 @@ export const getUsuario = /* GraphQL */ `
 
 
 
-
 let { width, height } = Dimensions.get("screen")
 
 
@@ -69,23 +75,53 @@ export default ({ navigation, route }) => {
     const { fecha: fechaGotten, fechaID } =
         route.params
 
+
+
     const [fecha, setFecha] = useState(null);
+    // Fecha original para comparaciones de cambio al final
+    const [originalDate, setOriginalDate] = useState(null);
+
 
     // Tipo modal reserva/ itinerario
     const [tipoModal, setTipoModal] = useState("reserva");
+
+    const [editing, setEditing] = useState(false);
+
+    // Variables para animaciones (Carrousel fotos y header transparencia)
+    const scrollY = useRef(new Animated.Value(0)).current
+
+    const [modalVisible, setModalVisible] = useState(false);
+
     // Reserva seleccionada
     const [actualReservation, setActualReservation] = useState({});
+
+    // Dias seleccionados
+    const [markedDays, setMarkedDays] = useState({});
+
+    const [loading, setLoading] = useState(false);
+
+
+
 
     // Detectar si se manda directamente la fecha de la ruta, si no obtenerla
     useEffect(() => {
         if (fechaGotten) {
             setFecha(fechaGotten)
+            setOriginalDate(fechaGotten)
+
         } else {
             getFecha()
         }
+
+
     }, []);
+
+
+
+
     async function getFecha() {
         if (!fechaID) return
+
 
         const fecha = await DataStore.query(Fecha, fechaID)
 
@@ -115,7 +151,7 @@ export default ({ navigation, route }) => {
         })
 
 
-        setFecha({
+        const f = {
             // Obtener reservas y personas reservadas en la fecha
             ...fecha,
             reservas,
@@ -125,25 +161,24 @@ export default ({ navigation, route }) => {
             precioAcomulado,
             precioAcomuladoSinComision,
 
-            imagenFondo: await getImageUrl(fecha.imagenFondo),
+            // imagenFondo: await getImageUrl(fecha.imagenFondo),
             material: JSON.parse(fecha.material),
             incluido: [...(JSON.parse(fecha.incluido)).default.map(e => e),
             ...(JSON.parse(fecha.incluido)).agregado.map(e => e)
             ],
             pasada: fecha.fechaInicial < now
 
-        })
+        }
+        setOriginalDate(f)
+        setFecha(f)
 
     }
 
-    // Variables para animaciones (Carrousel fotos y header transparencia)
-    const scrollY = useRef(new Animated.Value(0)).current
-
-    const [modalVisible, setModalVisible] = useState(false);
 
     if (!fecha) {
         return <Loading />
     }
+
 
     // Estado del material a llevar ya empacado
     const itinerario = JSON.parse(fecha.itinerario)
@@ -173,6 +208,17 @@ export default ({ navigation, route }) => {
 
     }
 
+    function clearData() {
+        const {
+            fechaInicial,
+            fechaFinal
+        } = originalDate
+
+        setMarkedDays(calculateMarkedDays(fechaInicial, fechaFinal, true))
+        setFecha(originalDate)
+
+    }
+
     function handleOpenItinerario() {
         setModalVisible(true)
         setTipoModal("itinerario")
@@ -189,6 +235,14 @@ export default ({ navigation, route }) => {
         setTipoModal("reserva")
         setActualReservation(r)
     }
+
+    async function cancelarFecha() {
+        Alert.alert("Cancelar fecha", "Cancelar una fecha tiene un costo de 20 pesos mas 10 por persona ya reservada ademas de una calificacion por parte de los usuarios reservados")
+
+    }
+
+
+
 
     async function codigoEscaneado(scanedID) {
 
@@ -257,10 +311,80 @@ export default ({ navigation, route }) => {
 
     }
 
+    async function handleSave() {
+        const {
+            fechaInicial,
+            fechaFinal,
+            id
+        } = fecha
+
+        // Si no hay fecha final devolver error
+        if (!fechaFinal) {
+            Alert.alert("Error", "Agrega la hora final")
+            return
+        }
+
+        const {
+            fechaInicial: fechaInicialOrig,
+            fechaFinal: fechaFinalOrig
+        } = originalDate
+
+        // Si no hubo cambios se devuelve
+        if (fechaInicial === fechaInicialOrig && fechaFinalOrig === fechaFinal) {
+            setEditing(!editing)
+            return
+        }
+
+        setLoading(true)
+        // Primero ver si hay usuarios reservados en la fecha que no hayan cancelado
+        const reservas = await DataStore.query(Reserva, r => r
+            .fechaID("eq", id)
+        )
+
+        function continuar() {
+            setLoading(false)
+            setEditing(!editing)
+            Alert.alert("Exito", "Fecha actualizada con exito!!")
+            // Guardar la fecha y modificar las notificaciones a usuarios
+            // DataStore.save(Fecha)
+
+
+            setOriginalDate({ ...fecha })
+
+        }
+
+        // Revisar si se cambio la fecha inicial y final y si hay reservas en la fecha
+        if ((fechaInicial !== fechaInicialOrig || fechaFinal !== fechaFinalOrig) && reservas.length !== 0) {
+            Alert.alert("Atencion", "Al cambiar la fecha inicial o final y tener usuarios reservados, se le permite cancelar sin costo y ademas una calificacion a tu perfil\n¿Quieres continuar?", [
+                {
+                    text: "cancel",
+                    onPress: () => {
+                        clearData()
+                        setLoading(false)
+                        setEditing(false)
+                    }
+                },
+                {
+                    text: "ok",
+                    onPress: continuar
+                },
+            ])
+        }
+
+        // Si no hubo cambios se deja de editar sin guardar datos
+        else {
+            setEditing(!editing)
+            setLoading(false)
+        }
+
+    }
+
+
 
     return (
         <View style={{
             flex: 1,
+            backgroundColor: '#fff',
         }}>
             <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
@@ -319,6 +443,29 @@ export default ({ navigation, route }) => {
 
                     <Line />
 
+                    <Calendario
+                        editDisabled={!editing}
+                        fechaID={fecha.id}
+
+                        fecha={fecha}
+                        setFecha={setFecha}
+
+                        setMarkedDays={setMarkedDays}
+                        markedDays={markedDays}
+                    />
+
+                    <View style={{
+                        marginTop: 20,
+                    }}>
+                        <HourEditor
+                            fecha={fecha}
+                            setFecha={setFecha}
+
+                            enabled={!editing}
+                        />
+
+                    </View>
+                    <Line />
 
                     {/* Personas reservadas en la fecha */}
                     {fecha.personasReservadas.length !== 0 ? <View >
@@ -330,20 +477,21 @@ export default ({ navigation, route }) => {
                             marginBottom: 10,
                         }}>
                             <Text style={{
+                                fontWeight: 'bold',
                                 marginLeft: 10,
                                 flex: 1,
                                 fontSize: 16,
                                 color: '#000',
-                            }}>{fecha.personasReservadasNum}/{fecha.personasTotales} personas reservadas:</Text>
+                            }}>{fecha.personasReservadasNum}/{fecha.personasTotales} personas reservadas</Text>
 
-                            <Ionicons
+                            {!editing && <Ionicons
                                 onPress={navigateChat}
-                                style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" />
+                                style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" />}
 
                         </View>
 
                         {/* Imagenes personas y chat */}
-                        <View style={{ marginBottom: 50, marginTop: 10, }}>
+                        {!editing && <View style={{ marginBottom: 20, marginTop: 10, }}>
                             {fecha.personasReservadas.map((persona, i) => {
                                 return <Pressable
                                     onPress={() =>
@@ -402,7 +550,7 @@ export default ({ navigation, route }) => {
 
                             })}
 
-                        </View>
+                        </View>}
                     </View>
                         :
                         <Text style={{
@@ -415,26 +563,6 @@ export default ({ navigation, route }) => {
                     }
 
 
-                    {formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).mismoDia ?
-                        <View style={{ ...styles.fechaContainer, marginBottom: 30, }}>
-                            <MaterialCommunityIcons style={{ position: 'absolute', left: 0, }} name="calendar-today" size={24} color={moradoOscuro} />
-                            <Text style={{ ...styles.fechaTxt, flex: 1, textAlign: 'center', }}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txt}</Text>
-                        </View>
-                        :
-                        <View style={{ marginBottom: 10, }}>
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Inicio: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtInicial}</Text>
-                            </View>
-
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Fin: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtFinal}</Text>
-                            </View>
-                        </View>}
-
-
-
                     <Line />
 
 
@@ -442,11 +570,28 @@ export default ({ navigation, route }) => {
                     <View style={{ height: 300, width: '100%', marginBottom: 40, }}>
 
                         <MapView
+                            onPress={() => {
+                                setModalVisible(true)
+                                setTipoModal("map")
+                            }}
+
+                            onMarkerPress={() => {
+                                setModalVisible(true)
+                                setTipoModal("map")
+                            }}
+
+
                             provider={"google"}
                             mapType={"standard"}
 
                             showsUserLocation={true}
                             loadingEnabled={true}
+
+                            pitchEnabled={false}
+                            rotateEnabled={false}
+                            zoomEnabled={false}
+                            scrollEnabled={false}
+
 
                             loadingBackgroundColor={"#fff"}
                             initialRegion={region}
@@ -560,6 +705,8 @@ export default ({ navigation, route }) => {
                     }
                 </View>
 
+
+
             </Animated.ScrollView >
 
 
@@ -568,7 +715,62 @@ export default ({ navigation, route }) => {
                 height={height * 0.5}
                 titulo={fecha.tituloAventura}
 
-                IconRight={() => <QRIcon handleQR={handleQR} />
+                IconLeft={({ style }) => <Pressable style={style}
+                    onPress={() => {
+                        if (editing) {
+                            clearData()
+                            setEditing(false)
+                        }
+                        else navigation.pop()
+
+                    }}>
+                    {editing ?
+                        <Feather
+                            name={"x"}
+                            size={30}
+                            color={moradoOscuro}
+                        />
+
+                        : <MaterialIcons
+                            name={"keyboard-arrow-left"}
+                            size={35}
+                            color={moradoOscuro}
+                        />
+
+                    }
+                </Pressable>}
+
+                IconRight={() => <Pressable
+                    onPress={() => {
+                        if (loading) {
+                            return
+                        }
+                        // Si se estaba editando se guarda
+                        if (editing) {
+                            handleSave()
+                        } else {
+                            setEditing(!editing)
+
+                        }
+                    }}
+                    style={{
+                        height: 43,
+                        width: 43,
+                        alignItems: 'center', justifyContent: 'center',
+
+                        borderRadius: 25,
+
+                        backgroundColor: '#fff',
+                    }}>
+                    {loading ?
+                        <ActivityIndicator size={"small"}
+                            color={moradoOscuro}
+                        />
+                        : editing ?
+                            <Feather name="check" size={25} color={moradoOscuro} />
+                            : <Feather name="edit-2" size={20} color={moradoOscuro} />
+                    }
+                </Pressable>
                 }
             />
 
@@ -591,27 +793,60 @@ export default ({ navigation, route }) => {
 
 
                     /> :
-                    <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(false);
-                        }}
-                    >{
-                            tipoModal === "escaner" ?
-                                <QRScan
-                                    cerrar={() => setModalVisible(false)}
-                                    handleScanned={codigoEscaneado} />
-                                : <DetalleReserva
-                                    handleBack={() => setModalVisible(false)}
-                                    reserva={actualReservation}
-                                />
-                        }
 
-                    </Modal>
+                    tipoModal === "map" ?
+                        <ModalMap
+                            modalVisible={modalVisible}
+                            setModalVisible={setModalVisible}
+
+                            selectedPlace={{
+                                latitude: JSON.parse(fecha?.puntoReunionCoords).latitude,
+                                longitude: JSON.parse(fecha?.puntoReunionCoords).longitude,
+                                titulo: fecha?.puntoReunionNombre,
+                            }}
+
+                        /> :
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                setModalVisible(false);
+                            }}
+                        >{
+                                tipoModal === "escaner" ?
+                                    <QRScan
+                                        cerrar={() => setModalVisible(false)}
+                                        handleScanned={codigoEscaneado} />
+                                    : <DetalleReserva
+                                        handleBack={() => setModalVisible(false)}
+                                        reserva={actualReservation}
+                                    />
+                            }
+
+                        </Modal>
 
             }
+
+
+
+
+            {/* Escanear codigo */}
+            <Pressable
+                onPress={editing ? cancelarFecha : handleQR}
+                style={{
+                    width: '100%',
+                    backgroundColor: colorFondo,
+                    borderTopRightRadius: 20,
+                    borderTopLeftRadius: 20,
+                    padding: 20,
+                }}>
+
+                <Text style={{
+                    ...styles.textCancel,
+                    color: editing ? "red" : moradoOscuro
+                }}>{editing ? "Cancelar fecha" : "Registrar entrada"}</Text>
+            </Pressable>
         </View >
     )
 }
@@ -762,5 +997,13 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: 10,
 
+    },
+
+    textCancel: {
+        color: moradoOscuro,
+        textAlign: 'center',
+        fontWeight: 'bold',
+
+        fontSize: 18,
     }
 })

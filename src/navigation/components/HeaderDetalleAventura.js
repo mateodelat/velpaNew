@@ -4,14 +4,13 @@ import { moradoClaro, moradoOscuro } from '../../../assets/constants'
 
 
 import { MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
-export default ({ scrollY, height, titulo, modalActive, handleBack, IconRight }) => {
+export default ({ scrollY, height, titulo, modalActive, handleBack, IconRight, IconLeft }) => {
     const navigation = useNavigation()
 
     const inputRange = [
@@ -70,15 +69,19 @@ export default ({ scrollY, height, titulo, modalActive, handleBack, IconRight })
 
 
 
-                <Pressable
-                    onPress={handleBack ? handleBack : () => navigation.pop()}
-                    style={styles.backContainer}>
-                    <MaterialIcons
-                        name={"keyboard-arrow-left"}
-                        size={35}
-                        color={moradoOscuro}
-                    />
-                </Pressable>
+                {IconLeft ? <IconLeft style={styles.backContainer} />
+                    :
+
+                    <Pressable
+                        onPress={handleBack ? handleBack : () => navigation.pop()}
+                        style={styles.backContainer}>
+                        <MaterialIcons
+                            name={"keyboard-arrow-left"}
+                            size={35}
+                            color={moradoOscuro}
+                        />
+                    </Pressable>
+                }
 
                 {IconRight && <IconRight style={styles.backContainer} />}
 
@@ -104,9 +107,12 @@ const styles = StyleSheet.create({
 
     backContainer: {
         alignSelf: 'flex-start',
-        padding: 4,
+
+        alignItems: 'center', justifyContent: 'center',
+        width: 43,
+        height: 43,
         backgroundColor: '#fff',
-        borderRadius: 20,
+        borderRadius: 22,
     },
 
     title: {

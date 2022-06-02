@@ -12,6 +12,7 @@ import { Loading } from '../../../components/Loading';
 import { colorFondo, getImageUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants';
 import { useNavigation } from '@react-navigation/native';
 import SelectorInput from '../../../components/SelectorInput';
+import Elemento from '../../MiPerfil/components/Elemento';
 
 export default () => {
     const navigation = useNavigation()
@@ -120,6 +121,10 @@ export default () => {
         setLoadingAdmin(false)
         setUsuarios(newUsuarios)
 
+    }
+
+    function verSaldo(id) {
+        navigation.navigate("Saldo", id)
     }
 
     function onRefresh() {
@@ -297,12 +302,24 @@ export default () => {
                                         />}
 
 
+                                        {e.guia && <Elemento
+                                            texto={"Saldo"}
+                                            onPress={() => verSaldo(e.id)}
+                                            icono={<MaterialIcons
+                                                style={{ left: -2, }}
+                                                name="account-balance-wallet"
+                                                size={30}
+                                                color="black"
+                                            />
+                                            }
+                                        />}
+
                                         <Text
                                             onPress={() => navigation.navigate("PerfilScreen", {
                                                 user: e,
                                             })}
                                             style={{
-                                                fontSize: 16,
+                                                fontSize: 18,
                                                 width: '100%',
                                                 textAlign: 'center',
                                                 color: moradoOscuro,

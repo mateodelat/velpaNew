@@ -36,12 +36,14 @@ import DetalleReserva from '../screens/DetalleReserva';
 import DetalleFecha from '../screens/DetalleFecha';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../models';
-import { getUserSub, moradoOscuro } from '../../assets/constants';
+import { getUserSub, moradoOscuro, msInDay, msInHour } from '../../assets/constants';
 
 import * as Notifications from 'expo-notifications';
-import { Button, View } from 'react-native';
+import { Alert, Button, Pressable, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QRCode from '../screens/QRScan/QRCode';
+import { Fecha } from '../models';
+import { Reserva } from '../models';
 
 
 
@@ -102,11 +104,105 @@ export default () => {
         return token;
     }
 
+    function haCambiado(timeShown, initialDate, trigger, createdAt) {
+        const remainingFor1Week = Math.round((initialDate - msInDay * 7 - createdAt) / 1000)
+        const remainingFor1Day = Math.round((initialDate - msInDay - createdAt) / 1000)
+        const remainingFor1Hour = Math.round((initialDate - msInHour - createdAt) / 1000)
+
+        const tiempo = timeShown === "1S" ? remainingFor1Week : timeShown === "1D" ? remainingFor1Day : timeShown === "1H" ? remainingFor1Hour : false
+
+        return trigger !== tiempo
+    }
+
+    function haCambiadoFinal(finalDate, trigger, createdAt) {
+        finalDate = new Date(finalDate)
+        if (finalDate.getUTCHours() >= 8) {
+            finalDate = new Date(finalDate.getTime() + msInDay)
+        }
+        finalDate.setUTCHours(8)
+
+
+        const remainingForNextDay = Math.round((finalDate - createdAt) / 1000)
+
+        return trigger !== remainingForNextDay
+    }
+
+    // Cancelar notificaciones invalidas por cancelacion de fecha o
+    // movimiento de fecha
+    async function cancelInvalidNotifications() {
+
+        const i = new Date()
+        const notifications = await Notifications.getAllScheduledNotificationsAsync()
+
+        // Pedir todas las fechas futuras que no han sido canceladas
+        const fechas = await DataStore.query(Fecha, fe => {
+            fe.fechaInicial("gt", new Date())
+            // fe.canceled("eq", true)
+        })
+
+        // Pedir las reservas que no han sido canceladas
+        const reservas = await DataStore.query(Reserva, res => {
+            // res.canceled("ne", true)
+        })
+
+
+        notifications.map(n => {
+            const data = n?.content?.data
+            const id = n.identifier
+
+            const {
+                tipo,
+                fechaID,
+                reservaID,
+
+
+                createdAt,
+                timeShown
+            } = data
+
+            if (!data || !tipo || !fechaID) {
+                console.log("Error raro, la notificacion no tiene tipo")
+                return
+            }
+
+
+
+            // Metodo para detectar si hubo cambios en la fecha o si fue elmininada
+            const fe = fechas.find(f => f.id === fechaID)
+            if (fe) {
+
+                if (tipo === "CALIFICAUSUARIO") {
+                    const cambio = haCambiadoFinal(fe.fechaFinal, n.trigger.seconds, createdAt * 1000)
+                    if (cambio) {
+                        console.log("Ha cambiado la fecha final asociada con la notificacion en cel, arreglar")
+                    } else {
+                    }
+                }
+                else if (tipo === "RECORDATORIOGUIA" || tipo === "RECORDATORIOCLIENTE") {
+                    if (fe) {
+                        // Detectar si el tiempo programado para mostrarlo es el correcto
+                        let cambio = haCambiado(timeShown, fe.fechaInicial, n.trigger.seconds, createdAt * 1000)
+                        if (cambio) {
+                            console.log("Ha cambiado la fecha inicial asociada con la notificacion en cel, arreglar")
+                        } else {
+                        }
+                    }
+                } else {
+                    // Si no esta la fecha asociada, eliminar notificacion
+                    console.log("Cancelar notificacion", n, "\nno existe la fecha o fue cancelada")
+                    // Notifications.cancelScheduledNotificationAsync(id)
+                }
+            }
+        })
+
+    }
 
 
     useEffect(() => {
         // Subir token de notificaciones para el usuario
         registerForPushNotificationsAsync()
+
+        cancelInvalidNotifications()
 
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -129,10 +225,19 @@ export default () => {
                 <NavigationContainer>
 
                     <Stack.Navigator
-                        // initialRouteName={"Admin"}
+                        initialRouteName={"MisFechas"}
 
                         screenOptions={{
-                            headerLeft: ({ onPress }) => <MaterialIcons name="keyboard-arrow-left" size={35} color="white" onPress={onPress} />,
+                            headerLeft: ({ onPress }) => {
+                                return <Pressable
+                                    onPress={onPress}
+                                    style={{
+                                        paddingHorizontal: 16,
+                                    }}>
+                                    <MaterialIcons name="keyboard-arrow-left" size={35} color="white" />
+
+                                </Pressable>
+                            },
                             headerTintColor: "white",
                             headerStyle: { backgroundColor: moradoOscuro, },
                             headerTitleAlign: "center"
@@ -357,6 +462,9 @@ export default () => {
                         <Stack.Screen
                             name="Saldo"
                             component={Saldo}
+                            options={{
+                                headerShown: false
+                            }}
                         />
 
 

@@ -12,14 +12,14 @@ import { vibrar } from '../../../../assets/constants/constant';
 
 
 // Personalizar idiomas
-LocaleConfig.locales['es'] = {
-    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-    monthNamesShort: ['Ene.', 'Feb.', 'Mar', 'Abr', 'May', 'Jun', 'Jul.', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-    dayNamesShort: ['Dom.', 'Lun.', 'Mar.', 'Mie.', 'Jue.', 'Vie.', 'Sab.'],
-    today: 'Hoy'
+LocaleConfig.locales["es"] = {
+    monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    monthNamesShort: ["Ene.", "Feb.", "Mar", "Abr", "May", "Jun", "Jul.", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    dayNames: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+    dayNamesShort: ["Dom.", "Lun.", "Mar.", "Mie.", "Jue.", "Vie.", "Sab."],
+    today: "Hoy"
 };
-LocaleConfig.defaultLocale = 'es';
+LocaleConfig.defaultLocale = "es";
 
 
 export default ({
@@ -41,7 +41,10 @@ export default ({
 
     const pedirFechasDelGuia = async () => {
         const sub = await getUserSub()
-        DataStore.query(Fecha, e => e.usuarioID("eq", sub))
+        DataStore.query(Fecha, e => e
+            .usuarioID("eq", sub)
+            .fechaInicial("gt", new Date().getTime())
+        )
             .then(r => {
                 let diasMarcados = {}
 

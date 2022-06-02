@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
+import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -488,6 +488,19 @@ export default ({ navigation, route }) => {
 
             </Animated.ScrollView >
 
+            {/* Escanear codigo */}
+            <Pressable
+                onPress={handleQR}
+                style={{
+                    width: '100%',
+                    backgroundColor: colorFondo,
+                    borderTopRightRadius: 20,
+                    borderTopLeftRadius: 20,
+                    padding: 20,
+                }}>
+
+                <Text style={styles.textCancel}>Codigo de acceso</Text>
+            </Pressable>
 
             <HeaderDetalleAventura
                 scrollY={scrollY}
@@ -700,5 +713,14 @@ const styles = StyleSheet.create({
     checkIcon: {
         borderRadius: 100,
         borderWidth: .5,
+    },
+
+    textCancel: {
+        color: moradoOscuro,
+        textAlign: 'center',
+        fontWeight: 'bold',
+
+        fontSize: 18,
     }
+
 })

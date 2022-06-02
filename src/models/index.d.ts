@@ -58,6 +58,7 @@ export enum TipoPublicidad {
 export declare class PaymentIntent {
   readonly id?: string | null;
   readonly clientSecret?: string | null;
+  readonly error?: string | null;
   constructor(init: ModelInit<PaymentIntent>);
 }
 
@@ -167,6 +168,7 @@ export declare class Usuario {
   readonly id: string;
   readonly tipo?: TipoUsuario | keyof typeof TipoUsuario | null;
   readonly guia?: boolean | null;
+  readonly email?: string | null;
   readonly calificacion?: number | null;
   readonly numResenas?: number | null;
   readonly nombre?: string | null;
@@ -182,6 +184,7 @@ export declare class Usuario {
   readonly certificaciones?: (string | null)[] | null;
   readonly telefono?: string | null;
   readonly sitioWeb?: string | null;
+  readonly comisionsDue?: string | null;
   readonly CuentaBancaria?: string | null;
   readonly fechaNacimiento?: string | null;
   readonly direccion?: string | null;
@@ -254,8 +257,12 @@ export declare class Reserva {
   readonly pagoID?: string | null;
   readonly ingreso?: boolean | null;
   readonly horaIngreso?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
   readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
+  readonly fecha?: Fecha | null;
+  readonly usuario?: Usuario | null;
   readonly guiaID?: string | null;
   readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
   readonly materialChecked?: string | null;
@@ -288,8 +295,13 @@ export declare class Fecha {
   readonly imagenRuta?: string | null;
   readonly imagenFondo?: string | null;
   readonly tituloAventura?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
+  readonly dateModified?: boolean | null;
   readonly aventuraID: string;
   readonly usuarioID: string;
+  readonly aventura?: Aventura | null;
+  readonly usuario?: Usuario | null;
   readonly dificultad?: number | null;
   readonly Reservas?: (Reserva | null)[] | null;
   readonly ChatRoom?: (ChatRoom | null)[] | null;

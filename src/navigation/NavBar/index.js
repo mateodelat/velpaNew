@@ -15,7 +15,7 @@ import HeaderNav from './../components/HeaderNav';
 
 import MiPerfil from '../../screens/MiPerfil';
 import NotificationsTab from './../NotificationsTab';
-import ComponentePrueba from '../../components/ComponentePrueba';
+
 import ModalAgregar from './../components/ModalAgregar';
 import { useNavigation } from '@react-navigation/native';
 import MapaAventuras from '../../screens/MapaAventuras';
@@ -26,6 +26,7 @@ import { Usuario } from '../../models';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tutorial from './Tutorial';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { initStripe } from '@stripe/stripe-react-native';
 
 
 
@@ -121,6 +122,14 @@ export default () => {
 
     // Ver todas las notificaciones nuevas y mensajes
     useEffect(() => {
+        // Iniciar interfaz de stripe 
+        initStripe({
+            publishableKey: "pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd",
+            merchantIdentifier: 'velpa.com',
+        });
+
+
+
         let subscripcionNotificaciones
         let subscripcionMensajes
         (async () => {
@@ -368,7 +377,8 @@ export default () => {
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}
-            >{
+            >
+                {
                     tipoModal === "add" ?
 
                         <ModalAgregar

@@ -593,7 +593,7 @@ export default ({
                                         {categorias.map((item, index) => (
                                             <Pressable
                                                 onPress={() => handleSelectCategoria(index)}
-                                                key={"Cat-", index}
+                                                key={"Cat-" + index}
                                                 style={{
                                                     alignItems: 'center',
                                                     width: 70,
@@ -648,7 +648,7 @@ export default ({
                                 :
                                 [...Array(Math.round(aventurasAMostrar.length / 2))].map((_, row) => (
                                     <View
-                                        key={"row", row}
+                                        key={"row" + row}
                                         style={{
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
@@ -680,7 +680,7 @@ export default ({
                                             return (
 
                                                 <CuadradoImagen
-                                                    key={"Ave", column}
+                                                    key={"Ave" + column}
 
                                                     selected={selector ? selectedItems[row][column]?.selected : undefined}
                                                     tamañoCuadrado={(width / 2 - 30)}

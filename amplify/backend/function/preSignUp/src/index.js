@@ -45,6 +45,7 @@ function crearUsuario(attributes, sub) {
         foto: attributes.picture ? attributes.picture : null,
         nickname: attributes.nickname,
         owner: sub,
+        email: attributes.email
     }
     console.log("Atributos recibidos en crear usuario: ", input)
 

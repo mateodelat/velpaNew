@@ -60,10 +60,14 @@ type Reserva
   ingreso: Boolean
   horaIngreso: AWSDateTime
 
+  cancelado: Boolean
+  canceledAt: String
+
   fechaID: ID @index(name: "byFecha")
   usuarioID: ID @index(name: "byUsuario")
 
-  usuario: @belongsTo
+  fecha: Fecha @belongsTo
+  usuario: Usuario @belongsTo
 
   guiaID: ID
 
@@ -107,10 +111,16 @@ type Fecha
   imagenFondo: String
   tituloAventura: String
 
+  cancelado: Boolean
+  canceledAt: String
+
+  dateModified: Boolean
+
   aventuraID: ID! @index(name: "byAventura")
   usuarioID: ID! @index(name: "byUsuario")
 
-  usuario:@belongsTo
+  aventura: Aventura @belongsTo
+  usuario: Usuario @belongsTo
 
   dificultad: Int
 
@@ -127,6 +137,8 @@ type Usuario
 
   tipo: TipoUsuario
   guia: Boolean
+
+  email: String
 
   calificacion: Float
   numResenas: Int
@@ -151,6 +163,8 @@ type Usuario
 
   telefono: String
   sitioWeb: AWSURL
+
+  comisionsDue: String
 
   CuentaBancaria: String
 
@@ -365,8 +379,16 @@ type Mutation {
     amount: Float!
     destinationStripeID: String!
     comision: Float!
+
+    # Parametro para pasar un JSON parsed si el usuario debe comisiones de efectivo
+    otherFees: String
+
     fechaID: String!
     usuarioID: String!
+    reservaID: String!
+
+    description: String
+    email: String
   ): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
 
   createStripeAccount(
@@ -428,6 +450,7 @@ enum tipoPago {
 type PaymentIntent {
   id: String
   clientSecret: String
+  error: String
 }
 
 type CreateAcountResponse {

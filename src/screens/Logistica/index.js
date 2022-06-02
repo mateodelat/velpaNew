@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { calculatePrice, colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants'
+import { AsyncAlert, calculatePrice, colorFondo, moradoClaro, moradoOscuro } from '../../../assets/constants'
 import Selector from '../../components/Selector';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -61,7 +61,7 @@ export default ({ navigation, route }) => {
 
     const precioIndividual = calculatePrice(precio, total, totalPersonasReservadas)
 
-    function handlePagar() {
+    async function handlePagar() {
 
         if (!aceptoTerminos || !aceptoMaterial) {
             Alert.alert("Error", "No se ha aceptado todo")
@@ -73,32 +73,36 @@ export default ({ navigation, route }) => {
             return
         }
 
+        AsyncAlert("Atencion", "Te recomendamos llegar 15 minutos antes al lugar pues de lo contrario queda a criterio del guia si espera gente")
+            .then(() => {
+                navigation.navigate("Pagar", {
+                    adultos,
+                    tercera,
+                    ninos,
 
-        navigation.navigate("Pagar", {
-            adultos,
-            tercera,
-            ninos,
+                    comisionVelpa,
 
-            comisionVelpa,
+                    precioIndividual,
 
-            precioIndividual,
+                    imagenFondo,
+                    tituloAventura,
 
-            imagenFondo,
-            tituloAventura,
+                    descripcion,
+                    efectivo,
 
-            descripcion,
-            efectivo,
+                    nicknameGuia,
+                    calificacionGuia,
 
-            nicknameGuia,
-            calificacionGuia,
+                    fechaFinal,
+                    fechaInicial,
+                    stripeID,
 
-            fechaFinal,
-            fechaInicial,
-            stripeID,
+                    fechaID,
+                    guiaID
+                })
+            })
+            .catch(e => e)
 
-            fechaID,
-            guiaID
-        })
     }
 
     function navigateTerms() {

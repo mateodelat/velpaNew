@@ -371,6 +371,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "calificacion": {
                     "name": "calificacion",
                     "isArray": false,
@@ -475,6 +482,13 @@ export const schema = {
                     "name": "sitioWeb",
                     "isArray": false,
                     "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comisionsDue": {
+                    "name": "comisionsDue",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1100,6 +1114,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "cancelado": {
+                    "name": "cancelado",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "canceledAt": {
+                    "name": "canceledAt",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "fechaID": {
                     "name": "fechaID",
                     "isArray": false,
@@ -1113,6 +1141,32 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "fecha": {
+                    "name": "fecha",
+                    "isArray": false,
+                    "type": {
+                        "model": "Fecha"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "fechaReservasId"
+                    }
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "usuarioReservasId"
+                    }
                 },
                 "guiaID": {
                     "name": "guiaID",
@@ -1354,6 +1408,27 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "cancelado": {
+                    "name": "cancelado",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "canceledAt": {
+                    "name": "canceledAt",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dateModified": {
+                    "name": "dateModified",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "aventuraID": {
                     "name": "aventuraID",
                     "isArray": false,
@@ -1367,6 +1442,32 @@ export const schema = {
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
+                },
+                "aventura": {
+                    "name": "aventura",
+                    "isArray": false,
+                    "type": {
+                        "model": "Aventura"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "aventuraFechasId"
+                    }
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "usuarioFechasId"
+                    }
                 },
                 "dificultad": {
                     "name": "dificultad",
@@ -2060,6 +2161,13 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "error": {
+                    "name": "error",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
                 }
             }
         },
@@ -2083,5 +2191,5 @@ export const schema = {
             }
         }
     },
-    "version": "3871d8c72ac824c33398313d9b2d2ec7"
+    "version": "3baf700706f482d6e6ee141eecbcb5b4"
 };

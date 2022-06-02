@@ -329,6 +329,13 @@ export async function handleGoogle() {
     })
 }
 
+export function comisionStripe(total) {
+  // Se calcula con el 3.6 % del precio original +3$ y un 16% de iva
+
+  return (total * 3.6 / 100 + 3) * 1.16
+
+}
+
 
 export const formatDate = (ms) => {
   const date = new Date(ms)
@@ -344,17 +351,21 @@ export const formatDate = (ms) => {
 
 }
 
+export function paramExist(param) {
+  return (param !== undefined || param !== null || param !== 0)
+}
+
 export const formatDateShort = (msInicial, msFinal) => {
   const dateInicial = new Date(msInicial)
 
-  var ddInicial = String(dateInicial.getUTCDate())
-  var mmInicial = String(dateInicial.getUTCMonth())
+  var ddInicial = String(dateInicial.getDate())
+  var mmInicial = String(dateInicial.getMonth())
 
   if (msFinal) {
     const dateFinal = new Date(msFinal)
 
-    var ddFinal = String(dateFinal.getUTCDate())
-    var mmFinal = String(dateFinal.getUTCMonth())
+    var ddFinal = String(dateFinal.getDate())
+    var mmFinal = String(dateFinal.getMonth())
 
     // Si es de un solo dia se regresa un numero
     if (ddFinal === ddInicial && mmInicial === mmFinal) {
@@ -1257,7 +1268,8 @@ export function formatMoney(num, hideCents) {
   if (!num) {
     num = 0
   }
-  return '$' + num.toFixed(hideCents ? 0 : 2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+
+  return '$' + num?.toFixed(hideCents ? 0 : 2)?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 
 
 }
@@ -1303,7 +1315,7 @@ export const levels = {
     expBaseLevel: 0,
     expNextLevel: 150,
 
-    comisionVelpa: 0.15,
+    comisionVelpa: 0.20,
   },
 
   2: {
@@ -1311,7 +1323,7 @@ export const levels = {
     expBaseLevel: 150,
     expNextLevel: 300,
 
-    comisionVelpa: 0.10,
+    comisionVelpa: 0.15,
   },
 
   3: {
@@ -1319,7 +1331,7 @@ export const levels = {
     expBaseLevel: 300,
     expNextLevel: 999,
 
-    comisionVelpa: 0.05,
+    comisionVelpa: 0.10,
   },
 
 }
@@ -1685,7 +1697,7 @@ export const shadowMarcada = {
   elevation: 23,
 
 }
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export const verificarUbicacion = async () => {
 

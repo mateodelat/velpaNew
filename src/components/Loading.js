@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, ActivityIndicator } from 'react-native'
+import Header from './header';
 export const Loading = ({ containerStyle, valor, indicator, color }) => {
     valor !== undefined ? null : valor = 1
 

@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
+
 import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+
 import { useNavigation } from '@react-navigation/native';
 import { moradoOscuro } from '../../assets/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function Header({ title, add, noArrow }) {
+export default function Header({ title, add, noArrow, iconRight }) {
 
   const navigation = useNavigation()
 
@@ -25,11 +28,15 @@ export default function Header({ title, add, noArrow }) {
         <View style={styles.headerTitle}>
           <Text style={styles.headerText} numberOfLines={1}>{title}</Text>
         </View>
-        {noArrow ? null : <MaterialIcons name="keyboard-arrow-left" size={35} color="white" style={styles.icon} onPress={handlePress} />}
-        {add && <MaterialIcons name="add" size={35} color="black" style={{
-          position: 'absolute',
-          right: 16,
-        }} onPress={add} />}
+        {noArrow ? null :
+          <MaterialIcons name="keyboard-arrow-left" size={35} color="white" style={styles.icon} onPress={handlePress} />
+        }
+        {
+          iconRight ? iconRight :
+            add && <MaterialIcons name="add" size={35} color="black" style={{
+              position: 'absolute',
+              right: 16,
+            }} onPress={add} />}
       </View>
     </View>
 

@@ -121,6 +121,7 @@ export default function ({
             const descripcion = mayusFirstLetter(usuarioCalificador.nickname) + " te ha calificado en " + aventura.titulo + " con " + rating + " estrellas.\n" + ((expGain > 0 ? "+" : "") + expGain + " exp")
 
 
+            // Notificacion al guia que fue calificado
             DataStore.save(new Notificacion({
                 tipo: 'BIENVENIDA',
 

@@ -165,6 +165,7 @@ export default ({ navigation, onPress, handleBack }) => {
                 <MaterialIcons
                     style={{
                         padding: 5,
+                        paddingLeft: 0,
                     }}
                     onPress={handleBack ? handleBack : () => navigation.pop()}
                     name={"keyboard-arrow-left"}
@@ -260,7 +261,7 @@ export default ({ navigation, onPress, handleBack }) => {
                                         {categorias.map((item, index) => (
                                             <Pressable
                                                 onPress={() => handleSelectCategoria(index)}
-                                                key={"Cat-", index}
+                                                key={"Cat-" + index}
                                                 style={{
                                                     alignItems: 'center',
                                                     width: 70,
@@ -319,7 +320,7 @@ export default ({ navigation, onPress, handleBack }) => {
                                     :
                                     [...Array(Math.round(aventurasAMostrar.length / 2)).keys()].map((_, row) => (
                                         <View
-                                            key={"row", row}
+                                            key={"row" + row}
                                             style={{
                                                 flexDirection: 'row',
                                                 justifyContent: 'space-between',
@@ -333,7 +334,7 @@ export default ({ navigation, onPress, handleBack }) => {
                                                     <CuadradoImagen
                                                         tamañoCuadrado={(width / 2 - 30)}
                                                         item={e}
-                                                        key={"Ave", idxAve}
+                                                        key={"Ave" + idxAve}
                                                         onPress={() => onPress ? onPress(e) : handleNavigateAventura(e.id)}
                                                     />
                                                 )

@@ -24,7 +24,7 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientRefreshTokenValidity": "60",
     "userpoolClientWriteAttributes": [
       "email"
     ],
@@ -71,13 +71,12 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
     "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn",
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"],\"LogoutURLs\":[\"exp://exp.host/@mateodelat/Velpa/\",\"exp://127.0.0.1:19000/--/\",\"Velpa://\"]}",
-    "adminQueryGroup": "Admin"
+    "adminQueryGroup": "Admin",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"],\"LogoutURLs\":[\"exp://exp.host/@mateodelat/Velpa/\",\"exp://127.0.0.1:19000/--/\",\"Velpa://\"]}"
   }
 }

@@ -347,7 +347,7 @@ export default function ({ navigation,
                                 const change = () => setAllowEfectivo(!allowEfectivo)
 
                                 if (!allowEfectivo) {
-                                    Alert.alert("Atencion", "Al permitir pagos en efectivo te arriesgas a que los clientes reserven y no se presenten\n¿Deseas continuar?", [
+                                    Alert.alert("Atencion", "Al permitir pagos en efectivo te arriesgas a que los clientes reserven y no se presenten y en ese caso las comisiones no se pueden devolver\n¿Deseas continuar?", [
                                         {
                                             text: "Cancelar",
                                             style: "cancel"

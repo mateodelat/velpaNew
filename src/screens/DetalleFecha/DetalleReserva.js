@@ -1,7 +1,8 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-import { Entypo } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -32,9 +33,14 @@ export default function ({ handleBack, reserva, }) {
 
     const efectivo = reserva?.tipoPago === "EFECTIVO"
 
+    const cancelado = reserva.cancelado
+
 
     const formatDateWithHour = (time) => {
-        const dateInicial = new Date(new Date(time).getTime() - 21600000)
+        if (!time) {
+            return "31 de dic a las 11:59 pm"
+        }
+        const dateInicial = new Date(new Date(time).getTime())
 
         const ddInicial = String(dateInicial.getDate())
         const mmInicial = String(dateInicial.getMonth())
@@ -55,10 +61,11 @@ export default function ({ handleBack, reserva, }) {
         <View style={{ flex: 1, }}>
             <View style={[styles.header, { height: insets.top + 60, }]}>
                 <Text style={styles.headerTitle}>Reserva</Text>
-                <Entypo
+                <Feather
                     onPress={handleBack && handleBack}
 
-                    name="cross" size={40} color="white" />
+                    style={{ padding: 5, }}
+                    name="x" size={30} color="white" />
 
 
 
@@ -84,14 +91,15 @@ export default function ({ handleBack, reserva, }) {
                         {/* <View style={[styles.line, { backgroundColor: '#000', }]} /> */}
                         <View style={[styles.innerContainer, { padding: 15, }]}>
 
-                            {!!tercera && <> <ElementoPersonas
-                                precio={precioIndividualConComision}
-                                titulo={"Tercera edad"}
+                            {!!tercera && <View>
+                                <ElementoPersonas
+                                    precio={precioIndividualConComision}
+                                    titulo={"Tercera edad"}
 
-                                cantidad={tercera}
-                            />
+                                    cantidad={tercera}
+                                />
                                 <View style={styles.line} />
-                            </>}
+                            </View>}
 
                             <ElementoPersonas
                                 precio={precioIndividualConComision}
@@ -102,7 +110,7 @@ export default function ({ handleBack, reserva, }) {
 
                             <View style={styles.line} />
 
-                            {!!ninos && <>
+                            {!!ninos && <View>
                                 <ElementoPersonas
                                     precio={precioIndividualConComision}
                                     titulo={"Niños"}
@@ -111,7 +119,7 @@ export default function ({ handleBack, reserva, }) {
                                 />
 
                                 <View style={styles.line} />
-                            </>
+                            </View>
                             }
                             {/* Precio desglosado */}
                             <View style={{ width: "100%", marginTop: 20, }}>
@@ -150,12 +158,20 @@ export default function ({ handleBack, reserva, }) {
                     </View>
 
                     <View style={styles.innerContainer}>
-                        <Text style={{
+                        {!cancelado && <Text style={{
                             marginVertical: 15,
                             marginBottom: 5,
                             fontSize: 18,
                             fontWeight: 'bold',
-                        }}>Reservado el {formatDateWithHour(reserva.createdAt)}</Text>
+                        }}>Reservado el {formatDateWithHour(reserva.createdAt)}</Text>}
+
+                        {cancelado && <Text style={{
+                            marginVertical: 15,
+                            marginBottom: 5,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: 'red',
+                        }}>Cancelado el {formatDateWithHour(reserva.canceledAt)}</Text>}
 
                         {!!reserva.horaIngreso && <Text style={{
                             marginVertical: 15,
@@ -176,11 +192,13 @@ export default function ({ handleBack, reserva, }) {
                     <View style={styles.innerContainer}>
                         <View style={{ flexDirection: 'row', width: '100%', }}>
                             {
-                                efectivo ?
+                                cancelado ?
+                                    <MaterialIcons name="cancel" size={24} color={"red"} /> :
+                                    efectivo ?
 
-                                    < FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
-                                    :
-                                    <AntDesign name="creditcard" size={24} color={moradoOscuro} />
+                                        < FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
+                                        :
+                                        <AntDesign name="creditcard" size={24} color={moradoOscuro} />
                             }
 
                             <Text style={{
@@ -192,14 +210,15 @@ export default function ({ handleBack, reserva, }) {
                                 fontWeight: 'bold',
                                 fontSize: 18,
 
-                                color: efectivo ? "coral" : moradoOscuro,
+                                color: cancelado ? "red" : efectivo ? "coral" : moradoOscuro,
 
                             }}>
                                 {
-                                    efectivo ?
+                                    cancelado ? "CANCELADO" :
+                                        efectivo ?
 
-                                        "POR PAGAR"
-                                        : "PAGADO"
+                                            "POR PAGAR"
+                                            : "PAGADO"
                                 }
                             </Text>
 
@@ -295,8 +314,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     precioTotal: {
-        width: '20%',
+        textAlign: 'right',
         color: '#000',
+        paddingRight: 15,
         fontWeight: 'bold',
         fontSize: 18,
     },

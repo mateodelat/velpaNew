@@ -77,6 +77,9 @@ export const getAventura = /* GraphQL */ `
           imagenRuta
           imagenFondo
           tituloAventura
+          cancelado
+          canceledAt
+          dateModified
           aventuraID
           usuarioID
           dificultad
@@ -220,8 +223,185 @@ export const getReserva = /* GraphQL */ `
       pagoID
       ingreso
       horaIngreso
+      cancelado
+      canceledAt
       fechaID
       usuarioID
+      fecha {
+        id
+        personasTotales
+        fechaInicial
+        fechaFinal
+        precio
+        comision
+        experienciaPorPersona
+        itinerario
+        puntoReunionNombre
+        puntoReunionId
+        puntoReunionLink
+        puntoReunionCoords
+        allowTercera
+        allowNinos
+        efectivo
+        material
+        incluido
+        titulo
+        descripcion
+        imagenRuta
+        imagenFondo
+        tituloAventura
+        cancelado
+        canceledAt
+        dateModified
+        aventuraID
+        usuarioID
+        aventura {
+          id
+          titulo
+          imagenFondoIdx
+          imagenDetalle
+          precioMin
+          precioMax
+          duracion
+          descripcion
+          dificultad
+          ubicacionNombre
+          ubicacionId
+          ubicacionLink
+          coordenadas
+          estadoAventura
+          altitud
+          distanciaRecorrida
+          altimetriaRecorrida
+          categoria
+          materialDefault
+          incluidoDefault
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          comisionsDue
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        dificultad
+        Reservas {
+          nextToken
+          startedAt
+        }
+        ChatRoom {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        comisionsDue
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
       guiaID
       tipoPago
       materialChecked
@@ -251,8 +431,81 @@ export const listReservas = /* GraphQL */ `
         pagoID
         ingreso
         horaIngreso
+        cancelado
+        canceledAt
         fechaID
         usuarioID
+        fecha {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          efectivo
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          cancelado
+          canceledAt
+          dateModified
+          aventuraID
+          usuarioID
+          dificultad
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          comisionsDue
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
         guiaID
         tipoPago
         materialChecked
@@ -291,8 +544,81 @@ export const syncReservas = /* GraphQL */ `
         pagoID
         ingreso
         horaIngreso
+        cancelado
+        canceledAt
         fechaID
         usuarioID
+        fecha {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          efectivo
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          cancelado
+          canceledAt
+          dateModified
+          aventuraID
+          usuarioID
+          dificultad
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          comisionsDue
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
         guiaID
         tipoPago
         materialChecked
@@ -332,8 +658,119 @@ export const getFecha = /* GraphQL */ `
       imagenRuta
       imagenFondo
       tituloAventura
+      cancelado
+      canceledAt
+      dateModified
       aventuraID
       usuarioID
+      aventura {
+        id
+        titulo
+        imagenFondoIdx
+        imagenDetalle
+        precioMin
+        precioMax
+        duracion
+        descripcion
+        dificultad
+        ubicacionNombre
+        ubicacionId
+        ubicacionLink
+        coordenadas
+        estadoAventura
+        altitud
+        distanciaRecorrida
+        altimetriaRecorrida
+        categoria
+        materialDefault
+        incluidoDefault
+        usuarioID
+        SolicitudGuias {
+          nextToken
+          startedAt
+        }
+        UsuariosAutorizados {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        comisionsDue
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
       dificultad
       Reservas {
         items {
@@ -347,6 +784,8 @@ export const getFecha = /* GraphQL */ `
           pagoID
           ingreso
           horaIngreso
+          cancelado
+          canceledAt
           fechaID
           usuarioID
           guiaID
@@ -416,8 +855,75 @@ export const listFechas = /* GraphQL */ `
         imagenRuta
         imagenFondo
         tituloAventura
+        cancelado
+        canceledAt
+        dateModified
         aventuraID
         usuarioID
+        aventura {
+          id
+          titulo
+          imagenFondoIdx
+          imagenDetalle
+          precioMin
+          precioMax
+          duracion
+          descripcion
+          dificultad
+          ubicacionNombre
+          ubicacionId
+          ubicacionLink
+          coordenadas
+          estadoAventura
+          altitud
+          distanciaRecorrida
+          altimetriaRecorrida
+          categoria
+          materialDefault
+          incluidoDefault
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          comisionsDue
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
         dificultad
         Reservas {
           nextToken
@@ -474,8 +980,75 @@ export const syncFechas = /* GraphQL */ `
         imagenRuta
         imagenFondo
         tituloAventura
+        cancelado
+        canceledAt
+        dateModified
         aventuraID
         usuarioID
+        aventura {
+          id
+          titulo
+          imagenFondoIdx
+          imagenDetalle
+          precioMin
+          precioMax
+          duracion
+          descripcion
+          dificultad
+          ubicacionNombre
+          ubicacionId
+          ubicacionLink
+          coordenadas
+          estadoAventura
+          altitud
+          distanciaRecorrida
+          altimetriaRecorrida
+          categoria
+          materialDefault
+          incluidoDefault
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          comisionsDue
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
         dificultad
         Reservas {
           nextToken
@@ -502,6 +1075,7 @@ export const getUsuario = /* GraphQL */ `
       id
       tipo
       guia
+      email
       calificacion
       numResenas
       nombre
@@ -517,6 +1091,7 @@ export const getUsuario = /* GraphQL */ `
       certificaciones
       telefono
       sitioWeb
+      comisionsDue
       CuentaBancaria
       fechaNacimiento
       direccion
@@ -582,6 +1157,8 @@ export const getUsuario = /* GraphQL */ `
           pagoID
           ingreso
           horaIngreso
+          cancelado
+          canceledAt
           fechaID
           usuarioID
           guiaID
@@ -620,6 +1197,9 @@ export const getUsuario = /* GraphQL */ `
           imagenRuta
           imagenFondo
           tituloAventura
+          cancelado
+          canceledAt
+          dateModified
           aventuraID
           usuarioID
           dificultad
@@ -708,6 +1288,7 @@ export const listUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        email
         calificacion
         numResenas
         nombre
@@ -723,6 +1304,7 @@ export const listUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
+        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -792,6 +1374,7 @@ export const syncUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        email
         calificacion
         numResenas
         nombre
@@ -807,6 +1390,7 @@ export const syncUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
+        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -1459,6 +2043,7 @@ export const getChatRoomUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        email
         calificacion
         numResenas
         nombre
@@ -1474,6 +2059,7 @@ export const getChatRoomUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
+        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -1562,6 +2148,7 @@ export const listChatRoomUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          email
           calificacion
           numResenas
           nombre
@@ -1577,6 +2164,7 @@ export const listChatRoomUsuarios = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
+          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -1638,6 +2226,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          email
           calificacion
           numResenas
           nombre
@@ -1653,6 +2242,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
+          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -1933,6 +2523,7 @@ export const getAventuraUsuarios = /* GraphQL */ `
         id
         tipo
         guia
+        email
         calificacion
         numResenas
         nombre
@@ -1948,6 +2539,7 @@ export const getAventuraUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
+        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -2050,6 +2642,7 @@ export const listAventuraUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          email
           calificacion
           numResenas
           nombre
@@ -2065,6 +2658,7 @@ export const listAventuraUsuarios = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
+          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -2140,6 +2734,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           id
           tipo
           guia
+          email
           calificacion
           numResenas
           nombre
@@ -2155,6 +2750,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
+          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion

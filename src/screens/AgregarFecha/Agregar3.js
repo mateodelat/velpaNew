@@ -114,6 +114,14 @@ export default function ({ navigation, route }) {
         const remainingFor1Day = Math.round((fechaInicial - msInDay - new Date) / 1000)
         const remainingFor1Hour = Math.round((fechaInicial - msInHour - new Date) / 1000)
 
+        const data = {
+            fechaID,
+
+            // Hora creada en segundos
+            createdAt: Math.round(new Date().getTime() / 1000),
+            tipo: "RECORDATORIOGUIA",
+        }
+
         // Si falta mas de una semana para la fecha enviar notificacion
         if (remainingFor1Week > 0) {
             // Alerta cel
@@ -123,6 +131,11 @@ export default function ({ navigation, route }) {
                     body: "Tu experiencia en " + tituloAventura + " es en 1 semana, revisa que tengas todo listo",
                     priority: AndroidNotificationPriority.HIGH,
                     vibrate: true,
+                    data: {
+                        ...data,
+                        timeShown: "1S"
+                    },
+
                 },
                 trigger: {
                     seconds: remainingFor1Week,
@@ -156,6 +169,11 @@ export default function ({ navigation, route }) {
                     body: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
                     priority: AndroidNotificationPriority.MAX,
                     vibrate: true,
+                    data: {
+                        ...data,
+                        timeShown: "1D"
+                    },
+
                 },
                 trigger: {
                     seconds: remainingFor1Day,
@@ -186,6 +204,12 @@ export default function ({ navigation, route }) {
                 body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes y utiliza la app para registrar su entrada con codigo QR!!",
                 priority: AndroidNotificationPriority.MAX,
                 vibrate: true,
+
+                data: {
+                    ...data,
+                    timeShown: "1H"
+                },
+
 
             },
             trigger: {

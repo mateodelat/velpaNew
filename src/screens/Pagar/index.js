@@ -14,8 +14,9 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { AsyncAlert, colorFondo, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
+import { colorFondo, formatAMPM, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
+
 
 import {
     confirmPaymentSheetPayment,
@@ -24,13 +25,15 @@ import {
 
 import API from '@aws-amplify/api';
 import ElementoPersonas from './components/ElementoPersonas';
-import { createPaymentIntent } from '../../graphql/mutations';
+import { createPaymentIntent, createReserva } from '../../graphql/mutations';
 import { DataStore } from '@aws-amplify/datastore';
 import { ChatRoom, ChatRoomUsuarios, Notificacion, Reserva, TipoNotificacion } from '../../models';
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
 
-import { AndroidNotificationPriority, cancelAllScheduledNotificationsAsync, getAllScheduledNotificationsAsync, getPresentedNotificationsAsync, scheduleNotificationAsync } from 'expo-notifications';
+import { AndroidNotificationPriority, scheduleNotificationAsync } from 'expo-notifications';
+
+import uuid from "react-native-uuid"
 
 
 import { sendPushNotification } from '../../../assets/constants/constant';
@@ -70,6 +73,8 @@ export default function ({ route, navigation }) {
     const [error, setError] = useState(false);
     const [paymentLoaded, setPaymentLoaded] = useState(false);
 
+    const [reservaID, setReservaID] = useState(uuid.v4());
+
     // Id de transaccion
     const [idPago, setIdPago] = useState("");
 
@@ -85,6 +90,9 @@ export default function ({ route, navigation }) {
     const [fecha, setFecha] = useState(null);
     const [sub, setSub] = useState("");
 
+    // Objeto de comisiones retenidas si el usuario tuvo
+    const [comisiones, setComisiones] = useState(null);
+    const [comisionesNoProcesadas, setComisionesNoProcesadas] = useState(null);
 
     const personasTotales = adultos + ninos + tercera
 
@@ -99,7 +107,30 @@ export default function ({ route, navigation }) {
                 console.log(e)
 
             })
+
     }, []);
+
+    // Devolver las comisiones al usuario de no ser cobradas
+    useEffect(() => {
+
+        return () => {
+            // Devolver el objeto de comisiones al usuario solo si no estamos despues de pagar con 
+            // tarjeta
+            if (comisiones && !buttonLoading) {
+                // console.log("Regresando comisiones del usuario...\n", comisiones)
+                // DataStore.query(Usuario, guiaID).then(r => {
+                //     DataStore.save(Usuario.copyOf(r, usr => {
+                //         usr.comisionsDue = JSON.stringify(comisiones)
+                //     }))
+                // })
+                setComisiones(null)
+            } else {
+                console.log("Comisiones no devueltas")
+
+            }
+
+        }
+    }, [comisiones]);
 
     const fetchFecha = async () => {
         setFecha(await DataStore.query(Fecha, fechaID))
@@ -126,7 +157,9 @@ export default function ({ route, navigation }) {
     /////////////////////////////FUNCIONES/////////////////////////////
     ///////////////////////////////////////////////////////////////////
     function verOpciones() {
-        navigation.pop(2)
+        navigation.pop()
+        navigation.pop()
+        navigation.pop()
     }
 
     // Obtener el clientSecret del backend
@@ -152,26 +185,79 @@ export default function ({ route, navigation }) {
                 return
             }
 
-            const response = await API.graphql({
+            const description = tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal) + "  -----  " + personasTotales + " persona" + (personasTotales === 1 ? "" : "s")
+
+            // Pedir el usuario para ver si debe comisiones
+            const coms = await DataStore.query(Usuario, guiaID)
+                .then(usr => {
+                    // Si debe comisiones, entonces quitarlas temporalmente del usuario
+                    if (usr.comisionsDue) {
+                        console.log("Comisiones tomadas del usuario...\n", JSON.parse(usr.comisionsDue))
+
+
+                        setComisiones(JSON.parse(usr.comisionsDue))
+                        DataStore.save(Usuario.copyOf(usr, ne => {
+                            ne.comisionsDue = null
+                        }))
+                    }
+
+                    return usr.comisionsDue
+                })
+
+            // Poner la comision a enviar como numero de pesos y no porcentaje
+            let localComision = Math.round(precioTotal) * comision
+
+            // Si el usuario debe comisiones agregarselos a la comision a enviar
+            if (coms) {
+                JSON.parse(coms).map(com => {
+
+                    // Mientras la comision no pase al precio total se siguen agregando
+                    if ((localComision + com.amount) < precioTotal) {
+                        localComision += com.amount
+                    } else {
+                        Alert.alert("Error", "Hay pagos no cobrados, informa al desarrollador")
+                        console.log([...comisionesNoProcesadas, com])
+                        setComisionesNoProcesadas([...comisionesNoProcesadas, com])
+                    }
+                })
+            }
+
+
+            const response = (await API.graphql({
                 query: createPaymentIntent, variables:
                 {
                     amount: Math.round(precioTotal),
                     destinationStripeID: stripeID,
-                    comision,
+                    comision: localComision,
+
+                    description,
+
+                    otherFees: coms,
+
+
+                    reservaID,
                     fechaID,
                     usuarioID: sub
                 }
             })
+                .catch(e => {
+                    Alert.alert("Error", "Error realizando el pago: funcion crear pago devolvio error")
+                    console.log(e)
+                    return {}
+                })
+            )?.data?.createPaymentIntent
 
-            if (!response?.data?.createPaymentIntent?.id || !response?.data?.createPaymentIntent?.clientSecret) {
-                Alert.alert("Error", "Error obteniendo el clientSecret")
+
+            if (!response.id || !response.clientSecret) {
+                Alert.alert("Error", "Error realizando el pago: client secret no obtenido")
+                console.log(response.error)
                 setError(true)
                 return
             }
 
             // Obtener el id de pago y el client secret
-            setIdPago(response.data.createPaymentIntent.id)
-            setClientSecret(response.data.createPaymentIntent.clientSecret)
+            setIdPago(response.id)
+            setClientSecret(response.clientSecret)
 
             return response
 
@@ -187,6 +273,8 @@ export default function ({ route, navigation }) {
             paymentIntentClientSecret: clientSecret,
             merchantDisplayName: 'Velpa adventures',
             customFlow: true,
+            allowsDelayedPaymentMethods: false,
+
         });
 
         if (error) {
@@ -273,12 +361,29 @@ export default function ({ route, navigation }) {
         const remainingForNextDay = Math.round((finalDate - new Date) / 1000)
 
 
+        // Datos para las notificaciones
+        const data = {
+            reservaID,
+            fechaID,
+
+            // Hora creada en segundos
+            createdAt: Math.round(new Date().getTime() / 1000),
+
+            tipo: "RECORDATORIOCLIENTE"
+        }
+
+
         // Enviar notificacion de califica al guia
         // Alerta cel
         scheduleNotificationAsync({
             content: {
                 title: ((user.nombre ? mayusFirstLetter(user.nombre) : user.nickname) + ", aydanos a hacer de Velpa un lugar mejor"),
                 body: "Calfica tu experiencia en " + tituloAventura + " con " + nicknameGuia,
+                data: {
+                    ...data,
+                    tipo: TipoNotificacion.CALIFICAUSUARIO
+                }
+
             },
             trigger: {
                 seconds: remainingForNextDay,
@@ -298,6 +403,10 @@ export default function ({ route, navigation }) {
             usuarioID: sub,
             aventuraID: fecha.aventuraID,
 
+            // Datos para buscar por si se cancela/mueve fecha o reserva
+            reservaID,
+            fechaID,
+
             imagen: imagenFondo.key,
 
             guiaID
@@ -315,9 +424,9 @@ export default function ({ route, navigation }) {
                     priority: AndroidNotificationPriority.HIGH,
                     vibrate: true,
                     data: {
-                        reservaID
-                    }
-
+                        ...data,
+                        timeShown: "1S"
+                    },
                 },
                 trigger: {
                     seconds: remainingFor1Week,
@@ -353,9 +462,9 @@ export default function ({ route, navigation }) {
                     priority: AndroidNotificationPriority.MAX,
                     vibrate: true,
                     data: {
-                        reservaID
-                    }
-
+                        ...data,
+                        timeShown: "1D"
+                    },
                 },
                 trigger: {
                     seconds: remainingFor1Day,
@@ -388,9 +497,9 @@ export default function ({ route, navigation }) {
                 priority: AndroidNotificationPriority.MAX,
                 vibrate: true,
                 data: {
-                    reservaID
-                }
-
+                    ...data,
+                    timeShown: "1H"
+                },
             },
             trigger: {
                 seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
@@ -438,7 +547,8 @@ export default function ({ route, navigation }) {
                         { cancelable: false }
                     )
                 } else {
-
+                    let coms = comisiones
+                    let guia = await DataStore.query(Usuario, guiaID)
                     // Pago con tarjeta
                     if (tipoPago === "TARJETA") {
 
@@ -450,24 +560,61 @@ export default function ({ route, navigation }) {
                         }
 
                         const { error } = await confirmPaymentSheetPayment()
+
+                            // Si el pago se confirma con exito y no faltaron, se eliminan las comisiones 
+                            // del usuario
+                            .then((r) => {
+                                if (!r.error) {
+                                    setComisiones(null)
+                                }
+                                return r
+                            })
                             .catch(e => {
                                 Alert.alert("Error", "Error realizando el pago")
                                 console.log(e)
                             })
-
                         // Si hubo un error con la tarjeta, se sale de la funcion
                         if (error) {
                             setButtonLoading(false)
                             Alert.alert(`Error code: ${error.code}`, error.message);
                             return
                         }
-                    }
-                    // else {
-                    //     setButtonLoading(false)
-                    //     await AsyncAlert("Atencion", `Pagaras ${precioTotal}$ en efectivo el dia de la aventura`)
-                    //         .then(() => setButtonLoading(true))
 
-                    // }
+
+
+                    }
+                    // Si fue pago en efectivo, se agrega la comision al usuario
+                    else {
+                        if (coms) {
+                            coms.push({
+                                createdAt: new Date(),
+                                id: reservaID,
+                                amount: precioTotal * comision
+                            })
+                        } else {
+                            coms = [{
+                                createdAt: new Date(),
+                                id: reservaID,
+                                amount: precioTotal * comision
+                            }]
+                        }
+
+
+                        // Guardar al guia con sus nuevas comisiones
+                        console.log("Comisiones nuevas del usuario...\n", JSON.stringify(coms))
+
+
+                        setComisiones(null)
+                        guia = await DataStore.save(Usuario.copyOf(guia, usr => {
+                            usr.comisionsDue = JSON.stringify(coms)
+                        }))
+
+
+                    }
+
+
+
+
 
                     const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
 
@@ -491,8 +638,8 @@ export default function ({ route, navigation }) {
                         }))
                     }
 
-
                     const datosReserva = {
+                        id: reservaID,
                         total: precioTotal,
                         comision: precioTotal * comision,
                         pagadoAlGuia: precioTotal - (precioTotal * comision),
@@ -509,33 +656,30 @@ export default function ({ route, navigation }) {
                         usuarioID: sub,
                     }
 
-                    // Crear la reservacion en DataStore
-                    const reserva = await DataStore.save(new Reserva(datosReserva))
 
+                    // Crear la reservacion en API para pasar ID
+                    await API.graphql({ query: createReserva, variables: { input: datosReserva } })
 
                     //////////////////////////////////////////////////////////////////////////////
                     //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
                     //////////////////////////////////////////////////////////////////////////////
 
                     // Notificacion a el guia en telefono
-                    DataStore.query(Usuario, guiaID)
-                        .then(r => {
-                            const { notificationToken, experience } = r
+                    const { notificationToken, experience } = guia
 
-                            // Agregar la experiencia al usuario
-                            let newExp = (experience ? experience : 0) + experienciaGanada
-                            DataStore.save(Usuario.copyOf(r, n => {
-                                n.experience = newExp
-                            }))
+                    // Agregar la experiencia al usuario
+                    let newExp = (experience ? experience : 0) + experienciaGanada
+                    DataStore.save(Usuario.copyOf(guia, n => {
+                        n.experience = newExp
+                    }))
 
-                            if (notificationToken) {
-                                sendPushNotification({
-                                    title: "Nueva reserva",
-                                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
-                                    token: notificationToken
-                                })
-                            }
+                    if (notificationToken) {
+                        sendPushNotification({
+                            title: "Nueva reserva",
+                            descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
+                            token: notificationToken
                         })
+                    }
 
 
                     // Notificacion al guia IN-APP
@@ -551,7 +695,7 @@ export default function ({ route, navigation }) {
                         usuarioID: fecha?.usuarioID,
 
                         fechaID: fecha?.id,
-                        reservaID: reserva.id
+                        reservaID
                     }))
 
 
@@ -560,18 +704,18 @@ export default function ({ route, navigation }) {
                         tipo: TipoNotificacion.RESERVACREADA,
 
                         titulo: "Reserva exitosa!!",
-                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura,
+                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal) + " a las " + formatAMPM(fechaInicial, false, false),
 
                         showAt: new Date().getTime(),
 
                         usuarioID: sub,
 
                         fechaID: fecha?.id,
-                        reservaID: reserva.id
+                        reservaID
                     }))
 
                     sendNotifications(
-                        reserva.id,
+                        reservaID,
                         usuario
                     )
 
@@ -733,28 +877,29 @@ export default function ({ route, navigation }) {
 
                         </View>
                     </Pressable>
-                    <View style={{
+                    {efectivo && <><View style={{
                         borderColor: '#aaa',
                         borderBottomWidth: 1,
                         marginHorizontal: 30,
                     }} />
 
-                    {efectivo && <Pressable
-                        onPress={() => {
-                            setTipoPago("EFECTIVO")
-                        }}
-                        style={styles.metodoDePago}>
+                        <Pressable
+                            onPress={() => {
+                                setTipoPago("EFECTIVO")
+                            }}
+                            style={styles.metodoDePago}>
 
-                        <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
+                            <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
 
-                        <Text style={{
-                            ...styles.titulo,
-                            color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
-                        }}>EFECTIVO</Text>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
-                            {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
-                        </View>
-                    </Pressable>}
+                            <Text style={{
+                                ...styles.titulo,
+                                color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
+                            }}>EFECTIVO</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                                {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
+                            </View>
+                        </Pressable>
+                    </>}
 
                 </View>
                 <View style={{ height: 40, }} />

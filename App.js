@@ -27,8 +27,9 @@ import { Notificacion } from './src/models';
 import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { getUserSub } from './assets/constants';
+import { colorFondo, getUserSub } from './assets/constants';
 import { ChatRoomUsuarios } from './src/models';
+import { cancelAllScheduledNotificationsAsync } from 'expo-notifications';
 
 
 
@@ -103,6 +104,7 @@ export default function App() {
 
     // DataStore.clear()
 
+
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
       .then(user => {
@@ -128,6 +130,11 @@ export default function App() {
           setAuthenticated(true)
           break;
         case "signOut":
+
+          // Cancelar todas las notificaciones al celular
+          cancelAllScheduledNotificationsAsync()
+
+          DataStore.clear()
           setLoading(false)
           setAuthenticated(false)
           break;
@@ -230,17 +237,10 @@ export default function App() {
 
   return (
     <View style={{
-      flex: 1, backgroundColor: '#fff',
+      flex: 1, backgroundColor: colorFondo,
     }}>
-      < StripeProvider
-        publishableKey="pk_live_51J7OwUFIERW56TAETjQ7dMTgYLXQnjLxuss5HmvufxrC3kl0jv6jnQQmTsLCn6UhG3vQPeryjQi04xSQm1XUhs4900866NxYwP"
-        // urlScheme={localRedirectSignIn} // required for 3D Secure and bank redirects
-        merchantIdentifier="merchant.com.velpa" // required for Apple Pay
-      >
-
-        <StatusBar hidden={true} />
-        <Router />
-      </StripeProvider>
+      <StatusBar hidden={true} />
+      <Router />
     </View>
   );
 

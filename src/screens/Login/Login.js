@@ -83,7 +83,7 @@ export default function Register({ navigation, route }) {
                 }
             })
             .finally(r => {
-                setLoading(true)
+                setLoading(false)
             })
     }
 
