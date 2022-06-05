@@ -5666,10 +5666,10 @@ expo-updates-interface@~0.6.0:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.6.0.tgz#cef5250106e59572afdfcf245c534754c8c844ba"
   integrity sha512-oQcGTsE8mSkSxENPlWjZPGoJpt3RFDNPuO5d8shBDxBb4ZNH/W2ojavSFQMaLbNMoS0bYQQhzbRNEIBd306QMg==
 
-expo-updates@~0.13.1:
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.13.1.tgz#ffed4216eda6afbc15f06399115a5b9e649102a6"
-  integrity sha512-6GTqgAco3da/rk0/AvDRFmrWxEIxlmIs7vvoCWWxyvifLBlQAaU08+AdZH5RwdN3aUaIep70pnqlc67xe/y0og==
+expo-updates@~0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.13.2.tgz#c96d664d8a97eb3af6841e46a137962b8bf06361"
+  integrity sha512-2ZthmyxYuN/c71y2oLNz9fdVXLf7ggxAw3Tfy+kwtGOTKNyOf/YoG+SwX7a0v+jZTJnuorEj5FuNf3wrniQ7+w==
   dependencies:
     "@expo/code-signing-certificates" "0.0.1"
     "@expo/config" "^6.0.14"
@@ -8422,6 +8422,11 @@ react-native-codegen@^0.0.17:
     flow-parser "^0.121.0"
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
+
+react-native-currency-input@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-currency-input/-/react-native-currency-input-1.0.1.tgz#3118a0d5347dd29568c5031320dbeb34be43415c"
+  integrity sha512-1AbXXMAyNBEV2M0snh6e/B1w+rxRBgu9IARVaeF0tkUuaGX4kl/tQVXzyNa0fV2GX89U8Hyb0HaMvjaIZGniAA==
 
 react-native-gesture-handler@~2.2.1:
   version "2.2.1"

@@ -295,8 +295,6 @@ export default function ({ navigation,
                             <Text style={styles.infoPriceNumber}>+{expPerPerson * personasTotales} exp</Text>
                         </View>
 
-
-
                     </Pressable>
 
                     {/* Permitir/negar tercera edad y niños */}

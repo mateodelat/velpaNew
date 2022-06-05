@@ -40,33 +40,40 @@ export default function ({
                         color: color ? color : moradoOscuro,
                         textAlign: 'center',
                         marginHorizontal: 50,
+                        fontWeight: 'bold',
                     }}>{titulo}</Text>
 
 
-                <Entypo
-                    name={"cross"}
-                    size={35}
-                    color={color ? color : moradoOscuro}
-                    style={styles.iconLeft}
-                />
+                <View style={styles.iconLeft}>
+
+                    <Feather
+                        name={"x"}
+                        size={30}
+                        color={color ? color : moradoOscuro}
+                    />
+
+                </View>
+
                 {
                     rightIcon ? rightIcon :
                         modify !== undefined && (modify ?
 
                             buttonLoading ?
-                                <View style={{ ...styles.iconRight, width: 35, alignItems: 'center', }}>
+                                <View style={styles.iconRight}>
                                     <ActivityIndicator color={"#fff"} />
 
                                 </View>
                                 :
-                                <MaterialIcons
-                                    onPress={handleSave}
-                                    name={"check"}
-                                    size={35}
-                                    color={color ? color : "green"}
-                                    style={styles.iconRight}
+                                <View style={styles.iconRight}>
 
-                                />
+                                    <MaterialIcons
+                                        onPress={handleSave}
+                                        name={"check"}
+                                        size={30}
+                                        color={color ? color : "green"}
+
+                                    />
+                                </View>
                             :
                             <Feather
                                 onPress={handleSave}
@@ -94,14 +101,22 @@ const styles = StyleSheet.create({
 
     iconLeft: {
         position: 'absolute',
-        left: 10,
-        padding: 6,
+        paddingLeft: 10,
+
+        height: 43,
+        width: 43,
+        alignItems: 'center', justifyContent: 'center',
+
     },
 
 
     iconRight: {
         position: 'absolute',
-        right: 16,
+        right: 10,
+        height: 43,
+        width: 43,
+
+        alignItems: 'center', justifyContent: 'center',
     }
 
 

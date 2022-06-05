@@ -30,7 +30,7 @@ import { getPlaceElevation, mayusFirstLetter, moradoClaro, moradoOscuro } from '
 
 import { Categorias } from '../../../models';
 
-import ModalMap from './components/ModalMap';
+import { ModalMap } from './components/ModalMap';
 import ModalMaterial from './components/ModalMaterial';
 import { DataStore } from '@aws-amplify/datastore';
 import { Aventura } from '../../../models';

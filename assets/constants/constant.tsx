@@ -1,5 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import { getBadgeCountAsync } from 'expo-notifications';
+import { TipoNotificacion } from '../../src/models';
 
 
 export async function sendPushNotification(input: {
@@ -37,6 +38,53 @@ export async function sendPushNotification(input: {
     })
 }
 
+
+export async function sendNotification(params:{
+    titulo:String,
+    tipo: TipoNotificacion,
+    descripcion: String,
+    showAt: Number,
+    usuarioID:String,
+    fechaID:String,
+    reservaID:String,
+    
+}) {
+    const {
+        titulo,
+        tipo,
+        descripcion,
+        showAt,
+        usuarioID,
+        fechaID,
+        reservaID,
+    } = params
+    console.log({
+        titulo,
+        tipo,
+        descripcion,
+        showAt,
+        usuarioID,
+        fechaID,
+        reservaID,
+    })
+
+    // // Notificacion IN-APP
+    // DataStore.save(new Notificacion({
+    //     tipo,
+
+    //     titulo,
+    //     descripcion: "Tu experiencia en " + tituloAventura + " es en 1 semana, ya tienes todo listo?",
+
+    //     showAt: (new Date(initialDate - msInDay * 7)).getTime(),
+
+    //     usuarioID: sub,
+
+    //     fechaID: fecha?.id,
+    //     reservaID
+    // }))
+
+
+}
 
 export const vibrar = (tipo: VibrationType) => {
     switch (tipo) {

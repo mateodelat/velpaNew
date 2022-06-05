@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Alert, Dimensions, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, moradoClaro } from '../../../../../assets/constants'
+import { colorFondo, moradoClaro } from '../../../../../assets/constants'
 import HeaderModal from '../../../AgregarFecha/components/HeaderModal'
 import MapWithSearch from '../../../../components/MapWithSearch'
 
 
-export default function ({ setModalVisible,
+export function ModalMap({ setModalVisible,
     handleGuardar,
-    place
+    place,
+
+    titulo
 }) {
     const { width, height } = Dimensions.get("window")
 
@@ -30,7 +32,7 @@ export default function ({ setModalVisible,
                     backgroundColor: moradoClaro,
                 }}
                 handleCerrar={handleCerrar}
-                titulo={"Ubicacion aventura"}
+                titulo={titulo ? titulo : "Ubicacion aventura"}
                 color={"#fff"}
 
 
@@ -43,7 +45,6 @@ export default function ({ setModalVisible,
                     style={styles.map}
                     sugestionsContainerStyle={styles.sugestionsContainer}
 
-                    previewTxt={null}
                     setSelectedPlace={setSelectedPlace}
                     selectedPlace={selectedPlace}
                 />

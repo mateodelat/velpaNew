@@ -37,8 +37,6 @@ const { height } = Dimensions.get("screen")
 export default ({
     selectedPlace, setSelectedPlace,
 
-    handleContinuar,
-
     buscarInitial,
     aventurasInicial,
     onCalloutPress,
@@ -404,15 +402,6 @@ export default ({
                     <Loading indicator />
                 }
             </View>
-
-            {handleContinuar && <Boton
-                onPress={handleContinuar}
-                titulo={"Continuar"}
-                loading={false}
-                style={{
-                    marginTop: 30,
-                }}
-            />}
         </View>
     )
 }

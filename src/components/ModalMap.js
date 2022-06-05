@@ -46,26 +46,29 @@ export default ({
 
     const [locationPermision, setLocationPermision] = useState(null);
 
-    // Checar si la ubicacion esta activada
     useEffect(() => {
-        verificarUbicacion()
-            .then(async r => {
-                // Si no hay permisos de ubicacion
-                setLocationPermision(r)
+        if (locationPermision === null) {
+            // Checar si la ubicacion esta activada
+            verificarUbicacion()
+                .then(async r => {
+                    // Si no hay permisos de ubicacion
+                    setLocationPermision(r)
+                })
 
-                const region = {
-                    latitude: selectedPlace.latitude,
-                    longitude: selectedPlace.longitude,
-                    latitudeDelta: selectedPlace.latitudeDelta ? selectedPlace.latitudeDelta : 2,
-                    longitudeDelta: selectedPlace.longitudeDelta ? selectedPlace.longitudeDelta : 2,
+        }
+        if (selectedPlace) {
+            const region = {
+                latitude: selectedPlace.latitude,
+                longitude: selectedPlace.longitude,
+                latitudeDelta: selectedPlace.latitudeDelta ? selectedPlace.latitudeDelta : 2,
+                longitudeDelta: selectedPlace.longitudeDelta ? selectedPlace.longitudeDelta : 2,
 
-                }
-                setRegion(region)
+            }
+            setRegion(region)
 
-                return
+        }
 
-            })
-    }, []);
+    }, [selectedPlace]);
 
 
 

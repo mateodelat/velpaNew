@@ -1357,6 +1357,11 @@ export function calculateLvl(experience) {
 
 }
 
+export function calculateComision(experience) {
+  return calculateLvl(experience).comisionVelpa
+
+}
+
 export function calculateExpPerPerson(precio) {
   let exp = 0
 

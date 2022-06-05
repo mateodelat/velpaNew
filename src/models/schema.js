@@ -2132,6 +2132,9 @@ export const schema = {
                 "ADMIN",
                 "BIENVENIDA",
                 "FECHACREADA",
+                "FECHAACTUALIZACION",
+                "FECHACANCELADA",
+                "RESERVACANCELADA",
                 "CALIFICAUSUARIO"
             ]
         },

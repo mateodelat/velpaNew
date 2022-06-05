@@ -146,7 +146,7 @@ export default function ({ fecha,
 
                     {!showDetails && <Text
                         style={[styles.precio, { color: '#fff', }]}
-                    >{precio * (fecha.comision + 1)}$</Text>}
+                    >{precio}$</Text>}
                 </View>}
 
 

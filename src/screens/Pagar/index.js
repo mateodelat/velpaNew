@@ -117,12 +117,12 @@ export default function ({ route, navigation }) {
             // Devolver el objeto de comisiones al usuario solo si no estamos despues de pagar con 
             // tarjeta
             if (comisiones && !buttonLoading) {
-                // console.log("Regresando comisiones del usuario...\n", comisiones)
-                // DataStore.query(Usuario, guiaID).then(r => {
-                //     DataStore.save(Usuario.copyOf(r, usr => {
-                //         usr.comisionsDue = JSON.stringify(comisiones)
-                //     }))
-                // })
+                console.log("Regresando comisiones del usuario...\n", comisiones)
+                DataStore.query(Usuario, guiaID).then(r => {
+                    DataStore.save(Usuario.copyOf(r, usr => {
+                        usr.comisionsDue = JSON.stringify(comisiones)
+                    }))
+                })
                 setComisiones(null)
             } else {
                 console.log("Comisiones no devueltas")

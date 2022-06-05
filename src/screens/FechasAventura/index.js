@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Animated, Dimensions, RefreshControl, StyleSheet, Text, View } from 'react-native'
 
-import { colorFondo, formatDia, formatDiaMesCompeto, getImageUrl, getUserSub, isFechaFull, isUrl, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
+import { calculateComision, colorFondo, formatDiaMesCompeto, getImageUrl, getUserSub, moradoClaro, moradoOscuro, msInDay, wait } from '../../../assets/constants';
 import ElementoFecha from './components/ElementoFecha';
 import HeaderConImagen from '../../components/HeaderConImagen';
 
@@ -158,6 +158,10 @@ export default ({ route, navigation }) => {
 
         navigation.navigate("Logistica", {
             ...fecha,
+
+            // Comision actual para el guia guia
+            comision: calculateComision(guia.experience),
+
             imagenFondo,
             tituloAventura: titulo,
             nicknameGuia: guia.nickname,

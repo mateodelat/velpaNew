@@ -1,6 +1,6 @@
 import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useState } from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { container, formatDateShort, formatMoney, getImageUrl, getUserSub, moradoOscuro } from '../../../assets/constants'
 import { Loading } from '../../components/Loading';
 import { Reserva } from '../../models';
@@ -9,29 +9,20 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Fecha } from '../../models';
 import ModalMap from '../../components/ModalMap';
 
-import { useNavigation } from '@react-navigation/core';
 import { Usuario } from '../../models';
 
-function Item({ e }) {
-    // Variables de ver en el mapa
-    const [showModalMap, setShowModalMap] = useState(false);
-    const navigation = useNavigation()
-
-
+function Item({ e, handleNavigate }) {
     const selectedPlace = {
         titulo: e.puntoReunionNombre,
         ...JSON.parse(e.puntoReunionCoords)
 
     }
 
-    function handleNavigate() {
-        navigation.navigate("DetalleFecha", { fecha: e })
-    }
-
-
+    // Variables de ver en el mapa
+    const [showModalMap, setShowModalMap] = useState(false);
     return (
         <Pressable
-            onPress={handleNavigate}
+            onPress={() => handleNavigate(e.id)}
 
             style={styles.reservaContainer}>
             <Image
@@ -91,12 +82,13 @@ function Item({ e }) {
 }
 
 
-export default function () {
+export default function ({ navigation }) {
     useEffect(() => {
         fetchReservas()
     }, []);
 
     const [fechas, setFechas] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
 
     const [reservasProximas, setReservasProximas] = useState(true);
 
@@ -165,11 +157,36 @@ export default function () {
         setFechas(fechas)
     }
 
+    function onRefresh() {
+        fetchReservas()
+        setRefreshing(true)
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 300);
+
+    }
+
+    function handleNavigate(id) {
+        const idx = fechas.findIndex(e => e.id === id)
+        const e = fechas[idx]
+
+
+        // Ir a detalle fecha y pasarle un parametro de fechas con el index selecionado
+        navigation.navigate("DetalleFecha", { fecha: e, setFechas, idx, fechas })
+
+
+    }
+
     const nextDates = fechas?.filter(e => !e.pasada)
     const pastDates = fechas?.filter(e => e.pasada)
 
     return (
         <ScrollView
+            refreshControl={<RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />}
+
             showsVerticalScrollIndicator={false}
             style={container}>
             <View style={styles.selectorContainer}>
@@ -209,7 +226,9 @@ export default function () {
                                 </View>
                                 :
                                 nextDates.map((reserva, i) => {
+
                                     return <Item
+                                        handleNavigate={handleNavigate}
                                         key={i.toString()}
                                         e={reserva}
                                     />
@@ -228,6 +247,7 @@ export default function () {
                                 :
                                 pastDates.map((reserva, i) => {
                                     return <Item
+                                        handleNavigate={handleNavigate}
                                         key={i.toString()}
                                         e={reserva}
                                     />
@@ -235,6 +255,9 @@ export default function () {
                                 })
                         )}
 
+            <View style={{
+                marginBottom: 20,
+            }} />
         </ScrollView>
     )
 }

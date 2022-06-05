@@ -42,7 +42,6 @@ export default function ({ setModalVisible,
                     style={styles.map}
                     sugestionsContainerStyle={styles.sugestionsContainer}
 
-                    previewTxt={null}
                     setSelectedPlace={setSelectedPlace}
                     selectedPlace={selectedPlace}
                 />

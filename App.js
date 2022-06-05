@@ -5,11 +5,11 @@ import 'react-native-gesture-handler';
 
 
 import {
-  Linking, View, StyleSheet, Button, Platform, Alert,
+  Linking, View, Platform, Alert,
   LogBox
 } from 'react-native';
 
-import { Auth, Hub, Amplify, AuthModeStrategyType, syncExpression } from "aws-amplify";
+import { Auth, Hub, Amplify, AuthModeStrategyType } from "aws-amplify";
 
 import { DataStore } from '@aws-amplify/datastore';
 
@@ -26,9 +26,9 @@ import { Notificacion } from './src/models';
 
 import LoginStack from './src/navigation/LoginStack';
 import Router from './src/navigation/Router';
-import { StripeProvider } from '@stripe/stripe-react-native';
-import { colorFondo, getUserSub } from './assets/constants';
-import { ChatRoomUsuarios } from './src/models';
+
+import { colorFondo } from './assets/constants';
+
 import { cancelAllScheduledNotificationsAsync } from 'expo-notifications';
 
 
@@ -215,7 +215,7 @@ export default function App() {
   )
 
 
-  if (!authenticated) {
+  if (authenticated) {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff', }}>
 
