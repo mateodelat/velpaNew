@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, Alert, TextInput, Pressable, Linking } from 'react-native'
 
 
@@ -195,9 +195,16 @@ const ModalItinerario = ({
     const [errorHora, setErrorHora] = useState(null);
     const [errorTitulo, setErrorTitulo] = useState(null);
 
+    const [itinerarioLocal, setItinerarioLocal] = useState(itinerario);
+
     const [horaSeleccionada, setHoraSeleccionada] = useState([null, null]);
     // [index,"inicial"/"final"]
 
+
+    // Actualizar cada que cambie el itinerario
+    useEffect(() => {
+        setItinerarioLocal(itinerario)
+    }, [itinerario]);
 
     // Funciones para seleccionar hora de itinerario
     const hideDatePicker = () => {
@@ -211,7 +218,7 @@ const ModalItinerario = ({
         const horaEnMs = date.getTime()
 
         const index = horaSeleccionada
-        let newItinerario = [...itinerario]
+        let newItinerario = [...itinerarioLocal]
 
         // Si la hora es menor a la hora inicial o mayor a la final se da error
         if (horaEnMs <= newItinerario[0].hora) {
@@ -219,8 +226,8 @@ const ModalItinerario = ({
             newItinerario[index].hora = newItinerario[0].hora + msInMinute
             Alert.alert("Error", "La hora de la actividad debe ser mayor a la hora de salida")
         }
-        else if (horaEnMs >= newItinerario[itinerario.length - 1].hora) {
-            newItinerario[index].hora = newItinerario[itinerario.length - 1].hora - msInMinute
+        else if (horaEnMs >= newItinerario[itinerarioLocal.length - 1].hora) {
+            newItinerario[index].hora = newItinerario[itinerarioLocal.length - 1].hora - msInMinute
             setErrorHora(index)
             Alert.alert("Error", "La hora de la actividad debe ser menor a la hora de llegada")
         }
@@ -229,7 +236,7 @@ const ModalItinerario = ({
         }
 
         newItinerario.sort(sortArray)
-        setItinerario(newItinerario)
+        setItinerarioLocal(newItinerario)
     }
 
     const sortArray = (a, b) => {
@@ -255,9 +262,9 @@ const ModalItinerario = ({
         setErrorTitulo(null)
 
 
-        let nuevoItinerario = [...itinerario]
+        let nuevoItinerario = [...itinerarioLocal]
         nuevoItinerario[idx].titulo = txt
-        setItinerario(nuevoItinerario)
+        setItinerarioLocal(nuevoItinerario)
 
     }
 
@@ -272,7 +279,7 @@ const ModalItinerario = ({
                 setFechaMin(fechaInicial)
                 break;
 
-            case itinerario.length - 1:
+            case itinerarioLocal.length - 1:
                 setFechaMin(fechaFinal)
                 setFechaMax(fechaFinal)
 
@@ -293,7 +300,7 @@ const ModalItinerario = ({
             let redFlag = false
 
             // Revisar titulos vacios
-            itinerario.find((e, i) => {
+            itinerarioLocal.find((e, i) => {
                 if (!e.titulo || e.titulo === "") {
                     Alert.alert("Error", "Agrega un titulo a la actividad")
                     setErrorTitulo(i)
@@ -303,6 +310,7 @@ const ModalItinerario = ({
 
             if (!redFlag) {
                 Alert.alert("Exito", "Itinerario modificado con exito")
+                setItinerario(itinerarioLocal)
                 setModify(!modify)
                 setModalVisible(false)
             }
@@ -313,8 +321,8 @@ const ModalItinerario = ({
 
     const handleAdd = (idx) => {
         clearErrors()
-        let newItinerario = [...itinerario]
-        if (itinerario.find((i, idx) => {
+        let newItinerario = [...itinerarioLocal]
+        if (itinerarioLocal.find((i, idx) => {
             if (i.titulo === "") {
                 setErrorTitulo(idx)
                 return true
@@ -325,12 +333,12 @@ const ModalItinerario = ({
         }
 
         newItinerario.splice(idx, 0, {
-            hora: itinerario[idx - 1].hora + msInMinute,
+            hora: itinerarioLocal[idx - 1].hora + msInMinute,
             titulo: ""
         })
 
         // newItinerario.sort(sortArray)
-        setItinerario(newItinerario)
+        setItinerarioLocal(newItinerario)
 
         setFechaMax(fechaFinal)
         setFechaMin(fechaInicial)
@@ -339,15 +347,18 @@ const ModalItinerario = ({
     const handleRemove = (idx) => {
         clearErrors()
 
-        let newItinerario = [...itinerario]
+        let newItinerario = [...itinerarioLocal]
 
         newItinerario.splice(idx, 1)
 
-        setItinerario(newItinerario)
+        setItinerarioLocal(newItinerario)
     }
 
 
     const handleCerrar = () => {
+        setItinerarioLocal({
+            ...itinerario
+        })
         setModalVisible(false)
     }
 
@@ -359,7 +370,7 @@ const ModalItinerario = ({
 
     }
 
-    let dateSelected = new Date(itinerario[horaSeleccionada]?.hora)
+    let dateSelected = new Date(itinerarioLocal[horaSeleccionada]?.hora)
     dateSelected.setTime(dateSelected.getTime() + dateSelected.getTimezoneOffset() * 60 * 1000)
 
     return (
@@ -385,13 +396,13 @@ const ModalItinerario = ({
                     showsVerticalScrollIndicator={false}
                     style={styles.body}>
                     {
-                        itinerario.map((elemento, idx) => {
+                        itinerarioLocal.map((elemento, idx) => {
                             var nuevoDia = false
 
-                            const fechaActual = new Date(itinerario[idx].hora)
+                            const fechaActual = new Date(itinerarioLocal[idx].hora)
 
                             // Ver si el dia de la actividad es distinto al anterior
-                            if (idx && fechaActual.getUTCDay() !== (new Date(itinerario[idx - 1].hora).getUTCDay())) {
+                            if (idx && fechaActual.getUTCDay() !== (new Date(itinerarioLocal[idx - 1].hora).getUTCDay())) {
                                 nuevoDia = true
                             }
 
@@ -417,7 +428,7 @@ const ModalItinerario = ({
                                     handleCambiarHora={() => handleCambiarHora(idx)}
                                     cambiarTitulo={(txt) => cambiarTitulo(txt, idx)}
 
-                                    allowAgregar={modify && idx !== itinerario.length - 1}
+                                    allowAgregar={modify && idx !== itinerarioLocal.length - 1}
 
                                     handleAdd={() => handleAdd(idx + 1)}
                                     handleRemove={() => handleRemove(idx)}
@@ -430,7 +441,7 @@ const ModalItinerario = ({
                     <View style={{ position: 'absolute', left: 67, top: 10, }}>
                         <View style={{
                             width: 6,
-                            height: (itinerario.length - 1) * (modify ? 180 : 120),
+                            height: (itinerarioLocal.length - 1) * (modify ? 180 : 120),
                             backgroundColor: moradoClaro,
                         }} />
 
@@ -441,8 +452,8 @@ const ModalItinerario = ({
                     isVisible={isDatePickerVisible}
                     mode="datetime"
                     date={dateSelected}
-                    minimumDate={fechaMin}
-                    maximumDate={fechaMax}
+                    minimumDate={new Date(fechaMin)}
+                    maximumDate={new Date(fechaMax)}
                     onConfirm={handleConfirmHour}
                     onCancel={hideDatePicker}
                 />

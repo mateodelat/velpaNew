@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 
 
-import { AsyncAlert, calculateComision, calculateExpPerPerson, calculateLvl, colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, meses, moradoClaro, moradoOscuro, redondear, shadowMarcada } from '../../../assets/constants';
+import { AsyncAlert, calculateComision, calculateExpPerPerson, colorFondo, formatAMPM, formatDateShort, formatMoney, getImageUrl, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -27,11 +27,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Line from '../../components/Line';
 
-import { DataStore } from '@aws-amplify/datastore';
+import { DataStore, OpType } from '@aws-amplify/datastore';
 import { ChatRoom, TipoNotificacion, Usuario } from '../../models';
 
 import { Reserva } from '../../models';
-import ModalItinerario from '../../components/ModalItinerario';
+import ModalItinerario from '../AgregarFecha/components/ModalItinerario';
 import { Loading } from '../../components/Loading';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -47,9 +47,11 @@ import CurrencyInput from 'react-native-currency-input';
 import { ModalMap as ModalMapEdit } from '../Admin/EditarAventura/components/ModalMap';
 import ModalMap from '../../components/ModalMap';
 import { Notificacion } from '../../models';
-import RadioButton from '../../components/RadioButton';
-import { sendNotification } from '../../../assets/constants/constant';
 
+import { cancelScheduledNotificationAsync, getAllScheduledNotificationsAsync } from 'expo-notifications';
+import { notificacionesRecordatorio, sendNotification } from '../../../assets/constants/constant';
+import QueLlevar from '../AgregarFecha/components/QueLlevar';
+import Incluido from '../AgregarFecha/components/Incluido';
 
 
 
@@ -91,6 +93,13 @@ export default ({ navigation, route }) => {
     const [markedDays, setMarkedDays] = useState({});
     const [guiaFecha, setGuiaFecha] = useState(null);
 
+
+    // Datos del que llevar y material incluido
+    const [modificarIncluido, setModificarIncluido] = useState(false);
+    const [modificarQueLlevar, setModificarQueLlevar] = useState(false);
+
+
+
     const mapRef = useRef()
 
 
@@ -98,6 +107,9 @@ export default ({ navigation, route }) => {
 
     // Detectar si se manda directamente la fecha de la ruta, si no obtenerla
     useEffect(() => {
+        let subscription
+
+
         if (fechaGotten) {
             getGuia(fechaGotten.usuarioID)
             setFecha(fechaGotten)
@@ -107,8 +119,22 @@ export default ({ navigation, route }) => {
             getFecha()
         }
 
+        // Suscribirse a reservas en la fecha
+        subscription = DataStore.observe(Reserva, res => {
+            res.fechaID("eq", fechaID ? fechaID : fechaGotten.id)
+        })
+            .subscribe((msg) => {
 
+                // Si se inserta una nueva reserva
+                if (msg.opType === OpType.INSERT) {
+                    Alert.alert("Nueva reserva en la fecha")
+
+                }
+            })
+
+        return () => subscription?.unsubscribe()
     }, []);
+
 
 
 
@@ -154,6 +180,7 @@ export default ({ navigation, route }) => {
         })
 
 
+
         const f = {
             // Obtener reservas y personas reservadas en la fecha
             ...fecha,
@@ -166,9 +193,10 @@ export default ({ navigation, route }) => {
 
             // imagenFondo: await getImageUrl(fecha.imagenFondo),
             material: JSON.parse(fecha.material),
-            incluido: [...(JSON.parse(fecha.incluido)).default.map(e => e),
-            ...(JSON.parse(fecha.incluido)).agregado.map(e => e)
-            ],
+            incluido: {
+                incluido: JSON.parse(fecha.incluido)?.incluido,
+                agregado: (JSON.parse(fecha.incluido))?.agregado
+            },
             pasada: fecha.fechaInicial < now
 
         }
@@ -230,6 +258,9 @@ export default ({ navigation, route }) => {
 
         mapRef?.current.animateToRegion(region)
 
+        setModificarIncluido(false)
+        setModificarQueLlevar(false)
+
         setMarkedDays(calculateMarkedDays(fechaInicial, fechaFinal, true))
         setFecha(originalDate)
 
@@ -242,8 +273,13 @@ export default ({ navigation, route }) => {
     }
 
     function handleQR() {
-        setModalVisible(true)
-        setTipoModal("escaner")
+        if (fecha.personasReservadas.length !== 0) {
+            setModalVisible(true)
+            setTipoModal("escaner")
+
+        } else {
+            Alert.alert("Erorr", "No tienes personas reservadas en la fecha")
+        }
     }
 
     function handleOpenReservacion(r) {
@@ -328,6 +364,10 @@ export default ({ navigation, route }) => {
     }
 
     async function handleSave() {
+
+        setModificarIncluido(false)
+        setModificarQueLlevar(false)
+
         try {
             const {
                 fechaInicial,
@@ -348,16 +388,43 @@ export default ({ navigation, route }) => {
 
                 efectivo,
                 allowNinos,
-                allowTercera
+                allowTercera,
+
+                incluido,
+                material
+
 
             } = fecha
 
+
+            let error = false
 
             // Si no hay fecha final devolver error
             if (!fechaFinal) {
                 Alert.alert("Error", "Agrega la hora final")
                 return
             }
+            // Verificacion itinerario correcto
+            if (itinerario !== itinerarioOrig) {
+                JSON.parse(itinerario).map((e) => {
+                    // Verificar que las horas esten en el rango
+                    if (fechaInicial > e.hora || fechaFinal < e.hora) {
+                        error = "Itinerario no valido, revisa que todas las actividades se encuentren en el rango de tu fecha"
+                    }
+                    // Verificar que tengan titulo
+                    if (!e.titulo || e.titulo === "") {
+                        error = "Agrega un titulo a la actividad"
+                    }
+                })
+
+            }
+
+            if (error) {
+                Alert.alert("Error", error)
+
+                return
+            }
+
 
             const {
                 fechaInicial: fechaInicialOrig,
@@ -373,7 +440,10 @@ export default ({ navigation, route }) => {
 
                 efectivo: efectivoOrig,
                 allowNinos: allowNinosOrig,
-                allowTercera: allowTerceraOrig
+                allowTercera: allowTerceraOrig,
+
+                incluido: incluidoOrig,
+                material: materialOrig,
             } = originalDate
 
             function saveDate(dateModified) {
@@ -410,7 +480,10 @@ export default ({ navigation, route }) => {
 
                             efectivo,
                             allowNinos,
-                            allowTercera
+                            allowTercera,
+
+                            incluido,
+                            material
 
                         }
                     }
@@ -418,6 +491,18 @@ export default ({ navigation, route }) => {
                         ...fechas
                     ])
                 }
+
+                // Si se cambia fecha inicial, cambiar el nombre del chatroom
+                if (fechaInicial !== fechaInicialOrig) {
+                    DataStore.query(ChatRoom, c => c.fechaID("eq", id))
+                        .then(r => {
+                            r = r[0]
+                            DataStore.save(ChatRoom.copyOf(r, n => {
+                                n.name = (fecha.tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal))
+                            }))
+                        })
+                }
+
 
                 DataStore.query(Fecha, id)
                     .then(r => {
@@ -448,12 +533,45 @@ export default ({ navigation, route }) => {
                             r.efectivo = efectivo
                             r.allowNinos = allowNinos
                             r.allowTercera = allowTercera
+
+                            // Material incluido y a llevar
+                            r.incluido = JSON.stringify(incluido)
+                            r.material = JSON.stringify(material)
                         }))
-                            .then(console.log)
                     })
                 Alert.alert("Exito", "Fecha actualizada con exito")
                 setLoading(false)
                 setEditing(false)
+            }
+
+            async function updateGuideNotifications() {
+
+                let notificationsToDelete = await getAllScheduledNotificationsAsync()
+                notificationsToDelete.filter(n => {
+                    const data = n?.content?.data
+                    const id = n.identifier
+
+                    // Encontrar las notificaciones asociadas a la fecha
+                    const {
+                        fechaID,
+                        tipo
+                    } = data
+
+                    // Cancelar notificaciones tipo recordatorio guia y con fecha id igual al de la fecha
+                    if (fechaID === fecha.id && tipo === TipoNotificacion.RECORDATORIOFECHA) {
+                        cancelScheduledNotificationAsync(id)
+                    }
+                })
+
+                // Nuevas notificaciones al guia
+                notificacionesRecordatorio({
+                    sub: guiaFecha.id,
+                    fechaInicial,
+                    tituloAventura: fecha.tituloAventura,
+                    fechaID: fecha.id,
+                })
+
+
             }
 
             // Variables a revisar que si cambian hay que avisar a los usuarios
@@ -461,6 +579,8 @@ export default ({ navigation, route }) => {
                 && fechaFinalOrig === fechaFinal
                 && puntoReunionCoords === puntoReunionCoordsOrig
                 && itinerarioOrig === itinerario
+                && material === materialOrig
+                && incluido === incluidoOrig
             ) {
                 // Variables que no se necesitan avisar cambios a usuarios
                 // Si no se cambio nada se cancela
@@ -489,34 +609,284 @@ export default ({ navigation, route }) => {
                     .fechaID("eq", id)
                     .cancelado("ne", true)
                 )
+                const tituloAventura = fecha.tituloAventura
 
                 // Mandar los respectivos mensajes si ya hay personas reservadas
                 if (reservas.length !== 0) {
-                    // Revisar si se cambio la fecha inicial y final si no simplemente se guardan los nuevos datos
+                    // Revisar si se cambio la fecha inicial o final si no simplemente se guardan los nuevos datos
                     if ((fechaInicial !== fechaInicialOrig || fechaFinal !== fechaFinalOrig)) {
                         await AsyncAlert("Atencion", "Al cambiar la fecha inicial o final y tener usuarios reservados, se les permite cancelar sin costo y ademas una calificacion a tu perfil\n¿Quieres continuar?")
 
-                        // Actualizar notificaciones a usuarios
-                        reservas.map(u => {
-                            console.log("Mandar mensaje de cambio fecha a ", u.id)
-                        })
+                        // Si la fecha inicial y fecha final cambiaron
+                        if (fechaInicial !== fechaInicialOrig && fechaFinal !== fechaFinalOrig) {
+                            console.log("Cambio fecha inicial y final")
+
+                            // Actualizar notificaciones de recordatorio de clientes
+                            await Promise.all(reservas.map(async u => {
+                                // Borrar notificaciones viejas en base de datos
+                                DataStore.query(Notificacion, r => r
+                                    .fechaID("eq", id)
+
+                                    // Selccionar las que sean de tipo calfica usuario
+                                    .or(t => {
+                                        t
+                                            .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
+                                            .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
+                                    })
+
+                                    // Seleccionar si es igual al usuario del cliente o el guia
+                                    .or(t => {
+                                        t
+                                            .usuarioID("eq", guiaFecha.id)
+                                            .usuarioID("eq", u.usuarioID)
+                                    })
+
+                                )
+                                    .then(not => {
+                                        // Borrar todas las viejas y crear nuevas
+                                        not.map(not => {
+                                            DataStore.delete(Notificacion, not.id)
+                                        })
+
+                                    })
+
+                                // Mandar notificacion al usuario
+                                await DataStore.query(Usuario, u.usuarioID)
+                                    .then(usr => {
+                                        sendNotification({
+                                            tipo: TipoNotificacion.FECHAACTUALIZACION,
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha de partida y la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            fechaID: id,
+                                            reservaID: u.id,
+                                            showAt: new Date().getTime(),
+                                            titulo: fecha.tituloAventura + " se ha actualizado",
+                                            usuarioID: u.usuarioID,
+                                            token: usr.notificationToken
+                                        })
+
+                                        // Nuevas notificaciones
+                                        notificacionesRecordatorio({
+                                            // Datos del cliente para la notificacion de calificar
+                                            cliente: {
+                                                calificaClienteImage: fecha.imagenFondo,
+                                                tipoPago: u.tipoPago,
+                                                precioTotal: u.total,
+                                                nickname: usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname
+                                            },
+
+                                            // Datos del guia para la notificacion de calificar
+                                            guia: {
+                                                guiaID: guiaFecha.id,
+                                                nickname: guiaFecha.nickname,
+                                            },
+
+                                            // Datos otras notificaciones
+                                            fechaInicial: fecha.fechaInicial,
+                                            fechaFinal: fecha.fechaFinal,
+                                            sub: u.usuarioID,
+                                            tituloAventura,
+
+                                            aventuraID: fecha.aventuraID,
+                                            reservaID: u.id,
+                                            fechaID: fecha.id,
+                                        })
+                                    })
+                            }))
+                            updateGuideNotifications()
+                            saveDate(true)
+                        }
+
+                        // Si solo cambio fecha inicial
+                        else if (fechaInicial !== fechaInicialOrig) {
+                            console.log("Cambio fecha inicial")
+
+
+                            // Ver usuarios reservados
+                            await Promise.all(reservas.map(async u => {
+                                // Borrar notificaciones viejas en base de datos
+                                DataStore.query(Notificacion, r => r
+                                    .fechaID("eq", id)
+
+                                    // Solo los recordatorios en la fecha
+                                    .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
+
+                                    // Seleccionar si es igual al usuario del cliente o el guia
+                                    .or(t => {
+                                        t
+                                            .usuarioID("eq", guiaFecha.id)
+                                            .usuarioID("eq", u.usuarioID)
+                                    })
+
+                                )
+                                    .then(not => {
+
+                                        // Borrar todas las viejas y crear nuevas
+                                        not.map(not => {
+                                            DataStore.delete(Notificacion, not.id)
+                                        })
+                                    })
+
+
+                                // Mandar notificacion al usuario reservado actual
+                                await DataStore.query(Usuario, u.usuarioID)
+                                    .then(usr => {
+                                        sendNotification({
+                                            tipo: TipoNotificacion.FECHAACTUALIZACION,
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha de partida quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            fechaID: id,
+                                            reservaID: u.id,
+                                            showAt: new Date().getTime(),
+                                            titulo: fecha.tituloAventura + " se ha actualizado",
+                                            usuarioID: u.usuarioID,
+                                            token: usr.notificationToken
+                                        })
+                                    })
+
+                                // Programar nuevas notificaciones del usuario
+                                notificacionesRecordatorio({
+                                    // Datos otras notificaciones
+                                    fechaInicial: fecha.fechaInicial,
+                                    fechaFinal: fecha.fechaFinal,
+                                    sub: u.usuarioID,
+                                    tituloAventura,
+
+                                    aventuraID: fecha.aventuraID,
+                                    reservaID: u.id,
+                                    fechaID,
+                                })
+                            }))
+                            // Actualizar notificaciones del guia
+                            updateGuideNotifications()
+                            saveDate(true)
+                        }
+
+                        // Si solo cambio fecha final
+                        else {
+                            console.log("Cambio fecha final")
+
+                            // Poner fecha final al dia siguiente de que acabe a las 8
+                            let finalDate = new Date(fechaFinal);
+                            if (finalDate.getUTCHours() >= 8) {
+                                finalDate = new Date(finalDate.getTime() + msInDay);
+                            }
+                            finalDate.setUTCHours(8);
+
+                            const horaCalificaUsuario = finalDate.getTime()
+
+                            await Promise.all(reservas.map(async u => {
+
+                                // Borrar notificaciones viejas en base de datos
+                                DataStore.query(Notificacion, r => r
+                                    .fechaID("eq", id)
+
+                                    // Solo los recordatorios en la fecha
+                                    .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
+
+                                    // Selccionar las que sean del  usuario
+                                    .usuarioID("eq", u.usuarioID)
+
+
+                                )
+                                    .then(not => {
+                                        // Borrar todas las viejas y crear nuevas
+                                        not.map(not => {
+                                            DataStore.delete(Notificacion, not.id)
+                                        })
+                                    })
+                                // Pedir el usuario para cada reserva
+                                await DataStore.query(Usuario, u.usuarioID)
+                                    .then(usr => {
+                                        sendNotification({
+                                            tipo: TipoNotificacion.FECHAACTUALIZACION,
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            fechaID: id,
+                                            reservaID: u.id,
+                                            showAt: new Date().getTime(),
+                                            titulo: fecha.tituloAventura + " se ha actualizado",
+                                            usuarioID: u.usuarioID,
+                                            token: usr.notificationToken
+                                        })
+
+
+                                        // Programar notificacion de califica al usuario terminando la fecha
+                                        DataStore.save(
+                                            new Notificacion({
+                                                tipo: TipoNotificacion.CALIFICAUSUARIO,
+
+                                                titulo: usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname + ", califica tu experiencia",
+                                                descripcion:
+                                                    "Ayudanos a hacer de Velpa un lugar mejor, calfica a " +
+                                                    guiaFecha.nickname +
+                                                    " en " +
+                                                    fecha.tituloAventura,
+
+                                                showAt: horaCalificaUsuario,
+
+                                                usuarioID: u.usuarioID,
+                                                aventuraID: fecha.aventuraID,
+
+                                                // Datos para buscar por si se cancela/mueve fecha o reserva
+                                                reservaID: u.id,
+                                                fechaID: fecha.id,
+
+                                                imagen: fecha.imagenFondo,
+
+                                                guiaID: guiaFecha.id,
+                                            })
+                                        )
+                                    })
+                            }))
+                            saveDate(true)
+                        }
+
 
                     }
+
                     // Si solo se cambio el itinerario y no la fecha, mandar notificacion a cada usuario de cambio de itinerario
                     else if (itinerario !== itinerarioOrig) {
                         // Mandar notificacion de actualizacion a usuarios
-                        reservas.map(u => {
-                            sendNotification({
-                                tipo: TipoNotificacion.FECHAACTUALIZACION,
-                                descripcion: "El guia ha cambiado el itinerario de la fecha para el " + formatDateShort(fechaInicial, fechaFinal),
-                                fechaID: id,
-                                reservaID: u.id,
-                                showAt: new Date().getTime(),
-                                titulo: "Actualizacion en tu reserva en " + fecha.tituloAventura,
-                                usuarioID: u.usuarioID
+                        await Promise.all(reservas.map(async u => {
+                            await DataStore.query(Usuario, u.usuarioID)
+                                .then(r => {
+                                    sendNotification({
+                                        tipo: TipoNotificacion.FECHAACTUALIZACION,
+                                        descripcion: "El guia ha cambiado el itinerario de la fecha para el " + formatDateShort(fechaInicial, fechaFinal),
+                                        fechaID: id,
+                                        reservaID: u.id,
+                                        showAt: new Date().getTime(),
+                                        titulo: fecha.tituloAventura + " se ha actualizado",
+                                        usuarioID: u.usuarioID,
+                                        token: r.notificationToken
 
-                            })
-                        })
+                                    })
+                                })
+
+                        }))
+                        // Guardar en datastore
+                        saveDate()
+                    }
+
+                    else if (incluido !== incluidoOrig || materialOrig !== material) {
+                        console.log("Solo cambio el material de la fecha")
+
+                        // Mandar notificacion de actualizacion a usuarios
+                        await Promise.all(reservas.map(async u => {
+                            await DataStore.query(Usuario, u.usuarioID)
+                                .then(r => {
+                                    sendNotification({
+                                        tipo: TipoNotificacion.FECHAACTUALIZACION,
+                                        descripcion: "El guia ha modificado el material a llevar y lo que incluye para el " + formatDateShort(fechaInicial, fechaFinal),
+                                        fechaID: id,
+                                        reservaID: u.id,
+                                        showAt: new Date().getTime(),
+                                        titulo: fecha.tituloAventura + " se ha actualizado",
+                                        usuarioID: u.usuarioID,
+                                        token: r.notificationToken
+
+                                    })
+                                })
+
+                        }))
 
                         // Guardar en datastore
                         saveDate()
@@ -526,8 +896,29 @@ export default ({ navigation, route }) => {
                         Alert.alert("Error", "Error no se detecto el cambio en la fecha")
                     }
                 }
-                // Si no hay personas reservadas, solo guardar la fecha
+
+                // Si no hay personas reservadas, solo guardar la fecha y actualizar notificaciones al guia
                 else {
+                    // Borrar notificaciones viejas del guia en base de datos
+                    DataStore.query(Notificacion, r => r
+                        .fechaID("eq", id)
+
+                        // Selccionar las que sean del  usuario
+                        .usuarioID("eq", guiaFecha.id)
+
+
+                    )
+                        .then(not => {
+                            // Borrar todas las viejas y crear nuevas
+                            not.map(not => {
+                                DataStore.delete(Notificacion, not.id)
+                            })
+                        })
+
+                    updateGuideNotifications()
+
+
+                    saveDate()
 
                 }
             }
@@ -538,6 +929,7 @@ export default ({ navigation, route }) => {
                 clearData()
 
             } else {
+                console.log(error)
                 Alert.alert("Error", "Error modificando la fecha")
 
             }
@@ -1049,7 +1441,7 @@ export default ({ navigation, route }) => {
 
                             <MaterialCommunityIcons
                                 style={styles.botonItinerario}
-                                name="calendar-text" size={20} color="#fff" />
+                                name={editing ? "calendar-edit" : "calendar-text"} size={20} color="#fff" />
 
                             <View style={styles.lineItinerarioContainer}>
                                 {/* Linea de itinerario */}
@@ -1097,45 +1489,91 @@ export default ({ navigation, route }) => {
 
                         <Line style={{ marginTop: 40, }} />
 
-                        {/* <Ionicons
-                        onPress={navigateChat}
-                        style={{ ...styles.botonItinerario, marginRight: 0, marginBottom: 0, }} name="chatbox" size={20} color="white" /> */}
-
-
 
                         <View style={{ marginTop: 40, }} />
 
-                        <Text style={[styles.title, { marginBottom: 5, }]}>Incluido:</Text>
 
-                        <Text
-                            style={{ fontSize: 16, marginLeft: 10, }}>{fecha.incluido?.map(e => e + "      ")}</Text>
+                        {/* ----------------- */}
+                        {/* Material incluido */}
+                        {/* ----------------- */}
+                        <View style={styles.material}>
+                            <Pressable
+                                style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                                <Text style={styles.tituloMaterial}>Incluido</Text>
+                                {
+                                    editing ? modificarIncluido ?
+                                        <Feather
+                                            onPress={() => setModificarIncluido(!modificarIncluido)}
+                                            style={styles.modificar}
+                                            name="check"
+                                            size={30}
+                                            color={moradoOscuro}
+                                        />
+                                        :
+                                        <Feather
+                                            onPress={() => setModificarIncluido(!modificarIncluido)}
+                                            style={styles.modificar}
+                                            name="edit"
+                                            size={24}
+                                            color="black"
+                                        /> : <View />
+                                }
+                            </Pressable>
 
-                        <View style={{ marginTop: 40, }} />
 
-                        {/* Que llevar */}
+                            <Incluido
+                                datos={fecha.incluido}
+                                modify={modificarIncluido}
+                                setDatos={r => {
+                                    setFecha({
+                                        ...fecha,
+                                        incluido: r
+                                    })
+                                }}
+                            />
 
-                        {
-                            fecha.material.map((e, idxCat) => {
-                                return <View
-                                    key={idxCat.toString()}
-                                    style={styles.queLlevarContainer}>
+                        </View>
+                        <View style={{
+                            marginBottom: 20,
+                        }} />
 
-                                    <Text style={[styles.title, { marginBottom: 5, }]}>{e[0]}:</Text>
-                                    {
-                                        e[1].map((item, idxItem) => {
-                                            return <View
-                                                onPress={() => handlePressMaterial(idxCat, idxItem)}
-                                                key={idxItem.toString()}
-                                                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
+                        <View style={styles.material}>
+                            <Pressable
+                                style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                                <Text style={styles.tituloMaterial}>Material a llevar</Text>
+                                {
+                                    editing ? modificarQueLlevar ?
+                                        <Feather
+                                            onPress={() => setModificarQueLlevar(!modificarQueLlevar)}
+                                            style={styles.modificar}
+                                            name="check"
+                                            size={30}
+                                            color={moradoOscuro}
+                                        />
+                                        :
+                                        <Feather
+                                            onPress={() => setModificarQueLlevar(!modificarQueLlevar)}
+                                            style={styles.modificar}
+                                            name="edit"
+                                            size={24}
+                                            color="black"
+                                        />
+                                        : <View />
+                                }
+                            </Pressable>
 
-                                                <Text style={{ fontSize: 16, marginLeft: 10, }}>{item}</Text>
+                            <QueLlevar
+                                datos={fecha.material}
+                                modify={editing && modificarQueLlevar}
+                                setDatos={r => {
+                                    setFecha({
+                                        ...fecha,
+                                        material: r
+                                    })
+                                }}
+                            />
 
-                                            </View>
-                                        })
-                                    }
-                                </View>
-                            })
-                        }
+                        </View>
                     </View>
 
 
@@ -1177,13 +1615,11 @@ export default ({ navigation, route }) => {
                             await AsyncAlert("Atencion", "Se perderan todos los cambios\n¿Quieres continuar?")
                                 .then(r => {
                                     clearData()
-
-                                })
-                                .catch(() => null)
-                                .finally(() => {
                                     setEditing(false)
 
                                 })
+                                .catch(() => null)
+
                         }
                         else navigation.pop()
 
@@ -1204,88 +1640,100 @@ export default ({ navigation, route }) => {
                     }
                 </Pressable>}
 
-                IconRight={editDisabled ? null : () => <Pressable
-                    onPress={() => {
-                        if (loading) {
-                            return
+                IconRight={
+                    editDisabled ? null : () => <Pressable
+                        onPress={() => {
+                            if (loading) {
+                                return
+                            }
+                            // Si se estaba editando se guarda
+                            if (editing) {
+                                handleSave()
+                            } else {
+                                setEditing(!editing)
+
+                            }
+                        }}
+                        style={{
+                            height: 43,
+                            width: 43,
+                            alignItems: 'center', justifyContent: 'center',
+
+                            borderRadius: 25,
+
+                            backgroundColor: '#fff',
+                        }}>
+                        {loading ?
+                            <ActivityIndicator size={"small"}
+                                color={moradoOscuro}
+                            />
+                            : editing ?
+                                <Feather name="check" size={25} color={moradoOscuro} />
+                                : <Feather name="edit-2" size={20} color={moradoOscuro} />
                         }
-                        // Si se estaba editando se guarda
-                        if (editing) {
-                            handleSave()
-                        } else {
-                            setEditing(!editing)
-
-                        }
-                    }}
-                    style={{
-                        height: 43,
-                        width: 43,
-                        alignItems: 'center', justifyContent: 'center',
-
-                        borderRadius: 25,
-
-                        backgroundColor: '#fff',
-                    }}>
-                    {loading ?
-                        <ActivityIndicator size={"small"}
-                            color={moradoOscuro}
-                        />
-                        : editing ?
-                            <Feather name="check" size={25} color={moradoOscuro} />
-                            : <Feather name="edit-2" size={20} color={moradoOscuro} />
-                    }
-                </Pressable>
+                    </Pressable>
                 }
             />
 
             {
-                tipoModal === "itinerario" ?
-
-                    < ModalItinerario
-                        puntoReunion={selectedPlace}
-
-
-
-                        modalVisible={modalVisible}
+                tipoModal === "infoNiveles" ?
+                    <InfoNivelesModal
+                        userExp={guiaFecha?.experience}
                         setModalVisible={setModalVisible}
+                        modalVisible={modalVisible}
+                    />
 
-                        itinerario={itinerario}
-
-
-                    /> :
-                    tipoModal === "infoNiveles" ?
-                        <InfoNivelesModal
-                            userExp={guiaFecha?.experience}
-                            setModalVisible={setModalVisible}
+                    :
+                    tipoModal === "map" && !editing ?
+                        <ModalMap
                             modalVisible={modalVisible}
+                            setModalVisible={setModalVisible}
+
+                            selectedPlace={selectedPlace}
+
                         />
 
                         :
-                        tipoModal === "map" && !editing ?
-                            <ModalMap
-                                modalVisible={modalVisible}
-                                setModalVisible={setModalVisible}
-
-                                selectedPlace={selectedPlace}
-
-                            />
-
-                            :
 
 
-                            <Modal
-                                animationType="slide"
-                                transparent={false}
-                                visible={modalVisible}
-                                onRequestClose={() => {
-                                    setModalVisible(false);
-                                }}
-                            >{
-                                    tipoModal === "escaner" ?
-                                        <QRScan
-                                            cerrar={() => setModalVisible(false)}
-                                            handleScanned={codigoEscaneado} />
-                                        : tipoModal === "map" ?
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                setModalVisible(false);
+                            }}
+                        >{
+                                tipoModal === "escaner" ?
+
+                                    <QRScan
+                                        cerrar={() => setModalVisible(false)}
+                                        handleScanned={codigoEscaneado} />
+                                    :
+                                    tipoModal === "itinerario" ?
+
+
+                                        < ModalItinerario
+                                            setModalVisible={setModalVisible}
+
+
+                                            itinerario={itinerario}
+                                            setItinerario={r => {
+                                                setFecha({
+                                                    ...fecha,
+                                                    itinerario: JSON.stringify(r)
+
+                                                })
+                                            }}
+
+                                            editAllowed={editing}
+
+                                            fechaInicial={fecha.fechaInicial}
+                                            fechaFinal={fecha.fechaFinal}
+
+                                        /> :
+
+                                        tipoModal === "map" ?
                                             <ModalMapEdit
                                                 titulo={"Punto de reunion"}
 
@@ -1300,9 +1748,9 @@ export default ({ navigation, route }) => {
                                                 handleBack={() => setModalVisible(false)}
                                                 reserva={actualReservation}
                                             />
-                                }
+                            }
 
-                            </Modal>
+                        </Modal>
 
             }
 
@@ -1434,6 +1882,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    tituloMaterial: {
+        fontSize: 18,
+        marginBottom: 15,
+        fontWeight: 'bold',
+        color: moradoClaro,
+
+    },
+
     dayItinerario: {
         position: 'absolute',
         top: -40,
@@ -1454,8 +1910,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    queLlevarContainer: {
-        marginVertical: 15,
+    material: {
+        padding: 20,
+        paddingHorizontal: 0,
+        marginBottom: 25,
+
 
     },
 

@@ -14,6 +14,7 @@ import { Entypo } from '@expo/vector-icons';
 import moment from "moment";
 import 'moment/locale/es'
 import CalificaUsuarioModal from '../../components/CalificaUsuarioModal'
+import { getAllScheduledNotificationsAsync } from 'expo-notifications'
 
 
 moment.locale('es')
@@ -134,7 +135,8 @@ export default () => {
         setNotificaciones([...nuevasNotificaciones])
     }
 
-    const handlePressItem = (item, index) => {
+
+    const handlePressItem = async (item, index) => {
         handleVerNotificacion(index)
 
         const { tipo } = item
@@ -174,6 +176,10 @@ export default () => {
 
             case TipoNotificacion.CALIFICAUSUARIO:
                 handleCalificaUser(item.guiaID, item.aventuraID, index)
+                break;
+
+            case TipoNotificacion.FECHAACTUALIZACION:
+                handleIrAReserva(item.reservaID)
                 break;
 
             case TipoNotificacion.ADMIN:

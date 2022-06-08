@@ -9,6 +9,8 @@ export function ModalMap({ setModalVisible,
     handleGuardar,
     place,
 
+    previewTxt,
+
     titulo
 }) {
     const { width, height } = Dimensions.get("window")
@@ -42,6 +44,8 @@ export function ModalMap({ setModalVisible,
             />
             <View style={styles.container}>
                 <MapWithSearch
+                    previewTxt={previewTxt}
+
                     style={styles.map}
                     sugestionsContainerStyle={styles.sugestionsContainer}
 

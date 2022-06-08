@@ -488,7 +488,6 @@ export const createReserva = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
-          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -539,7 +538,6 @@ export const createReserva = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -581,6 +579,10 @@ export const createReserva = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -590,11 +592,89 @@ export const createReserva = /* GraphQL */ `
       guiaID
       tipoPago
       materialChecked
+      comisionID
+      comisionAsociada {
+        id
+        amount
+        editing
+        payed
+        pagadoEnReservaID
+        reservaID
+        reserva {
+          id
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          cancelado
+          canceledAt
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          comisionID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          reservaComisionAsociadaId
+        }
+        usuarioID
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        comisionReservaId
+      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      reservaComisionAsociadaId
     }
   }
 `;
@@ -694,7 +774,6 @@ export const updateReserva = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
-          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -745,7 +824,6 @@ export const updateReserva = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -787,6 +865,10 @@ export const updateReserva = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -796,11 +878,89 @@ export const updateReserva = /* GraphQL */ `
       guiaID
       tipoPago
       materialChecked
+      comisionID
+      comisionAsociada {
+        id
+        amount
+        editing
+        payed
+        pagadoEnReservaID
+        reservaID
+        reserva {
+          id
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          cancelado
+          canceledAt
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          comisionID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          reservaComisionAsociadaId
+        }
+        usuarioID
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        comisionReservaId
+      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      reservaComisionAsociadaId
     }
   }
 `;
@@ -900,7 +1060,6 @@ export const deleteReserva = /* GraphQL */ `
           certificaciones
           telefono
           sitioWeb
-          comisionsDue
           CuentaBancaria
           fechaNacimiento
           direccion
@@ -951,7 +1110,6 @@ export const deleteReserva = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -993,6 +1151,10 @@ export const deleteReserva = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -1002,11 +1164,89 @@ export const deleteReserva = /* GraphQL */ `
       guiaID
       tipoPago
       materialChecked
+      comisionID
+      comisionAsociada {
+        id
+        amount
+        editing
+        payed
+        pagadoEnReservaID
+        reservaID
+        reserva {
+          id
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          cancelado
+          canceledAt
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          comisionID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          reservaComisionAsociadaId
+        }
+        usuarioID
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        comisionReservaId
+      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      reservaComisionAsociadaId
     }
   }
 `;
@@ -1103,7 +1343,6 @@ export const createFecha = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -1145,6 +1384,10 @@ export const createFecha = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -1171,11 +1414,13 @@ export const createFecha = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -1298,7 +1543,6 @@ export const updateFecha = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -1340,6 +1584,10 @@ export const updateFecha = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -1366,11 +1614,13 @@ export const updateFecha = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -1493,7 +1743,6 @@ export const deleteFecha = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -1535,6 +1784,10 @@ export const deleteFecha = /* GraphQL */ `
           nextToken
           startedAt
         }
+        Comisiones {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -1561,11 +1814,13 @@ export const deleteFecha = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -1620,7 +1875,6 @@ export const createUsuario = /* GraphQL */ `
       certificaciones
       telefono
       sitioWeb
-      comisionsDue
       CuentaBancaria
       fechaNacimiento
       direccion
@@ -1693,11 +1947,13 @@ export const createUsuario = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -1794,6 +2050,25 @@ export const createUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comisiones {
+        items {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
         }
         nextToken
         startedAt
@@ -1831,7 +2106,6 @@ export const updateUsuario = /* GraphQL */ `
       certificaciones
       telefono
       sitioWeb
-      comisionsDue
       CuentaBancaria
       fechaNacimiento
       direccion
@@ -1904,11 +2178,13 @@ export const updateUsuario = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -2005,6 +2281,25 @@ export const updateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Comisiones {
+        items {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
         }
         nextToken
         startedAt
@@ -2042,7 +2337,6 @@ export const deleteUsuario = /* GraphQL */ `
       certificaciones
       telefono
       sitioWeb
-      comisionsDue
       CuentaBancaria
       fechaNacimiento
       direccion
@@ -2115,11 +2409,13 @@ export const deleteUsuario = /* GraphQL */ `
           guiaID
           tipoPago
           materialChecked
+          comisionID
           createdAt
           updatedAt
           _version
           _deleted
           _lastChangedAt
+          reservaComisionAsociadaId
         }
         nextToken
         startedAt
@@ -2220,11 +2516,642 @@ export const deleteUsuario = /* GraphQL */ `
         nextToken
         startedAt
       }
+      Comisiones {
+        items {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+    }
+  }
+`;
+export const createComision = /* GraphQL */ `
+  mutation CreateComision(
+    $input: CreateComisionInput!
+    $condition: ModelComisionConditionInput
+  ) {
+    createComision(input: $input, condition: $condition) {
+      id
+      amount
+      editing
+      payed
+      pagadoEnReservaID
+      reservaID
+      reserva {
+        id
+        total
+        comision
+        pagadoAlGuia
+        tercera
+        ninos
+        adultos
+        pagoID
+        ingreso
+        horaIngreso
+        cancelado
+        canceledAt
+        fechaID
+        usuarioID
+        fecha {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          efectivo
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          cancelado
+          canceledAt
+          dateModified
+          aventuraID
+          usuarioID
+          dificultad
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        guiaID
+        tipoPago
+        materialChecked
+        comisionID
+        comisionAsociada {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        reservaComisionAsociadaId
+      }
+      usuarioID
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      comisionReservaId
+    }
+  }
+`;
+export const updateComision = /* GraphQL */ `
+  mutation UpdateComision(
+    $input: UpdateComisionInput!
+    $condition: ModelComisionConditionInput
+  ) {
+    updateComision(input: $input, condition: $condition) {
+      id
+      amount
+      editing
+      payed
+      pagadoEnReservaID
+      reservaID
+      reserva {
+        id
+        total
+        comision
+        pagadoAlGuia
+        tercera
+        ninos
+        adultos
+        pagoID
+        ingreso
+        horaIngreso
+        cancelado
+        canceledAt
+        fechaID
+        usuarioID
+        fecha {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          efectivo
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          cancelado
+          canceledAt
+          dateModified
+          aventuraID
+          usuarioID
+          dificultad
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        guiaID
+        tipoPago
+        materialChecked
+        comisionID
+        comisionAsociada {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        reservaComisionAsociadaId
+      }
+      usuarioID
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      comisionReservaId
+    }
+  }
+`;
+export const deleteComision = /* GraphQL */ `
+  mutation DeleteComision(
+    $input: DeleteComisionInput!
+    $condition: ModelComisionConditionInput
+  ) {
+    deleteComision(input: $input, condition: $condition) {
+      id
+      amount
+      editing
+      payed
+      pagadoEnReservaID
+      reservaID
+      reserva {
+        id
+        total
+        comision
+        pagadoAlGuia
+        tercera
+        ninos
+        adultos
+        pagoID
+        ingreso
+        horaIngreso
+        cancelado
+        canceledAt
+        fechaID
+        usuarioID
+        fecha {
+          id
+          personasTotales
+          fechaInicial
+          fechaFinal
+          precio
+          comision
+          experienciaPorPersona
+          itinerario
+          puntoReunionNombre
+          puntoReunionId
+          puntoReunionLink
+          puntoReunionCoords
+          allowTercera
+          allowNinos
+          efectivo
+          material
+          incluido
+          titulo
+          descripcion
+          imagenRuta
+          imagenFondo
+          tituloAventura
+          cancelado
+          canceledAt
+          dateModified
+          aventuraID
+          usuarioID
+          dificultad
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        guiaID
+        tipoPago
+        materialChecked
+        comisionID
+        comisionAsociada {
+          id
+          amount
+          editing
+          payed
+          pagadoEnReservaID
+          reservaID
+          usuarioID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          comisionReservaId
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        reservaComisionAsociadaId
+      }
+      usuarioID
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      comisionReservaId
     }
   }
 `;
@@ -2833,7 +3760,6 @@ export const createChatRoomUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -2872,6 +3798,10 @@ export const createChatRoomUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }
@@ -2951,7 +3881,6 @@ export const updateChatRoomUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -2990,6 +3919,10 @@ export const updateChatRoomUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }
@@ -3069,7 +4002,6 @@ export const deleteChatRoomUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -3108,6 +4040,10 @@ export const deleteChatRoomUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }
@@ -3413,7 +4349,6 @@ export const createAventuraUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -3452,6 +4387,10 @@ export const createAventuraUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }
@@ -3538,7 +4477,6 @@ export const updateAventuraUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -3577,6 +4515,10 @@ export const updateAventuraUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }
@@ -3663,7 +4605,6 @@ export const deleteAventuraUsuarios = /* GraphQL */ `
         certificaciones
         telefono
         sitioWeb
-        comisionsDue
         CuentaBancaria
         fechaNacimiento
         direccion
@@ -3702,6 +4643,10 @@ export const deleteAventuraUsuarios = /* GraphQL */ `
           startedAt
         }
         Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
           nextToken
           startedAt
         }

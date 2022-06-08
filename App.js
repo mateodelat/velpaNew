@@ -5,7 +5,7 @@ import 'react-native-gesture-handler';
 
 
 import {
-  Linking, View, Platform, Alert,
+  Linking, View, Platform,
   LogBox
 } from 'react-native';
 
@@ -215,7 +215,7 @@ export default function App() {
   )
 
 
-  if (authenticated) {
+  if (!authenticated) {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff', }}>
 

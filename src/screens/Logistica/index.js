@@ -57,7 +57,7 @@ export default ({ navigation, route }) => {
     // Logica para poner material incluido como lista
     let incluido = []
     const parseIncluido = JSON.parse(route.params?.incluido)
-    incluido = [...parseIncluido.default, ...parseIncluido.agregado]
+    incluido = [...parseIncluido.incluido, ...parseIncluido.agregado]
 
     const precioIndividual = calculatePrice(precio, total, totalPersonasReservadas)
 
@@ -164,7 +164,7 @@ export default ({ navigation, route }) => {
                     <Text style={{ color: '#aaa', }}>(${Math.round(precioIndividual)}/persona)</Text>
                     <Text style={styles.precio}>${Math.round(precioIndividual * total)}</Text>
                 </View>
-                <Text style={{ color: '#aaa', marginTop: 10, textAlign: 'center', }}>*El precio individual depende de las personas totales en el grupo</Text>
+                {/* <Text style={{ color: '#aaa', marginTop: 10, textAlign: 'center', }}>*El precio individual depende de las personas totales en el grupo</Text> */}
             </View>
 
 

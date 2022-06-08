@@ -485,13 +485,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "comisionsDue": {
-                    "name": "comisionsDue",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "CuentaBancaria": {
                     "name": "CuentaBancaria",
                     "isArray": false,
@@ -665,6 +658,20 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "usuarioCalificadoID"
+                    }
+                },
+                "Comisiones": {
+                    "name": "Comisiones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Comision"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "usuarioID"
                     }
                 },
                 "createdAt": {
@@ -1191,6 +1198,27 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "comisionID": {
+                    "name": "comisionID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comisionAsociada": {
+                    "name": "comisionAsociada",
+                    "isArray": false,
+                    "type": {
+                        "model": "Comision"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "reserva",
+                        "targetName": "reservaComisionAsociadaId"
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1206,6 +1234,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
+                },
+                "reservaComisionAsociadaId": {
+                    "name": "reservaComisionAsociadaId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -1536,6 +1571,135 @@ export const schema = {
                             "aventuraID"
                         ]
                     }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update",
+                                    "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Comision": {
+            "name": "Comision",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "amount": {
+                    "name": "amount",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "editing": {
+                    "name": "editing",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "payed": {
+                    "name": "payed",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "pagadoEnReservaID": {
+                    "name": "pagadoEnReservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "reservaID": {
+                    "name": "reservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "reserva": {
+                    "name": "reserva",
+                    "isArray": false,
+                    "type": {
+                        "model": "Reserva"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "comisionReservaId"
+                    }
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "usuarioComisionesId"
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Comisions",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
                 },
                 {
                     "type": "key",
@@ -2194,5 +2358,5 @@ export const schema = {
             }
         }
     },
-    "version": "3baf700706f482d6e6ee141eecbcb5b4"
+    "version": "b7ea4817bb9fe547a96da6fcdb243bb4"
 };

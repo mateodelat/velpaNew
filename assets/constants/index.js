@@ -11,7 +11,7 @@ import { Foundation, MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
-import { sendPushNotification } from "./constant";
+import { sendPushNotification } from "./constant.tsx";
 import * as ImageManipulator from 'expo-image-manipulator';
 
 
@@ -1354,6 +1354,39 @@ export function calculateLvl(experience) {
   else {
     return levels[3]
   }
+
+}
+
+export function updateItinerario(itinerario, horaInicial, horaFinal) {
+  itinerario = JSON.parse(itinerario)
+
+  itinerario = itinerario.map((it, idx) => {
+    if (idx === 0) {
+      // Cambiar hora inicial del primer elemento
+      return {
+        ...it,
+        hora: horaInicial
+      }
+    }
+    if (idx === itinerario.length - 1) {
+      // Cambiar hora inicial del primer elemento
+      return {
+        ...it,
+        hora: horaFinal
+      }
+    }
+    return {
+      ...it,
+      hora: (horaInicial + msInMinute * idx) < horaFinal ? (horaInicial + msInMinute * idx) : horaFinal
+    }
+
+  })
+  itinerario[itinerario.length - 1].hora = horaFinal
+
+  Alert.alert("Atencion", "El itinerario ha cambiado")
+  itinerario = JSON.stringify(itinerario)
+
+  return (itinerario)
 
 }
 

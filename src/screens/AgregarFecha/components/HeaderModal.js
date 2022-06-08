@@ -21,8 +21,7 @@ export default function ({
 
     const insets = useSafeAreaInsets()
     return (
-        <Pressable
-            onPress={handleCerrar}
+        <View
 
             style={{
                 backgroundColor: colorFondo,
@@ -44,7 +43,13 @@ export default function ({
                     }}>{titulo}</Text>
 
 
-                <View style={styles.iconLeft}>
+                <Pressable
+                    onPress={handleCerrar}
+                    style={{
+                        ...styles.iconLeft,
+                        height: insets.top ? 53 : 63,
+
+                    }}>
 
                     <Feather
                         name={"x"}
@@ -52,41 +57,55 @@ export default function ({
                         color={color ? color : moradoOscuro}
                     />
 
-                </View>
+                </Pressable>
 
                 {
                     rightIcon ? rightIcon :
                         modify !== undefined && (modify ?
 
                             buttonLoading ?
-                                <View style={styles.iconRight}>
+                                <View style={{
+                                    ...styles.iconRight,
+                                    height: insets.top ? 53 : 63,
+
+                                }}>
                                     <ActivityIndicator color={"#fff"} />
 
                                 </View>
                                 :
-                                <View style={styles.iconRight}>
+                                <View style={{
+                                    ...styles.iconRight,
+                                    height: insets.top ? 53 : 63,
+
+                                }}>
 
                                     <MaterialIcons
                                         onPress={handleSave}
                                         name={"check"}
                                         size={30}
-                                        color={color ? color : "green"}
+                                        color={color ? color : moradoOscuro}
 
                                     />
                                 </View>
                             :
-                            <Feather
-                                onPress={handleSave}
-                                name={"edit"}
-                                size={35}
-                                color={color ? color : moradoClaro}
-                                style={styles.iconRight}
+                            <View style={{
+                                ...styles.iconRight,
+                                height: insets.top ? 53 : 63,
 
-                            />)}
+                            }}>
+                                <Feather
+                                    onPress={handleSave}
+                                    name={"edit-2"}
+                                    size={25}
+                                    color={color ? color : moradoClaro}
+
+                                />
+                            </View>
+                        )}
 
 
             </View>
-        </Pressable>
+        </View>
 
     )
 }
@@ -101,20 +120,18 @@ const styles = StyleSheet.create({
 
     iconLeft: {
         position: 'absolute',
-        paddingLeft: 10,
+        paddingLeft: 15,
 
-        height: 43,
-        width: 43,
+        padding: 18,
         alignItems: 'center', justifyContent: 'center',
-
     },
 
 
     iconRight: {
         position: 'absolute',
-        right: 10,
-        height: 43,
-        width: 43,
+        right: 0,
+        padding: 18,
+        // backgroundColor: 'red',
 
         alignItems: 'center', justifyContent: 'center',
     }

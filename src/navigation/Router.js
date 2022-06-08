@@ -44,6 +44,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QRCode from '../screens/QRScan/QRCode';
 import { Fecha } from '../models';
 import { Reserva } from '../models';
+import { TipoNotificacion } from '../models';
+import { AndroidNotificationPriority } from 'expo-notifications';
+import { Comision } from '../models';
 
 
 
@@ -70,6 +73,7 @@ export default () => {
 
 
     async function registerForPushNotificationsAsync() {
+
         let token;
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
@@ -131,13 +135,36 @@ export default () => {
     // movimiento de fecha
     async function cancelInvalidNotifications() {
 
+        function scheduleNewNotification({
+            data,
+            body,
+            title,
+            seconds
+        }) {
+
+
+            Notifications.scheduleNotificationAsync({
+                content: {
+                    priority: AndroidNotificationPriority.MAX,
+                    vibrate: [100],
+                    title,
+                    body,
+                    data,
+                },
+                trigger: {
+                    seconds
+                }
+            }).then(() => console.log("Notificacion reprogramada con exito"))
+
+        }
+
         const i = new Date()
         const notifications = await Notifications.getAllScheduledNotificationsAsync()
 
         // Pedir todas las fechas futuras que no han sido canceladas
         const fechas = await DataStore.query(Fecha, fe => {
             fe.fechaInicial("gt", new Date())
-            // fe.canceled("eq", true)
+            fe.cancelado("ne", true)
         })
 
         // Pedir las reservas que no han sido canceladas
@@ -145,10 +172,15 @@ export default () => {
             // res.canceled("ne", true)
         })
 
+        // Fechas con errores
+        let fechasConError = {}
+
 
         notifications.map(n => {
             const data = n?.content?.data
             const id = n.identifier
+            const body = n.content.body
+            const title = n.content.title
 
             const {
                 tipo,
@@ -161,29 +193,66 @@ export default () => {
             } = data
 
             if (!data || !tipo || !fechaID) {
+                // Notifications.cancelScheduledNotificationAsync(id)
                 console.log("Error raro, la notificacion no tiene tipo")
                 return
             }
 
 
 
+
             // Metodo para detectar si hubo cambios en la fecha o si fue elmininada
-            const fe = fechas.find(f => f.id === fechaID)
+            const fe = fechas.find((f) => f.id === fechaID)
             if (fe) {
 
-                if (tipo === "CALIFICAUSUARIO") {
+                // Poner fecha final al dia siguiente de que acabe a las 8
+                let fechaFinal = new Date(fe.fechaFinal);
+                if (fechaFinal.getUTCHours() >= 8) {
+                    fechaFinal = new Date(fechaFinal.getTime() + msInDay);
+                }
+                fechaFinal.setUTCHours(8);
+                const remainingForNextDay = Math.round(
+                    (fechaFinal?.getTime() - new Date().getTime()) / 1000
+                );
+
+
+                // Fecha final actualizada
+                if (tipo === TipoNotificacion.CALIFICAUSUARIO) {
                     const cambio = haCambiadoFinal(fe.fechaFinal, n.trigger.seconds, createdAt * 1000)
                     if (cambio) {
-                        console.log("Ha cambiado la fecha final asociada con la notificacion en cel, arreglar")
+                        console.log("Notificacion de calificar ususario con error, corrigiendo...")
+
+                        // Cancelar la notificacion vieja
+                        Notifications.cancelScheduledNotificationAsync(id)
+
+                        // Crear nueva notificacion
+                        delete data.timeShown
+                        data.createdAt = Math.round(new Date().getTime() / 1000),
+                            scheduleNewNotification({
+                                data,
+                                body,
+                                title,
+                                seconds: remainingForNextDay
+                            })
                     } else {
                     }
                 }
-                else if (tipo === "RECORDATORIOGUIA" || tipo === "RECORDATORIOCLIENTE") {
+
+                // Fecha inicial actualizada
+                else if (tipo === TipoNotificacion.RECORDATORIOFECHA) {
                     if (fe) {
+
                         // Detectar si el tiempo programado para mostrarlo es el correcto
                         let cambio = haCambiado(timeShown, fe.fechaInicial, n.trigger.seconds, createdAt * 1000)
                         if (cambio) {
-                            console.log("Ha cambiado la fecha inicial asociada con la notificacion en cel, arreglar")
+                            // Agregar fecha a fechas invalidas para recalcular notificaciones
+                            console.log("Notificacion aviso de dia invalida, corrigiendo...")
+
+                            // Cancelar notificacion invalida
+                            Notifications.cancelScheduledNotificationAsync(id)
+
+                            fechasConError[fe.id] = reservaID
+
                         } else {
                         }
                     }
@@ -195,10 +264,106 @@ export default () => {
             }
         })
 
+        // Mapear los index con error para recalcular las notificaciones de cada fecha
+        Object.keys(fechasConError)
+            .map(fe => {
+                const reservaID = fechasConError[fe]
+
+                fe = fechas.find(old => old.id === fe)
+
+                // Obtener parametros a usar en la creacion de las nuevas notificaciones
+                const {
+                    fechaInicial,
+                    id: fechaID,
+                    tituloAventura,
+
+                } = fe
+
+                const remainingFor1Week = Math.round(
+                    (fechaInicial - msInDay * 7 - new Date().getTime()) / 1000
+                );
+                const remainingFor1Day = Math.round(
+                    (fechaInicial - msInDay - new Date().getTime()) / 1000
+                );
+                const remainingFor1Hour = Math.round(
+                    (fechaInicial - msInHour - new Date().getTime()) / 1000
+                );
+
+                const data = {
+                    fechaID,
+                    reservaID,
+
+                    // Hora creada en segundos
+                    createdAt: Math.round(new Date().getTime() / 1000),
+                    tipo: TipoNotificacion.RECORDATORIOFECHA,
+                }
+
+                //   Una semana
+                remainingFor1Week > 0 && Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Todo listo??",
+                        body:
+                            "Tu experiencia en " +
+                            tituloAventura +
+                            " es en 1 semana, revisa que tengas todo listo",
+                        priority: AndroidNotificationPriority.HIGH,
+                        vibrate: [100],
+                        data: {
+                            ...data,
+                            timeShown: "1S",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Week,
+                    },
+                });
+
+                //   Un dia
+                remainingFor1Day > 0 && Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Solo falta 1 dia!!",
+                        body:
+                            "Tu experiencia en " +
+                            tituloAventura +
+                            " es mañana, revisa todo tu material y el punto de reunion",
+                        priority: AndroidNotificationPriority.MAX,
+                        vibrate: [100],
+                        data: {
+                            ...data,
+                            timeShown: "1D",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Day,
+                    },
+                });
+
+                //   Una hora
+                Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Estas a nada de irte",
+                        body: "Tu experiencia en " +
+                            tituloAventura +
+                            " es en menos de 1 hora, no hagas esperar al guia!!" +
+                            "Ten a la mano el QR de tu reserva y recuerda llevar tu pago si es en efectivo",
+                        priority: AndroidNotificationPriority.MAX,
+                        vibrate: [100],
+
+                        data: {
+                            ...data,
+                            timeShown: "1H",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
+                    },
+                });
+            })
     }
 
 
     useEffect(() => {
+
         // Subir token de notificaciones para el usuario
         registerForPushNotificationsAsync()
 
@@ -223,9 +388,8 @@ export default () => {
         <View style={{ flex: 1, }}>
             <SafeAreaProvider>
                 <NavigationContainer>
-
                     <Stack.Navigator
-                        initialRouteName={"MisFechas"}
+                        // initialRouteName={"MisFechas"}
 
                         screenOptions={{
                             headerLeft: ({ onPress }) => {

@@ -115,7 +115,7 @@ export default function ({ route, navigation }) {
                                 ...r,
                                 imagenFondo: await getImageUrl(r.imagenFondo),
                                 material: JSON.parse(r.material),
-                                incluido: [...(JSON.parse(r.incluido)).default.map(e => e),
+                                incluido: [...(JSON.parse(r.incluido))?.incluido?.map(e => e),
                                 ...(JSON.parse(r.incluido)).agregado.map(e => e)
                                 ]
                             }

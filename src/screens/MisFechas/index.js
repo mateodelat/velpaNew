@@ -145,9 +145,10 @@ export default function ({ navigation }) {
                         ...fecha,
                         imagenFondo: await getImageUrl(fecha.imagenFondo),
                         material: JSON.parse(fecha.material),
-                        incluido: [...(JSON.parse(fecha.incluido)).default.map(e => e),
-                        ...(JSON.parse(fecha.incluido)).agregado.map(e => e)
-                        ],
+                        incluido: {
+                            incluido: JSON.parse(fecha.incluido)?.incluido,
+                            agregado: (JSON.parse(fecha.incluido))?.agregado
+                        },
                         pasada: fecha.fechaInicial < now
 
                     }

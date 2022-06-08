@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
+    ActivityIndicator,
     Alert,
     Animated,
     Dimensions,
@@ -12,10 +13,10 @@ import {
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { colorFondo, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, redondear } from '../../../assets/constants';
+import { AsyncAlert, colorFondo, comisionStripe, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, redondear } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -28,6 +29,8 @@ import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
 import { Loading } from '../../components/Loading';
 import QRIcon from '../DetalleFecha/components/QRIcon';
+import { TipoPago } from '../../models';
+import Calendario from '../DetalleFecha/components/Calendario';
 
 
 export const getUsuario = /* GraphQL */ `
@@ -72,6 +75,8 @@ export default ({ navigation, route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState("map");
     const [guia, setGuia] = useState({});
+
+    const [loading, setLoading] = useState(false);
 
     // Estado del material a llevar ya empacado
     const materialDefault = fecha.material.map(cat => {
@@ -175,6 +180,69 @@ export default ({ navigation, route }) => {
         setModalVisible(true)
     }
 
+    async function handleCancel() {
+        const {
+            dateModified,
+            fechaInicial
+        } = fecha
+        const {
+            pagoID
+        } = reserva
+        console.log(pagoID)
+
+        const efectivo = reserva.tipoPago === TipoPago.EFECTIVO ? true : false
+
+        try {
+            // Si se cambio la fecha no se cobra comision al usuario
+            if (dateModified && !efectivo) {
+                await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(reserva.total - comisionStripe(reserva.total), true)) + " por comisiones de cancelacion")
+
+                // Devolver todo el cargo al cliente
+
+            }
+
+            // Si fue con tarjeta pero no se cambio la fecha, se cobra comision al usuario y detecta si ya paso el plazo de cancelacion
+            else if (!efectivo) {
+                // No poder cancelar si faltan 24 horas para la fecha 
+                if (fechaInicial - new Date().getTime() < (msInDay)) {
+                    await AsyncAlert("Atencion", "Faltando 24 horas para la fecha ya no es posible cancelarla")
+                    return
+                } else {
+                    await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(reserva.total - 20 - comisionStripe(reserva.total), true)) + " por comisiones de cancelacion")
+
+                }
+
+            }
+
+            // Si fue en efectivo solamente cancelarlo
+            else {
+                await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?")
+
+            }
+
+            setLoading(true)
+
+            // Poner la reserva en cancelado
+            DataStore.query(Reserva, reserva.id)
+
+                .then(async r => {
+                    await DataStore.save(Reserva.copyOf(r, r => {
+                        r.cancelado = true
+                        r.canceledAt = new Date()
+                    })).then(console.log)
+
+                    setLoading(false)
+
+                })
+        } catch (error) {
+            if (error !== "Cancelada") {
+                console.log(error)
+                Alert.alert("Error", "Error cancelando la reserva")
+            }
+        }
+
+    }
+
     function handleQR() {
         const {
             tituloAventura,
@@ -201,6 +269,7 @@ export default ({ navigation, route }) => {
     return (
         <View style={{
             flex: 1,
+            backgroundColor: '#fff',
         }}>
             <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
@@ -217,15 +286,37 @@ export default ({ navigation, route }) => {
 
                 <View style={styles.bodyContainer}>
 
+                    {/* Titulo cantidad y estatus tarjeta/efectivo */}
                     <View style={styles.row}>
                         <Text
                             numberOfLines={1}
                             style={styles.title}>{fecha.tituloAventura}
                         </Text>
 
-                        <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(reserva.total, true)}
-                        </Text>
+                        <View style={{
+                            alignItems: 'center',
+                        }}>
+
+                            <Text style={{ ...styles.title, color: moradoOscuro, }}>{formatMoney(reserva.total, true)} </Text>
+                            {
+                                reserva.tipoPago === TipoPago.TARJETA && <AntDesign style={{ marginTop: 5, }} name="creditcard" size={22} color={moradoOscuro} />
+                            }
+                        </View>
+
                     </View>
+                    <View style={{
+                        alignItems: 'center',
+                    }}>
+
+                        {reserva.tipoPago === TipoPago.EFECTIVO && <Text
+                            style={{
+                                fontSize: 16,
+                                color: 'orange',
+                                marginTop: 10,
+                            }}>Recuerda llevar tu pago en efectivo</Text>}
+                    </View>
+
+
 
 
                     {fecha.descripcion ? <View style={{ ...styles.row, marginVertical: 10, }}>
@@ -239,26 +330,19 @@ export default ({ navigation, route }) => {
                     <Line />
 
 
-                    {formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).mismoDia ?
-                        <View style={{ ...styles.fechaContainer, marginBottom: 30, }}>
-                            <MaterialCommunityIcons style={{ position: 'absolute', left: 0, }} name="calendar-today" size={24} color={moradoOscuro} />
-                            <Text style={{ ...styles.fechaTxt, flex: 1, textAlign: 'center', }}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txt}</Text>
-                        </View>
-                        :
-                        <View style={{ marginBottom: 10, }}>
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Inicio: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtInicial}</Text>
-                            </View>
+                    <Calendario
+                        editDisabled={true}
+                        denyFechasGuia
+                        fecha={fecha}
+                    />
 
-                            <View style={styles.fechaContainer}>
-                                <Text style={styles.fechaTitle}>Fin: </Text>
-                                <Text style={styles.fechaTxt}>{formatDateWithHour(fecha.fechaInicial, fecha.fechaFinal).txtFinal}</Text>
-                            </View>
-                        </View>}
+
 
                     <Pressable
                         onPress={handleOpenMap}
+                        style={{
+                            marginTop: 40,
+                        }}
                     >
 
                         <Text style={{
@@ -449,8 +533,11 @@ export default ({ navigation, route }) => {
 
                     <Text style={[styles.title, { marginBottom: 5, }]}>Incluido:</Text>
 
-                    <Text
-                        style={{ fontSize: 16, marginLeft: 10, }}>{fecha.incluido?.map(e => e + "      ")}</Text>
+                    {fecha.incluido?.map((e, idx) => {
+                        return <Text
+                            key={idx}
+                            style={{ fontSize: 16, marginLeft: 10, marginBottom: 4, }}>{e}</Text>
+                    })}
 
                     <View style={{ marginTop: 40, }} />
 
@@ -488,19 +575,6 @@ export default ({ navigation, route }) => {
 
             </Animated.ScrollView >
 
-            {/* Escanear codigo */}
-            <Pressable
-                onPress={handleQR}
-                style={{
-                    width: '100%',
-                    backgroundColor: colorFondo,
-                    borderTopRightRadius: 20,
-                    borderTopLeftRadius: 20,
-                    padding: 20,
-                }}>
-
-                <Text style={styles.textCancel}>Codigo de acceso</Text>
-            </Pressable>
 
             <HeaderDetalleAventura
                 scrollY={scrollY}
@@ -536,6 +610,43 @@ export default ({ navigation, route }) => {
 
                     />
             }
+
+
+
+            {loading && <View style={{
+                backgroundColor: '#00000099',
+                alignItems: 'center', justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+            }}>
+                <ActivityIndicator
+                    size={"large"}
+                    color={moradoOscuro}
+                />
+            </View>}
+
+            {/* Escanear codigo y cancelar reserva*/}
+            <View style={{
+                width: '100%',
+                backgroundColor: colorFondo,
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
+            }}>
+                <Pressable
+                    onPress={() => {
+                        if (loading) {
+                            Alert.alert("Espera", "Cancelacion en proceso")
+                        } else {
+                            handleCancel()
+                        }
+                    }}
+                >
+                    <Text style={{ ...styles.textCancel, color: "red" }}>{loading ? "Cancelando..." : "Cancelar"}</Text>
+                </Pressable>
+
+
+            </View>
 
         </View >
     )
@@ -719,7 +830,7 @@ const styles = StyleSheet.create({
         color: moradoOscuro,
         textAlign: 'center',
         fontWeight: 'bold',
-
+        padding: 20,
         fontSize: 18,
     }
 

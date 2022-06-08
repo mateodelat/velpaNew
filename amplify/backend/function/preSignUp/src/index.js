@@ -44,7 +44,6 @@ function crearUsuario(attributes, sub) {
         id: sub,
         foto: attributes.picture ? attributes.picture : null,
         nickname: attributes.nickname,
-        owner: sub,
         email: attributes.email
     }
     console.log("Atributos recibidos en crear usuario: ", input)
@@ -152,8 +151,6 @@ exports.handler = (event, context, callback) => {
         } else {
             // Si es una cuenta nativa solo se crea el usuario con la informacion que queremos
             crearUsuario(event.request.userAttributes, event.userName)
-
-
         }
 
     }

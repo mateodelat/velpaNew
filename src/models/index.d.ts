@@ -103,6 +103,10 @@ type FechaMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
+type ComisionMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type NotificacionMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -187,7 +191,6 @@ export declare class Usuario {
   readonly certificaciones?: (string | null)[] | null;
   readonly telefono?: string | null;
   readonly sitioWeb?: string | null;
-  readonly comisionsDue?: string | null;
   readonly CuentaBancaria?: string | null;
   readonly fechaNacimiento?: string | null;
   readonly direccion?: string | null;
@@ -205,6 +208,7 @@ export declare class Usuario {
   readonly Notificaciones?: (Notificacion | null)[] | null;
   readonly SolicitudesCreadas?: (SolicitudGuia | null)[] | null;
   readonly Comentarios?: (Comentario | null)[] | null;
+  readonly Comisiones?: (Comision | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Usuario, UsuarioMetaData>);
@@ -269,8 +273,11 @@ export declare class Reserva {
   readonly guiaID?: string | null;
   readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
   readonly materialChecked?: string | null;
+  readonly comisionID?: string | null;
+  readonly comisionAsociada?: Comision | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
+  readonly reservaComisionAsociadaId?: string | null;
   constructor(init: ModelInit<Reserva, ReservaMetaData>);
   static copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva, ReservaMetaData>) => MutableModel<Reserva, ReservaMetaData> | void): Reserva;
 }
@@ -312,6 +319,22 @@ export declare class Fecha {
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Fecha, FechaMetaData>);
   static copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha, FechaMetaData>) => MutableModel<Fecha, FechaMetaData> | void): Fecha;
+}
+
+export declare class Comision {
+  readonly id: string;
+  readonly amount: number;
+  readonly editing?: boolean | null;
+  readonly payed?: boolean | null;
+  readonly pagadoEnReservaID?: string | null;
+  readonly reservaID: string;
+  readonly reserva?: Reserva | null;
+  readonly usuarioID?: string | null;
+  readonly usuario?: Usuario | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Comision, ComisionMetaData>);
+  static copyOf(source: Comision, mutator: (draft: MutableModel<Comision, ComisionMetaData>) => MutableModel<Comision, ComisionMetaData> | void): Comision;
 }
 
 export declare class Notificacion {

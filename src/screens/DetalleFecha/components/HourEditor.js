@@ -1,6 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import { colorFondo, formatAMPM, moradoOscuro, msInMinute } from '../../../../assets/constants';
+import { colorFondo, formatAMPM, moradoOscuro, msInMinute, updateItinerario } from '../../../../assets/constants';
 import { Feather } from '@expo/vector-icons';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -18,18 +18,20 @@ const HourEditor = ({
     } = fecha
 
     // Funciones para editar la fecha inicial y final
-    function setFechaInicial(fechaInicial) {
+    function setFechaInicial(fechaInicial, upIt) {
         setFecha({
             ...fecha,
-            fechaInicial
+            fechaInicial,
+            itinerario: upIt ? updateItinerario(fecha.itinerario, fechaInicial, fechaFinal) : fecha.itinerario
         })
     }
 
 
-    function setFechaFinal(fechaFinal) {
+    function setFechaFinal(fechaFinal, upIt) {
         setFecha({
             ...fecha,
-            fechaFinal
+            fechaFinal,
+            itinerario: upIt ? updateItinerario(fecha.itinerario, fechaInicial, fechaFinal) : fecha.itinerario
         })
     }
 
@@ -59,12 +61,6 @@ const HourEditor = ({
         }
     }
 
-    function updateItinerario(hora) {
-        console.log(horaInicial ? "Hora inicial" : "Hora final")
-        Alert.alert("Actualizar el itinerario")
-
-    }
-
     function handleConfirmHour(hora) {
         setHourPickerVisible(false)
 
@@ -79,10 +75,7 @@ const HourEditor = ({
                 Alert.alert("Error", "La hora inicial debe ser menor a la hora final")
             } else {
 
-                setFechaInicial(hora.getTime())
-
-                // Actualizar la hora inicial del itinerario
-                updateItinerario(hora.getTime(), true)
+                setFechaInicial(hora.getTime(), true)
 
 
             }
@@ -95,10 +88,7 @@ const HourEditor = ({
                 Alert.alert("Error", "La hora final debe ser mayor que la hora inicial")
             } else {
 
-                setFechaFinal(hora.getTime())
-
-                // Actualizar hora final del itinerario
-                updateItinerario(hora.getTime(), false)
+                setFechaFinal(hora.getTime(), true)
 
             }
         }

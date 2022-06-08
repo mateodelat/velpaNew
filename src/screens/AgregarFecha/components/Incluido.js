@@ -12,11 +12,12 @@ export default ({
     setDatos
 }) => {
 
-    const vacio = datos.agregado?.length === 0 && datos.default?.length === 0
+    const vacio = datos.agregado?.length === 0 && datos.incluido?.length === 0
 
     const agregarItem = (texto) => {
         let nuevosDatos = {
-            ...datos
+            agregado: datos?.agregado ? [...datos?.agregado] : [],
+            incluido: datos?.incluido ? [...datos?.incluido] : []
         }
         nuevosDatos.agregado.push(texto)
         setDatos(nuevosDatos)
@@ -41,11 +42,11 @@ export default ({
                 :
                 <>
                     {
-                        datos?.default && datos?.default?.length !== 0 ?
+                        datos?.incluido && datos?.incluido?.length !== 0 ?
                             <>
                                 <Text style={styles.title}>De parte de Velpa:</Text>
                                 {/* Render de incluido por velpa */}
-                                {datos?.default?.map((item, i) => {
+                                {datos?.incluido?.map((item, i) => {
                                     return <View
                                         key={i.toString()}
                                         style={styles.container}>

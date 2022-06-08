@@ -34,7 +34,38 @@ export default ({ route, navigation }) => {
                 const sub = await getUserSub()
                 // Crear las subscripciones
                 r.map((f, idx) => {
-                    const subs = DataStore.observe(Reserva, res => res.fechaID("eq", f.id).usuarioID("ne", sub))
+                    // Suscribirse a la fecha para ver si se ha cancelado o se modifico por el guia
+                    subscriptions.push(DataStore.observe(Fecha, fe => fe.id("eq", f.id))
+                        .subscribe(async msg => {
+                            if (msg.opType === OpType.UPDATE || msg.opType === OpType.DELETE) {
+                                const {
+                                    fechaInicial,
+                                    fechaFinal,
+                                } = msg.element
+
+                                if (fechaFinal !== f.fechaFinal || fechaInicial !== f.fechaInicial) {
+                                    Alert.alert("Alerta", "La fecha inicial o final han cambiado, revisalo", [{
+                                        text: "VER",
+                                        onPress: () => {
+
+                                            navigation.navigate("FechasAventura", {
+                                                aventuraID: aventuraID,
+                                                imagenFondo,
+                                                titulo
+
+                                            })
+                                            fetchFechas()
+                                        }
+                                    }], {
+                                        cancelable: false
+
+                                    })
+                                }
+                            }
+                        })
+                    )
+
+                    subscriptions.push(DataStore.observe(Reserva, res => res.fechaID("eq", f.id).usuarioID("ne", sub))
                         .subscribe(async msg => {
                             if (msg.opType === OpType.INSERT) {
                                 const reserva = msg.element
@@ -42,42 +73,41 @@ export default ({ route, navigation }) => {
                                 const totalPersonas = reserva.adultos + reserva.ninos + reserva.tercera
 
                                 const usuario = await DataStore.query(Usuario, reserva.usuarioID)
-                                let nuevasFechas = fechas?.length !== 0 ? [...fechas] : [...r]
-                                nuevasFechas[idx] = {
-                                    ...f,
-                                    totalPersonasReservadas: nuevasFechas[idx].totalPersonasReservadas += totalPersonas,
-                                    personasReservadas: [...nuevasFechas[idx].personasReservadas, {
-                                        foto: await getImageUrl(usuario.foto),
-                                        nickname: usuario.nickname,
-                                        personasReservadas: totalPersonas
-                                    }]
-                                }
+                                let nuevasFechas = fechas?.length !== 0 ? fechas : r
+                                if (nuevasFechas) {
 
-                                // Si la fecha esta llena, esta se quita
-                                if (isFechaFull(nuevasFechas[idx])) {
-                                    console.log(indexPresionado, idx)
-                                    if (indexPresionado === idx) {
-                                        Alert.alert("Atencion", "Lo sentimos, la fecha se ha llenado pero puedes ver mas opciones", [
-                                            {
-                                                text: "Ver",
-                                                onPress: () => {
-                                                    navigation.navigate("FechasAventura")
-                                                    setIndexPresionado(null)
-                                                }
-                                            }
-                                        ])
+                                    nuevasFechas[idx] = {
+                                        ...f,
+                                        totalPersonasReservadas: nuevasFechas[idx].totalPersonasReservadas += totalPersonas,
+                                        personasReservadas: [...nuevasFechas[idx].personasReservadas, {
+                                            foto: await getImageUrl(usuario.foto),
+                                            nickname: usuario.nickname,
+                                            personasReservadas: totalPersonas
+                                        }]
                                     }
 
-                                    nuevasFechas.splice(idx, 1)
+                                    // Si la fecha esta llena, esta se quita
+                                    if (isFechaFull(nuevasFechas[idx])) {
+                                        console.log(indexPresionado, idx)
+                                        if (indexPresionado === idx) {
+                                            Alert.alert("Atencion", "Lo sentimos, la fecha se ha llenado pero puedes ver mas opciones", [
+                                                {
+                                                    text: "Ver",
+                                                    onPress: () => {
+                                                        navigation.navigate("FechasAventura")
+                                                        setIndexPresionado(null)
+                                                    }
+                                                }
+                                            ])
+                                        }
+
+                                        nuevasFechas.splice(idx, 1)
+                                    }
+
+                                    setFechas([...nuevasFechas])
                                 }
-
-
-                                setFechas([...nuevasFechas])
-
                             }
-                        })
-                    subscriptions.push(subs)
-
+                        }))
                 })
             })
 
@@ -155,7 +185,6 @@ export default ({ route, navigation }) => {
     }, []);
 
     const handleContinuar = (fecha, guia) => {
-
         navigation.navigate("Logistica", {
             ...fecha,
 

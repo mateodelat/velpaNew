@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from "react-native-calendars";
-import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, moradoOscuro, msInHour } from "../../../../assets/constants";
+import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, moradoOscuro, msInHour, updateItinerario } from "../../../../assets/constants";
 import { Loading } from "../../../components/Loading";
 import { Fecha } from "../../../models";
 
@@ -109,6 +109,7 @@ export default ({
     markedDays,
     setMarkedDays,
 
+    denyFechasGuia
 }) => {
 
     const {
@@ -125,7 +126,7 @@ export default ({
 
     useEffect(() => {
         setFechaInicialObj(calculateMarkedDays(fechaInicial, fechaFinal, true))
-        pedirFechasDelGuia()
+        !denyFechasGuia && pedirFechasDelGuia()
     }, [])
 
 
@@ -189,7 +190,6 @@ export default ({
                     endingDay: true,
                 },
             })
-
             setFecha({
                 ...fecha,
                 fechaInicial: timestamp + 8 * msInHour
@@ -199,6 +199,7 @@ export default ({
 
         // Si ya tengo segunda fecha, se reinicia todo
         if (fechaFinal) {
+
             setFecha({
                 ...fecha,
                 fechaInicial: timestamp + 8 * msInHour,
@@ -281,6 +282,7 @@ export default ({
 
             setFecha({
                 ...fecha,
+                itinerario: updateItinerario(fecha.itinerario, fechaInicial, (timestamp + 18 * msInHour)),
                 fechaFinal: (timestamp + 18 * msInHour),
             })
 
@@ -295,8 +297,11 @@ export default ({
                     endingDay: true,
                 },
             })
+
+
             setFecha({
                 ...fecha,
+                itinerario: updateItinerario(fecha.itinerario, (timestamp + 8 * msInHour), fechaFinal),
                 fechaInicial: (timestamp + 8 * msInHour),
             })
 

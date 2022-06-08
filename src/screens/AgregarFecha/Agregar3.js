@@ -19,7 +19,8 @@ import { Usuario } from '../../models';
 
 import uuid from 'react-native-uuid';
 import { Storage } from '@aws-amplify/storage';
-import { AndroidNotificationPriority, scheduleNotificationAsync } from 'expo-notifications';
+
+import { notificacionesRecordatorio } from '../../../assets/constants/constant';
 
 const { height } = Dimensions.get("screen")
 
@@ -45,7 +46,7 @@ export default function ({ navigation, route }) {
     const [tipoModal, setTipoModal] = useState("");
 
     const [incluido, setIncluido] = useState({
-        default: incluidoDefault ? incluidoDefault : [],
+        incluido: incluidoDefault ? incluidoDefault : [],
         agregado: []
     })
 
@@ -102,139 +103,7 @@ export default function ({ navigation, route }) {
     }
 
 
-    async function sendNotifications(sub, fechaID) {
-        /*Enviar notificaciones:
-        _Faltando 1 semana
-        _Faltando 1 dia
-        _Faltando 1 hora
-        _A las 8 del dia siguiente de la reserva para calificar
-        */
 
-        const remainingFor1Week = Math.round((fechaInicial - msInDay * 7 - new Date) / 1000)
-        const remainingFor1Day = Math.round((fechaInicial - msInDay - new Date) / 1000)
-        const remainingFor1Hour = Math.round((fechaInicial - msInHour - new Date) / 1000)
-
-        const data = {
-            fechaID,
-
-            // Hora creada en segundos
-            createdAt: Math.round(new Date().getTime() / 1000),
-            tipo: "RECORDATORIOGUIA",
-        }
-
-        // Si falta mas de una semana para la fecha enviar notificacion
-        if (remainingFor1Week > 0) {
-            // Alerta cel
-            scheduleNotificationAsync({
-                content: {
-                    title: "Todo listo??",
-                    body: "Tu experiencia en " + tituloAventura + " es en 1 semana, revisa que tengas todo listo",
-                    priority: AndroidNotificationPriority.HIGH,
-                    vibrate: true,
-                    data: {
-                        ...data,
-                        timeShown: "1S"
-                    },
-
-                },
-                trigger: {
-                    seconds: remainingFor1Week,
-                },
-
-            })
-
-            // Notificacion IN-APP
-            DataStore.save(new Notificacion({
-                tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-                titulo: "Experiencia en 1 semana",
-                descripcion: "Tu experiencia en " + tituloAventura + " es en 1 semana, ya tienes todo listo?",
-
-                showAt: (new Date(fechaInicial - msInDay * 7)).getTime(),
-
-                usuarioID: sub,
-
-                fechaID,
-            }))
-
-        }
-
-
-        // Si falta mas de una dia para la fecha enviar notificacion
-        if (remainingFor1Day > 0) {
-            // Alerta cel
-            scheduleNotificationAsync({
-                content: {
-                    title: "Solo falta 1 dia!!",
-                    body: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
-                    priority: AndroidNotificationPriority.MAX,
-                    vibrate: true,
-                    data: {
-                        ...data,
-                        timeShown: "1D"
-                    },
-
-                },
-                trigger: {
-                    seconds: remainingFor1Day,
-                },
-            })
-
-            // Notificacion IN-APP
-            DataStore.save(new Notificacion({
-                tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-                titulo: "Experiencia mañana",
-                descripcion: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
-
-                showAt: (new Date(fechaInicial - msInDay)).getTime(),
-
-                usuarioID: sub,
-
-                fechaID,
-            }))
-
-        }
-
-        // Enviar notificacion de en menos de 1 hora
-        // Alerta cel
-        scheduleNotificationAsync({
-            content: {
-                title: "Estas a nada de irte",
-                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes y utiliza la app para registrar su entrada con codigo QR!!",
-                priority: AndroidNotificationPriority.MAX,
-                vibrate: true,
-
-                data: {
-                    ...data,
-                    timeShown: "1H"
-                },
-
-
-            },
-            trigger: {
-                seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
-            },
-
-        })
-
-        // Notificacion IN-APP
-        DataStore.save(new Notificacion({
-            tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-            titulo: "Experiencia en menos de 1 hora",
-            descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, estate listo para recibir a los clientes!!",
-
-            showAt: (new Date(fechaInicial - msInHour)).getTime(),
-
-            usuarioID: sub,
-
-            fechaID,
-
-        }))
-
-
-    }
 
     const handleContinuar = async () => {
         const {
@@ -362,8 +231,14 @@ export default function ({ navigation, route }) {
                         fechaID: fecha.id,
                     }))
 
-                    // Notificaciones faltando (1 dia, 1 hora)
-                    sendNotifications(sub, fecha.id)
+                    // Notificaciones faltando (1 dia, 1 hora, 1 semana)
+                    notificacionesRecordatorio({
+                        sub,
+                        fechaInicial,
+                        tituloAventura: tituloAventura,
+                        fechaID: fecha.id,
+                        scheduled: true
+                    })
 
                     // Navegar a exitoso
                     setButtonLoading(false)
@@ -411,7 +286,7 @@ export default function ({ navigation, route }) {
                                     style={styles.modificar}
                                     name="check"
                                     size={24}
-                                    color="green"
+                                    color={moradoOscuro}
                                 />
                                 :
                                 <Feather
@@ -435,7 +310,6 @@ export default function ({ navigation, route }) {
                 </View>
 
                 <View style={[styles.item, styles.queLlevar]}>
-
                     <Pressable
                         style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
                         <Text style={styles.captionTxt}>Material a llevar</Text>
@@ -446,7 +320,7 @@ export default function ({ navigation, route }) {
                                     style={styles.modificar}
                                     name="check"
                                     size={24}
-                                    color="green"
+                                    color={moradoOscuro}
                                 />
                                 :
                                 <Feather

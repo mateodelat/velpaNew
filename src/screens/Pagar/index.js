@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
@@ -31,12 +31,11 @@ import { ChatRoom, ChatRoomUsuarios, Notificacion, Reserva, TipoNotificacion } f
 import { Fecha } from '../../models';
 import { Usuario } from '../../models';
 
-import { AndroidNotificationPriority, scheduleNotificationAsync } from 'expo-notifications';
-
 import uuid from "react-native-uuid"
 
 
-import { sendPushNotification } from '../../../assets/constants/constant';
+import { notificacionesRecordatorio, sendPushNotification } from '../../../assets/constants/constant';
+import { Comision } from '../../models';
 
 
 export default function ({ route, navigation }) {
@@ -91,8 +90,9 @@ export default function ({ route, navigation }) {
     const [sub, setSub] = useState("");
 
     // Objeto de comisiones retenidas si el usuario tuvo
-    const [comisiones, setComisiones] = useState(null);
-    const [comisionesNoProcesadas, setComisionesNoProcesadas] = useState(null);
+    const comisiones = useRef()
+
+    const [payed, setPayed] = useState(false);
 
     const personasTotales = adultos + ninos + tercera
 
@@ -114,23 +114,19 @@ export default function ({ route, navigation }) {
     useEffect(() => {
 
         return () => {
-            // Devolver el objeto de comisiones al usuario solo si no estamos despues de pagar con 
-            // tarjeta
-            if (comisiones && !buttonLoading) {
-                console.log("Regresando comisiones del usuario...\n", comisiones)
-                DataStore.query(Usuario, guiaID).then(r => {
-                    DataStore.save(Usuario.copyOf(r, usr => {
-                        usr.comisionsDue = JSON.stringify(comisiones)
-                    }))
+            // Devolver el objeto de comisiones al usuario solo si no estamos despues de pagar con tarjeta
+            if (comisiones.current && comisiones.current.length !== 0 && !payed) {
+                comisiones.current.map(com => {
+                    DataStore.save(Comision.copyOf(com, ne => {
+                        ne.editing = false
+                    })).then(r => {
+                        console.log("Devolviendo comision: ", r)
+                    })
                 })
-                setComisiones(null)
-            } else {
-                console.log("Comisiones no devueltas")
-
             }
 
         }
-    }, [comisiones]);
+    }, []);
 
     const fetchFecha = async () => {
         setFecha(await DataStore.query(Fecha, fechaID))
@@ -187,41 +183,53 @@ export default function ({ route, navigation }) {
 
             const description = tituloAventura + " " + formatDateShort(fechaInicial, fechaFinal) + "  -----  " + personasTotales + " persona" + (personasTotales === 1 ? "" : "s")
 
-            // Pedir el usuario para ver si debe comisiones
-            const coms = await DataStore.query(Usuario, guiaID)
-                .then(usr => {
-                    // Si debe comisiones, entonces quitarlas temporalmente del usuario
-                    if (usr.comisionsDue) {
-                        console.log("Comisiones tomadas del usuario...\n", JSON.parse(usr.comisionsDue))
-
-
-                        setComisiones(JSON.parse(usr.comisionsDue))
-                        DataStore.save(Usuario.copyOf(usr, ne => {
-                            ne.comisionsDue = null
-                        }))
-                    }
-
-                    return usr.comisionsDue
-                })
-
             // Poner la comision a enviar como numero de pesos y no porcentaje
             let localComision = Math.round(precioTotal) * comision
 
-            // Si el usuario debe comisiones agregarselos a la comision a enviar
-            if (coms) {
-                JSON.parse(coms).map(com => {
+            // Pedir el usuario para ver si debe comisiones
+            const coms = await DataStore.query(Comision, r => r
+                // Id coincidente
+                .usuarioID("eq", guiaID)
 
-                    // Mientras la comision no pase al precio total se siguen agregando
-                    if ((localComision + com.amount) < precioTotal) {
-                        localComision += com.amount
-                    } else {
-                        Alert.alert("Error", "Hay pagos no cobrados, informa al desarrollador")
-                        console.log([...comisionesNoProcesadas, com])
-                        setComisionesNoProcesadas([...comisionesNoProcesadas, com])
-                    }
+                // Que no lo este viendo alguien mas
+                .editing("ne", true)
+
+                // Que no haya sido procesada
+                .payed("ne", true)
+            )
+                .then(com => {
+                    let newComisiones = []
+                    // Si debe comisiones, entonces ponerla como editing true
+                    com.map(e => {
+                        // Mientras la comision no pase al precio total se siguen agregando
+                        if ((localComision + e.amount) < precioTotal) {
+
+                            // Si el usuario debe comisiones agregarselos a la comision a enviar
+                            localComision += e.amount
+
+                            newComisiones = [...newComisiones, e]
+
+                            DataStore.save(Comision.copyOf(e, n => {
+                                n.editing = true
+                            }))
+
+                        } else {
+                            console.log("Hay pagos no cobrados que se quedaran sin la bandera de editing")
+                        }
+                    })
+
+                    console.log(newComisiones)
+                    comisiones.current = (newComisiones)
+
+                    // Objeto para mandar como metadata del payment intent
+                    return JSON.stringify(newComisiones.map(com => {
+                        return {
+                            createdAt: com.createdAt,
+                            id: com.reservaID,
+                            amount: com.amount
+                        }
+                    }))
                 })
-            }
-
 
             const response = (await API.graphql({
                 query: createPaymentIntent, variables:
@@ -339,193 +347,9 @@ export default function ({ route, navigation }) {
     }
 
 
-    async function sendNotifications(reservaID, user) {
-        /*Enviar notificaciones:
-        _Faltando 1 semana
-        _Faltando 1 dia
-        _Faltando 1 hora
-        _A las 8 del dia siguiente de la reserva para calificar
-        */
-        const initialDate = new Date(fecha.fechaInicial)
-
-        // Poner fecha final al dia siguiente de que acabe a las 8
-        let finalDate = new Date(fecha.fechaFinal)
-        if (finalDate.getUTCHours() >= 8) {
-            finalDate = new Date(finalDate.getTime() + msInDay)
-        }
-        finalDate.setUTCHours(8)
-
-        const remainingFor1Week = Math.round((initialDate - msInDay * 7 - new Date) / 1000)
-        const remainingFor1Day = Math.round((initialDate - msInDay - new Date) / 1000)
-        const remainingFor1Hour = Math.round((initialDate - msInHour - new Date) / 1000)
-        const remainingForNextDay = Math.round((finalDate - new Date) / 1000)
-
-
-        // Datos para las notificaciones
-        const data = {
-            reservaID,
-            fechaID,
-
-            // Hora creada en segundos
-            createdAt: Math.round(new Date().getTime() / 1000),
-
-            tipo: "RECORDATORIOCLIENTE"
-        }
-
-
-        // Enviar notificacion de califica al guia
-        // Alerta cel
-        scheduleNotificationAsync({
-            content: {
-                title: ((user.nombre ? mayusFirstLetter(user.nombre) : user.nickname) + ", aydanos a hacer de Velpa un lugar mejor"),
-                body: "Calfica tu experiencia en " + tituloAventura + " con " + nicknameGuia,
-                data: {
-                    ...data,
-                    tipo: TipoNotificacion.CALIFICAUSUARIO
-                }
-
-            },
-            trigger: {
-                seconds: remainingForNextDay,
-            },
-
-        })
-
-        // Notificacion IN-APP
-        DataStore.save(new Notificacion({
-            tipo: TipoNotificacion.CALIFICAUSUARIO,
-
-            titulo: "Califica tu experiencia",
-            descripcion: ((user.nombre ? mayusFirstLetter(user.nombre) : user.nickname) + ", ayudanos a hacer de Velpa un lugar mejor, calfica a " + nicknameGuia + " en " + tituloAventura),
-
-            showAt: finalDate.getTime(),
-
-            usuarioID: sub,
-            aventuraID: fecha.aventuraID,
-
-            // Datos para buscar por si se cancela/mueve fecha o reserva
-            reservaID,
-            fechaID,
-
-            imagen: imagenFondo.key,
-
-            guiaID
-        }))
-
-
-
-        // Si falta mas de una semana para la fecha enviar notificacion
-        if (remainingFor1Week > 0) {
-            // Alerta cel
-            scheduleNotificationAsync({
-                content: {
-                    title: "Todo listo??",
-                    body: "Tu experiencia en " + tituloAventura + " es en 1 semana, revisa el material a llevar",
-                    priority: AndroidNotificationPriority.HIGH,
-                    vibrate: true,
-                    data: {
-                        ...data,
-                        timeShown: "1S"
-                    },
-                },
-                trigger: {
-                    seconds: remainingFor1Week,
-                },
-
-            })
-
-            // Notificacion IN-APP
-            DataStore.save(new Notificacion({
-                tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-                titulo: "Experiencia en 1 semana",
-                descripcion: "Tu experiencia en " + tituloAventura + " es en 1 semana, ya tienes todo listo?",
-
-                showAt: (new Date(initialDate - msInDay * 7)).getTime(),
-
-                usuarioID: sub,
-
-                fechaID: fecha?.id,
-                reservaID
-            }))
-
-        }
-
-
-        // Si falta mas de una dia para la fecha enviar notificacion
-        if (remainingFor1Day > 0) {
-            // Alerta cel
-            scheduleNotificationAsync({
-                content: {
-                    title: "Solo falta 1 dia!!",
-                    body: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
-                    priority: AndroidNotificationPriority.MAX,
-                    vibrate: true,
-                    data: {
-                        ...data,
-                        timeShown: "1D"
-                    },
-                },
-                trigger: {
-                    seconds: remainingFor1Day,
-                },
-            })
-
-            // Notificacion IN-APP
-            DataStore.save(new Notificacion({
-                tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-                titulo: "Experiencia mañana",
-                descripcion: "Tu experiencia en " + tituloAventura + " es mañana, revisa todo tu material y el punto de reunion",
-
-                showAt: (new Date(initialDate - msInDay)).getTime(),
-
-                usuarioID: sub,
-
-                fechaID: fecha?.id,
-                reservaID
-            }))
-
-        }
-
-        // Enviar notificacion de en menos de 1 hora
-        // Alerta cel
-        scheduleNotificationAsync({
-            content: {
-                title: "Estas a nada de irte",
-                body: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!" + (tipoPago === "EFECTIVO" ? "\nRecuerda llevar el pago de $" + precioTotal + " en efectivo de la aventura" : ""),
-                priority: AndroidNotificationPriority.MAX,
-                vibrate: true,
-                data: {
-                    ...data,
-                    timeShown: "1H"
-                },
-            },
-            trigger: {
-                seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
-            },
-
-        })
-
-        // Notificacion IN-APP
-        DataStore.save(new Notificacion({
-            tipo: TipoNotificacion.RECORDATORIOFECHA,
-
-            titulo: "Experiencia en menos de 1 hora",
-            descripcion: "Tu experiencia en " + tituloAventura + " es en menos de 1 hora, no hagas esperar al guia!!" + (tipoPago === "EFECTIVO" ? "\nRecuerda llevar el pago de $" + precioTotal + " en efectivo de la aventura" : ""),
-
-            showAt: (new Date(initialDate - msInHour)).getTime(),
-
-            usuarioID: sub,
-
-            fechaID: fecha?.id,
-            reservaID
-        }))
-
-
-    }
 
     const handleConfirm = async () => {
+
         if (tipoPago === null) {
             Alert.alert("Error", "Selecciona un tipo de pago")
         } else {
@@ -547,7 +371,7 @@ export default function ({ route, navigation }) {
                         { cancelable: false }
                     )
                 } else {
-                    let coms = comisiones
+                    let coms = comisiones.current
                     let guia = await DataStore.query(Usuario, guiaID)
                     // Pago con tarjeta
                     if (tipoPago === "TARJETA") {
@@ -561,11 +385,19 @@ export default function ({ route, navigation }) {
 
                         const { error } = await confirmPaymentSheetPayment()
 
-                            // Si el pago se confirma con exito y no faltaron, se eliminan las comisiones 
-                            // del usuario
+                            // Si el pago se confirma con exito, se eliminan las comisiones que se debian del usuario
                             .then((r) => {
                                 if (!r.error) {
-                                    setComisiones(null)
+                                    console.log("Eliminando comisiones del estado y actualizando en datastore a pagadas...")
+                                    comisiones.current?.map(com => {
+                                        DataStore.save(Comision.copyOf(com, ne => {
+                                            ne.editing = false
+                                            ne.payed = true
+                                            ne.pagadoEnReservaID = reservaID
+                                        })).then(console.log)
+                                    })
+                                    setPayed(true)
+                                    comisiones.current = (null)
                                 }
                                 return r
                             })
@@ -583,35 +415,28 @@ export default function ({ route, navigation }) {
 
 
                     }
+
                     // Si fue pago en efectivo, se agrega la comision al usuario
                     else {
-                        if (coms) {
-                            coms.push({
-                                createdAt: new Date(),
-                                id: reservaID,
-                                amount: precioTotal * comision
-                            })
-                        } else {
-                            coms = [{
-                                createdAt: new Date(),
-                                id: reservaID,
-                                amount: precioTotal * comision
-                            }]
-                        }
+                        DataStore.save(new Comision({
+                            reservaID,
+                            amount: precioTotal * comision,
+                            editing: false,
+                            payed: false,
 
-
-                        // Guardar al guia con sus nuevas comisiones
-                        console.log("Comisiones nuevas del usuario...\n", JSON.stringify(coms))
-
-
-                        setComisiones(null)
-                        guia = await DataStore.save(Usuario.copyOf(guia, usr => {
-                            usr.comisionsDue = JSON.stringify(coms)
+                            usuarioID: guiaID
                         }))
 
+                        // Actualizar estado de las comisiones viejas a dejando de editar
+                        coms.map(com => {
+                            DataStore.save(com, e => {
+                                e.editing = false
+                            })
+                        })
+
+                        comisiones.current = (null)
 
                     }
-
 
 
 
@@ -714,10 +539,32 @@ export default function ({ route, navigation }) {
                         reservaID
                     }))
 
-                    sendNotifications(
+                    notificacionesRecordatorio({
+                        scheduled: true,
+                        // Datos del cliente para la notificacion de calificar
+                        cliente: {
+                            calificaClienteImage: imagenFondo.key,
+                            tipoPago,
+                            precioTotal,
+                            nickname: (usuario.nombre ? mayusFirstLetter(usuario.nombre) : usuario.nickname),
+                        },
+
+                        // Datos del guia para la notificacion de calificar
+                        guia: {
+                            guiaID,
+                            nickname: nicknameGuia,
+                        },
+
+                        // Datos otras notificaciones
+                        fechaInicial: fecha.fechaInicial,
+                        fechaFinal: fecha.fechaFinal,
+                        sub,
+                        tituloAventura,
+
+                        aventuraID: fecha.aventuraID,
                         reservaID,
-                        usuario
-                    )
+                        fechaID,
+                    })
 
                     navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
                     setButtonLoading(false)

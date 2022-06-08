@@ -108,6 +108,15 @@
           "attributes": [
             "UserPoolId"
           ]
+        },
+        {
+          "category": "api",
+          "resourceName": "velpaAPI",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
         }
       ]
     },

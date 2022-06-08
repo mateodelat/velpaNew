@@ -10,6 +10,8 @@ import {
 
 
 import { Entypo } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { moradoOscuro } from '../../../../assets/constants';
 
 export default ({
     agregarALista,
@@ -64,10 +66,10 @@ export default ({
             {!editing && preview && <Text style={[styles.textoAgregar, textStyle]}>{preview}</Text>}
 
             {editing ?
-                <Entypo
+                <Feather
                     style={styles.icon}
 
-                    name="check" size={25} color="green" onPress={handleSubmit} />
+                    name="check" size={25} color={moradoOscuro} onPress={handleSubmit} />
                 :
                 <Entypo
                     style={styles.icon}

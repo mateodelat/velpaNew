@@ -61,7 +61,7 @@ type Reserva
   horaIngreso: AWSDateTime
 
   cancelado: Boolean
-  canceledAt: String
+  canceledAt: AWSDateTime
 
   fechaID: ID @index(name: "byFecha")
   usuarioID: ID @index(name: "byUsuario")
@@ -74,6 +74,9 @@ type Reserva
   tipoPago: tipoPago
 
   materialChecked: String
+
+  comisionID: ID
+  comisionAsociada: Comision @hasOne
 }
 
 type Fecha
@@ -164,8 +167,6 @@ type Usuario
   telefono: String
   sitioWeb: AWSURL
 
-  comisionsDue: String
-
   CuentaBancaria: String
 
   fechaNacimiento: AWSJSON
@@ -198,6 +199,29 @@ type Usuario
     @hasMany(indexName: "byUsuario", fields: ["id"])
 
   Comentarios: [Comentario] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Comisiones: [Comision] @hasMany(indexName: "byUsuario", fields: ["id"])
+}
+
+type Comision
+  @model
+  @auth(
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
+  ) {
+  id: ID!
+
+  amount: Int!
+
+  editing: Boolean
+  payed: Boolean
+
+  pagadoEnReservaID: ID
+
+  reservaID: ID!
+  reserva: Reserva @belongsTo
+
+  usuarioID: ID @index(name: "byUsuario")
+  usuario: Usuario @belongsTo
 }
 
 type ChatRoom
