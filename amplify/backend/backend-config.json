@@ -1,6 +1,6 @@
 {
   "auth": {
-    "velpaAuth": {
+    "velpa4fc38b42": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -30,6 +30,24 @@
     }
   },
   "api": {
+    "velpaAPI": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7,
+              "apiKeyExpirationDate": "2022-06-16T17:36:00.068Z",
+              "description": ""
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    },
     "AdminQueries": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
@@ -37,53 +55,20 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpaAuth",
+          "resourceName": "velpa4fc38b42",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "function",
-          "resourceName": "AdminQueries9184a6d2",
+          "resourceName": "AdminQueries9acde108",
           "attributes": [
             "Arn",
             "Name"
           ]
         }
       ]
-    },
-    "velpaAPI": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "velpaAuth",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ],
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7,
-              "apiKeyExpirationDate": "2022-06-01T20:22:43.026Z",
-              "description": ""
-            }
-          },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authvelpaAuth"
-              }
-            }
-          ]
-        }
-      }
     }
   },
   "function": {
@@ -103,13 +88,6 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "velpaAuth",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
           "category": "api",
           "resourceName": "velpaAPI",
           "attributes": [
@@ -120,14 +98,14 @@
         }
       ]
     },
-    "AdminQueries9184a6d2": {
+    "AdminQueries9acde108": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
       "build": true,
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpaAuth",
+          "resourceName": "velpa4fc38b42",
           "attributes": [
             "UserPoolId"
           ]

@@ -155,7 +155,10 @@ export default ({ navigation, route }) => {
 
 
         const now = new Date()
-        const reservas = await DataStore.query(Reserva, res => res.fechaID("eq", fechaID))
+        const reservas = await DataStore.query(Reserva, res => res
+            .fechaID("eq", fechaID)
+            .cancelado("ne", true)
+        )
         let personasReservadas = []
 
         await Promise.all(reservas.map(async res => {
@@ -304,10 +307,9 @@ export default ({ navigation, route }) => {
         ]
 
         // Mapear todas las personas y ver si existe el id escaneado en las mismas
-
         const idx = personas.findIndex(e => e.id === scanedID)
 
-        // Si la reserva existe en la fecha y checar si ya paso el cliente 
+        // Si la reserva existe en la fecha checar si ya paso el cliente 
         if (idx !== -1) {
             if (personas[idx].ingreso) {
                 return new Promise((resolve) => {
@@ -334,18 +336,29 @@ export default ({ navigation, route }) => {
             }
             console.log(scanedID)
             const reser = await DataStore.query(Reserva, scanedID)
-            DataStore.save(Reserva.copyOf(reser, res => {
-                res.horaIngreso = new Date().toISOString()
-                res.ingreso = true
-            }))
-                .catch(e => console.log(e))
+                // Verificar que no hagan fraude cancelando la reserva de ultima hora
                 .then(r => {
-                    console.log(r)
+                    if (r.cancelado === true) {
+                        Alert.alert("Error", "La reserva ha sido cancelada por el cliente")
+                        return null
+                    }
+                    return r
                 })
-            setFecha(newFecha)
+            if (reser) {
+                DataStore.save(Reserva.copyOf(reser, res => {
+                    res.horaIngreso = new Date().toISOString()
+                    res.ingreso = true
+                }))
+                    .catch(e => console.log(e))
+                    .then(r => {
+                        console.log(r)
+                    })
+                setFecha(newFecha)
 
-            Alert.alert("Info", "Persona ingresada con exito")
-            handleOpenReservacion(newPersonas[idx])
+                Alert.alert("Info", "Persona ingresada con exito")
+                handleOpenReservacion(newPersonas[idx])
+            }
+
 
         } else {
             return new Promise((resolve, reject) => {

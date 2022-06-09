@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { Rating } from 'react-native-ratings';
-import { moradoOscuro } from '../../../../assets/constants';
+import { formatCalificacion, moradoOscuro } from '../../../../assets/constants';
 import { Loading } from '../../../components/Loading';
 import HeaderModal from '../../AgregarFecha/components/HeaderModal';
 import CommentItem from './CommentItem';
@@ -37,7 +37,7 @@ export default function ({
                     <View style={{ flex: 1, }}>
                         <View style={styles.header}>
 
-                            <Text style={styles.calificacionTxt}>{user.calificacion}</Text>
+                            <Text style={styles.calificacionTxt}>{formatCalificacion(user.calificacion)}</Text>
                             <Rating
                                 readonly
                                 ratingCount={5}

@@ -4,7 +4,7 @@ import { formatMoney, moradoOscuro } from '../../../../assets/constants'
 
 const PaymentRow = ({ title, description, amount, status, style }) => {
     function calculateColor() {
-        return amount?.content > 0 ? "green" : "red"
+        return amount.content === 0 ? "black" : amount.content > 0 ? "green" : "red"
     }
 
 

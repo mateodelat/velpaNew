@@ -9,30 +9,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { loginLinkStripe, retrieveBalanceStripe } from '../../graphql/mutations'
+
 import Elemento from './components/Elemento'
 import { DataStore } from '@aws-amplify/datastore';
 
 
 import UserLevel from '../../components/UserLevel'
-import Line from '../../components/Line'
-import HelpButton from '../../components/HelpButton'
+
 import InfoNivelesModal from '../../components/InfoNivelesModal'
 import { Usuario } from '../../models'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 
-const getUsuario = /* GraphQL */ `
-query GetUsuario($id: ID!) {
-    getUsuario(id: $id) {
-        id
-        nombre
-        apellido
-        foto
-        nickname
-    }
-    }
-`
 
 export default ({ route, navigation }) => {
 
@@ -135,7 +123,6 @@ export default ({ route, navigation }) => {
 
 
     async function cerrarSesion() {
-        await DataStore.stop()
         DataStore.clear()
         Auth.signOut()
     }

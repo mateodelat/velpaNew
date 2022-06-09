@@ -1131,7 +1131,7 @@ export const schema = {
                 "canceledAt": {
                     "name": "canceledAt",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1453,7 +1453,7 @@ export const schema = {
                 "canceledAt": {
                     "name": "canceledAt",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -2358,5 +2358,5 @@ export const schema = {
             }
         }
     },
-    "version": "b7ea4817bb9fe547a96da6fcdb243bb4"
+    "version": "b933defe3f6634a3ab3352887c74121a"
 };

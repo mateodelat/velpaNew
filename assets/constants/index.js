@@ -13,6 +13,9 @@ import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
 import { sendPushNotification } from "./constant.tsx";
 import * as ImageManipulator from 'expo-image-manipulator';
+import { STRIPE_KEY } from "./keys";
+
+
 
 
 
@@ -323,6 +326,7 @@ export const createUsuario = async (attributes, unathenticated, username) => {
 export async function handleGoogle() {
 
   Auth.federatedSignIn({ provider: "Google" })
+    .then(console.log)
     .catch(e => {
       Alert.alert("Error", "Error iniciando sesion con google")
       console.log(e)
@@ -1933,6 +1937,117 @@ export async function uploadImageToStripe(uri) {
   }
 };
 
+export async function fetchAsociatedStripeIds(idPago) {
+  return fetch(
+    `https://api.stripe.com/v1/payment_intents/${idPago}`
+    , {
+      method: "get",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization":
+          "Bearer " +
+          STRIPE_KEY,
+        "Accept": "application/json",
+      },
+    }
+  )
+    .then((r) => r.json())
+    .then((r) => {
+      if (r.has_more) {
+        Alert.alert("Atencion", "Faltan elementos para cancelar, avisa al desarrollador");
+      }
+      if (r.error) {
+        console.log(r);
+        Alert.alert("Error", "Ocurrio un error obteniendo el pago");
+        return;
+      }
+
+      const otherFees = JSON.parse(r.metadata.otherFees)
+      const transferID = r.charges.data[0].transfer
+      const fee = {
+        id: r.charges.data[0].application_fee,
+        amount: r.charges.data[0].application_fee_amount,
+
+      }
+
+
+      return ({
+        otherFees,
+        transferID,
+        fee,
+      })
+
+    });
+}
+
+export const formatCalificacion = (cal) => {
+  return cal?.toFixed(1)
+
+}
+
+export async function cancelTransfer(idTransfer) {
+  return fetch(
+    `https://api.stripe.com/v1/transfers/${idTransfer}/reversals`
+    , {
+      method: "post",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization":
+          "Bearer " +
+          STRIPE_KEY,
+        "Accept": "application/json",
+      },
+    }
+  ).then((r) => r.json())
+
+}
+
+export async function refundPaymentIntent(paymentId, amount) {
+  var details = {
+    'amount': Math.round(amount * 100),
+    'payment_intent': paymentId,
+  };
+
+
+  var formBody = [];
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
+
+  return fetch(
+    `https://api.stripe.com/v1/refunds?amount=124223.2&payment_intent=pi_3L8HPOFIERW56TAE0KnxNXB6`
+    , {
+      method: "post",
+      body: formBody,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization":
+          "Bearer " +
+          STRIPE_KEY,
+        "Accept": "application/json",
+      },
+    }
+  ).then((r) => r.json())
+}
+
+export async function cancelAppFee(feeId, amount) {
+  return fetch(
+    `https://api.stripe.com/v1/application_fees/${feeId}/refunds`
+    , {
+      method: "post",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization":
+          "Bearer " +
+          STRIPE_KEY,
+        "Accept": "application/json",
+      },
+    }
+  ).then((r) => r.json())
+}
 
 export const AsyncAlert = async (title, body) => new Promise((resolve, reject) => {
   Alert.alert(title, body,

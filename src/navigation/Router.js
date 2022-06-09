@@ -160,17 +160,20 @@ export default () => {
 
         const i = new Date()
         const notifications = await Notifications.getAllScheduledNotificationsAsync()
+        const sub = await getUserSub()
 
         // Pedir todas las fechas futuras que no han sido canceladas
-        const fechas = await DataStore.query(Fecha, fe => {
+        const fechas = await DataStore.query(Fecha, fe =>
             fe.fechaInicial("gt", new Date())
-            fe.cancelado("ne", true)
-        })
+                .cancelado("ne", true)
+        )
 
         // Pedir las reservas que no han sido canceladas
-        const reservas = await DataStore.query(Reserva, res => {
-            // res.canceled("ne", true)
-        })
+        const reservas = await DataStore.query(Reserva, res =>
+            res
+                .cancelado("ne", true)
+                .usuarioID("eq", sub)
+        )
 
         // Fechas con errores
         let fechasConError = {}
@@ -194,11 +197,20 @@ export default () => {
 
             if (!data || !tipo || !fechaID) {
                 // Notifications.cancelScheduledNotificationAsync(id)
-                console.log("Error raro, la notificacion no tiene tipo")
+                console.log("Error raro, la notificacion no tiene tipo o fecha ID")
                 return
             }
 
+            // Si tiene reserva id y no hay ninguna reserva asociada es porque se cancelo
+            if (reservaID) {
+                const res = reservas.find((r) => r.id === reservaID)
 
+                if (!res) {
+                    Notifications.cancelScheduledNotificationAsync(id)
+                    console.log("Error, no existe reserva asociada a la notificacion con reserva id cancelando...")
+
+                }
+            }
 
 
             // Metodo para detectar si hubo cambios en la fecha o si fue elmininada
@@ -256,11 +268,11 @@ export default () => {
                         } else {
                         }
                     }
-                } else {
-                    // Si no esta la fecha asociada, eliminar notificacion
-                    console.log("Cancelar notificacion", n, "\nno existe la fecha o fue cancelada")
-                    // Notifications.cancelScheduledNotificationAsync(id)
                 }
+            } else {
+                // Si no esta la fecha asociada, eliminar notificacion
+                console.log("No existe la fecha o fue cancelada asociada a a notificacion")
+                Notifications.cancelScheduledNotificationAsync(id)
             }
         })
 
@@ -389,7 +401,7 @@ export default () => {
             <SafeAreaProvider>
                 <NavigationContainer>
                     <Stack.Navigator
-                        // initialRouteName={"MisFechas"}
+                        // initialRouteName={"MisReservas"}
 
                         screenOptions={{
                             headerLeft: ({ onPress }) => {

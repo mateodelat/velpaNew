@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { AsyncAlert, colorFondo, comisionStripe, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, redondear } from '../../../assets/constants';
+import { AsyncAlert, cancelAppFee, cancelTransfer, colorFondo, comisionStripe, fetchAsociatedStripeIds, formatAMPM, formatDateShort, formatDateWithHour, formatMoney, getImageUrl, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, redondear, refundPaymentIntent } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -23,7 +23,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Line from '../../components/Line';
 import ModalMap from '../../components/ModalMap';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoom, Fecha, Usuario } from '../../models';
+import { ChatRoom, Fecha, TipoNotificacion, Usuario } from '../../models';
 import API from '@aws-amplify/api';
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
@@ -31,27 +31,13 @@ import { Loading } from '../../components/Loading';
 import QRIcon from '../DetalleFecha/components/QRIcon';
 import { TipoPago } from '../../models';
 import Calendario from '../DetalleFecha/components/Calendario';
+import { Comision } from '../../models';
+import { Notificacion } from '../../models';
+import { ChatRoomUsuarios } from '../../models';
+import { sendNotification } from '../../../assets/constants/constant';
+import { AventuraUsuarios } from '../../models';
 
 
-export const getUsuario = /* GraphQL */ `
-  query GetUsuario($id: ID!) {
-    getUsuario(id: $id) {
-      id
-      foto
-      nickname
-      AventurasAutorizadas(limit:4) {
-        items {
-            aventura {
-                titulo
-                id
-                imagenFondoIdx
-                imagenDetalle
-            }
-        }
-      }
-    }
-  }
-`;
 
 
 
@@ -65,12 +51,14 @@ export default ({ navigation, route }) => {
     //DISTINTAS CATEGORIAS
 
     const fecha = route.params.fecha
-    const reserva = route.params.reserva
+    const setReservas = route.params.setReservas
+
 
     // Variables para animaciones (Carrousel fotos y header transparencia)
     const scrollY = useRef(new Animated.Value(0)).current
 
 
+    const [reserva, setReserva] = useState(route.params.reserva);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState("map");
@@ -112,22 +100,34 @@ export default ({ navigation, route }) => {
                 return r
             })
         // Obtener el usuario y la imagen de las aventuras autorizadas
-        API.graphql({ query: getUsuario, variables: { id: guiaID } })
+        DataStore.query(Usuario, guiaID)
             .then(async r => {
-                r = r.data.getUsuario
-                const AventurasAutorizadas = await Promise.all(r.AventurasAutorizadas.items.map(async e => {
-                    e = e.aventura
+                const AventurasAutorizadas = await DataStore.query(AventuraUsuarios)
+                    .then(async e => {
+                        e = (await Promise.all(e.map(async av => {
 
-                    const imagenFondo = await getImageUrl(e.imagenDetalle[e.imagenFondoIdx])
+                            // Si no es del usuario se cancela
+                            if (av.usuario.id !== guiaID) {
+                                return false
+                            }
 
-                    const titulo = mayusFirstLetter(e.titulo)
-                    // Obtener la imagen de fondo
-                    return {
-                        ...e,
-                        imagenFondo,
-                        titulo
-                    }
-                }))
+                            av = av.aventura
+
+                            const imagenFondo = await getImageUrl(av.imagenDetalle[av.imagenFondoIdx])
+
+                            const titulo = mayusFirstLetter(av.titulo)
+                            // Obtener la imagen de fondo
+                            return {
+                                ...av,
+                                imagenFondo,
+                                titulo
+                            }
+
+
+                        }))).filter(e => e).slice(0, 4)
+
+                        return e
+                    })
 
                 setGuia({
                     ...r,
@@ -143,7 +143,6 @@ export default ({ navigation, route }) => {
                     updated.materialChecked = JSON.stringify(materialChecked)
                 }
                 )).catch(e => {
-                    // console.log("Error extraño por")
                 })
             })
 
@@ -186,55 +185,217 @@ export default ({ navigation, route }) => {
             fechaInicial
         } = fecha
         const {
-            pagoID
+            pagoID,
+            id
         } = reserva
-        console.log(pagoID)
+
+
 
         const efectivo = reserva.tipoPago === TipoPago.EFECTIVO ? true : false
 
         try {
-            // Si se cambio la fecha no se cobra comision al usuario
-            if (dateModified && !efectivo) {
-                await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(reserva.total - comisionStripe(reserva.total), true)) + " por comisiones de cancelacion")
-
-                // Devolver todo el cargo al cliente
+            // Si fue en efectivo solamente cancelarlo
+            if (efectivo) {
+                await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?")
+                setLoading(true)
 
             }
 
-            // Si fue con tarjeta pero no se cambio la fecha, se cobra comision al usuario y detecta si ya paso el plazo de cancelacion
-            else if (!efectivo) {
-                // No poder cancelar si faltan 24 horas para la fecha 
-                if (fechaInicial - new Date().getTime() < (msInDay)) {
-                    await AsyncAlert("Atencion", "Faltando 24 horas para la fecha ya no es posible cancelarla")
-                    return
-                } else {
-                    await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(reserva.total - 20 - comisionStripe(reserva.total), true)) + " por comisiones de cancelacion")
+            // Si fue pago con tarjeta
+            else {
+                let aDevolver = reserva.total - comisionStripe(reserva.total)
+
+                // Si se cambio la fecha no se cobra comision al usuario mas que la de stripe
+                if (dateModified) {
+                    await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(aDevolver, true)) + " por comisiones de cancelacion")
+
+                    setLoading(true)
 
                 }
 
+                // Si fue con tarjeta pero no se cambio la fecha, se cobra comision al usuario y detecta si ya paso el plazo de cancelacion
+                else {
+                    // No poder cancelar si faltan 24 horas para la fecha 
+                    if (fechaInicial - new Date().getTime() < (msInDay)) {
+                        await AsyncAlert("Atencion", "Faltando 24 horas para la fecha ya no es posible cancelarla")
+                        return
+                    } else {
+                        // Restarle 20 por comision de plataforma por cancelacion
+                        aDevolver -= 20
+
+                        await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?, se devolveran " + (formatMoney(aDevolver, true)) + " por comisiones de cancelacion")
+                        setLoading(true)
+
+                    }
+                }
+
+
+                /////////////////////////////////////////////////////////
+                //////////////// Cancelar desde stripe //////////////////
+                /////////////////////////////////////////////////////////
+                // Obtener info del pago
+                const {
+                    otherFees,
+                    transferID,
+                    fee,
+                } = await fetchAsociatedStripeIds(pagoID)
+
+                let promises = []
+                // Devolver una parte del pago quitandole la comision
+                promises.push(refundPaymentIntent(pagoID, aDevolver)
+                    .then(e => {
+                        const { error } = e
+                        if (error) {
+                            throw error
+                        }
+                    })
+                )
+                // Devolver solo la comision asociada con la reserva
+                promises.push(cancelAppFee(fee.id, reserva.comision)
+                    .then(e => {
+                        const { error } = e
+                        if (error) {
+                            throw error
+                        }
+                    }))
+
+                // Cancelar transferencia
+                promises.push(cancelTransfer(transferID)
+                    .then(e => {
+                        const { error } = e
+                        if (error) {
+                            throw error
+                        }
+                    })
+                )
+
+                // Esperar a que se cancelen los pagos
+                await Promise.all(promises)
+
+                // Si hay comisiones asociadas al pago simplemente habilitarlas con payed = false en datastore
+                // otherFees.map(o => {
+                //     DataStore.query(Comision, o.id)
+                //         .then(c => {
+                //             DataStore.save(Comision.copyOf(c, com => {
+                //                 com.payed = false
+                //                 com.pagadoEnReservaID = null
+                //                 com.editing = false
+                //             }))
+                //         })
+                // })
             }
 
-            // Si fue en efectivo solamente cancelarlo
-            else {
-                await AsyncAlert("Atencion", "¿Seguro que quieres cancelar la fecha?")
+            const sub = await getUserSub()
 
-            }
+            // Borrar notificaciones de recordatorio asociadas
+            DataStore.query(Notificacion, not => not
+                .reservaID("eq", reserva.id)
+                .usuarioID("eq", sub)
+                .or(
+                    r => r
+                        .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
+                        .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
+                )
+                .fechaID("eq", fecha.id)
+            ).then(r => {
+                console.log("Notificaciones borrando: ", r.length)
+                r.map(not => {
+                    DataStore.delete(not)
+                })
+            })
 
-            setLoading(true)
+            const client = await DataStore.query(Usuario, reserva.usuarioID)
+
+            // Agregar notificacion de califica al guia
+            DataStore.save(
+                new Notificacion({
+                    tipo: TipoNotificacion.CALIFICAUSUARIO,
+
+                    titulo: "Califica al usuario",
+                    descripcion:
+                        (client.nombre ? mayusFirstLetter(client.nombre) : client.nickname) + " ayudanos a hacer de Velpa un lugar mejor, calfica a " +
+                        guia.nickname +
+                        " en " +
+                        fecha.tituloAventura,
+
+                    showAt: new Date().getTime(),
+
+                    usuarioID: reserva.usuarioID,
+                    aventuraID: fecha.aventuraID,
+
+                    imagen: fecha.imagenFondo,
+
+                    guiaID: guia.guiaID,
+                })
+            );
+
+            // Mandar notificacion de reserva cancelada al guia
+            sendNotification({
+                titulo: "Usuario cancelado",
+                descripcion: "El usuario @" + client.nickname + " ha cancelado su reserva",
+                showAt: new Date().getTime(),
+                reservaID: reserva.id,
+                tipo: TipoNotificacion.RESERVACANCELADA,
+                usuarioID: fecha.usuarioID,
+                token: guia.notificationToken
+            })
+
+            // Mandar notificacion de reserva cancelada con exito al usuario
+            sendNotification({
+                titulo: "Reserva cancelada",
+                descripcion: "La reserva en " + fecha.tituloAventura + " ha sido cancelada" + (!efectivo ? "\nEn caso de no reembolsarse tu pago dentro de 5 a 10 dias habiles contacta a soporte" : ""),
+                reservaID: reserva.id,
+                tipo: TipoNotificacion.RESERVACANCELADA,
+                usuarioID: reserva.usuarioID,
+            })
+
+            // Quitar relacion de usuario chatroom
+            DataStore.query(ChatRoom, c => c.fechaID("eq", reserva.fechaID))
+                .then(r => {
+                    r = r[0]
+                    DataStore.query(ChatRoomUsuarios, c => c
+                        .chatroom("eq", r)
+                    )
+                        // Mapear las relaciones chatUsuario y borrar la que coincida con el usuario id
+                        .then(r => {
+                            r = r.find(chat => chat.usuario.id === reserva.usuarioID)
+                            if (!r) {
+                                console.log("No hay chat asociado")
+
+                                return
+                            }
+                            DataStore.delete(r)
+                        })
+                })
 
             // Poner la reserva en cancelado
             DataStore.query(Reserva, reserva.id)
-
                 .then(async r => {
                     await DataStore.save(Reserva.copyOf(r, r => {
                         r.cancelado = true
-                        r.canceledAt = new Date()
-                    })).then(console.log)
+                        r.canceledAt = new Date().toISOString()
+                    }))
+
+                    Alert.alert("Exito", "Reserva cancelada con exito")
+                    setReserva(r)
+
+                    setReservas(old => {
+                        const idx = old.findIndex(e => e.id === r.id)
+
+                        old[idx] = {
+                            ...r,
+                            reserva: r,
+                            fecha: fecha,
+                            pasada: fecha.fechaInicial < new Date()
+                        }
+
+                        return [...old]
+                    })
 
                     setLoading(false)
-
                 })
         } catch (error) {
+            setLoading(false)
             if (error !== "Cancelada") {
                 console.log(error)
                 Alert.alert("Error", "Error cancelando la reserva")
@@ -266,6 +427,22 @@ export default ({ navigation, route }) => {
         })
     }
 
+    async function deleteReserva() {
+        setLoading(true)
+        await DataStore.delete(reserva)
+
+        // Guardar estado de mis reservas
+        setReservas((old) => {
+            const idx = old.findIndex(o => o.id === reserva.id)
+            old.splice(idx, 1)
+            return [...old]
+        })
+
+        navigation.pop()
+        Alert.alert("Exito", "Reserva eliminada con exito")
+        setLoading(false)
+    }
+
     return (
         <View style={{
             flex: 1,
@@ -293,7 +470,7 @@ export default ({ navigation, route }) => {
                             style={styles.title}>{fecha.tituloAventura}
                         </Text>
 
-                        <View style={{
+                        {!reserva.cancelado && <View style={{
                             alignItems: 'center',
                         }}>
 
@@ -301,14 +478,24 @@ export default ({ navigation, route }) => {
                             {
                                 reserva.tipoPago === TipoPago.TARJETA && <AntDesign style={{ marginTop: 5, }} name="creditcard" size={22} color={moradoOscuro} />
                             }
-                        </View>
-
+                        </View>}
                     </View>
+
+                    {reserva.cancelado && <Text style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: 'red',
+                        textAlign: 'center',
+                        marginTop: 10,
+                    }}>
+                        Reserva cancelada
+                    </Text>}
+
                     <View style={{
                         alignItems: 'center',
                     }}>
 
-                        {reserva.tipoPago === TipoPago.EFECTIVO && <Text
+                        {(!reserva.cancelado && reserva.tipoPago === TipoPago.EFECTIVO) && <Text
                             style={{
                                 fontSize: 16,
                                 color: 'orange',
@@ -531,46 +718,51 @@ export default ({ navigation, route }) => {
 
                     <View style={{ marginTop: 40, }} />
 
-                    <Text style={[styles.title, { marginBottom: 5, }]}>Incluido:</Text>
+                    {!reserva.cancelado && <View style={{
 
-                    {fecha.incluido?.map((e, idx) => {
-                        return <Text
-                            key={idx}
-                            style={{ fontSize: 16, marginLeft: 10, marginBottom: 4, }}>{e}</Text>
-                    })}
+                    }}>
 
-                    <View style={{ marginTop: 40, }} />
+                        <Text style={[styles.title, { marginBottom: 5, }]}>Incluido:</Text>
 
-                    {/* Que llevar */}
-                    {
-                        fecha.material.map((e, idxCat) => {
-                            return <View
-                                key={idxCat.toString()}
-                                style={styles.queLlevarContainer}>
+                        {fecha.incluido?.map((e, idx) => {
+                            return <Text
+                                key={idx}
+                                style={{ fontSize: 16, marginLeft: 10, marginBottom: 4, }}>{e}</Text>
+                        })}
 
-                                <Text style={[styles.title, { marginBottom: 5, }]}>{e[0]}:</Text>
-                                {
-                                    e[1].map((item, idxItem) => {
-                                        return <Pressable
-                                            onPress={() => handlePressMaterial(idxCat, idxItem)}
-                                            key={idxItem.toString()}
-                                            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
+                        <View style={{ marginTop: 40, }} />
+
+                        {/* Que llevar */}
+                        {
+                            fecha.material.map((e, idxCat) => {
+                                return <View
+                                    key={idxCat.toString()}
+                                    style={styles.queLlevarContainer}>
+
+                                    <Text style={[styles.title, { marginBottom: 5, }]}>{e[0]}:</Text>
+                                    {
+                                        e[1].map((item, idxItem) => {
+                                            return <Pressable
+                                                onPress={() => handlePressMaterial(idxCat, idxItem)}
+                                                key={idxItem.toString()}
+                                                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
 
 
-                                            <AntDesign
-                                                style={{ ...styles.checkIcon, borderColor: materialChecked[idxCat][idxItem] ? "transparent" : moradoOscuro, }}
-                                                name="checkcircle"
-                                                size={24}
-                                                color={materialChecked[idxCat][idxItem] ? moradoOscuro : "transparent"}
-                                            />
-                                            <Text style={{ fontSize: 16, marginLeft: 10, }}>{item}</Text>
+                                                <AntDesign
+                                                    style={{ ...styles.checkIcon, borderColor: materialChecked[idxCat][idxItem] ? "transparent" : moradoOscuro, }}
+                                                    name="checkcircle"
+                                                    size={24}
+                                                    color={materialChecked[idxCat][idxItem] ? moradoOscuro : "transparent"}
+                                                />
+                                                <Text style={{ fontSize: 16, marginLeft: 10, }}>{item}</Text>
 
-                                        </Pressable>
-                                    })
-                                }
-                            </View>
-                        })
-                    }
+                                            </Pressable>
+                                        })
+                                    }
+                                </View>
+                            })
+                        }
+                    </View>}
                 </View>
 
             </Animated.ScrollView >
@@ -582,7 +774,9 @@ export default ({ navigation, route }) => {
                 handleBack={handleBack}
                 titulo={fecha.tituloAventura}
 
-                IconRight={() => <QRIcon handleQR={handleQR} />}
+                IconRight={!reserva.cancelado ? () => <QRIcon
+                    trash={reserva.cancelado ? true : false}
+                    handleQR={handleQR} /> : null}
 
             />
             {
@@ -626,8 +820,8 @@ export default ({ navigation, route }) => {
                 />
             </View>}
 
-            {/* Escanear codigo y cancelar reserva*/}
-            <View style={{
+            {/* Cancelar reserva*/}
+            {!reserva.cancelado && <View style={{
                 width: '100%',
                 backgroundColor: colorFondo,
                 borderTopRightRadius: 20,
@@ -635,6 +829,9 @@ export default ({ navigation, route }) => {
             }}>
                 <Pressable
                     onPress={() => {
+                        if (reserva.cancelado) {
+                            return
+                        }
                         if (loading) {
                             Alert.alert("Espera", "Cancelacion en proceso")
                         } else {
@@ -646,7 +843,7 @@ export default ({ navigation, route }) => {
                 </Pressable>
 
 
-            </View>
+            </View>}
 
         </View >
     )

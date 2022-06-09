@@ -103,7 +103,9 @@ export default function ({ navigation }) {
                 return await Promise.all(r.map(async fecha => {
 
                     const now = new Date()
-                    const reservas = await DataStore.query(Reserva, res => res.fechaID("eq", fecha.id))
+                    const reservas = await DataStore.query(Reserva, res => res
+                        .cancelado("ne", true)
+                        .fechaID("eq", fecha.id))
                     let personasReservadas = []
 
                     await Promise.all(reservas.map(async res => {

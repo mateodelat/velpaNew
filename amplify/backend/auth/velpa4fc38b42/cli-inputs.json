@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "velpa1006687d_identitypool_1006687d",
+    "identityPoolName": "velpa4fc38b42_identitypool_4fc38b42",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "velpa1006687d",
-    "userPoolName": "velpa1006687d_userpool_1006687d",
+    "resourceNameTruncated": "velpa4fc38b42",
+    "userPoolName": "velpa4fc38b42_userpool_4fc38b42",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -24,30 +24,24 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": "60",
+    "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
       "email"
     ],
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "velpaA1006687d_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "velpa44fc38b42_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "1006687d",
-    "resourceName": "velpaAuth",
+    "sharedId": "4fc38b42",
+    "resourceName": "velpa4fc38b42",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
-    "thirdPartyAuth": true,
-    "authProviders": [
-      "accounts.google.com"
-    ],
+    "hostedUI": true,
     "usernameAttributes": [
       "email"
     ],
-    "userPoolGroups": false,
-    "adminQueries": false,
     "triggers": {},
-    "hostedUI": true,
     "hostedUIDomainName": "velpaauth",
     "authProvidersUserPool": [
       "Google"
@@ -72,11 +66,18 @@
     "breakCircularDependency": true,
     "dependsOn": [],
     "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn",
+    "thirdPartyAuth": true,
+    "authProviders": [
+      "accounts.google.com"
+    ],
+    "userPoolGroups": false,
+    "adminQueries": true,
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "adminQueryGroup": "Admin",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"],\"LogoutURLs\":[\"exp://exp.host/@mateodelat/Velpa/\",\"exp://127.0.0.1:19000/--/\",\"Velpa://\"]}"
+    "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"Velpa://\"]}",
+    "adminQueryGroup": "Admin"
   }
 }

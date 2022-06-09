@@ -20,6 +20,9 @@ import { TipoPago } from '../../models';
 import DetalleReserva from '../DetalleFecha/DetalleReserva';
 import { PaymentIntents } from '@stripe/stripe-react-native';
 import PaymentRow from './components/PaymentRow';
+import { Comision } from '../../models';
+import { STRIPE_KEY } from '../../../assets/constants/keys';
+
 
 moment.locale('es')
 
@@ -79,7 +82,7 @@ export default function ({ navigation, route }) {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + "sk_test_51J7OwUFIERW56TAEe1Ih8TU1SRyeoyLvP17jicv86HOaEJCjEakiYqMqMJ5ZdsCf3OdXV5Km1qwEN7QYvwEgjv4J00XeAeyKE1",
+                    "Authorization": "Bearer " + STRIPE_KEY,
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())
@@ -112,7 +115,7 @@ export default function ({ navigation, route }) {
                 let listaAlternativo = []
 
                 // Iterar todas las transacciones de stripe
-                r?.map(e => {
+                await Promise.all(r?.map(async e => {
                     // Agregar al saldo total por enviar al banco
                     const amount = (e.net / 100)
                     total += amount
@@ -130,6 +133,7 @@ export default function ({ navigation, route }) {
                         comision: e.fee,
                         disponible: moment(e.available_on * 1000).from(moment()),
                     }
+
 
                     // Si es un fee es porque fue devuelto
                     if (e.reporting_category === "fee") {
@@ -164,16 +168,23 @@ export default function ({ navigation, route }) {
                         if (otherFees) {
                             otherFees = JSON.parse(otherFees)
 
-                            listaFeesEfectivo.push(...otherFees.map(e => {
+                            listaFeesEfectivo = await Promise.all(otherFees.map(async e => {
+
+
+                                // Pedir los datos asociados a la comision
+                                const {
+                                    reservaID: id,
+                                    amount,
+                                    createdAt
+                                } = (await DataStore.query(Comision, e.id))
+
                                 return {
-                                    ...e,
-                                    amount: -e.amount,
-                                    creado: e.createdAt,
+                                    id,
+                                    amount: -amount,
+                                    creado: createdAt,
                                     reporting_category: "fee"
                                 }
                             }))
-
-
                         }
 
                         r = {
@@ -194,7 +205,6 @@ export default function ({ navigation, route }) {
                         }
 
                         // Si el pago tiene fecha ID se agrega a la lista de objetos asi
-
                         if (fechaID) {
                             if (!f[fechaID]) {
                                 f[fechaID] = [r]
@@ -211,6 +221,7 @@ export default function ({ navigation, route }) {
                             })
                         }
                     }
+
                     // Si no tiene es porque se obtuvo de otro que no es payment intent
                     else {
                         Alert.alert("Atencion", "Hay transaccion sin fecha asociada")
@@ -218,7 +229,7 @@ export default function ({ navigation, route }) {
                     }
 
                     return r
-                })
+                }))
 
                 setSaldo(total)
 
@@ -340,7 +351,7 @@ export default function ({ navigation, route }) {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + "sk_test_51J7OwUFIERW56TAEe1Ih8TU1SRyeoyLvP17jicv86HOaEJCjEakiYqMqMJ5ZdsCf3OdXV5Km1qwEN7QYvwEgjv4J00XeAeyKE1",
+                    "Authorization": "Bearer " + STRIPE_KEY,
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())
@@ -646,7 +657,8 @@ export default function ({ navigation, route }) {
                                                                 fees.map((fee, idx) => {
                                                                     // Si es mayor a 0 es una devolucion
                                                                     // Si es menor a 0 es un cobro al efectivo
-                                                                    const titulo = fee.amount > 0 ? "Comision devuelta" : "Comision Velpa"
+                                                                    // Si la reserva se cancelo y fue en efectivo asvisar de la comision no reembolsable
+                                                                    const titulo = fee.amount >= 0 ? "Comision devuelta" : ("Comision Velpa" + (res.cancelado ? " no reembolsable" : ""))
 
 
                                                                     return (

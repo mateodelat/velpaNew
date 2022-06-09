@@ -134,8 +134,10 @@ export default ({ route, navigation }) => {
                 r = await Promise.all(r.map(async fecha => {
                     let personasReservadas = []
                     let totalPersonasReservadas = 0
-                    // Obtener todas las reservaciones en la fecha
-                    const reservaciones = await DataStore.query(Reserva, res => res.fechaID("eq", fecha.id))
+                    // Obtener todas las reservaciones en la fecha que no hayan sido canceladas
+                    const reservaciones = await DataStore.query(Reserva, res => res
+                        .cancelado("ne", true)
+                        .fechaID("eq", fecha.id))
 
                     // Primero mapear todas las reservaciones y sacar las que esten llenas
                     reservaciones.map(res => {

@@ -115,7 +115,7 @@ type Fecha
   tituloAventura: String
 
   cancelado: Boolean
-  canceledAt: String
+  canceledAt: AWSDateTime
 
   dateModified: Boolean
 
@@ -283,8 +283,6 @@ type Notificacion
   usuarioID: ID! @index(name: "byUsuario")
 
   imagen: String
-
-  owner: String
 
   leido: Boolean
   showAt: AWSTimestamp

@@ -43,6 +43,8 @@ export async function sendPushNotification(input: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(message),
+  }).then((r) => {
+    console.log("Push notification send to ", token);
   });
 }
 

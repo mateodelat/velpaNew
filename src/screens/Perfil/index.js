@@ -660,7 +660,7 @@ export default ({ route }) => {
                             flexDirection: 'row',
 
                             alignItems: 'center',
-                            marginBottom: 15,
+                            marginBottom: 20,
                         }}>
                             <Text style={{ ...styles.title, marginLeft: 0, }}>Reseñas {comentarios?.length ? ("(" + comentarios?.length + ")") : ""}</Text>
 

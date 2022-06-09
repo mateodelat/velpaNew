@@ -19,7 +19,7 @@ import {
     View
 } from 'react-native'
 
-import { distancia2Puntos, getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, verificarUbicacion, wait } from '../../../assets/constants';
+import { distancia2Puntos, formatCalificacion, getImageUrl, listAventurasAutorizadas, moradoClaro, moradoOscuro, redondear, redondearNDecimales, verificarUbicacion, wait } from '../../../assets/constants';
 import Flecha from '../../components/Flecha';
 import { Loading } from '../../components/Loading';
 import { TipoPublicidad } from '../../models';
@@ -552,9 +552,17 @@ export default ({ navigation }) => {
                                 <Text style={{ flex: 1, }}>@{usr.nickname}</Text>
                                 {usr.calificacion && <View style={{
                                     flexDirection: 'row',
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
                                 }}>
-                                    <Entypo name="star" size={20} color="#F5BE18" />
-                                    <Text >{redondearNDecimales(usr.calificacion, 2)}</Text>
+                                    <Entypo
+                                        style={{
+                                            position: 'absolute',
+                                            left: 10,
+                                        }}
+                                        name="star" size={20} color="#F5BE18" />
+                                    <Text >{formatCalificacion(usr.calificacion)}</Text>
 
                                 </View>}
 

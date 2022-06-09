@@ -45,7 +45,7 @@ export default function ({ cerrar, handleScanned }) {
         return <View />;
     }
     if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
+        return <Text>Sin acceso a la camara</Text>;
     }
 
 
@@ -89,7 +89,7 @@ export default function ({ cerrar, handleScanned }) {
             setTimeout(() => {
                 setCameraKey(r => r + 1)
 
-            }, ms ? ms : 1000);
+            }, ms ? ms : 700);
         }
 
 

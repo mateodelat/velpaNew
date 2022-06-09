@@ -33,7 +33,8 @@ import { cancelAllScheduledNotificationsAsync } from 'expo-notifications';
 
 
 
-LogBox.ignoreLogs(["`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method", 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
+LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', "`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method", 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
+
 
 
 export default function App() {

@@ -5,7 +5,7 @@ import { moradoOscuro } from '../../../../assets/constants'
 import { Ionicons } from '@expo/vector-icons';
 
 
-export default function ({ handleQR }) {
+export default function ({ handleQR, trash }) {
     return (
         <Pressable
             onPress={handleQR}
@@ -23,11 +23,10 @@ export default function ({ handleQR }) {
                     borderRadius: 30,
                 }}
 
-                name="ios-qr-code"
+                name={trash ? "md-trash" : "ios-qr-code"}
                 size={20}
                 color={moradoOscuro}
             />
-
 
         </Pressable>)
 }

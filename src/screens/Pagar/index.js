@@ -119,6 +119,7 @@ export default function ({ route, navigation }) {
                 comisiones.current.map(com => {
                     DataStore.save(Comision.copyOf(com, ne => {
                         ne.editing = false
+                        ne.payed = true
                     })).then(r => {
                         console.log("Devolviendo comision: ", r)
                     })
@@ -221,11 +222,10 @@ export default function ({ route, navigation }) {
                     console.log(newComisiones)
                     comisiones.current = (newComisiones)
 
-                    // Objeto para mandar como metadata del payment intent
+                    // Lista de comisiones realizadas
                     return JSON.stringify(newComisiones.map(com => {
                         return {
-                            createdAt: com.createdAt,
-                            id: com.reservaID,
+                            id: com.id,
                             amount: com.amount
                         }
                     }))
@@ -241,7 +241,6 @@ export default function ({ route, navigation }) {
                     description,
 
                     otherFees: coms,
-
 
                     reservaID,
                     fechaID,
@@ -335,7 +334,9 @@ export default function ({ route, navigation }) {
     }
 
     const isFechaFull = async (fecha) => {
-        const reservas = await DataStore.query(Reserva, r => r.fechaID("eq", fechaID))
+        const reservas = await DataStore.query(Reserva, r => r
+            .cancelado("ne", true)
+            .fechaID("eq", fechaID))
         let personasReservadas = 0
 
         reservas.map(res => {

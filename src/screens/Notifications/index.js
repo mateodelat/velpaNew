@@ -107,7 +107,7 @@ export default () => {
             .usuarioID("eq", sub)
 
             // Mostrar notificaciones que no tienen showAt o que el show at es anterior a la fecha actual
-            .showAt("lt", new Date())
+            // .showAt("lt", new Date())
 
             , {
                 sort: e => e
@@ -137,6 +137,30 @@ export default () => {
 
 
     const handlePressItem = async (item, index) => {
+        const not = await getAllScheduledNotificationsAsync()
+            .then(r => {
+                return r.map(no => {
+                    const id = no.identifier
+                    const {
+                        body, title,
+                        data: {
+                            tipo
+                        }
+                    } = no.content
+
+                    return {
+                        body,
+                        title,
+                        tipo,
+                        id
+                    }
+                })
+            })
+
+        console.log(not)
+
+        return
+
         handleVerNotificacion(index)
 
         const { tipo } = item

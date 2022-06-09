@@ -1,6 +1,6 @@
 import { DataStore } from '@aws-amplify/datastore';
 import React, { useEffect, useState } from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { container, formatDateShort, formatMoney, getImageUrl, getUserSub, isUrl, moradoOscuro } from '../../../assets/constants'
 import { Loading } from '../../components/Loading';
 import { Reserva } from '../../models';
@@ -8,14 +8,11 @@ import { Reserva } from '../../models';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { Fecha } from '../../models';
 import ModalMap from '../../components/ModalMap';
-import Storage from '@aws-amplify/storage';
-import { useNavigation } from '@react-navigation/core';
 
-function Item({ e }) {
+function Item({ e, handleNavigate }) {
     // Variables de ver en el mapa
     const [showModalMap, setShowModalMap] = useState(false);
     const personasReservadas = e.ninos + e.tercera + e.adultos
-    const navigation = useNavigation()
 
     const selectedPlace = {
         titulo: e.fecha.puntoReunionNombre,
@@ -23,14 +20,12 @@ function Item({ e }) {
 
     }
 
-    function handleNavigate() {
-        navigation.navigate("DetalleReserva", e)
-    }
+
 
 
     return (
         <Pressable
-            onPress={handleNavigate}
+            onPress={() => handleNavigate(e)}
 
             style={styles.reservaContainer}>
             <Image
@@ -53,35 +48,53 @@ function Item({ e }) {
                     </View>
                 </View>
 
-                <View style={[styles.row, { marginTop: 10 }]}>
-                    <Text >{personasReservadas} persona{personasReservadas !== 1 ? "s" : ""}</Text>
-                    <Text style={styles.precio}>{formatMoney(e.total, true)}</Text>
+                {e.cancelado ?
+                    <Text style={{ marginTop: 10, textAlign: 'center', color: 'red', }}>Reserva cancelada</Text>
 
-                </View>
+                    :
+                    <View >
 
-                <Pressable
-                    onPress={() => {
-                        setShowModalMap(true)
-                    }}
-                    style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', }}>
+                        <View style={[styles.row, { marginTop: 10 }]}>
+                            <Text >{personasReservadas} persona{personasReservadas !== 1 ? "s" : ""}</Text>
+                            <Text style={styles.precio}>{formatMoney(e.total, true)}</Text>
 
-                    <Ionicons
-                        name="location-sharp"
-                        size={24}
-                        color={moradoOscuro}
-                    />
-                    <Text numberOfLines={1} style={{ ...styles.precio, flex: 1, }}>{e.fecha.puntoReunionNombre}</Text>
+                        </View>
 
-                </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                setShowModalMap(true)
+                            }}
+                            style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', }}>
+
+                            <Ionicons
+                                name="location-sharp"
+                                size={24}
+                                color={moradoOscuro}
+                            />
+                            <Text numberOfLines={1} style={{ ...styles.precio, flex: 1, }}>{e.fecha.puntoReunionNombre}</Text>
+
+                        </Pressable>
+                    </View>}
+
 
             </View>
-            {selectedPlace && <ModalMap
+            {selectedPlace && !e.cancelado && <ModalMap
                 modalVisible={showModalMap}
                 setModalVisible={setShowModalMap}
 
                 selectedPlace={selectedPlace}
 
             />}
+
+            {
+                // Filtro oscuro en resrva cancelada
+                e.cancelado && <View style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#00000055',
+                    position: 'absolute',
+                }} />
+            }
 
         </Pressable>
     )
@@ -96,13 +109,13 @@ export default function ({ route, navigation }) {
     }, []);
 
     const [reservas, setReservas] = useState(null);
-
+    const [refreshing, setRefreshing] = useState(false);
     const [reservasProximas, setReservasProximas] = useState(true);
 
     const fetchReservas = async () => {
         const sub = await getUserSub()
 
-        // Obtener reservas y fechas para cada una
+        // Obtener reservas y fechas para cada una canceladas y no canceladas
         const reservas = await DataStore.query(Reserva, r => r.usuarioID("eq", sub), {
             sort: e => e.createdAt("DESCENDING"),
         })
@@ -144,12 +157,33 @@ export default function ({ route, navigation }) {
         }
     }
 
+    function handleNavigate(e) {
+        navigation.navigate("DetalleReserva", {
+            ...e, setReservas
+        })
+    }
+
+    function onRefresh() {
+        fetchReservas()
+        setRefreshing(true)
+        setTimeout(() => {
+            setRefreshing(false)
+
+        }, 300);
+    }
+
     const nextReservations = reservas?.filter(e => !e.pasada)
     const pastReservations = reservas?.filter(e => e.pasada)
 
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />}
+
+
             style={container}>
             <View style={styles.selectorContainer}>
                 <Pressable
@@ -189,6 +223,7 @@ export default function ({ route, navigation }) {
                                 :
                                 nextReservations.map((reserva, i) => {
                                     return <Item
+                                        handleNavigate={handleNavigate}
                                         key={i.toString()}
                                         e={reserva}
                                     />
@@ -207,6 +242,7 @@ export default function ({ route, navigation }) {
                                 :
                                 pastReservations.map((reserva, i) => {
                                     return <Item
+                                        handleNavigate={handleNavigate}
                                         key={i.toString()}
                                         e={reserva}
                                     />
