@@ -63,7 +63,7 @@ export default function ({ handleBack, route, }) {
                                 <Text style={{
                                     color: moradoClaro,
                                     fontSize: 14,
-                                }}>{formatDia(fechaInicial) + " a las " + formatAMPM(fechaInicial, false, false)}</Text>
+                                }}>{formatDia(fechaInicial) + " a las " + formatAMPM(fechaInicial, false, true)}</Text>
 
                             </View>
 

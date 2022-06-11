@@ -324,9 +324,7 @@ export const createUsuario = async (attributes, unathenticated, username) => {
 
 
 export async function handleGoogle() {
-
   Auth.federatedSignIn({ provider: "Google" })
-    .then(console.log)
     .catch(e => {
       Alert.alert("Error", "Error iniciando sesion con google")
       console.log(e)
@@ -348,9 +346,9 @@ export const formatDate = (ms) => {
     return ("    -  -    ");
 
   }
-  var dd = String(date.getUTCDate()).padStart(2, '0');
-  var mm = String(date.getUTCMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = date.getUTCFullYear();
+  var dd = String(date.getDate()).padStart(2, '0');
+  var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = date.getFullYear();
   return (yyyy + '-' + mm + '-' + dd);
 
 }
@@ -394,22 +392,22 @@ export const formatDateShort = (msInicial, msFinal) => {
 export const formatDateWithHour = (msInicial, msFinal) => {
   const dateInicial = new Date(msInicial)
 
-  const ddInicial = String(dateInicial.getUTCDate())
-  const mmInicial = String(dateInicial.getUTCMonth())
+  const ddInicial = String(dateInicial.getDate())
+  const mmInicial = String(dateInicial.getMonth())
 
 
   // Fecha final
   const dateFinal = new Date(msFinal)
 
-  const ddFinal = String(dateFinal.getUTCDate())
-  const mmFinal = String(dateFinal.getUTCMonth())
+  const ddFinal = String(dateFinal.getDate())
+  const mmFinal = String(dateFinal.getMonth())
 
 
 
   // Si es de un solo dia se regresa un numero con su hora inicial y final
   if (ddFinal === ddInicial && mmInicial === mmFinal) {
     return {
-      txt: (ddInicial + " " + meses + [mmInicial] + " de " + formatAMPM(msInicial, false, false) + " a " + formatAMPM(msFinal, false, true)),
+      txt: (ddInicial + " " + meses + [mmInicial] + " de " + formatAMPM(msInicial, false, true) + " a " + formatAMPM(msFinal, false, true)),
       mismoDia: true
     }
 
@@ -417,8 +415,8 @@ export const formatDateWithHour = (msInicial, msFinal) => {
 
   else {
     return {
-      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, false),
-      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, false),
+      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, true),
+      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, true),
       mismoDia: false
     }
   }
@@ -1518,8 +1516,8 @@ export async function googleMapsSearchPlace(place_id) {
 export const formatDia = (ms) => {
   const fecha = new Date(ms)
 
-  let mes = fecha.getUTCMonth()
-  let dia = fecha.getUTCDate()
+  let mes = fecha.getMonth()
+  let dia = fecha.getDate()
 
   switch (mes) {
     case 0:
@@ -1570,8 +1568,8 @@ export const formatDia = (ms) => {
 export const formatDiaMesCompeto = (ms) => {
   const fecha = new Date(ms)
 
-  let mes = fecha.getUTCMonth()
-  let dia = fecha.getUTCDate()
+  let mes = fecha.getMonth()
+  let dia = fecha.getDate()
 
   switch (mes) {
     case 0:
@@ -1888,14 +1886,6 @@ export const getUserSub = async () => {
 }
 
 
-export const makeUsrGuide = async () => {
-  const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
-
-  await Auth.updateUserAttributes(user, {
-    'custom:guia': "1"
-  })
-
-}
 
 export async function uploadImageToStripe(uri) {
   // Check selected image is not null
@@ -1921,7 +1911,7 @@ export async function uploadImageToStripe(uri) {
       headers: {
         "Content-Type": "multipart/form-data",
         "Accept": "application/json",
-        "Authorization": "Bearer " + "pk_live_51J7OwUFIERW56TAETjQ7dMTgYLXQnjLxuss5HmvufxrC3kl0jv6jnQQmTsLCn6UhG3vQPeryjQi04xSQm1XUhs4900866NxYwP",
+        "Authorization": "Bearer " + STRIPE_KEY,
       }
     })
     let responseJson = await res.json()

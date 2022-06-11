@@ -1775,13 +1775,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "owner": {
-                    "name": "owner",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "leido": {
                     "name": "leido",
                     "isArray": false,
@@ -2358,5 +2351,5 @@ export const schema = {
             }
         }
     },
-    "version": "b933defe3f6634a3ab3352887c74121a"
+    "version": "7dfea47930961c906da5e1ab4db54c52"
 };

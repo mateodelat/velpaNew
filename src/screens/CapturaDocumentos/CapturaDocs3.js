@@ -167,7 +167,7 @@ export default ({ navigation, route }) => {
                 r = r.data.createStripeAccount
                 if (r.errors) {
                     setButtonLoading(false)
-                    Alert.alert("Error", "Hubo un error creando tu cuenta bancaria")
+                    Alert.alert("Error", "Hubo un error creando tu cuenta bancaria: " + r.id)
                     return
                 }
                 else {

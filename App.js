@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import 'react-native-gesture-handler';
@@ -80,10 +80,10 @@ export default function App() {
 
 
 
-  let publicidadLoaded
-  let aventuraLoaded
-  let usuarioLoaded
-  let notificacionLoaded
+  const publicidadLoaded = useRef()
+  const aventuraLoaded = useRef()
+  const usuarioLoaded = useRef()
+  const notificacionLoaded = useRef()
 
 
   const [authenticated, setAuthenticated] = useState(false);
@@ -135,7 +135,6 @@ export default function App() {
           // Cancelar todas las notificaciones al celular
           cancelAllScheduledNotificationsAsync()
 
-          DataStore.clear()
           setLoading(false)
           setAuthenticated(false)
           break;
@@ -153,22 +152,22 @@ export default function App() {
       // console.log(data)
 
       if (event === "modelSynced" && data?.model === Aventura) {
-        aventuraLoaded = true
+        aventuraLoaded.current = true
       }
       else if (event === "modelSynced" && data?.model === Publicidad) {
-        publicidadLoaded = true
+        publicidadLoaded.current = true
 
       }
 
       else if (event === "modelSynced" && data?.model === Usuario) {
-        usuarioLoaded = true
+        usuarioLoaded.current = true
 
       }
       else if (event === "modelSynced" && data?.model === Notificacion) {
-        notificacionLoaded = true
+        notificacionLoaded.current = true
 
       }
-      else if (publicidadLoaded && aventuraLoaded && usuarioLoaded && notificacionLoaded) {
+      else if (publicidadLoaded.current && aventuraLoaded.current && usuarioLoaded.current && notificacionLoaded.current) {
         setCargandoModelos(false)
 
       }
@@ -244,6 +243,7 @@ export default function App() {
       <Router />
     </View>
   );
+
 
 
 }

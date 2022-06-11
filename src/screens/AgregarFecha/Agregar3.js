@@ -53,14 +53,14 @@ export default function ({ navigation, route }) {
     const formatDateShortLogistica = (msInicial, msFinal) => {
         const dateInicial = new Date(msInicial)
 
-        var ddInicial = String(dateInicial.getUTCDate())
-        var mmInicial = String(dateInicial.getUTCMonth())
+        var ddInicial = String(dateInicial.getDate())
+        var mmInicial = String(dateInicial.getMonth())
 
         if (msFinal) {
             const dateFinal = new Date(msFinal)
 
-            var ddFinal = String(dateFinal.getUTCDate())
-            var mmFinal = String(dateFinal.getUTCMonth())
+            var ddFinal = String(dateFinal.getDate())
+            var mmFinal = String(dateFinal.getMonth())
 
             // Si es de un solo dia se regresa un numero
             if (ddFinal === ddInicial && mmInicial === mmFinal) {

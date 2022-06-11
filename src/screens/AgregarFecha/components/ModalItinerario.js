@@ -119,7 +119,7 @@ const ItemItinerario = ({
                             style={{
                                 ...styles.horaModify,
                                 borderWidth: errorHora ? 1 : 0
-                            }}>{formatAMPM(hora)}</Text>
+                            }}>{formatAMPM(hora, false, true)}</Text>
                         <Entypo
                             name="minus"
                             size={30}
@@ -129,7 +129,7 @@ const ItemItinerario = ({
 
                     </View>
                     :
-                    <Text style={styles.hora}>{formatAMPM(hora)}</Text>
+                    <Text style={styles.hora}>{formatAMPM(hora, false, true)}</Text>
 
             }
             {/* Ubicacion */}
@@ -214,7 +214,6 @@ const ModalItinerario = ({
     const handleConfirmHour = (date) => {
         hideDatePicker()
 
-        date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000)
         const horaEnMs = date.getTime()
 
         const index = horaSeleccionada
@@ -371,7 +370,6 @@ const ModalItinerario = ({
     }
 
     let dateSelected = new Date(itinerarioLocal[horaSeleccionada]?.hora)
-    dateSelected.setTime(dateSelected.getTime() + dateSelected.getTimezoneOffset() * 60 * 1000)
 
     return (
         <View style={styles.container}>
@@ -402,7 +400,7 @@ const ModalItinerario = ({
                             const fechaActual = new Date(itinerarioLocal[idx].hora)
 
                             // Ver si el dia de la actividad es distinto al anterior
-                            if (idx && fechaActual.getUTCDay() !== (new Date(itinerarioLocal[idx - 1].hora).getUTCDay())) {
+                            if (idx && fechaActual.getDay() !== (new Date(itinerarioLocal[idx - 1].hora).getDay())) {
                                 nuevoDia = true
                             }
 

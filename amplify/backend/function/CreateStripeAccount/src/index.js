@@ -1,4 +1,4 @@
-const stripe = require('stripe')('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');
+const stripe = require('stripe')('sk_test_51J7OwUFIERW56TAEe1Ih8TU1SRyeoyLvP17jicv86HOaEJCjEakiYqMqMJ5ZdsCf3OdXV5Km1qwEN7QYvwEgjv4J00XeAeyKE1');
 
 // Funcion crear cuenta de stripe a partir de datos 
 /*
@@ -277,7 +277,8 @@ exports.handler = async (event) => {
         console.log(error)
 
         return {
-            errors: true
+            errors: true,
+            id: error.code
         }
 
     }

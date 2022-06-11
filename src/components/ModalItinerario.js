@@ -64,7 +64,7 @@ const ItemItinerario = ({
 
 
             {/* Hora */}
-            <Text style={styles.hora}>{formatAMPM(hora)}</Text>
+            <Text style={styles.hora}>{formatAMPM(hora, false, true)}</Text>
 
             {/* Ubicacion */}
             {ubicacionNombre &&
@@ -140,7 +140,7 @@ const ModalItinerario = ({
                                 const fechaActual = new Date(itinerario[idx].hora)
 
                                 // Ver si el dia de la actividad es distinto al anterior
-                                if (idx && fechaActual.getUTCDay() !== (new Date(itinerario[idx - 1].hora).getUTCDay())) {
+                                if (idx && fechaActual.getDay() !== (new Date(itinerario[idx - 1].hora).getDay())) {
                                     nuevoDia = true
                                 }
 

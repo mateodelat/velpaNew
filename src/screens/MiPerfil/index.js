@@ -81,17 +81,20 @@ export default ({ route, navigation }) => {
 
         fetchUsuario(user)
             .then(async (r) => {
-                setData({
-                    ...r,
-                    foto: {
-                        uri: await getImageUrl(r.foto),
-                        key: r.foto
-                    },
-                    imagenFondo: {
-                        uri: await getImageUrl(r.imagenFondo),
-                        key: r.imagenFondo
-                    },
-                })
+                if (r) {
+                    setData({
+                        ...r,
+                        foto: {
+                            uri: await getImageUrl(r.foto),
+                            key: r.foto
+                        },
+                        imagenFondo: {
+                            uri: await getImageUrl(r.imagenFondo),
+                            key: r.imagenFondo
+                        },
+                    })
+
+                }
                 setLoaded(true)
             })
             .catch(e => {

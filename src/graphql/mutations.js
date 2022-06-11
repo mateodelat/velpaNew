@@ -2005,7 +2005,6 @@ export const createUsuario = /* GraphQL */ `
           descripcion
           usuarioID
           imagen
-          owner
           leido
           showAt
           reservaID
@@ -2236,7 +2235,6 @@ export const updateUsuario = /* GraphQL */ `
           descripcion
           usuarioID
           imagen
-          owner
           leido
           showAt
           reservaID
@@ -2467,7 +2465,6 @@ export const deleteUsuario = /* GraphQL */ `
           descripcion
           usuarioID
           imagen
-          owner
           leido
           showAt
           reservaID
@@ -3503,7 +3500,6 @@ export const createNotificacion = /* GraphQL */ `
       descripcion
       usuarioID
       imagen
-      owner
       leido
       showAt
       reservaID
@@ -3531,7 +3527,6 @@ export const updateNotificacion = /* GraphQL */ `
       descripcion
       usuarioID
       imagen
-      owner
       leido
       showAt
       reservaID
@@ -3559,7 +3554,6 @@ export const deleteNotificacion = /* GraphQL */ `
       descripcion
       usuarioID
       imagen
-      owner
       leido
       showAt
       reservaID

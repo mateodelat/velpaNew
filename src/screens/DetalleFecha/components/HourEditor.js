@@ -64,8 +64,6 @@ const HourEditor = ({
     function handleConfirmHour(hora) {
         setHourPickerVisible(false)
 
-        // Regresar de hora local para el modal a UTC
-        hora.setTime(hora.getTime() - hora.getTimezoneOffset() * 60 * 1000)
 
         if (horaInicial) {
             // Verificacion hora valida
@@ -118,7 +116,7 @@ const HourEditor = ({
                     borderWidth: errorHoraInicial ? 1 : 0,
                 }}>
 
-                    <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial)}</Text>
+                    <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial, false, true)}</Text>
 
                     <Feather
                         style={styles.icono}
@@ -152,7 +150,7 @@ const HourEditor = ({
                         color={moradoOscuro}
                     />
 
-                    <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal)}</Text>
+                    <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal, false, true)}</Text>
 
                 </View>
 
@@ -160,7 +158,9 @@ const HourEditor = ({
             <DateTimePickerModal
                 isVisible={hourPickerVisible}
                 mode="datetime"
+                locale="es-ES"
                 date={bloquearADia}
+                timeZoneOffsetInSeconds={0}
                 minimumDate={bloquearADia}
                 maximumDate={bloquearADia}
                 onConfirm={handleConfirmHour}

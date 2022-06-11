@@ -197,8 +197,10 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
 
 
-                <View style={{ flex: 1, }}>
+                <View style={{ flex: 1 }}>
                     <Camera
+                        ratio='9:5'
+
                         useCamera2Api={type === CameraType.front ? true : false}
                         autoFocus={Camera.Constants.AutoFocus.on}
                         onCameraReady={() => setLoaded(true)}
@@ -289,7 +291,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
                         <View style={{
                             ...styles.barraInferior,
-                            paddingBottom: insets.bottom,
+                            paddingBottom: insets.bottom + 10,
                         }}>
                             <View style={{
                                 alignItems: 'center',
@@ -346,8 +348,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
 
 const styles = StyleSheet.create({
     camera: {
-        height: '100%',
-        width: '100%',
+        aspectRatio: 5 / 9
     },
 
 

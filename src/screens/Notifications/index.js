@@ -2,7 +2,7 @@ import { DataStore } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, getUserSub, moradoOscuro, wait } from '../../../assets/constants'
+import { colorFondo, container, getUserSub, moradoOscuro, msInDay, msInHour, msInMinute, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
 import Element from './components/Element'
@@ -137,6 +137,7 @@ export default () => {
 
 
     const handlePressItem = async (item, index) => {
+
         const not = await getAllScheduledNotificationsAsync()
             .then(r => {
                 return r.map(no => {
@@ -144,21 +145,23 @@ export default () => {
                     const {
                         body, title,
                         data: {
-                            tipo
+                            tipo,
+                            createdAt
                         }
                     } = no.content
+
+                    const { seconds } = no.trigger
 
                     return {
                         body,
                         title,
                         tipo,
-                        id
+                        id,
                     }
                 })
             })
 
         console.log(not)
-
         return
 
         handleVerNotificacion(index)

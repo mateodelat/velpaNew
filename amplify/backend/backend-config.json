@@ -1,6 +1,6 @@
 {
   "auth": {
-    "velpa4fc38b42": {
+    "velpaAuth": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -55,14 +55,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpa4fc38b42",
+          "resourceName": "velpaAuth",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "function",
-          "resourceName": "AdminQueries9acde108",
+          "resourceName": "AdminQueries4eefc64c",
           "attributes": [
             "Arn",
             "Name"
@@ -88,6 +88,13 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "auth",
+          "resourceName": "velpaAuth",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "velpaAPI",
           "attributes": [
@@ -98,14 +105,14 @@
         }
       ]
     },
-    "AdminQueries9acde108": {
+    "AdminQueries4eefc64c": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
       "build": true,
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "velpa4fc38b42",
+          "resourceName": "velpaAuth",
           "attributes": [
             "UserPoolId"
           ]

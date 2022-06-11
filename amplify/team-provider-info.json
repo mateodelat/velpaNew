@@ -23,13 +23,17 @@
         },
         "preSignUp": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
-          "s3Key": "amplify-builds/preSignUp-3259616b306765414834-build.zip"
+          "s3Key": "amplify-builds/preSignUp-2b67784d785a59306e37-build.zip"
+        },
+        "AdminQueries4eefc64c": {
+          "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
+          "s3Key": "amplify-builds/AdminQueries4eefc64c-6a7147714c676659396f-build.zip"
         }
       },
       "auth": {
-        "velpa4fc38b42": {
-          "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn",
-          "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com"
+        "velpaAuth": {
+          "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
+          "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn"
         }
       }
     }

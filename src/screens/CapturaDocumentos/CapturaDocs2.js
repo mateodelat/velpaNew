@@ -427,6 +427,7 @@ export default ({ navigation, route }) => {
                         <View style={{ ...styles.textInput, borderColor: errorSitioWeb ? "red" : "transparent", }}>
                             <Text style={{ color: moradoClaro, }}>https://</Text>
                             <TextInput
+                                autoCapitalize='none'
                                 onTouchStart={() => setErrorSitioWeb(false)}
                                 style={{ flex: 1, color: moradoClaro, }}
                                 value={sitioWeb}

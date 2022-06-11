@@ -151,8 +151,14 @@ export default ({
     const handleDayPress = (fecha) => {
         vibrar('light')
         // Dia inicial
-        const { dateString, timestamp } = fecha
+        const { dateString } = fecha
+        let { timestamp } = fecha
 
+        // Obtener diferencia de horas contra el UTC y pasarlo a milis
+        const offset = new Date().getTimezoneOffset() * 60 * 1000
+
+        // Sumarle para ponerlo a las 8 de la hora local
+        timestamp += offset
 
         // Si es la primera vez que se presiona la fecha
         if (!fechaInicial) {

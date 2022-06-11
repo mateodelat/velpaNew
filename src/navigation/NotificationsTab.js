@@ -42,7 +42,11 @@ export default function () {
             const sub = await getUserSub()
 
             verNuevasNotificaciones(sub)
-            subscripcionNotificaciones = DataStore.observe(Notificacion, e => e.usuarioID("eq", sub).leido("ne", true))
+            subscripcionNotificaciones = DataStore.observe(Notificacion, e => e
+                .usuarioID("eq", sub)
+                .leido("ne", true)
+                .showAt("gt", new Date())
+            )
                 .subscribe(msg => {
                     if (msg.opType !== OpType.DELETE) {
                         setNewNotificaciones(true)

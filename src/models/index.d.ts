@@ -344,7 +344,6 @@ export declare class Notificacion {
   readonly descripcion?: string | null;
   readonly usuarioID: string;
   readonly imagen?: string | null;
-  readonly owner?: string | null;
   readonly leido?: boolean | null;
   readonly showAt?: number | null;
   readonly reservaID?: string | null;

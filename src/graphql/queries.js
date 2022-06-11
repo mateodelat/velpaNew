@@ -1336,7 +1336,6 @@ export const getUsuario = /* GraphQL */ `
           descripcion
           usuarioID
           imagen
-          owner
           leido
           showAt
           reservaID
@@ -2287,7 +2286,6 @@ export const getNotificacion = /* GraphQL */ `
       descripcion
       usuarioID
       imagen
-      owner
       leido
       showAt
       reservaID
@@ -2317,7 +2315,6 @@ export const listNotificacions = /* GraphQL */ `
         descripcion
         usuarioID
         imagen
-        owner
         leido
         showAt
         reservaID
@@ -2356,7 +2353,6 @@ export const syncNotificacions = /* GraphQL */ `
         descripcion
         usuarioID
         imagen
-        owner
         leido
         showAt
         reservaID

@@ -113,7 +113,7 @@ export default function ({ fecha,
 
                 {/* Hora y superguia */}
                 <View style={styles.superGuiaContainer}>
-                    <Text style={styles.superGuiaTxt}>{formatAMPM(fecha.fechaInicial, false)}</Text>
+                    <Text style={styles.superGuiaTxt}>{formatAMPM(fecha.fechaInicial, false, true)}</Text>
                     {/* <Text style={styles.superGuiaTxt}>SuperGuia</Text> */}
                     <View>
                         <Text

@@ -180,7 +180,7 @@ export default () => {
 
         if (unread.length !== 0) {
             setNewNotificaciones(true)
-            console.log("Notificacion no leida")
+            // console.log("Notificacion no leida")
 
         }
         return sub

@@ -109,21 +109,23 @@ export default () => {
     }
 
     function haCambiado(timeShown, initialDate, trigger, createdAt) {
+        // Calcular la diferencia de horas
         const remainingFor1Week = Math.round((initialDate - msInDay * 7 - createdAt) / 1000)
         const remainingFor1Day = Math.round((initialDate - msInDay - createdAt) / 1000)
         const remainingFor1Hour = Math.round((initialDate - msInHour - createdAt) / 1000)
 
         const tiempo = timeShown === "1S" ? remainingFor1Week : timeShown === "1D" ? remainingFor1Day : timeShown === "1H" ? remainingFor1Hour : false
 
+
         return trigger !== tiempo
     }
 
     function haCambiadoFinal(finalDate, trigger, createdAt) {
         finalDate = new Date(finalDate)
-        if (finalDate.getUTCHours() >= 8) {
+        if (finalDate.getHours() >= 8) {
             finalDate = new Date(finalDate.getTime() + msInDay)
         }
-        finalDate.setUTCHours(8)
+        finalDate.setHours(8)
 
 
         const remainingForNextDay = Math.round((finalDate - createdAt) / 1000)
@@ -219,10 +221,10 @@ export default () => {
 
                 // Poner fecha final al dia siguiente de que acabe a las 8
                 let fechaFinal = new Date(fe.fechaFinal);
-                if (fechaFinal.getUTCHours() >= 8) {
+                if (fechaFinal.getHours() >= 8) {
                     fechaFinal = new Date(fechaFinal.getTime() + msInDay);
                 }
-                fechaFinal.setUTCHours(8);
+                fechaFinal.setHours(8);
                 const remainingForNextDay = Math.round(
                     (fechaFinal?.getTime() - new Date().getTime()) / 1000
                 );

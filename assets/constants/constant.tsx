@@ -12,6 +12,7 @@ import { TipoNotificacion } from "../../src/models";
 
 const msInHour = 3600000;
 const msInDay = 86400000;
+const msInMinute = 60000;
 
 export async function sendPushNotification(input: {
   title: String;
@@ -72,7 +73,7 @@ export async function notificacionesRecordatorio({
 
   fechaInicial: number;
   tituloAventura: string;
-  fechaFinal: Date;
+  fechaFinal: null | number;
 
   scheduled: boolean;
 
@@ -102,12 +103,14 @@ export async function notificacionesRecordatorio({
     _A las 8 del dia siguiente si es dirigida al usuario
     */
 
-    // Poner fecha final al dia siguiente de que acabe a las 8
-    fechaFinal = new Date(fechaFinal);
-    if (fechaFinal.getUTCHours() >= 8) {
-      fechaFinal = new Date(fechaFinal.getTime() + msInDay);
+    let finalDate = new Date(fechaFinal);
+    if (fechaFinal) {
+      // Poner fecha final al dia siguiente de que acabe a las 8
+      if (finalDate.getHours() >= 8) {
+        finalDate = new Date(finalDate.getTime() + msInDay);
+      }
+      finalDate.setHours(8);
     }
-    fechaFinal.setUTCHours(8);
 
     const remainingFor1Week = Math.round(
       (fechaInicial - msInDay * 7 - new Date().getTime()) / 1000
@@ -120,7 +123,7 @@ export async function notificacionesRecordatorio({
     );
 
     const remainingForNextDay = Math.round(
-      (fechaFinal?.getTime() - new Date().getTime()) / 1000
+      (finalDate?.getTime() - new Date().getTime()) / 1000
     );
 
     let data = {
@@ -272,7 +275,7 @@ export async function notificacionesRecordatorio({
     );
 
     //   Si hay cliente es porque tenemos calificacion de guia
-    if (cliente) {
+    if (cliente && fechaFinal) {
       // Enviar notificacion de califica al guia
       // Alerta cel
       scheduled &&
@@ -308,7 +311,7 @@ export async function notificacionesRecordatorio({
             " en " +
             tituloAventura,
 
-          showAt: fechaFinal.getTime(),
+          showAt: finalDate.getTime(),
 
           usuarioID: sub,
           aventuraID: aventuraID,

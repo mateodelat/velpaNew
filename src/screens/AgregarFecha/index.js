@@ -102,7 +102,8 @@ export default function ({ navigation, route }) {
 
     let bloquearADia = fechaInicial ? (horaInicial ? new Date(fechaInicial) : fechaFinal ? new Date(fechaFinal) : new Date(fechaInicial)) : new Date()
     // Hacer el dia bloqueado a hora local para escoger fecha
-    bloquearADia.setTime(bloquearADia.getTime() + bloquearADia.getTimezoneOffset() * 60 * 1000)
+    // bloquearADia.setTime(bloquearADia.getTime() + bloquearADia.getTimezoneOffset() * 60 * 1000)
+
 
     const handleOpenPuntoDeReunion = () => {
         setErrorPuntoReunion(false)
@@ -155,9 +156,6 @@ export default function ({ navigation, route }) {
     }
     function handleConfirmHour(hora) {
         setHourPickerVisible(false)
-
-        // Regresar de hora local para el modal a UTC
-        hora.setTime(hora.getTime() - hora.getTimezoneOffset() * 60 * 1000)
 
         if (horaInicial) {
             // Verificacion hora valida
@@ -379,7 +377,7 @@ export default function ({ navigation, route }) {
                             borderWidth: errorHoraInicial ? 1 : 0,
                         }}>
 
-                            <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial)}</Text>
+                            <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial, false, true)}</Text>
 
                             <Feather
                                 style={styles.icono}
@@ -413,7 +411,7 @@ export default function ({ navigation, route }) {
                                 color={moradoOscuro}
                             />
 
-                            <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal)}</Text>
+                            <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal, false, true)}</Text>
 
                         </View>
 

@@ -13,16 +13,16 @@ import Boton from '../../components/Boton';
 import { getUserSub, moradoClaro, sendAdminNotification } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
-import Header from '../../components/header';
+
 import HeaderMaterial from './components/HeaderMaterial';
 import { DataStore } from '@aws-amplify/datastore';
-import { Aventura } from '../../models';
+
 import { EstadoAventura } from '../../models';
 import { TipoNotificacion } from '../../models';
 import { Notificacion } from '../../models';
 import API from '@aws-amplify/api';
 import { createAventura } from '../../graphql/mutations';
-import { Usuario } from '../../models';
+
 
 const { height } = Dimensions.get("window")
 

@@ -43,7 +43,7 @@ export default ({ imagen, titulo, modalVisible, setModalVisible }) => {
                 <View style={styles.innerContainer}>
                     <Image
                         style={{ flex: 1, }}
-                        resizeMode={"contain"}
+                        resizeMode={"cover"}
                         source={{ uri: imagen }}
                     />
                 </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // margin: 10,
         marginTop: 0,
-        borderRadius: 20,
+        // borderRadius: 20,
         overflow: "hidden"
     },
 

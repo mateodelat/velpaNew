@@ -78,7 +78,6 @@ function crearUsuario(attributes, sub) {
                 descripcion: (attributes.name ? attributes.name : attributes.nickname) + " gracias por registrarte en Velpa.\nAqui vas a encontrar experiencias increibles",
 
                 usuarioID: sub,
-                owner: sub,
             }
         })
 
@@ -200,6 +199,7 @@ function linkUser(userName, event) {
     var sourceValue = event.userName.split("_")[1];
     console.log('destinationValue: ' + destinationValue);
     console.log('sourceValue: ' + sourceValue);
+
     // Email Found and CONFIRMED (not EXTERNAL_PROVIDER)
     var params = {
         DestinationUser: {
@@ -209,14 +209,14 @@ function linkUser(userName, event) {
         SourceUser: {
             ProviderAttributeName: 'Cognito_Subject',
             ProviderAttributeValue: sourceValue,
-            ProviderName: event.userName.split("_")[0]
+            ProviderName: "Google"
         },
         UserPoolId: event.userPoolId
     };
     cognito.adminLinkProviderForUser(params, function (err, data) {
         if (err) {
             console.log('linkUser - err - cognito.adminLinkProviderForUser:');
-            console.log(err, err.stack);
+            console.log(err);
         }
         else {
             console.log('linkUser - cognito.adminLinkProviderForUser:');
