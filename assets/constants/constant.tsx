@@ -231,7 +231,7 @@ export async function notificacionesRecordatorio({
         (tipoPago === TipoPago.EFECTIVO
           ? "\nRecuerda llevar el pago de $" +
             precioTotal +
-            " en efectivo de la aventura"
+            " en efectivo de la aventura\n"
           : "\n") +
         "Ten a la mano el QR de tu reserva"
       : "Tu experiencia en " +

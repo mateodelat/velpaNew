@@ -213,7 +213,7 @@ export default ({ navigation }) => {
         const mes = meses[fecha.getMonth()]
         const dia = fecha.getDate()
 
-        const hora = formatAMPM(fecha, false, true)
+        const hora = formatAMPM(fecha)
 
         return (dia + "/" + mes + "/" + año + " " + hora)
     }

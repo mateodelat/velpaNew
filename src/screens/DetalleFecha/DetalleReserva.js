@@ -46,7 +46,7 @@ export default function ({ handleBack, reserva, }) {
         const mmInicial = String(dateInicial.getMonth())
 
 
-        return ddInicial + " de " + meses[mmInicial] + " a las " + formatAMPM(dateInicial, false, true)
+        return ddInicial + " de " + meses[mmInicial] + " a las " + formatAMPM(dateInicial)
 
     }
 

@@ -119,7 +119,7 @@ const ItemItinerario = ({
                             style={{
                                 ...styles.horaModify,
                                 borderWidth: errorHora ? 1 : 0
-                            }}>{formatAMPM(hora, false, true)}</Text>
+                            }}>{formatAMPM(hora)}</Text>
                         <Entypo
                             name="minus"
                             size={30}
@@ -129,7 +129,7 @@ const ItemItinerario = ({
 
                     </View>
                     :
-                    <Text style={styles.hora}>{formatAMPM(hora, false, true)}</Text>
+                    <Text style={styles.hora}>{formatAMPM(hora)}</Text>
 
             }
             {/* Ubicacion */}

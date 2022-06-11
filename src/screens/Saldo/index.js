@@ -379,7 +379,7 @@ export default function ({ navigation, route }) {
     }
 
     function formatDate(input) {
-        return formatDateShort(input) + " a las " + formatAMPM(input, false, true)
+        return formatDateShort(input) + " a las " + formatAMPM(input)
     }
 
     async function onRefresh() {

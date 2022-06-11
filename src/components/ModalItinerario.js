@@ -64,7 +64,7 @@ const ItemItinerario = ({
 
 
             {/* Hora */}
-            <Text style={styles.hora}>{formatAMPM(hora, false, true)}</Text>
+            <Text style={styles.hora}>{formatAMPM(hora)}</Text>
 
             {/* Ubicacion */}
             {ubicacionNombre &&

@@ -183,13 +183,13 @@ export default ({ route }) => {
                         const date = new Date(item.createdAt)
                         const prevDate = index !== chatMessages.length - 1 ? new Date(chatMessages[index + 1]?.createdAt) : null
 
-                        const hora = formatAMPM(date, false, true)
+                        const hora = formatAMPM(date)
 
                         const lastMessagePerson = !index ? true : item.usuarioID !== chatMessages[index - 1].usuarioID
                         const firstMessagePerson = index === chatMessages.length - 1 ? true : item.usuarioID !== chatMessages[index + 1].usuarioID
 
                         // Ver si renderizar otro de hora
-                        const horaAnteriorMsg = index !== chatMessages.length - 1 ? formatAMPM(chatMessages[index + 1]?.createdAt, false, true) : null
+                        const horaAnteriorMsg = index !== chatMessages.length - 1 ? formatAMPM(chatMessages[index + 1]?.createdAt) : null
                         const diferentToPreviousTime = horaAnteriorMsg !== hora
 
                         const newDay = index !== chatMessages.length - 1 ? date.getDate() !== prevDate.getDate() || date.getMonth() !== prevDate.getMonth() : true

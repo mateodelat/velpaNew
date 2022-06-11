@@ -377,7 +377,7 @@ export default function ({ navigation, route }) {
                             borderWidth: errorHoraInicial ? 1 : 0,
                         }}>
 
-                            <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial, false, true)}</Text>
+                            <Text style={styles.txtLocation}>{!fechaInicial ? "--:--" : formatAMPM(fechaInicial)}</Text>
 
                             <Feather
                                 style={styles.icono}
@@ -411,7 +411,7 @@ export default function ({ navigation, route }) {
                                 color={moradoOscuro}
                             />
 
-                            <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal, false, true)}</Text>
+                            <Text style={styles.txtLocation}>{!fechaFinal ? "--:--" : formatAMPM(fechaFinal)}</Text>
 
                         </View>
 

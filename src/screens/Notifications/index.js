@@ -152,11 +152,10 @@ export default () => {
 
                     const { seconds } = no.trigger
 
+                    const showAt = moment((seconds + createdAt) * 1000).fromNow()
+
                     return {
-                        body,
-                        title,
-                        tipo,
-                        id,
+                        showAt
                     }
                 })
             })

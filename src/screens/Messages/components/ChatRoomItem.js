@@ -1,8 +1,7 @@
 import { DataStore, OpType } from '@aws-amplify/datastore'
-import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { formatAMPM, moradoClaro, moradoOscuro } from '../../../../assets/constants'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { moradoClaro } from '../../../../assets/constants'
 
 import moment from "moment";
 moment.locale('es')

@@ -416,7 +416,7 @@ export const formatDateWithHour = (msInicial, msFinal) => {
   // Si es de un solo dia se regresa un numero con su hora inicial y final
   if (ddFinal === ddInicial && mmInicial === mmFinal) {
     return {
-      txt: (ddInicial + " " + meses + [mmInicial] + " de " + formatAMPM(msInicial, false, true) + " a " + formatAMPM(msFinal, false, true)),
+      txt: (ddInicial + " " + meses + [mmInicial] + " de " + formatAMPM(msInicial) + " a " + formatAMPM(msFinal)),
       mismoDia: true
     }
 
@@ -424,8 +424,8 @@ export const formatDateWithHour = (msInicial, msFinal) => {
 
   else {
     return {
-      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial, false, true),
-      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal, false, true),
+      txtInicial: ddInicial + " " + meses[mmInicial] + " a las " + formatAMPM(msInicial),
+      txtFinal: ddFinal + " " + meses[mmFinal] + " a las " + formatAMPM(msFinal),
       mismoDia: false
     }
   }
@@ -1241,11 +1241,11 @@ export function calculatePrice(precioIndividual, total, personasReservadas) {
   }
 }
 
-export function formatAMPM(dateInMs, hideAMPM, localTime) {
+export function formatAMPM(dateInMs, hideAMPM) {
 
   const date = new Date(dateInMs)
-  var hours = date[localTime ? "getHours" : "getUTCHours"]();
-  var minutes = date[localTime ? "getMinutes" : "getUTCMinutes"]();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
   var ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'

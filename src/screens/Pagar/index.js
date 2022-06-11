@@ -530,7 +530,7 @@ export default function ({ route, navigation }) {
                         tipo: TipoNotificacion.RESERVACREADA,
 
                         titulo: "Reserva exitosa!!",
-                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal) + " a las " + formatAMPM(fechaInicial, false, false),
+                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal) + " a las " + formatAMPM(fechaInicial),
 
                         showAt: new Date().getTime(),
 

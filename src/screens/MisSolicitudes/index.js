@@ -32,7 +32,7 @@ export default function ({ navigation, route }) {
 
 
 
-        return ddInicial + " de " + meses[mmInicial] + " " + formatAMPM(msInicial, false, true)
+        return ddInicial + " de " + meses[mmInicial] + " " + formatAMPM(msInicial)
 
     }
 

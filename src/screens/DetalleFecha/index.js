@@ -1479,13 +1479,13 @@ export default ({ navigation, route }) => {
                                 <View style={styles.itinerarioItem}>
                                     <Text style={styles.dayItinerario}>{formatDateShort(inicioItinerario.hora)}</Text>
                                     <Text style={styles.titleItinerario}>{inicioItinerario.titulo}</Text>
-                                    <Text style={styles.horaItinerario}>{formatAMPM(inicioItinerario.hora, false, true)}</Text>
+                                    <Text style={styles.horaItinerario}>{formatAMPM(inicioItinerario.hora)}</Text>
                                 </View>
 
                                 {medioItinerario ? <View style={styles.itinerarioItem}>
                                     <Text style={styles.dayItinerario}>{formatDateShort(medioItinerario.hora)}</Text>
                                     <Text style={styles.titleItinerario}>{medioItinerario.titulo}</Text>
-                                    <Text style={styles.horaItinerario}>{formatAMPM(medioItinerario.hora, false, true)}</Text>
+                                    <Text style={styles.horaItinerario}>{formatAMPM(medioItinerario.hora)}</Text>
                                 </View> :
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginHorizontal: 10, }}>
                                         <Entypo name="dots-three-horizontal" size={24} color="#999" />
@@ -1494,7 +1494,7 @@ export default ({ navigation, route }) => {
                                 <View style={styles.itinerarioItem}>
                                     <Text style={styles.dayItinerario}>{formatDateShort(finItinerario.hora)}</Text>
                                     <Text style={styles.titleItinerario}>{finItinerario.titulo}</Text>
-                                    <Text style={styles.horaItinerario}>{formatAMPM(finItinerario.hora, false, true)}</Text>
+                                    <Text style={styles.horaItinerario}>{formatAMPM(finItinerario.hora)}</Text>
                                 </View>
 
                             </View>
