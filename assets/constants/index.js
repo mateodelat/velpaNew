@@ -35,7 +35,16 @@ export function isAlphaNumeric(str) {
 
 // Funcion que toma dos fechas y devuelve un numero con la diferencia de dias
 export const diffDays = (fechaInicial, fechaFinal) => {
-  return Math.abs((fechaInicial - fechaFinal) / msInDay)
+  const fInicial = new Date(fechaInicial)
+  const fFinal = new Date(fechaFinal)
+
+  // Ponerlos los 2 en hora local 12 am
+  fInicial.setHours(0, 0, 0, 0)
+  fFinal.setHours(0, 0, 0, 0)
+
+
+  return Math.abs((fInicial - fFinal) / msInDay)
+
 
 }
 
@@ -57,9 +66,9 @@ export const addDays = (dayStr, add) => {
   date = date.agregarDias(add)
 
   // Se formatea como queremos
-  var dd = String(date.getUTCDate()).padStart(2, '0');
-  var mm = String(date.getUTCMonth() + 1).padStart(2, '0');
-  var yyyy = date.getUTCFullYear();
+  var dd = String(date.getDate()).padStart(2, '0');
+  var mm = String(date.getMonth() + 1).padStart(2, '0');
+  var yyyy = date.getFullYear();
   return (yyyy + '-' + mm + '-' + dd);
 
 }

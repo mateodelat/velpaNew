@@ -3,13 +3,11 @@ import React, { useEffect, useState } from "react";
 
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from "react-native-calendars";
-import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, moradoOscuro, msInHour, updateItinerario } from "../../../../assets/constants";
+import { addDays, colorFondo, diffDays, formatDate, getUserSub, moradoClaro, moradoOscuro, msInDay, msInHour, updateItinerario } from "../../../../assets/constants";
 import { Loading } from "../../../components/Loading";
 import { Fecha } from "../../../models";
 
-import * as Haptics from "expo-haptics";
 import { vibrar } from "../../../../assets/constants/constant";
-import { View } from "react-native";
 
 
 // Personalizar idiomas
@@ -142,9 +140,6 @@ export default ({
             .then(r => {
 
                 // Asignar la fecha si es que ya existe
-                diasMarcados = {
-                    ...fechasExistentes
-                }
 
                 r.map(fecha => {
 
