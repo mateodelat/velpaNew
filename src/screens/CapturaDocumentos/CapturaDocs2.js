@@ -21,7 +21,7 @@ import Boton from '../../components/Boton';
 import { Feather } from '@expo/vector-icons';
 import Line from '../../components/Line';
 
-import Storage from '@aws-amplify/storage';
+import { Storage } from '@aws-amplify/storage';
 
 const containerColor = "#fff"
 const colorFondo = "#F4F6F6"
@@ -44,7 +44,7 @@ export default ({ navigation, route }) => {
 
 
 
-    const [direccion, setDireccion] = useState({});
+    const [direccion, setDireccion] = useState(route.params.direccion);
     const [errorDireccion, setErrorDireccion] = useState({});
 
     // Variables comunes
@@ -55,19 +55,29 @@ export default ({ navigation, route }) => {
     const [nombreAgencia, setNombreAgencia] = useState(route.params.nombreAgencia);
     const [errorNombreAgencia, setErrorNombreAgencia] = useState(false);
 
-    const [sitioWeb, setSitioWeb] = useState(null);
+    const [sitioWeb, setSitioWeb] = useState(route.params.sitioWeb);
     const [errorSitioWeb, setErrorSitioWeb] = useState(false);
 
-    // Telefono
-    const [telefono, setTelefono] = useState(null);
+
+
+    // Telefono    
+    const t = formatTelefono(route.params.telefono?.slice(3))
+    const [telefono, setTelefono] = useState(t);
     const [errorTelefono, setErrorTelefono] = useState(false);
 
 
     const today = new Date()
 
+    const dia = route.params?.fechaNacimiento?.day
+    const mes = route.params?.fechaNacimiento?.month
+    const año = route.params?.fechaNacimiento?.year
 
     // Variables de la fecha de nacimiento
-    const [DOB, setDOB] = useState({});
+    const [DOB, setDOB] = useState({
+        dia,
+        mes,
+        año
+    });
     const [DOBVisible, setDOBVisible] = useState(false);
     const [defaultDate, setDefaultDate] = useState(new Date(today - (msInDay * 365 * 13)));
     const [errorDOB, setErrorDOB] = useState(false);
@@ -214,6 +224,7 @@ export default ({ navigation, route }) => {
 
 
         const dataToSend = {
+            ...route.params,
             agencia,
             ...imagesToSend,
             apellido,

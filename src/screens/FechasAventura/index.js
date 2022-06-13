@@ -126,9 +126,13 @@ export default ({ route, navigation }) => {
     const fetchFechas = async () => {
         const i = new Date()
         // Pedir todas las fechas que tengan fecha inicial mayor a hoy y de la aventura pedida
-        return await DataStore.query(Fecha, f => f.aventuraID("eq", aventuraID).fechaInicial("gt", i), {
-            sort: s => s.fechaInicial(SortDirection.ASCENDING)
-        })
+        return await DataStore.query(Fecha, f => f
+            .aventuraID("eq", aventuraID)
+            .fechaInicial("gt", i)
+            .cancelado("ne", true)
+            , {
+                sort: s => s.fechaInicial(SortDirection.ASCENDING)
+            })
             .then(async r => {
 
                 r = await Promise.all(r.map(async fecha => {

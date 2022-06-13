@@ -208,11 +208,6 @@ export default ({
 
         }))
 
-        // Poner el estatus de guia en el usuario actual
-        const user = await DataStore.query(Usuario, sub)
-        DataStore.save(Usuario.copyOf(user, nuevo => {
-            nuevo.guia = true
-        }))
 
         setButtonLoading(false)
         navigation.popToTop()

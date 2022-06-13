@@ -99,6 +99,8 @@ export default ({ navigation }) => {
 
     const [sub, setSub] = useState("");
 
+    const [usuario, setUsuario] = useState(null);
+
     // Subir imagenes a stripe si existen frente y atras
     useEffect(() => {
         uploadIdImagesStripe()
@@ -117,6 +119,8 @@ export default ({ navigation }) => {
 
         DataStore.query(Usuario, sub)
             .then(r => {
+                setUsuario(r)
+
                 setSub(r.id)
                 setNombre(r.nombre)
                 setApellido(r.apellido)
@@ -166,6 +170,7 @@ export default ({ navigation }) => {
 
     const handleContinuar = () => {
         const datosAEnviar = {
+            ...usuario,
             agencia,
             certificaciones: certificacionEnabled ? certificaciones.map(e => ({ uri: e.uri })) : null,
             IDFrente: datos.ID[0],
@@ -177,7 +182,7 @@ export default ({ navigation }) => {
             nombre,
             apellido,
 
-            sub
+            sub,
         }
 
 

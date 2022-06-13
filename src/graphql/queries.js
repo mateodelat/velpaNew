@@ -225,6 +225,7 @@ export const getReserva = /* GraphQL */ `
       horaIngreso
       cancelado
       canceledAt
+      cancelReason
       fechaID
       usuarioID
       fecha {
@@ -412,6 +413,7 @@ export const getReserva = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -428,6 +430,7 @@ export const getReserva = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -441,6 +444,7 @@ export const getReserva = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id
@@ -513,6 +517,7 @@ export const listReservas = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -593,9 +598,11 @@ export const listReservas = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -642,6 +649,7 @@ export const syncReservas = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -722,9 +730,11 @@ export const syncReservas = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -901,6 +911,7 @@ export const getFecha = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1273,6 +1284,7 @@ export const getUsuario = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1389,9 +1401,11 @@ export const getUsuario = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -1589,6 +1603,7 @@ export const getComision = /* GraphQL */ `
       id
       amount
       editing
+      startEditingAt
       payed
       pagadoEnReservaID
       reservaID
@@ -1605,6 +1620,7 @@ export const getComision = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -1685,9 +1701,11 @@ export const getComision = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -1703,6 +1721,7 @@ export const getComision = /* GraphQL */ `
         _lastChangedAt
         reservaComisionAsociadaId
       }
+      fechaID
       usuarioID
       usuario {
         id
@@ -1795,6 +1814,7 @@ export const listComisions = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -1811,6 +1831,7 @@ export const listComisions = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1824,6 +1845,7 @@ export const listComisions = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id
@@ -1889,6 +1911,7 @@ export const syncComisions = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -1905,6 +1928,7 @@ export const syncComisions = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1918,6 +1942,7 @@ export const syncComisions = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id

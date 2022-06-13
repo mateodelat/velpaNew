@@ -62,6 +62,7 @@ type Reserva
 
   cancelado: Boolean
   canceledAt: AWSDateTime
+  cancelReason: reservaCancelReason
 
   fechaID: ID @index(name: "byFecha")
   usuarioID: ID @index(name: "byUsuario")
@@ -213,12 +214,16 @@ type Comision
   amount: Int!
 
   editing: Boolean
+  startEditingAt: AWSTimestamp
   payed: Boolean
 
   pagadoEnReservaID: ID
 
-  reservaID: ID!
+  reservaID: ID
   reserva: Reserva @belongsTo
+
+  # Si fue una cancelacion de fecha
+  fechaID: ID
 
   usuarioID: ID @index(name: "byUsuario")
   usuario: Usuario @belongsTo
@@ -471,6 +476,11 @@ enum AccountType {
 enum tipoPago {
   EFECTIVO
   TARJETA
+}
+
+enum reservaCancelReason {
+  FECHACERRADA
+  CANCELADOPORCLIENTE
 }
 
 type PaymentIntent {

@@ -48,24 +48,10 @@ export default function App() {
   const url = local
 
 
-  async function urlOpener(url, redirectUrl) {
-    console.log(redirectUrl)
-    const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(
-      url,
-      redirectUrl
-    );
-
-    if (type === 'success' && Platform.OS === 'ios') {
-      WebBrowser.dismissBrowser();
-      return Linking.openURL(newUrl);
-    }
-  }
-
   Amplify.configure({
     ...awsconfig,
     oauth: {
       ...awsconfig.oauth,
-      urlOpener,
       redirectSignIn: url,
       redirectSignOut: url,
 
@@ -92,8 +78,6 @@ export default function App() {
 
 
   async function startDatastore() {
-    // const sub = await getUserSub()
-
 
     DataStore.start()
 

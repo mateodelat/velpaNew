@@ -1135,6 +1135,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "cancelReason": {
+                    "name": "cancelReason",
+                    "isArray": false,
+                    "type": {
+                        "enum": "ReservaCancelReason"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "fechaID": {
                     "name": "fechaID",
                     "isArray": false,
@@ -1623,6 +1632,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "startEditingAt": {
+                    "name": "startEditingAt",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "payed": {
                     "name": "payed",
                     "isArray": false,
@@ -1641,7 +1657,7 @@ export const schema = {
                     "name": "reservaID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "reserva": {
@@ -1656,6 +1672,13 @@ export const schema = {
                         "connectionType": "BELONGS_TO",
                         "targetName": "comisionReservaId"
                     }
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "usuarioID": {
                     "name": "usuarioID",
@@ -2267,6 +2290,13 @@ export const schema = {
                 "GUIAINDIVIDUAL"
             ]
         },
+        "ReservaCancelReason": {
+            "name": "ReservaCancelReason",
+            "values": [
+                "FECHACERRADA",
+                "CANCELADOPORCLIENTE"
+            ]
+        },
         "TipoPago": {
             "name": "TipoPago",
             "values": [
@@ -2351,5 +2381,5 @@ export const schema = {
             }
         }
     },
-    "version": "7dfea47930961c906da5e1ab4db54c52"
+    "version": "5d76050a8c0df9f9270b97a712fcba4b"
 };

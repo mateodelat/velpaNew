@@ -8,7 +8,6 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
-
 import { moradoOscuro } from '../../../../assets/constants';
 import { TipoNotificacion } from '../../../models';
 import moment from 'moment';
@@ -69,7 +68,7 @@ const Icon = ({ tipo }) => {
                         borderRadius: 20,
                         padding: 2,
                     }}
-                    name="check" size={18} color={"green"}
+                    name="check" size={18} color={moradoOscuro}
                 />
             </View>
 
@@ -132,8 +131,46 @@ const Icon = ({ tipo }) => {
                 />
             </View>
 
+        case TipoNotificacion.FECHACANCELADA:
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+
+                <FontAwesome5
+                    name="calendar"
+                    size={sizeIcon}
+                    color={"black"}
+                />
+
+                <Entypo
+                    style={{
+                        position: 'absolute',
+                        top: 15,
+                    }}
+                    name="cross" size={20} color="black"
+                />
+
+            </View>
+
+        case TipoNotificacion.FECHAACTUALIZACION:
+            return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+
+                <FontAwesome5
+                    name="calendar"
+                    size={sizeIcon}
+                    color={"black"}
+                />
+
+                <MaterialCommunityIcons style={{
+                    position: 'absolute',
+                    top: 17,
+                }}
+                    name="reload" size={18} color="black" />
+
+            </View>
+
 
         default:
+
+
             return <Image
                 style={{ flex: 1, width: '100%', height: '100%', }}
                 source={require("../../../../assets/VELPA.png")}

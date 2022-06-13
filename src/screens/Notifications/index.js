@@ -2,7 +2,7 @@ import { DataStore } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colorFondo, container, getUserSub, moradoOscuro, msInDay, msInHour, msInMinute, wait } from '../../../assets/constants'
+import { cancelAppFee, colorFondo, container, getUserSub, moradoOscuro, msInDay, msInHour, msInMinute, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
 import Element from './components/Element'
@@ -42,8 +42,8 @@ export default () => {
     }, []);
 
 
-    const handleIrAReserva = (idReserva) => {
-        navigation.navigate("MisReservas", idReserva)
+    const handleIrAReserva = (reservaID) => {
+        navigation.navigate("MisReservas", { reservaID })
     }
 
     const handleCalificaUser = (usuarioID, aventuraID, notificacionIdx) => {
@@ -82,10 +82,16 @@ export default () => {
 
     }
 
-    const handleIrAReservaEnFecha = (fechaID, reservaID) => {
+    const handleIrAFecha = (fechaID, reservaID) => {
         // Navegar a fechas y a la fecha especifica
         navigation.navigate("MisFechas")
-        navigation.navigate("DetalleFecha", { fechaID, })
+
+        if (fechaID) {
+            let params = { fechaID }
+            if (reservaID) params = { fechaID, reservaID }
+
+            navigation.navigate("DetalleFecha", params)
+        }
     }
 
     const handleVerTutorial = () => {
@@ -107,7 +113,7 @@ export default () => {
             .usuarioID("eq", sub)
 
             // Mostrar notificaciones que no tienen showAt o que el show at es anterior a la fecha actual
-            // .showAt("lt", new Date())
+            .showAt("lt", new Date())
 
             , {
                 sort: e => e
@@ -138,30 +144,30 @@ export default () => {
 
     const handlePressItem = async (item, index) => {
 
-        const not = await getAllScheduledNotificationsAsync()
-            .then(r => {
-                return r.map(no => {
-                    const id = no.identifier
-                    const {
-                        body, title,
-                        data: {
-                            tipo,
-                            createdAt
-                        }
-                    } = no.content
+        // const not = await getAllScheduledNotificationsAsync()
+        //     .then(r => {
+        //         return r.map(no => {
+        //             const id = no.identifier
+        //             const {
+        //                 body, title,
+        //                 data: {
+        //                     tipo,
+        //                     createdAt
+        //                 }
+        //             } = no.content
 
-                    const { seconds } = no.trigger
+        //             const { seconds } = no.trigger
 
-                    const showAt = moment((seconds + createdAt) * 1000).fromNow()
+        //             const showAt = moment((seconds + createdAt) * 1000).fromNow()
 
-                    return {
-                        showAt
-                    }
-                })
-            })
+        //             return {
+        //                 showAt
+        //             }
+        //         })
+        //     })
 
-        console.log(not)
-        return
+        // console.log(not)
+        // return
 
         handleVerNotificacion(index)
 
@@ -169,11 +175,11 @@ export default () => {
 
         switch (tipo) {
             case TipoNotificacion.RESERVAENFECHA:
-                handleIrAReservaEnFecha(item.fechaID, item.reservaID)
+                handleIrAFecha(item.fechaID, item.reservaID)
                 break;
 
             case TipoNotificacion.FECHACREADA:
-                handleIrAReservaEnFecha(item.fechaID, item.reservaID)
+                handleIrAFecha(item.fechaID)
                 break;
 
             case TipoNotificacion.RESERVACREADA:
@@ -206,6 +212,18 @@ export default () => {
 
             case TipoNotificacion.FECHAACTUALIZACION:
                 handleIrAReserva(item.reservaID)
+                break;
+
+            case TipoNotificacion.FECHACANCELADA:
+                if (item.titulo.startsWith("Cancelaste")) {
+                    handleIrAFecha(item.fechaID)
+                } else {
+                    handleIrAReserva(item.reservaID)
+                }
+                break;
+
+            case TipoNotificacion.RESERVACANCELADA:
+                handleIrAFecha(item.fechaID, item.reservaID)
                 break;
 
             case TipoNotificacion.ADMIN:

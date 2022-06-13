@@ -74,7 +74,7 @@ export default function ({ navigation,
     const [allowEfectivo, setAllowEfectivo] = useState(false);
 
     // Dificultad de la fecha
-    const [dificuldad, setDificuldad] = useState(3);
+    const [dificultad, setDificultad] = useState(3);
 
     const comisionVelpa = calculateLvl(usuario?.experience)?.comisionVelpa * 100
     const lvl = calculateLvl(usuario?.experience)?.lvl
@@ -111,7 +111,7 @@ export default function ({ navigation,
             titulo,
             descripcion,
 
-            dificuldad,
+            dificultad,
 
             efectivo: allowEfectivo,
 
@@ -125,7 +125,7 @@ export default function ({ navigation,
     }
 
     const handleClickDificultad = (index) => {
-        setDificuldad(index)
+        setDificultad(index)
     }
 
 
@@ -191,7 +191,7 @@ export default function ({ navigation,
                                         key={e}
                                         name="mountains"
                                         size={35}
-                                        color={dificuldad > e ? "black" : "gray"}
+                                        color={dificultad > e ? "black" : "gray"}
                                     />
                                 })
                             }

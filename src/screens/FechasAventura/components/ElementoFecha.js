@@ -156,7 +156,7 @@ export default function ({ fecha,
                     {/* Dificultad de la fecha */}
                     {fecha.dificultad !== null && fecha.dificultad !== undefined && <View style={{ flexDirection: 'row', marginVertical: 10, }}>
                         {
-                            [...Array(fecha.dificultad).keys()].map(e => {
+                            [...Array(5).keys()].map(e => {
                                 return <Foundation
                                     style={{
                                         paddingHorizontal: 2
@@ -165,7 +165,7 @@ export default function ({ fecha,
                                     key={e}
                                     name="mountains"
                                     size={25}
-                                    color={3 > e ? "black" : "gray"}
+                                    color={fecha.dificultad > e ? "black" : "gray"}
                                 />
                             })
                         }

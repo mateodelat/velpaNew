@@ -410,6 +410,7 @@ export const createReserva = /* GraphQL */ `
       horaIngreso
       cancelado
       canceledAt
+      cancelReason
       fechaID
       usuarioID
       fecha {
@@ -597,6 +598,7 @@ export const createReserva = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -613,6 +615,7 @@ export const createReserva = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -626,6 +629,7 @@ export const createReserva = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id
@@ -696,6 +700,7 @@ export const updateReserva = /* GraphQL */ `
       horaIngreso
       cancelado
       canceledAt
+      cancelReason
       fechaID
       usuarioID
       fecha {
@@ -883,6 +888,7 @@ export const updateReserva = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -899,6 +905,7 @@ export const updateReserva = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -912,6 +919,7 @@ export const updateReserva = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id
@@ -982,6 +990,7 @@ export const deleteReserva = /* GraphQL */ `
       horaIngreso
       cancelado
       canceledAt
+      cancelReason
       fechaID
       usuarioID
       fecha {
@@ -1169,6 +1178,7 @@ export const deleteReserva = /* GraphQL */ `
         id
         amount
         editing
+        startEditingAt
         payed
         pagadoEnReservaID
         reservaID
@@ -1185,6 +1195,7 @@ export const deleteReserva = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1198,6 +1209,7 @@ export const deleteReserva = /* GraphQL */ `
           _lastChangedAt
           reservaComisionAsociadaId
         }
+        fechaID
         usuarioID
         usuario {
           id
@@ -1409,6 +1421,7 @@ export const createFecha = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1609,6 +1622,7 @@ export const updateFecha = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1809,6 +1823,7 @@ export const deleteFecha = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -1942,6 +1957,7 @@ export const createUsuario = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -2058,9 +2074,11 @@ export const createUsuario = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -2172,6 +2190,7 @@ export const updateUsuario = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -2288,9 +2307,11 @@ export const updateUsuario = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -2402,6 +2423,7 @@ export const deleteUsuario = /* GraphQL */ `
           horaIngreso
           cancelado
           canceledAt
+          cancelReason
           fechaID
           usuarioID
           guiaID
@@ -2518,9 +2540,11 @@ export const deleteUsuario = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -2549,6 +2573,7 @@ export const createComision = /* GraphQL */ `
       id
       amount
       editing
+      startEditingAt
       payed
       pagadoEnReservaID
       reservaID
@@ -2565,6 +2590,7 @@ export const createComision = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -2645,9 +2671,11 @@ export const createComision = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -2663,6 +2691,7 @@ export const createComision = /* GraphQL */ `
         _lastChangedAt
         reservaComisionAsociadaId
       }
+      fechaID
       usuarioID
       usuario {
         id
@@ -2753,6 +2782,7 @@ export const updateComision = /* GraphQL */ `
       id
       amount
       editing
+      startEditingAt
       payed
       pagadoEnReservaID
       reservaID
@@ -2769,6 +2799,7 @@ export const updateComision = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -2849,9 +2880,11 @@ export const updateComision = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -2867,6 +2900,7 @@ export const updateComision = /* GraphQL */ `
         _lastChangedAt
         reservaComisionAsociadaId
       }
+      fechaID
       usuarioID
       usuario {
         id
@@ -2957,6 +2991,7 @@ export const deleteComision = /* GraphQL */ `
       id
       amount
       editing
+      startEditingAt
       payed
       pagadoEnReservaID
       reservaID
@@ -2973,6 +3008,7 @@ export const deleteComision = /* GraphQL */ `
         horaIngreso
         cancelado
         canceledAt
+        cancelReason
         fechaID
         usuarioID
         fecha {
@@ -3053,9 +3089,11 @@ export const deleteComision = /* GraphQL */ `
           id
           amount
           editing
+          startEditingAt
           payed
           pagadoEnReservaID
           reservaID
+          fechaID
           usuarioID
           createdAt
           updatedAt
@@ -3071,6 +3109,7 @@ export const deleteComision = /* GraphQL */ `
         _lastChangedAt
         reservaComisionAsociadaId
       }
+      fechaID
       usuarioID
       usuario {
         id

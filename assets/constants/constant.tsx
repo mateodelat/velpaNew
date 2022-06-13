@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 
 import { Notificacion, TipoPago } from "../../src/models";
 import { TipoNotificacion } from "../../src/models";
+import { STRIPE_KEY } from "./keys";
 
 const msInHour = 3600000;
 const msInDay = 86400000;
@@ -227,7 +228,7 @@ export async function notificacionesRecordatorio({
     const descripcion1Hora = cliente
       ? "Tu experiencia en " +
         tituloAventura +
-        " es en menos de 1 hora, no hagas esperar al guia!!" +
+        " es en menos de 1 hora, procura estar en el punto de reunion 15 minutos antes par que no te dejen!!" +
         (tipoPago === TipoPago.EFECTIVO
           ? "\nRecuerda llevar el pago de $" +
             precioTotal +
@@ -424,4 +425,54 @@ export declare enum VibrationType {
   select = "select",
   error = "error",
   sucess = "sucess",
+}
+
+export enum tipoUrl {
+  "post" = "POST",
+  "get" = "GET",
+  "put" = "PUT",
+  "delete" = "DELETE",
+}
+
+export async function urlRequest(
+  url: string,
+  method: tipoUrl,
+  authKey: String | null,
+  body: { id: string; key: string } | null
+) {
+  var formBody: [string] | string = [""];
+
+  for (var property in body) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(body[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&").slice(1);
+
+  return await new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.open(String(method), url);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    if (authKey) {
+      xhr.setRequestHeader("Authorization", "Bearer " + authKey);
+    }
+
+    xhr.onload = () => {
+      resolve(xhr.response);
+    };
+    xhr.onerror = () => {
+      delete xhr["_performanceLogger"];
+      console.log(xhr);
+      reject(xhr.response);
+    };
+
+    if (formBody.length !== 0) {
+      xhr.send(formBody);
+    } else {
+      xhr.send();
+    }
+  });
 }

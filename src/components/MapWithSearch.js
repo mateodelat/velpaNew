@@ -249,83 +249,88 @@ export default ({
             }}
             style={[styles.container, style]}>
             {/* Header */}
-
             <View style={{
-                ...styles.buscarContainer,
-                borderBottomRightRadius: !!buscar ? 0 : 7,
-                borderBottomLeftRadius: !!buscar ? 0 : 7,
-
+                padding: 10,
+                paddingBottom: 5,
             }}>
-                <Feather
-                    name="search"
-                    size={25}
-                    color="#7E7F84"
-                    style={{ marginRight: 5, position: 'absolute', bottom: 10, left: 10, }}
-                />
-                <TextInput
-                    style={{
-                        flex: 1,
-                        marginLeft: 35,
-                    }}
-                    value={buscar}
-                    placeholder="Buscar lugar"
-                    onChangeText={handleSearchPlace}
-                />
-                {!!buscar && <Feather
-                    onPress={clearSugested}
-                    name="x"
-                    size={25}
-                    color="#7E7F84"
-                    style={{ marginRight: 5, position: 'absolute', bottom: 10, right: 10, }}
-                />}
 
-            </View>
-            {
-                !!buscar && buscar?.length !== 0 && (
-                    suggestedPlace.length !== 0 ?
-                        <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
-                            <View style={styles.line} />
+                <View style={{
+                    ...styles.buscarContainer,
+                    borderBottomRightRadius: !!buscar ? 0 : 7,
+                    borderBottomLeftRadius: !!buscar ? 0 : 7,
 
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                            >
-                                {suggestedPlace.map((e, i) => {
-                                    const titulo = e.structured_formatting?.main_text
-                                    const descripcion = e.structured_formatting?.secondary_text
-                                    return <Pressable
-                                        onPress={() => handlePressSuggested(e)}
-                                        key={i.toString()}
-                                        style={styles.suggestedPlace}>
-                                        <Entypo
-                                            style={styles.icon}
-                                            name="location-pin"
-                                            size={30}
-                                            color={moradoOscuro}
+                }}>
+                    <Feather
+                        name="search"
+                        size={25}
+                        color="#7E7F84"
+                        style={{ marginRight: 5, position: 'absolute', bottom: 10, left: 10, }}
+                    />
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            marginLeft: 35,
+                        }}
+                        value={buscar}
+                        placeholder="Buscar lugar"
+                        onChangeText={handleSearchPlace}
+                    />
+                    {!!buscar && <Feather
+                        onPress={clearSugested}
+                        name="x"
+                        size={25}
+                        color="#7E7F84"
+                        style={{ marginRight: 5, position: 'absolute', bottom: 10, right: 10, }}
+                    />}
 
-                                        />
+                </View>
+                {
+                    !!buscar && buscar?.length !== 0 && (
+                        suggestedPlace.length !== 0 ?
+                            <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
+                                <View style={styles.line} />
 
-                                        <Text numberOfLines={2} style={styles.tituloSugested}>{titulo} <Text style={styles.descripcionSugested}>{descripcion}</Text></Text>
-                                    </Pressable>
-                                })}
-                            </ScrollView>
-                        </View>
-                        : <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
-                            <View style={styles.line} />
-                            <View style={{
-                                ...styles.suggestedPlace,
-                                flex: 1,
-                            }}>
-                                <Text numberOfLines={2} style={{
-                                    ...styles.tituloSugested,
-                                    textAlign: 'center',
-                                }}>No se han encontrado lugares</Text>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                >
+                                    {suggestedPlace.map((e, i) => {
+                                        const titulo = e.structured_formatting?.main_text
+                                        const descripcion = e.structured_formatting?.secondary_text
+                                        return <Pressable
+                                            onPress={() => handlePressSuggested(e)}
+                                            key={i.toString()}
+                                            style={styles.suggestedPlace}>
+                                            <Entypo
+                                                style={styles.icon}
+                                                name="location-pin"
+                                                size={30}
+                                                color={moradoOscuro}
 
+                                            />
+
+                                            <Text numberOfLines={2} style={styles.tituloSugested}>{titulo} <Text style={styles.descripcionSugested}>{descripcion}</Text></Text>
+                                        </Pressable>
+                                    })}
+                                </ScrollView>
                             </View>
-                        </View>
-                )
-            }
+                            : <View style={[styles.sugestionsContainer, sugestionsContainerStyle]}>
+                                <View style={styles.line} />
+                                <View style={{
+                                    ...styles.suggestedPlace,
+                                    flex: 1,
+                                }}>
+                                    <Text numberOfLines={2} style={{
+                                        ...styles.tituloSugested,
+                                        textAlign: 'center',
+                                    }}>No se han encontrado lugares</Text>
 
-            {previewTxt !== null && <Text style={styles.infoTxt}>{previewTxt ? previewTxt : "Selecciona el pin de la aventura"}</Text>}
+                                </View>
+                            </View>
+                    )
+                }
+                {previewTxt !== null && <Text style={styles.infoTxt}>{previewTxt ? previewTxt : "Selecciona el pin de la aventura"}</Text>}
+            </View>
+
             <View style={styles.mapContainer}>
                 {region && locationPermision !== null ? <MapView
                     ref={map}
@@ -411,8 +416,6 @@ export default ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        padding: 20,
     },
     textInput: {
         fontSize: 17,
@@ -444,8 +447,6 @@ const styles = StyleSheet.create({
 
     mapContainer: {
         flex: 1,
-        borderRadius: 7,
-        overflow: "hidden",
         alignItems: 'center', justifyContent: 'center',
     },
 

@@ -14,7 +14,7 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { colorFondo, formatAMPM, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, shadowMedia } from '../../../assets/constants'
+import { colorFondo, formatAMPM, formatDateShort, formatDia, getUserSub, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, msInHour, msInMinute, shadowMedia } from '../../../assets/constants'
 import Boton from '../../components/Boton';
 
 
@@ -91,6 +91,7 @@ export default function ({ route, navigation }) {
 
     // Objeto de comisiones retenidas si el usuario tuvo
     const comisiones = useRef()
+    const expired = useRef(false)
 
     const [payed, setPayed] = useState(false);
 
@@ -112,18 +113,30 @@ export default function ({ route, navigation }) {
 
     // Devolver las comisiones al usuario de no ser cobradas
     useEffect(() => {
+        // Timer para no cambiar el estado de la comision pasado la expiracion de 10 minutos
+        const t = setTimeout(() => {
+            expired.current = true
+        }, 1000 * 60 * 10);
 
         return () => {
+            clearTimeout(t)
+
             // Devolver el objeto de comisiones al usuario solo si no estamos despues de pagar con tarjeta
-            if (comisiones.current && comisiones.current.length !== 0 && !payed) {
-                comisiones.current.map(com => {
-                    DataStore.save(Comision.copyOf(com, ne => {
-                        ne.editing = false
-                        ne.payed = true
-                    })).then(r => {
-                        console.log("Devolviendo comision: ", r)
-                    })
-                })
+            if (!expired.current && comisiones.current && comisiones.current.length !== 0 && !payed) {
+                Promise.all(comisiones.current.map(com => {
+                    DataStore.query(Comision, com.id)
+                        .then(com => {
+                            DataStore.save(Comision.copyOf(com, ne => {
+                                ne.editing = false;
+                                ne.startEditingAt = null;
+
+                                ne.payed = false;
+                            })).then(r => {
+                                console.log("Devolviendo comision por ", r.amount)
+                            })
+                        })
+                }))
+
             }
 
         }
@@ -192,35 +205,46 @@ export default function ({ route, navigation }) {
                 // Id coincidente
                 .usuarioID("eq", guiaID)
 
-                // Que no lo este viendo alguien mas
-                .editing("ne", true)
-
                 // Que no haya sido procesada
                 .payed("ne", true)
-            )
-                .then(com => {
+
+                // Que no lo este editando alguien mas o que haya pasado mas de 10 minutos de cuando se empezo a editar
+                .or(e => e
+                    // Que no lo este viendo alguien mas
+                    .editing("ne", true)
+                    // Que haya pasado mas de 10 minutos de la ultima edicion
+                    .startEditingAt("gt", (new Date().getTime()) - (msInMinute * 10))
+                )
+                , {
+                    sort: e => e.amount("DESCENDING")
+                })
+                .then(async com => {
                     let newComisiones = []
+
                     // Si debe comisiones, entonces ponerla como editing true
-                    com.map(e => {
+                    await Promise.all(com.map(async e => {
+
                         // Mientras la comision no pase al precio total se siguen agregando
                         if ((localComision + e.amount) < precioTotal) {
-
-                            // Si el usuario debe comisiones agregarselos a la comision a enviar
                             localComision += e.amount
 
-                            newComisiones = [...newComisiones, e]
-
-                            DataStore.save(Comision.copyOf(e, n => {
+                            await DataStore.save(Comision.copyOf(e, n => {
+                                n.startEditingAt = new Date().getTime()
                                 n.editing = true
                             }))
+                                .then(r => {
+                                    // Si el usuario debe comisiones agregarselos a la comision a enviar
 
+                                    newComisiones = [...newComisiones, r]
+                                })
                         } else {
                             console.log("Hay pagos no cobrados que se quedaran sin la bandera de editing")
                         }
-                    })
+                    }))
 
-                    console.log(newComisiones)
-                    comisiones.current = (newComisiones)
+                    console.log("Comisiones obtenidas:", newComisiones.length)
+
+                    comisiones.current = newComisiones
 
                     // Lista de comisiones realizadas
                     return JSON.stringify(newComisiones.map(com => {
@@ -354,14 +378,21 @@ export default function ({ route, navigation }) {
         if (tipoPago === null) {
             Alert.alert("Error", "Selecciona un tipo de pago")
         } else {
+            let t
 
             try {
                 setButtonLoading(true)
+                // Poner temporizador de 10 segundos
+                t = setTimeout(() => {
+                    throw new Error("Error tiempo de pago expirado")
+                }, 10000);
+
+
 
                 // Revisar que no se haya llenado la fecha
                 if (await isFechaFull(fecha)) {
                     setButtonLoading(false)
-
+                    clearTimeout(t)
                     Alert.alert("Atencion",
                         "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
                         [
@@ -372,7 +403,6 @@ export default function ({ route, navigation }) {
                         { cancelable: false }
                     )
                 } else {
-                    let coms = comisiones.current
                     let guia = await DataStore.query(Usuario, guiaID)
                     // Pago con tarjeta
                     if (tipoPago === "TARJETA") {
@@ -380,6 +410,7 @@ export default function ({ route, navigation }) {
                         // Verificar pago
                         if (!paymentOption?.label || !paymentOption?.image) {
                             Alert.alert("Error", "Agrega una tarjeta o paga en efectivo")
+                            clearTimeout(t)
                             setButtonLoading(false)
                             return
                         }
@@ -391,14 +422,19 @@ export default function ({ route, navigation }) {
                                 if (!r.error) {
                                     console.log("Eliminando comisiones del estado y actualizando en datastore a pagadas...")
                                     comisiones.current?.map(com => {
-                                        DataStore.save(Comision.copyOf(com, ne => {
-                                            ne.editing = false
-                                            ne.payed = true
-                                            ne.pagadoEnReservaID = reservaID
-                                        })).then(console.log)
+                                        DataStore.query(Comision, com.id)
+                                            .then(com => {
+                                                DataStore.save(Comision.copyOf(com, ne => {
+                                                    ne.editing = false;
+                                                    ne.startEditingAt = null;
+
+                                                    ne.payed = true;
+                                                    ne.pagadoEnReservaID = reservaID;
+                                                })).then(r => console.log("Comision de ", r.amount, " puesta como pagada"))
+                                            })
                                     })
                                     setPayed(true)
-                                    comisiones.current = (null)
+                                    comisiones.current = null
                                 }
                                 return r
                             })
@@ -429,15 +465,22 @@ export default function ({ route, navigation }) {
                         }))
 
                         // Actualizar estado de las comisiones viejas a dejando de editar
-                        coms.map(com => {
-                            DataStore.save(com, e => {
-                                e.editing = false
-                            })
-                        })
+                        Promise.all(comisiones.current.map(async com => {
+                            return DataStore.query(Comision, com.id)
+                                .then(async com => {
+                                    return await DataStore.save(Comision.copyOf(com, e => {
+                                        e.editing = false
+                                    }))
 
-                        comisiones.current = (null)
+                                }).then(r => {
+                                    console.log("Comision de ", r.amount, " puesta como pagada")
+                                })
+                        }))
+
+                        comisiones.current = null
 
                     }
+                    clearTimeout(t)
 
 
 
@@ -453,15 +496,19 @@ export default function ({ route, navigation }) {
                     // Obtener el usuario logeado
                     const usuario = await DataStore.query(Usuario, sub)
 
-
-                    // Verificar que el usuario no este agregado ya al chatroom
-                    const relacion = (await DataStore.query(ChatRoomUsuarios)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
-                    if (!relacion) {
-                        // Si no esta el usuario se agrega
-                        DataStore.save(new ChatRoomUsuarios({
-                            usuario,
-                            chatroom
-                        }))
+                    // Si encuentra el chat crear la relacion
+                    if (chatroom) {
+                        // Verificar que el usuario no este agregado ya al chatroom
+                        const relacion = (await DataStore.query(ChatRoomUsuarios)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
+                        if (!relacion) {
+                            // Si no esta el usuario se agrega
+                            DataStore.save(new ChatRoomUsuarios({
+                                usuario,
+                                chatroom
+                            }))
+                        }
+                    } else {
+                        console.log("Error agregando al usuario al grupo, no existe el chat")
                     }
 
                     const datosReserva = {
@@ -567,10 +614,12 @@ export default function ({ route, navigation }) {
                         fechaID,
                     })
 
+                    navigation.popToTop()
                     navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
                     setButtonLoading(false)
                 }
             } catch (error) {
+                clearTimeout(t)
                 if (error !== "Cancelada") {
                     Alert.alert("Error", "Error creando la reservacion")
                     console.log(error)

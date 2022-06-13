@@ -44,31 +44,48 @@ function Item({ e, handleNavigate }) {
                     />
                 </View>
 
-                <View style={[styles.row, { marginTop: 10 }]}>
-                    <Text >{e.personasReservadasNum}/{e.personasTotales} personas</Text>
-                    {e.personasReservadasNum === 0 ? <Text style={styles.precio}>{formatMoney(e.precio, true)} /p</Text>
-                        :
-                        <Text style={styles.precio}>{formatMoney(e.precioAcomuladoSinComision, true)}</Text>
-                    }
+                {!e.cancelado ?
+                    <>
+                        <View style={[styles.row, { marginTop: 10 }]}>
+                            <Text >{e.personasReservadasNum}/{e.personasTotales} personas</Text>
+                            {e.personasReservadasNum === 0 ? <Text style={styles.precio}>{formatMoney(e.precio, true)} /p</Text>
+                                :
+                                <Text style={styles.precio}>{formatMoney(e.precioAcomuladoSinComision, true)}</Text>
+                            }
 
-                </View>
+                        </View>
 
-                <Pressable
-                    onPress={() => {
-                        setShowModalMap(true)
-                    }}
-                    style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', }}>
+                        <Pressable
+                            onPress={() => {
+                                setShowModalMap(true)
+                            }}
+                            style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', }}>
 
-                    <Ionicons
-                        name="location-sharp"
-                        size={24}
-                        color={moradoOscuro}
-                    />
-                    <Text numberOfLines={1} style={{ ...styles.precio, flex: 1, }}>{e.puntoReunionNombre}</Text>
+                            <Ionicons
+                                name="location-sharp"
+                                size={24}
+                                color={moradoOscuro}
+                            />
+                            <Text numberOfLines={1} style={{ ...styles.precio, flex: 1, }}>{e.puntoReunionNombre}</Text>
 
-                </Pressable>
+                        </Pressable>
+                    </>
+                    :
+                    <Text style={{
+                        color: 'red',
+                        fontWeight: 'bold',
+                    }}>Fecha cancelada</Text>
 
+                }
             </View>
+
+            {e.cancelado && <View style={{
+                backgroundColor: '#00000055',
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+            }} />}
+
             {selectedPlace && <ModalMap
                 modalVisible={showModalMap}
                 setModalVisible={setShowModalMap}

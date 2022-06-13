@@ -585,6 +585,8 @@ export const redondearNDecimales = (numero, entero) => {
 
 
 export function formatTelefono(input) {
+  if (!input) return
+
   // Strip all characters from the input except digits
   input = input.replace(/\D/g, '');
 
@@ -2001,10 +2003,13 @@ export async function cancelTransfer(idTransfer) {
 
 }
 
+
+
 export async function refundPaymentIntent(paymentId, amount) {
   var details = {
     'amount': Math.round(amount * 100),
     'payment_intent': paymentId,
+    "refund_application_fee": false,
   };
 
 
@@ -2017,7 +2022,7 @@ export async function refundPaymentIntent(paymentId, amount) {
   formBody = formBody.join("&");
 
   return fetch(
-    `https://api.stripe.com/v1/refunds?amount=124223.2&payment_intent=pi_3L8HPOFIERW56TAE0KnxNXB6`
+    `https://api.stripe.com/v1/refunds`
     , {
       method: "post",
       body: formBody,
@@ -2033,19 +2038,30 @@ export async function refundPaymentIntent(paymentId, amount) {
 }
 
 export async function cancelAppFee(feeId, amount) {
-  return fetch(
-    `https://api.stripe.com/v1/application_fees/${feeId}/refunds`
-    , {
-      method: "post",
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "Authorization":
-          "Bearer " +
-          STRIPE_KEY,
-        "Accept": "application/json",
-      },
-    }
-  ).then((r) => r.json())
+  if (!amount) {
+    // Si no hay comision que devolver se cancela la funcion
+    return
+  }
+  var data = "amount=" + String(Math.floor(amount * 100));
+
+  return await new Promise((resolve, reject) => {
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.open("POST", "https://api.stripe.com/v1/application_fees/" + feeId + "/refunds");
+    xhr.setRequestHeader("Authorization", "Bearer " + STRIPE_KEY);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+    xhr.onload = () => {
+      resolve(xhr.response);
+    };
+    xhr.onerror = () => reject(xhr.response);
+    xhr.send(data);
+
+
+  })
 }
 
 export const AsyncAlert = async (title, body) => new Promise((resolve, reject) => {

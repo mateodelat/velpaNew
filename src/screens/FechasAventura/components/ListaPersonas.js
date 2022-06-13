@@ -34,10 +34,12 @@ export default ({ personasReservadas, personasTotales }) => {
                         // Solo renderizar 3 primeras imagenes
                         if (idx > 2) return
                         if (!persona.foto) {
-                            return <View style={{
-                                ...styles.imagenPersonas,
-                                left: tamañoFotos * idx,
-                            }}
+                            return <View
+                                key={idx.toString()}
+                                style={{
+                                    ...styles.imagenPersonas,
+                                    left: tamañoFotos * idx,
+                                }}
                             >
                                 <Feather
                                     key={idx.toString()}

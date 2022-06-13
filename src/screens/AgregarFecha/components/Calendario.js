@@ -44,6 +44,7 @@ export default ({
         DataStore.query(Fecha, e => e
             .usuarioID("eq", sub)
             .fechaInicial("gt", new Date().getTime())
+            .cancelado("ne", true)
         )
             .then(r => {
                 let diasMarcados = {}

@@ -4,6 +4,7 @@ import { container, formatAMPM, formatCuentaCLABE, formatDateShort, mayusFirstLe
 import { Loading } from '../../components/Loading';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import { DataStore } from '@aws-amplify/datastore';
@@ -16,9 +17,9 @@ import moment from "moment";
 import 'moment/locale/es'
 import { Reserva } from '../../models';
 import Line from '../../components/Line';
-import { TipoPago } from '../../models';
+
 import DetalleReserva from '../DetalleFecha/DetalleReserva';
-import { PaymentIntents } from '@stripe/stripe-react-native';
+
 import PaymentRow from './components/PaymentRow';
 import { Comision } from '../../models';
 import { STRIPE_KEY } from '../../../assets/constants/keys';
@@ -178,6 +179,39 @@ export default function ({ navigation, route }) {
                                     createdAt
                                 } = (await DataStore.query(Comision, e.id))
 
+
+
+                                // Verificar si no es de una fecha distinta el pago de comision
+                                let fechaRel = (await DataStore.query(Reserva, id))
+
+                                if (fechaRel.fechaID && fechaRel.fechaID.fechaID !== fechaID) {
+
+                                    const r = {
+                                        id: e.id,
+                                        reservaID: id,
+                                        fechaID: fechaRel.fechaID,
+                                        usuarioID,
+
+                                        status: e.status,
+                                        amount,
+                                        creado: new Date(createdAt),
+
+                                        reporting_category: "fee",
+                                        type: e.type,
+
+                                        comision: e.fee,
+                                        disponible: null,
+                                    }
+                                    if (!f[fechaRel.fechaID]) {
+                                        f[fechaRel.fechaID] = [r]
+                                    } else {
+                                        f[fechaRel.fechaID] = [...f[fechaRel.fechaID], r]
+
+                                    }
+
+
+                                }
+
                                 return {
                                     id,
                                     amount: -amount,
@@ -255,7 +289,7 @@ export default function ({ navigation, route }) {
                                 const usuario = await DataStore.query(Usuario, r.usuarioID).then(r => {
                                     return ({
                                         ...r,
-                                        foto: isUrl(r.foto) ? r.foto : "https://picsum.photos/200/200"
+                                        foto: isUrl(r.foto) ? r.foto : null
                                     })
                                 }
                                 )
@@ -328,6 +362,7 @@ export default function ({ navigation, route }) {
                         imagen: await getImageUrl(fe.imagenFondo),
                         fechaInicial: fe.fechaInicial,
                         fechaFinal: fe.fechaFinal,
+                        cancelado: fe.cancelado,
 
                         Reservas: res
                     }
@@ -552,8 +587,7 @@ export default function ({ navigation, route }) {
                                     {fechas.map(fecha => {
 
                                         return (
-                                            <Pressable
-                                                onPress={() => handleVerFecha(fecha.id)}
+                                            <View
                                                 key={fecha.id}
                                                 style={{
                                                     marginVertical: 10,
@@ -562,200 +596,225 @@ export default function ({ navigation, route }) {
                                                     overflow: "hidden",
                                                     padding: 0,
                                                     flex: 1,
-                                                }}>
+                                                }}
+                                            >
+                                                <Pressable
+                                                    onPress={() => handleVerFecha(fecha.id)}
 
-                                                {/* Header, detalle de fecha, titulo */}
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                }}>
+                                                >
 
-                                                    <Image
-                                                        source={{ uri: fecha.imagen }}
-                                                        style={{
-                                                            aspectRatio: 3 / 2,
-                                                            height: 80,
-                                                        }}
-                                                    />
+                                                    {/* Header, detalle de fecha, titulo */}
                                                     <View style={{
-                                                        flex: 1,
-                                                        alignItems: 'center', justifyContent: 'center',
+                                                        flexDirection: 'row',
                                                     }}>
-                                                        <Text style={{
-                                                            fontWeight: 'bold',
-                                                        }}>{fecha.titulo}</Text>
-                                                        <Text style={{
-                                                            color: moradoOscuro,
-                                                            fontWeight: 'bold',
-                                                        }}>{formatDateShort(fecha.fechaInicial, fecha.fechaFinal)}</Text>
+
+                                                        <Image
+                                                            source={{ uri: fecha.imagen }}
+                                                            style={{
+                                                                aspectRatio: 3 / 2,
+                                                                height: 80,
+                                                            }}
+                                                        />
+                                                        <View style={{
+                                                            flex: 1,
+                                                            alignItems: 'center', justifyContent: 'center',
+                                                        }}>
+                                                            <Text style={{
+                                                                fontWeight: 'bold',
+                                                            }}>{fecha.titulo}</Text>
+                                                            <Text style={{
+                                                                color: moradoOscuro,
+                                                                fontWeight: 'bold',
+                                                            }}>{formatDateShort(fecha.fechaInicial, fecha.fechaFinal)}</Text>
+
+                                                            {fecha.cancelado && <Text style={{
+                                                                color: "red",
+                                                                fontWeight: 'bold',
+                                                            }}>Fecha cancelada</Text>}
+                                                        </View>
+
+                                                        {fecha.cancelado && <View style={{
+                                                            backgroundColor: '#00000044',
+                                                            position: 'absolute',
+                                                            width: '100%',
+                                                            height: '100%',
+                                                        }} />}
+
                                                     </View>
-                                                </View>
 
-                                                {
-                                                    fecha.Reservas.map((res, idx) => {
-                                                        const {
-                                                            paymentCancel,
-                                                            fees
-                                                        } = res
-
-                                                        return <Pressable
-                                                            onPress={() => handleVerReserva(res.id)}
-                                                            key={res.id}
-                                                        >
+                                                    {
+                                                        fecha.Reservas.map((res, idx) => {
+                                                            const {
+                                                                paymentCancel,
+                                                                fees
+                                                            } = res
 
 
-                                                            <View
-                                                                style={{
-                                                                    flexDirection: 'row',
-                                                                    padding: 10,
-                                                                    alignItems: 'center',
-                                                                    paddingBottom: (paymentCancel || fees.length !== 0) ? 5 : 10,
+                                                            return <Pressable
+                                                                onPress={() => handleVerReserva(res.id)}
+                                                                key={res.id}
+                                                            >
 
-                                                                }}>
-                                                                <Image
-                                                                    source={{ uri: res.usuario.foto }}
+
+                                                                <View
                                                                     style={{
-                                                                        width: 25,
-                                                                        height: 25,
-                                                                        marginRight: 10,
-                                                                        borderRadius: 20,
+                                                                        flexDirection: 'row',
+                                                                        padding: 10,
+                                                                        alignItems: 'center',
+                                                                        paddingBottom: (paymentCancel || fees.length !== 0) ? 5 : 10,
+
+                                                                    }}>
+
+
+                                                                    <View style={styles.profileImage}>
+                                                                        {res?.usuario?.foto ? <Image
+                                                                            source={{ uri: res?.usuario?.foto }} style={{ width: 25, height: 25, }} />
+                                                                            : <Feather
+                                                                                style={{
+                                                                                    borderRadius: 15,
+                                                                                }}
+                                                                                name="user"
+                                                                                size={20}
+                                                                                color="black"
+                                                                            />}
+                                                                    </View>
+
+                                                                    <PaymentRow
+                                                                        style={{ paddingLeft: 0, }}
+                                                                        amount={{
+                                                                            color: res.tipoPago === "EFECTIVO" ? "black" : "green",
+                                                                            content: (res.tipoPago === "EFECTIVO" ? res.total : res.pagadoAlGuia)
+
+                                                                        }}
+
+                                                                        status={{
+                                                                            color: res.tipoPago === "EFECTIVO" ? "black" : "orange",
+                                                                            content: fecha.cancelado ? null : res.tipoPago === "EFECTIVO" ? "En efectivo" : res.pago.disponible
+
+                                                                        }}
+                                                                        description={formatDate(res.pago ? res.pago.creado : res.createdAt)}
+                                                                        title={"@" + res.usuario.nickname}
+                                                                    />
+                                                                </View>
+
+
+                                                                {/* Render de cancelacion de pago en reserva */}
+                                                                {paymentCancel && <PaymentRow
+                                                                    style={{
+                                                                        paddingRight: 20,
                                                                     }}
+                                                                    amount={{ content: (paymentCancel.amount) }}
+                                                                    description={formatDate(paymentCancel.creado)}
+                                                                    title="Pago cancelado"
                                                                 />
-
-                                                                <PaymentRow
-                                                                    style={{ paddingLeft: 0, }}
-                                                                    amount={{
-                                                                        color: res.tipoPago === "EFECTIVO" ? "black" : "green",
-                                                                        content: (res.tipoPago === "EFECTIVO" ? res.total : res.pagadoAlGuia)
-
-                                                                    }}
-
-                                                                    status={{
-                                                                        color: res.tipoPago === "EFECTIVO" ? "black" : "orange",
-                                                                        content: res.tipoPago === "EFECTIVO" ? "En efectivo" : res.pago.disponible
-
-                                                                    }}
-                                                                    description={formatDate(res.pago ? res.pago.creado : res.createdAt)}
-                                                                    title={"@" + res.usuario.nickname}
-                                                                />
-                                                            </View>
+                                                                }
 
 
-                                                            {/* Render de cancelacion de pago en reserva */}
-                                                            {paymentCancel && <PaymentRow
-                                                                style={{
-                                                                    paddingRight: 20,
-                                                                }}
-                                                                amount={{ content: (paymentCancel.amount) }}
-                                                                description={formatDate(paymentCancel.creado)}
-                                                                title="Pago cancelado"
-                                                            />
-                                                            }
+                                                                {/* Render de app fees */}
+                                                                {
+                                                                    fees.map((fee, idx) => {
+                                                                        // Si es mayor a 0 es una devolucion
+                                                                        // Si es menor a 0 es un cobro al efectivo
+                                                                        // Si la reserva se cancelo y fue en efectivo asvisar de la comision no reembolsable
+                                                                        const titulo = fee.amount >= 0 ? "Comision devuelta" : ("Comision Velpa" + (res.cancelado ? " no reembolsable" : ""))
 
 
-                                                            {/* Render de app fees */}
-                                                            {
-                                                                fees.map((fee, idx) => {
-                                                                    // Si es mayor a 0 es una devolucion
-                                                                    // Si es menor a 0 es un cobro al efectivo
-                                                                    // Si la reserva se cancelo y fue en efectivo asvisar de la comision no reembolsable
-                                                                    const titulo = fee.amount >= 0 ? "Comision devuelta" : ("Comision Velpa" + (res.cancelado ? " no reembolsable" : ""))
+                                                                        return (
 
+                                                                            <PaymentRow
+                                                                                key={idx}
+                                                                                style={{
+                                                                                    paddingRight: 20,
+                                                                                }}
+                                                                                amount={{ content: (fee.amount) }}
+                                                                                description={formatDate(fee.creado)}
+                                                                                title={titulo}
+                                                                            />
 
-                                                                    return (
-
-                                                                        <PaymentRow
-                                                                            key={idx}
-                                                                            style={{
-                                                                                paddingRight: 20,
-                                                                            }}
-                                                                            amount={{ content: (fee.amount) }}
-                                                                            description={formatDate(fee.creado)}
-                                                                            title={titulo}
-                                                                        />
-
-                                                                    )
-                                                                })
-                                                            }
+                                                                        )
+                                                                    })
+                                                                }
 
 
 
-                                                            {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
-                                                        </Pressable>
+                                                                {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
+                                                            </Pressable>
 
 
-                                                        // Casos especiales cuando no hay pago asociado y cuando es en efectivo
-                                                        // }
-                                                        // // else if (res.tipoPago === TipoPago.EFECTIVO) {
-                                                        // //     return <Pressable
-                                                        // //         onPress={() => handleVerReserva(res.id)}
-                                                        // //         key={res.id}
-                                                        // //     >
+                                                            // Casos especiales cuando no hay pago asociado y cuando es en efectivo
+                                                            // }
+                                                            // // else if (res.tipoPago === TipoPago.EFECTIVO) {
+                                                            // //     return <Pressable
+                                                            // //         onPress={() => handleVerReserva(res.id)}
+                                                            // //         key={res.id}
+                                                            // //     >
 
-                                                        // //         <View
-                                                        // //             style={{
-                                                        // //                 flexDirection: 'row',
-                                                        // //                 padding: 10,
-                                                        // //                 alignItems: 'center',
+                                                            // //         <View
+                                                            // //             style={{
+                                                            // //                 flexDirection: 'row',
+                                                            // //                 padding: 10,
+                                                            // //                 alignItems: 'center',
 
-                                                        // //             }}>
-                                                        // //             <Image
-                                                        // //                 source={{ uri: res.usuario.foto }}
-                                                        // //                 style={{
-                                                        // //                     width: 25,
-                                                        // //                     height: 25,
-                                                        // //                     marginRight: 10,
-                                                        // //                     borderRadius: 20,
-                                                        // //                 }}
-                                                        // //             />
+                                                            // //             }}>
+                                                            // //             <Image
+                                                            // //                 source={{ uri: res.usuario.foto }}
+                                                            // //                 style={{
+                                                            // //                     width: 25,
+                                                            // //                     height: 25,
+                                                            // //                     marginRight: 10,
+                                                            // //                     borderRadius: 20,
+                                                            // //                 }}
+                                                            // //             />
 
-                                                        // //             {/* Fecha de creacion */}
-                                                        // //             <PaymentRow
-                                                        // //                 style={{ paddingLeft: 0, }}
-                                                        // //                 amount={{
-                                                        // //                     content: res.total
+                                                            // //             {/* Fecha de creacion */}
+                                                            // //             <PaymentRow
+                                                            // //                 style={{ paddingLeft: 0, }}
+                                                            // //                 amount={{
+                                                            // //                     content: res.total
 
-                                                        // //                 }}
+                                                            // //                 }}
 
-                                                        // //                 status={{
-                                                        // //                     color: "black",
-                                                        // //                     content: res.tipoPago
-                                                        // //                 }}
-                                                        // //                 description={formatDate(res.createdAt)}
-                                                        // //                 title={"@" + res.usuario.nickname}
-                                                        // //             />
+                                                            // //                 status={{
+                                                            // //                     color: "black",
+                                                            // //                     content: res.tipoPago
+                                                            // //                 }}
+                                                            // //                 description={formatDate(res.createdAt)}
+                                                            // //                 title={"@" + res.usuario.nickname}
+                                                            // //             />
 
-                                                        // //         </View>
+                                                            // //         </View>
 
-                                                        // //         {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
-                                                        // //     </Pressable>
+                                                            // //         {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
+                                                            // //     </Pressable>
 
-                                                        // // }
+                                                            // // }
 
-                                                        // else {
-                                                        //     return (
-                                                        //         <Pressable
-                                                        //             onPress={() => handleVerReserva(res.id)}
-                                                        //             key={res.id}
-                                                        //         >
+                                                            // else {
+                                                            //     return (
+                                                            //         <Pressable
+                                                            //             onPress={() => handleVerReserva(res.id)}
+                                                            //             key={res.id}
+                                                            //         >
 
-                                                        //             <Text style={{
-                                                        //                 height: 63,
-                                                        //                 textAlignVertical: 'center',
-                                                        //                 textAlign: 'center',
+                                                            //             <Text style={{
+                                                            //                 height: 63,
+                                                            //                 textAlignVertical: 'center',
+                                                            //                 textAlign: 'center',
 
-                                                        //             }}>Error: Reserva con tarjeta sin pago asociado</Text>
+                                                            //             }}>Error: Reserva con tarjeta sin pago asociado</Text>
 
-                                                        //             {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
-                                                        //         </Pressable>
+                                                            //             {idx !== fecha.Reservas.length - 1 && <Line style={{ marginVertical: 0, }} />}
+                                                            //         </Pressable>
 
-                                                        //     )
+                                                            //     )
 
-                                                        // }
+                                                            // }
 
 
-                                                    })
-                                                }
-                                            </Pressable>
+                                                        })
+                                                    }
+                                                </Pressable>
+                                            </View>
                                         )
                                     })}
                                     <View style={{
@@ -858,11 +917,15 @@ const styles = StyleSheet.create({
     },
 
     profileImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 100,
-        backgroundColor: '#fff',
-        marginRight: 5,
+        width: 25,
+        height: 25,
+        borderRadius: 25,
+        backgroundColor: "#f4f4f4",
+        marginRight: 10,
+
+        overflow: "hidden",
+
+        alignItems: 'center', justifyContent: 'center',
     },
 
     transaccion: {

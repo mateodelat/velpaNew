@@ -136,6 +136,7 @@ export default ({
             .usuarioID("eq", sub)
             .fechaInicial("gt", new Date().getTime())
             .id("ne", fechaID)
+            .cancelado("ne", true)
         )
             .then(r => {
 

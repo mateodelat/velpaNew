@@ -28,6 +28,11 @@ export enum TipoUsuario {
   GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
 }
 
+export enum ReservaCancelReason {
+  FECHACERRADA = "FECHACERRADA",
+  CANCELADOPORCLIENTE = "CANCELADOPORCLIENTE"
+}
+
 export enum TipoPago {
   EFECTIVO = "EFECTIVO",
   TARJETA = "TARJETA"
@@ -266,6 +271,7 @@ export declare class Reserva {
   readonly horaIngreso?: string | null;
   readonly cancelado?: boolean | null;
   readonly canceledAt?: string | null;
+  readonly cancelReason?: ReservaCancelReason | keyof typeof ReservaCancelReason | null;
   readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
   readonly fecha?: Fecha | null;
@@ -325,10 +331,12 @@ export declare class Comision {
   readonly id: string;
   readonly amount: number;
   readonly editing?: boolean | null;
+  readonly startEditingAt?: number | null;
   readonly payed?: boolean | null;
   readonly pagadoEnReservaID?: string | null;
-  readonly reservaID: string;
+  readonly reservaID?: string | null;
   readonly reserva?: Reserva | null;
+  readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
   readonly usuario?: Usuario | null;
   readonly createdAt?: string | null;

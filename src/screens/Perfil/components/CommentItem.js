@@ -18,7 +18,6 @@ export default function ({ content }) {
         return numero
     }
 
-
     const nombre = content.owner.nombre ?
         (content.owner.nombre + " " + content.owner.apellido)
         : content.owner.nicnkame
@@ -55,7 +54,7 @@ export default function ({ content }) {
 
                 </View>
             </View>
-            {content.body && <Text style={styles.content}>{content.body}</Text>}
+            {!!content.body && <Text style={styles.content}>{content.body}</Text>}
 
         </View>)
 }

@@ -36,6 +36,7 @@ import { Notificacion } from '../../models';
 import { ChatRoomUsuarios } from '../../models';
 import { sendNotification } from '../../../assets/constants/constant';
 import { AventuraUsuarios } from '../../models';
+import { ReservaCancelReason } from '../../models';
 
 
 
@@ -278,7 +279,6 @@ export default ({ navigation, route }) => {
                 //         .then(c => {
                 //             DataStore.save(Comision.copyOf(c, com => {
                 //                 com.payed = false
-                //                 com.pagadoEnReservaID = null
                 //                 com.editing = false
                 //             }))
                 //         })
@@ -335,6 +335,7 @@ export default ({ navigation, route }) => {
                 descripcion: "El usuario @" + client.nickname + " ha cancelado su reserva",
                 showAt: new Date().getTime(),
                 reservaID: reserva.id,
+                fechaID: reserva.fechaID,
                 tipo: TipoNotificacion.RESERVACANCELADA,
                 usuarioID: fecha.usuarioID,
                 token: guia.notificationToken
@@ -351,17 +352,14 @@ export default ({ navigation, route }) => {
 
             // Quitar relacion de usuario chatroom
             DataStore.query(ChatRoom, c => c.fechaID("eq", reserva.fechaID))
-                .then(r => {
-                    r = r[0]
-                    DataStore.query(ChatRoomUsuarios, c => c
-                        .chatroom("eq", r)
-                    )
+                .then(chat => {
+                    chat = chat[0]
+                    DataStore.query(ChatRoomUsuarios)
                         // Mapear las relaciones chatUsuario y borrar la que coincida con el usuario id
                         .then(r => {
-                            r = r.find(chat => chat.usuario.id === reserva.usuarioID)
+                            r = r.find(rel => (rel.usuario.id === reserva.usuarioID && rel.chatroom.id === chat.id))
                             if (!r) {
                                 console.log("No hay chat asociado")
-
                                 return
                             }
                             DataStore.delete(r)
@@ -374,6 +372,7 @@ export default ({ navigation, route }) => {
                     r = await DataStore.save(Reserva.copyOf(r, r => {
                         r.cancelado = true
                         r.canceledAt = new Date().toISOString()
+                        r.cancelReason = ReservaCancelReason.CANCELADOPORCLIENTE
                     }))
 
                     Alert.alert("Exito", "Reserva cancelada con exito")

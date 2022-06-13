@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { container, formatDateShort, formatMoney, getImageUrl, getUserSub, isUrl, moradoOscuro } from '../../../assets/constants'
 import { Loading } from '../../components/Loading';
-import { Reserva } from '../../models';
+import { Reserva, TipoPago } from '../../models';
 
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { Fecha } from '../../models';
 import ModalMap from '../../components/ModalMap';
+import { ReservaCancelReason } from '../../models';
 
 function Item({ e, handleNavigate }) {
     // Variables de ver en el mapa
@@ -49,15 +50,27 @@ function Item({ e, handleNavigate }) {
                 </View>
 
                 {e.cancelado ?
-                    <Text style={{ marginTop: 10, textAlign: 'center', color: 'red', }}>Reserva cancelada</Text>
+                    <Text style={{ marginTop: 10, textAlign: 'center', color: 'red', }}>{e.cancelReason === ReservaCancelReason.FECHACERRADA ? "Cancelado por el guia" : "Reserva cancelada"}</Text>
 
                     :
                     <View >
 
                         <View style={[styles.row, { marginTop: 10 }]}>
                             <Text >{personasReservadas} persona{personasReservadas !== 1 ? "s" : ""}</Text>
-                            <Text style={styles.precio}>{formatMoney(e.total, true)}</Text>
+                            <View style={{
+                                alignItems: 'flex-end',
+                                flex: 1,
+                                paddingRight: 5,
+                            }}>
 
+
+                                {
+                                    e.tipoPago === TipoPago.EFECTIVO &&
+                                    < FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={15} color={moradoOscuro} />
+                                }
+                            </View>
+
+                            <Text style={styles.precio}>{formatMoney(e.total, true)}</Text>
                         </View>
 
                         <Pressable
@@ -102,7 +115,7 @@ function Item({ e, handleNavigate }) {
 
 
 export default function ({ route, navigation }) {
-    const idReserva = route.params
+    const reservaID = route.params?.reservaID
 
     useEffect(() => {
         fetchReservas()
@@ -129,7 +142,7 @@ export default function ({ route, navigation }) {
                                 imagenFondo: await getImageUrl(r.imagenFondo),
                                 material: JSON.parse(r.material),
                                 incluido: [...(JSON.parse(r.incluido))?.incluido?.map(e => e),
-                                ...(JSON.parse(r.incluido)).agregado.map(e => e)
+                                ...(JSON.parse(r.incluido)).agregado.map(e => e),
                                 ]
                             }
                         })
@@ -149,10 +162,12 @@ export default function ({ route, navigation }) {
 
         // Si hay un id de reserva encontrar la reserva para hacer reservas proximas o pasadas
 
-        if (idReserva) {
-            const selected = reservas.find(e => e.id === idReserva)
+        if (reservaID) {
+            const selected = reservas.find(e => e.id === reservaID)
             if (!selected) return
 
+            // Ir a la reserva
+            handleNavigate(selected)
             selected.pasada && setReservasProximas(false)
         }
     }

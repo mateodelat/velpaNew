@@ -37,7 +37,7 @@ const PaymentRow = ({ title, description, amount, status, style }) => {
                     {formatMoney(amount.content)}
                 </Text>
 
-                {status && <Text style={{
+                {status?.content && <Text style={{
                     // marginTop: 2,
                     color: status.color ? status.color : "orange",
                 }}>

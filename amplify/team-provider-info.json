@@ -19,11 +19,11 @@
         },
         "CreateStripeAccount": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
-          "s3Key": "amplify-builds/CreateStripeAccount-42533132797475777631-build.zip"
+          "s3Key": "amplify-builds/CreateStripeAccount-5447656f5077716d6a5a-build.zip"
         },
         "preSignUp": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",
-          "s3Key": "amplify-builds/preSignUp-2b67784d785a59306e37-build.zip"
+          "s3Key": "amplify-builds/preSignUp-414c4c43703944597656-build.zip"
         },
         "AdminQueries4eefc64c": {
           "deploymentBucketName": "amplify-velpa-dev-213136-deployment",

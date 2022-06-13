@@ -39,7 +39,6 @@ export default function ({ setModalVisible,
             />
             <View style={styles.container}>
                 <MapWithSearch
-                    style={styles.map}
                     sugestionsContainerStyle={styles.sugestionsContainer}
 
                     setSelectedPlace={setSelectedPlace}
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colorFondo,
-        padding: 10,
     },
 
     nameLocationContainer: {
@@ -74,11 +72,6 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 7,
         borderBottomRightRadius: 7,
 
-    },
-
-    map: {
-        backgroundColor: colorFondo,
-        padding: 0,
     },
 
     sugestionsContainer: {

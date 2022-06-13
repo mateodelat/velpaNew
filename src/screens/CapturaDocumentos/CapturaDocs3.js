@@ -52,12 +52,12 @@ export default ({ navigation, route }) => {
     const [errorApellido, setErrorApellido] = useState(false);
 
 
-    const [RFCIndividual, setRFCIndividual] = useState(null);
-    const [RFCAgencia, setRFCAgencia] = useState(null);
+    const [RFCIndividual, setRFCIndividual] = useState(route.params.rfcIndividual);
+    const [RFCAgencia, setRFCAgencia] = useState(route.params.rfcCompania);
     const [errorRFC, setErrorRFC] = useState(false);
 
 
-    const [numeroDeCuenta, setNumeroDeCuenta] = useState(null);
+    const [numeroDeCuenta, setNumeroDeCuenta] = useState(formatCuentaCLABE(route.params.CuentaBancaria));
     const [errorNumeroDeCuenta, setErrorNumeroDeCuenta] = useState(false);
 
     const [aceptoTerminos, setAceptoTerminos] = useState(false);
@@ -198,6 +198,8 @@ export default ({ navigation, route }) => {
                             postal_code,
                             state,
                         }
+
+                        nuevo.guia = true
 
                         nuevo.CuentaBancaria = numeroDeCuentaEnviar
 

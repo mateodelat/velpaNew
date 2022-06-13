@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 
 
-import { AsyncAlert, calculateComision, calculateExpPerPerson, colorFondo, formatAMPM, formatDateShort, formatMoney, getImageUrl, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, } from '../../../assets/constants';
+import { AsyncAlert, calculateComision, calculateExpPerPerson, cancelAppFee, cancelTransfer, colorFondo, comision, comisionStripe, fetchAsociatedStripeIds, formatAMPM, formatDateShort, formatMoney, getImageUrl, mayusFirstLetter, moradoClaro, moradoOscuro, msInDay, refundPaymentIntent, } from '../../../assets/constants';
 import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAventura';
 
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -28,7 +28,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Line from '../../components/Line';
 
 import { DataStore, OpType } from '@aws-amplify/datastore';
-import { ChatRoom, TipoNotificacion, Usuario } from '../../models';
+import { ChatRoom, TipoNotificacion, TipoPago, Usuario } from '../../models';
 
 import { Reserva } from '../../models';
 import ModalItinerario from '../AgregarFecha/components/ModalItinerario';
@@ -48,10 +48,12 @@ import { ModalMap as ModalMapEdit } from '../Admin/EditarAventura/components/Mod
 import ModalMap from '../../components/ModalMap';
 import { Notificacion } from '../../models';
 
-import { cancelScheduledNotificationAsync, getAllScheduledNotificationsAsync } from 'expo-notifications';
+import { cancelScheduledNotificationAsync, getAllScheduledFsAsync, getAllScheduledNotificationsAsync } from 'expo-notifications';
 import { notificacionesRecordatorio, sendNotification } from '../../../assets/constants/constant';
 import QueLlevar from '../AgregarFecha/components/QueLlevar';
 import Incluido from '../AgregarFecha/components/Incluido';
+import { Comision } from '../../models';
+import { ReservaCancelReason } from '../../models';
 
 
 
@@ -65,7 +67,7 @@ export default ({ navigation, route }) => {
     //DISTINTAS CATEGORIAS
 
 
-    const { fecha: fechaGotten, fechaID } =
+    const { fecha: fechaGotten, fechaID, reservaID } =
         route.params
 
 
@@ -81,6 +83,7 @@ export default ({ navigation, route }) => {
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [cancelLoad, setCancelLoad] = useState(false);
 
     // Variables para animaciones (Carrousel fotos y header transparencia)
     const scrollY = useRef(new Animated.Value(0)).current
@@ -121,7 +124,7 @@ export default ({ navigation, route }) => {
 
         // Suscribirse a reservas en la fecha
         subscription = DataStore.observe(Reserva, res => {
-            res.fechaID("eq", fechaID ? fechaID : fechaGotten.id)
+            res.fechaID("eq", fechaID ? fechaID : fechaGotten?.id)
         })
             .subscribe((msg) => {
 
@@ -182,6 +185,14 @@ export default ({ navigation, route }) => {
             personasReservadasNum += (e.adultos + e.ninos + e.tercera)
         })
 
+        // Si hay reserva en la fecha mostrarla
+        if (reservaID) {
+            const r = personasReservadas.find(r => r.id === reservaID)
+            if (r) {
+
+                handleOpenReservacion(r)
+            }
+        }
 
 
         const f = {
@@ -292,7 +303,261 @@ export default ({ navigation, route }) => {
     }
 
     async function cancelarFecha() {
-        Alert.alert("Cancelar fecha", "Cancelar una fecha tiene un costo de 20 pesos mas 10 por persona ya reservada ademas de una calificacion por parte de los usuarios reservados")
+        // Funcion para borrar todas las notificaciones asociadas a la fecha
+        function borrarNotificaciones() {
+            DataStore.query(Notificacion, n => n
+                .fechaID("eq", fecha.id)
+
+                // Seleccionar solo las de tipo calificar usuario o recordatorio
+                .or(t => {
+                    t
+                        .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
+                        .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
+                })
+            )
+                .then(not => {
+                    console.log("Borrando ", not.length, " notificaciones en la fecha...")
+                    not.map(no => {
+                        DataStore.delete(no)
+                    })
+                })
+        }
+
+        function notificarGuia() {
+            DataStore.save(new Notificacion({
+                tipo: "FECHACANCELADA",
+                titulo: "Cancelaste una fecha",
+                descripcion: "Cancelaste la fecha en " + fecha.tituloAventura + " para el " + formatDateShort(fecha.fechaInicial, fecha.fechaFinal) + " con exito!!",
+                usuarioID: fecha.usuarioID,
+                fechaID: fecha.id,
+                showAt: new Date().getTime()
+
+            }))
+        }
+
+
+        try {
+            setCancelLoad(true)
+
+
+
+            // Ver si hay personas reservadas que no hayan cancelado
+            const reservas = await DataStore.query(Reserva, r => r
+                .fechaID("eq", fecha.id)
+                .cancelado("ne", true)
+            )
+
+            // Si tenemos reservas avisar de la comision y cancelar todos los pagos de los clientes
+            if (reservas.length !== 0) {
+                let precioAcomulado = 0
+                let personasTotales = 0
+                reservas.map(e => {
+                    const personas = e.adultos + e.ninos + e.tercera
+                    precioAcomulado += e.total / personas
+                    personasTotales += personas
+                })
+
+                const cuotaCancelacion = Math.round(comisionStripe(precioAcomulado / personasTotales)) + 20
+
+                await AsyncAlert("Cancelar fecha", `Cuando hay reservas en la fecha cancelar tiene un costo de 20 pesos mas ${cuotaCancelacion - 20} por persona ya reservada ademas de una calificacion por parte de los usuarios reservados`)
+
+                // Borrar notificaciones de recordatorio cliente y usuario asi como las de califica al guia
+                borrarNotificaciones()
+                notificarGuia()
+
+                // Devolver todo el dinero a los clientes si fue con tarjeta y mandar aviso
+                await Promise.all(reservas.map(async res => {
+                    const comisionADevolver = res.comision - cuotaCancelacion
+
+
+                    // Poner reserva como cancelada
+                    DataStore.save(Reserva.copyOf(res, res => {
+                        res.cancelado = true
+                        res.canceledAt = new Date().toISOString()
+                        res.cancelReason = ReservaCancelReason.FECHACERRADA
+                    }))
+
+                    // Mandar notificacion al cliente de cancelado y de calificar al guia
+                    DataStore.query(Usuario, res.usuarioID)
+                        .then(r => {
+                            sendNotification({
+                                titulo: fecha.tituloAventura,
+                                descripcion: (r.nombre ? mayusFirstLetter(r.nombre) : r.nickname) + ", el guia ha cancelado la fecha del " + formatDateShort(fecha.fechaInicial, fecha.fechaFinal) +
+                                    (res.tipoPago === TipoPago.TARJETA ? "\nTu dinero se devolvera a tu banco en menos de 10 dias." : "")
+                                ,
+                                showAt: new Date().getTime(),
+                                usuarioID: res.usuarioID,
+                                reservaID: r.id,
+                                fechaID: fecha.id,
+                                token: r.notificationToken,
+                                tipo: TipoNotificacion.FECHACANCELADA
+                            })
+
+                            DataStore.save(new Notificacion({
+                                tipo: TipoNotificacion.CALIFICAUSUARIO,
+
+                                titulo: (r.nombre ? mayusFirstLetter(r.nombre) : r.nickname) + ", califica tu experiencia",
+                                descripcion:
+                                    "Ayudanos a hacer de Velpa un lugar mejor, calfica a " +
+                                    guiaFecha.nickname +
+                                    " en " +
+                                    fecha.tituloAventura,
+
+                                showAt: new Date().getTime(),
+
+                                usuarioID: r.id,
+                                aventuraID: fecha.aventuraID,
+
+                                fechaID: fecha.id,
+
+                                imagen: fecha.imagenFondo,
+
+                                guiaID: guiaFecha.id,
+                            }))
+                        })
+
+                    if (res.tipoPago === TipoPago.TARJETA) {
+                        // Obtener info del pago
+                        const {
+                            transferID,
+                            fee,
+                        } = await fetchAsociatedStripeIds(res.pagoID)
+
+
+                        let promises = []
+                        // Si la comision a devolver es menor a 0 es porque el guia debe comision
+                        // Crear objeto de comision
+                        if (comisionADevolver < 0) {
+                            // Se crea un cargo de comision al guia
+                            DataStore.save(new Comision({
+                                amount: -comisionADevolver,
+                                fechaID: fecha.id,
+                                usuarioID: fecha.usuarioID,
+
+                            }))
+
+                            // No se devuelve nada de la comision cobrada
+                            comisionADevolver = 0
+                        }
+                        // Devolver al guia solo la comision asociada con la reserva si hay algo que devolver
+                        comisionADevolver && promises.push(cancelAppFee(fee.id, comisionADevolver)
+                            .then(e => {
+                                console.log(e)
+                                const { error } = e
+                                if (error) {
+                                    // Si ya se reembolso se manda mensaje
+                                    if (error.message?.endsWith("has already been refunded.")) {
+                                        console.log("La comision ya se devolvio")
+                                    } else {
+                                        throw error
+
+                                    }
+                                }
+                            }))
+
+
+
+                        // Devolver todo el pago al cliente
+                        promises.push(refundPaymentIntent(res.pagoID, res.total)
+                            .then(e => {
+                                const { error } = e
+                                if (error) {
+                                    throw error
+                                }
+                            })
+                        )
+
+
+                        // Cancelar transferencia de mi cuenta hacia el guia
+                        promises.push(cancelTransfer(transferID)
+                            .then(e => {
+                                const { error } = e
+                                if (error) {
+                                    throw error
+                                }
+                            })
+                        )
+
+                        // Esperar a que se cancelen los pagos
+                        await Promise.all(promises)
+                    }
+                }))
+            } else {
+                // Si no hay reservas simplemente cancelarla sin mas
+
+                await AsyncAlert("Cancelar fecha", "Seguro que quieres cancelar la fecha? No tiene nigun costo")
+
+                // Borrar notificaciones de recordatorio cliente y usuario asi como las de califica al guia
+                borrarNotificaciones()
+                notificarGuia()
+
+
+            }
+
+            // Borrar el chatroom
+            DataStore.query(ChatRoom, c => c.fechaID("eq", fecha.id))
+                .then(r => {
+                    r = r[0]
+                    DataStore.delete(r)
+                })
+
+
+            await DataStore.query(Fecha, fecha.id)
+                .then(fe => {
+                    DataStore.save(Fecha.copyOf(fe, fe => {
+                        fe.cancelado = true
+                        fe.canceledAt = new Date().toISOString()
+                    }))
+                })
+
+            let {
+                idx,
+                setFechas,
+                fechas
+            } = route.params
+
+            // Cancelar en la pantalla de arriba
+            if (fechas && setFechas) {
+                fechas[idx] = {
+                    ...fechas[idx],
+                    cancelado: true,
+                    canceledAt: new Date().toISOString()
+                }
+                setFechas([
+                    ...fechas
+                ])
+            }
+
+            setCancelLoad(false)
+            Alert.alert("Exito", "Fecha cancelada con exito")
+            setFecha({
+                ...originalDate,
+                cancelado: true,
+                canceledAt: new Date().getTime(),
+
+            })
+
+
+
+            setEditing(false)
+
+
+            setOriginalDate({
+                ...originalDate,
+                cancelado: true,
+                canceledAt: new Date().getTime(),
+
+            })
+
+
+        } catch (error) {
+            setCancelLoad(false)
+            if (error !== "Cancelada") {
+                console.log(error)
+                Alert.alert("Error", "Error cancelando la reserva")
+            }
+
+        }
 
     }
 
@@ -669,7 +934,7 @@ export default ({ navigation, route }) => {
                                     .then(usr => {
                                         sendNotification({
                                             tipo: TipoNotificacion.FECHAACTUALIZACION,
-                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha de partida y la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + ", el guia ha cambiado la fecha de partida y la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
                                             fechaID: id,
                                             reservaID: u.id,
                                             showAt: new Date().getTime(),
@@ -746,7 +1011,7 @@ export default ({ navigation, route }) => {
                                     .then(usr => {
                                         sendNotification({
                                             tipo: TipoNotificacion.FECHAACTUALIZACION,
-                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha de partida quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + ", el guia ha cambiado la fecha de partida quedando para el " + formatDateShort(fechaInicial, fechaFinal),
                                             fechaID: id,
                                             reservaID: u.id,
                                             showAt: new Date().getTime(),
@@ -812,7 +1077,7 @@ export default ({ navigation, route }) => {
                                     .then(usr => {
                                         sendNotification({
                                             tipo: TipoNotificacion.FECHAACTUALIZACION,
-                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + " el guia ha cambiado la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
+                                            descripcion: (usr.nombre ? mayusFirstLetter(usr.nombre) : usr.nickname) + ", el guia ha cambiado la fecha final quedando para el " + formatDateShort(fechaInicial, fechaFinal),
                                             fechaID: id,
                                             reservaID: u.id,
                                             showAt: new Date().getTime(),
@@ -1032,7 +1297,7 @@ export default ({ navigation, route }) => {
     }
 
     // Se desactiva la opcion de editar si es cliente o la fecha ya paso
-    const editDisabled = false//fecha?.fechaInicial < new Date().getTime() ? true : false
+    const editDisabled = (fecha?.fechaInicial < new Date().getTime() | fecha?.cancelado) ? true : false
 
 
     return (
@@ -1199,6 +1464,7 @@ export default ({ navigation, route }) => {
                                 style={styles.allowInnerContainer}>
                                 <Text style={styles.textAllow}>Permitir pagos en efectivo</Text>
                                 <Switch
+                                    disabled={!editing}
                                     trackColor={{
                                         true: moradoOscuro + "88",
                                         false: colorFondo
@@ -1221,6 +1487,7 @@ export default ({ navigation, route }) => {
                                 style={styles.allowInnerContainer}>
                                 <Text style={styles.textAllow}>Permitir tercera edad</Text>
                                 <Switch
+                                    disabled={!editing}
                                     trackColor={{
                                         true: moradoOscuro + "88",
                                         false: colorFondo
@@ -1246,6 +1513,7 @@ export default ({ navigation, route }) => {
                                 style={styles.allowInnerContainer}>
                                 <Text style={styles.textAllow}>Permitir niños</Text>
                                 <Switch
+                                    disabled={!editing}
                                     trackColor={{
                                         true: moradoOscuro + "88",
                                         false: colorFondo
@@ -1596,7 +1864,7 @@ export default ({ navigation, route }) => {
 
                 {/* Escanear codigo */}
                 <Pressable
-                    onPress={editing ? cancelarFecha : handleQR}
+                    onPress={fecha?.cancelado ? null : editing ? cancelarFecha : handleQR}
                     style={{
                         width: '100%',
                         backgroundColor: colorFondo,
@@ -1609,10 +1877,9 @@ export default ({ navigation, route }) => {
 
                     <Text style={{
                         ...styles.textCancel,
-                        color: editing ? "red" : moradoOscuro
-                    }}>{editing ? "Cancelar fecha" : "Registrar entrada"}</Text>
+                        color: (editing | fecha?.cancelado) ? "red" : moradoOscuro
+                    }}>{editing ? "Cancelar fecha" : fecha?.cancelado ? "Fecha cancelada" : "Registrar entrada"}</Text>
                 </Pressable>
-
 
 
             </KeyboardAvoidingView>
@@ -1655,7 +1922,7 @@ export default ({ navigation, route }) => {
                 </Pressable>}
 
                 IconRight={
-                    editDisabled ? null : () => <Pressable
+                    (editDisabled) ? null : () => <Pressable
                         onPress={() => {
                             if (loading) {
                                 return
@@ -1767,6 +2034,18 @@ export default ({ navigation, route }) => {
                         </Modal>
 
             }
+
+            {cancelLoad && <View style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#00000099',
+                alignItems: 'center', justifyContent: 'center',
+            }}>
+                <ActivityIndicator
+                    size={"large"}
+                />
+            </View>}
 
         </View >
     )

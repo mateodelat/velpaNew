@@ -30,6 +30,11 @@ const TipoUsuario = {
   "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
 };
 
+const ReservaCancelReason = {
+  "FECHACERRADA": "FECHACERRADA",
+  "CANCELADOPORCLIENTE": "CANCELADOPORCLIENTE"
+};
+
 const TipoPago = {
   "EFECTIVO": "EFECTIVO",
   "TARJETA": "TARJETA"
@@ -82,6 +87,7 @@ export {
   Categorias,
   StatusSolicitud,
   TipoUsuario,
+  ReservaCancelReason,
   TipoPago,
   TipoNotificacion,
   TipoPublicidad,
