@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 
-import { colorFondo, getUserSub, moradoOscuro, userEsGuia } from '../../../assets/constants';
+import { colorFondo, getUserSub, moradoOscuro, msInDay, msInHour, userEsGuia } from '../../../assets/constants';
 import Inicio from '../../screens/Inicio';
 import HeaderNav from './../components/HeaderNav';
 
@@ -20,14 +20,19 @@ import ModalAgregar from './../components/ModalAgregar';
 import { useNavigation } from '@react-navigation/native';
 import MapaAventuras from '../../screens/MapaAventuras';
 import { DataStore, OpType } from '@aws-amplify/datastore';
-import { Notificacion } from '../../models';
+import { Notificacion, Reserva } from '../../models';
 import { Usuario } from '../../models';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tutorial from './Tutorial';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { initStripe } from '@stripe/stripe-react-native';
+import * as Notifications from 'expo-notifications';
+import { Fecha } from '../../models';
+import { TipoNotificacion } from '../../models';
+import { AndroidNotificationPriority } from 'expo-notifications';
 
+import { STRIPE_PUBLISHABLE_KEY } from '@env'
 
 
 const tamañoLogo = 35
@@ -105,9 +110,8 @@ const Plus = () => {
     return null
 }
 
-const { width, height } = Dimensions.get("window")
 
-export default () => {
+export default ({ route }) => {
     const Tab = createBottomTabNavigator()
 
 
@@ -118,17 +122,288 @@ export default () => {
     const [newMessages, setNewMessages] = useState(false);
 
 
+    function haCambiado(timeShown, initialDate, trigger, createdAt) {
+        // Calcular la diferencia de horas
+        const remainingFor1Week = Math.round((initialDate - msInDay * 7 - createdAt) / 1000)
+        const remainingFor1Day = Math.round((initialDate - msInDay - createdAt) / 1000)
+        const remainingFor1Hour = Math.round((initialDate - msInHour - createdAt) / 1000)
+
+        const tiempo = timeShown === "1S" ? remainingFor1Week : timeShown === "1D" ? remainingFor1Day : timeShown === "1H" ? remainingFor1Hour : false
+
+
+        return trigger !== tiempo
+    }
+
+    function haCambiadoFinal(finalDate, trigger, createdAt) {
+        finalDate = new Date(finalDate)
+        if (finalDate.getHours() >= 8) {
+            finalDate = new Date(finalDate.getTime() + msInDay)
+        }
+        finalDate.setHours(8)
+
+
+        const remainingForNextDay = Math.round((finalDate - createdAt) / 1000)
+
+        return trigger !== remainingForNextDay
+    }
+
+    // Cancelar notificaciones invalidas por cancelacion de fecha o
+    // movimiento de fecha y checar si es la primer reserva
+    async function cancelInvalidNotifications() {
+        function scheduleNewNotification({
+            data,
+            body,
+            title,
+            seconds
+        }) {
+
+
+            Notifications.scheduleNotificationAsync({
+                content: {
+                    priority: AndroidNotificationPriority.MAX,
+                    vibrate: [100],
+                    title,
+                    body,
+                    data,
+                },
+                trigger: {
+                    seconds
+                }
+            }).then(() => console.log("Notificacion reprogramada con exito"))
+
+        }
+
+        const i = new Date()
+        const notifications = await Notifications.getAllScheduledNotificationsAsync()
+        const sub = await getUserSub()
+
+        // Pedir todas las fechas futuras que no han sido canceladas
+        const fechas = await DataStore.query(Fecha, fe =>
+            fe.fechaInicial("gt", new Date())
+                .cancelado("ne", true)
+        )
+
+        // Pedir las reservas que no han sido canceladas
+        const reservas = await DataStore.query(Reserva, res =>
+            res
+                .cancelado("ne", true)
+                .usuarioID("eq", sub)
+        )
+
+        // // Si hay reservas revisar si fue la primera
+        // if (reservas?.length > 0) {
+        //     checarTutorialDeReserva()
+        // }
+
+        // Fechas con errores
+        let fechasConError = {}
+
+
+        notifications.map(n => {
+            const data = n?.content?.data
+            const id = n.identifier
+            const body = n.content.body
+            const title = n.content.title
+
+            const {
+                tipo,
+                fechaID,
+                reservaID,
+
+
+                createdAt,
+                timeShown
+            } = data
+
+            if (!data || !tipo || !fechaID) {
+                // Notifications.cancelScheduledNotificationAsync(id)
+                console.log("Error raro, la notificacion no tiene tipo o fecha ID")
+                return
+            }
+
+            // Si tiene reserva id y no hay ninguna reserva asociada es porque se cancelo
+            if (reservaID) {
+                const res = reservas.find((r) => r.id === reservaID)
+
+                if (!res) {
+                    Notifications.cancelScheduledNotificationAsync(id)
+                    console.log("Error, no existe reserva asociada a la notificacion con reserva id cancelando...")
+
+                }
+            }
+
+
+            // Metodo para detectar si hubo cambios en la fecha o si fue elmininada
+            const fe = fechas.find((f) => f.id === fechaID)
+            if (fe) {
+
+                // Poner fecha final al dia siguiente de que acabe a las 8
+                let fechaFinal = new Date(fe.fechaFinal);
+                if (fechaFinal.getHours() >= 8) {
+                    fechaFinal = new Date(fechaFinal.getTime() + msInDay);
+                }
+                fechaFinal.setHours(8);
+                const remainingForNextDay = Math.round(
+                    (fechaFinal?.getTime() - new Date().getTime()) / 1000
+                );
+
+
+                // Fecha final actualizada
+                if (tipo === TipoNotificacion.CALIFICAUSUARIO) {
+                    const cambio = haCambiadoFinal(fe.fechaFinal, n.trigger.seconds, createdAt * 1000)
+                    if (cambio) {
+                        console.log("Notificacion de calificar ususario con error, corrigiendo...")
+
+                        // Cancelar la notificacion vieja
+                        Notifications.cancelScheduledNotificationAsync(id)
+
+                        // Crear nueva notificacion
+                        delete data.timeShown
+                        data.createdAt = Math.round(new Date().getTime() / 1000),
+                            scheduleNewNotification({
+                                data,
+                                body,
+                                title,
+                                seconds: remainingForNextDay
+                            })
+                    } else {
+                    }
+                }
+
+                // Fecha inicial actualizada
+                else if (tipo === TipoNotificacion.RECORDATORIOFECHA) {
+                    if (fe) {
+
+                        // Detectar si el tiempo programado para mostrarlo es el correcto
+                        let cambio = haCambiado(timeShown, fe.fechaInicial, n.trigger.seconds, createdAt * 1000)
+                        if (cambio) {
+                            // Agregar fecha a fechas invalidas para recalcular notificaciones
+                            console.log("Notificacion aviso de dia invalida, corrigiendo...")
+
+                            // Cancelar notificacion invalida
+                            Notifications.cancelScheduledNotificationAsync(id)
+
+                            fechasConError[fe.id] = reservaID
+
+                        } else {
+                        }
+                    }
+                }
+            } else {
+                // Si no esta la fecha asociada, eliminar notificacion
+                console.log("No existe la fecha o fue cancelada asociada a a notificacion")
+                Notifications.cancelScheduledNotificationAsync(id)
+            }
+        })
+
+        // Mapear los index con error para recalcular las notificaciones de cada fecha
+        Object.keys(fechasConError)
+            .map(fe => {
+                const reservaID = fechasConError[fe]
+
+                fe = fechas.find(old => old.id === fe)
+
+                // Obtener parametros a usar en la creacion de las nuevas notificaciones
+                const {
+                    fechaInicial,
+                    id: fechaID,
+                    tituloAventura,
+
+                } = fe
+
+                const remainingFor1Week = Math.round(
+                    (fechaInicial - msInDay * 7 - new Date().getTime()) / 1000
+                );
+                const remainingFor1Day = Math.round(
+                    (fechaInicial - msInDay - new Date().getTime()) / 1000
+                );
+                const remainingFor1Hour = Math.round(
+                    (fechaInicial - msInHour - new Date().getTime()) / 1000
+                );
+
+                const data = {
+                    fechaID,
+                    reservaID,
+
+                    // Hora creada en segundos
+                    createdAt: Math.round(new Date().getTime() / 1000),
+                    tipo: TipoNotificacion.RECORDATORIOFECHA,
+                }
+
+                //   Una semana
+                remainingFor1Week > 0 && Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Todo listo??",
+                        body:
+                            "Tu experiencia en " +
+                            tituloAventura +
+                            " es en 1 semana, revisa que tengas todo listo",
+                        priority: AndroidNotificationPriority.HIGH,
+                        vibrate: [100],
+                        data: {
+                            ...data,
+                            timeShown: "1S",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Week,
+                    },
+                });
+
+                //   Un dia
+                remainingFor1Day > 0 && Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Solo falta 1 dia!!",
+                        body:
+                            "Tu experiencia en " +
+                            tituloAventura +
+                            " es mañana, revisa todo tu material y el punto de reunion",
+                        priority: AndroidNotificationPriority.MAX,
+                        vibrate: [100],
+                        data: {
+                            ...data,
+                            timeShown: "1D",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Day,
+                    },
+                });
+
+                //   Una hora
+                Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Estas a nada de irte",
+                        body: "Tu experiencia en " +
+                            tituloAventura +
+                            " es en menos de 1 hora, no hagas esperar al guia!!" +
+                            "Ten a la mano el QR de tu reserva y recuerda llevar tu pago si es en efectivo",
+                        priority: AndroidNotificationPriority.MAX,
+                        vibrate: [100],
+
+                        data: {
+                            ...data,
+                            timeShown: "1H",
+                        },
+                    },
+                    trigger: {
+                        seconds: remainingFor1Hour > 0 ? remainingFor1Hour : 1,
+                    },
+                });
+            })
+    }
+
 
 
     // Ver todas las notificaciones nuevas y mensajes
     useEffect(() => {
         // Iniciar interfaz de stripe 
         initStripe({
-            publishableKey: "pk_test_51J7OwUFIERW56TAEOt1Uo5soBi8WRK6LSSBAgU8btdFoTF1z05a84q9N1DMcnlQcFF7UuXS3dr6ugD2NdiXgcfOe00K4vcbETd",
+            publishableKey: STRIPE_PUBLISHABLE_KEY,
             merchantIdentifier: 'velpa.com',
         });
 
-
+        cancelInvalidNotifications()
 
         let subscripcionNotificaciones
         let subscripcionMensajes
@@ -167,6 +442,7 @@ export default () => {
     }, []);
 
 
+
     async function verNuevasNotificaciones() {
         const sub = await getUserSub()
 
@@ -199,27 +475,22 @@ export default () => {
     }
 
 
-    // Ver si ya se mostro el tutorial de la app
-    useEffect(() => {
-        // checkFirstTimeTutorial()
-    }, []);
 
+    // async function checarTutorialDeReserva() {
+    //     const value = await AsyncStorage.getItem("@tutorialReservaShwon")
 
-    async function checkFirstTimeTutorial() {
-        const value = await AsyncStorage.getItem("@tutorialShwon")
+    //     if (!value) {
+    //         setTipoModal("tutorial")
+    //         setModalVisible(true)
+    //     }
+    // }
 
-        if (!value) {
-            setTipoModal("tutorial")
-            setModalVisible(true)
-        }
-    }
+    // // Limpiar el elemento de tutorialShown
+    // async function handleDoneTutorial() {
+    //     setModalVisible(false)
+    //     AsyncStorage.setItem("@tutorialReservaShwon", "t")
 
-    // Limpiar el elemento de tutorialShown
-    async function handleDoneTutorial() {
-        setModalVisible(false)
-        AsyncStorage.setItem("@tutorialShwon", "t")
-
-    }
+    // }
 
     const insets = useSafeAreaInsets()
 
@@ -267,7 +538,6 @@ export default () => {
                         ),
                     }}
                 />
-
 
                 <Tab.Screen
                     name="Explorar"
@@ -386,13 +656,14 @@ export default () => {
                         />
                         :
                         <Tutorial
-                            doneViewing={handleDoneTutorial}
+                        // doneViewing={handleDoneTutorial}
                         />
 
                 }
             </Modal>
 
         </View >
+
     )
 }
 

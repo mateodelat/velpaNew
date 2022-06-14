@@ -1,3 +1,5 @@
+import Bugsnag from '@bugsnag/expo';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
@@ -14,7 +16,7 @@ import { DataStore } from '@aws-amplify/datastore';
 
 
 import awsconfig from "./src/aws-exports";
-import * as WebBrowser from 'expo-web-browser';
+
 import { Loading } from './src/components/Loading';
 import { Aventura } from './src/models';
 import { Publicidad } from './src/models';
@@ -35,8 +37,8 @@ import { cancelAllScheduledNotificationsAsync } from 'expo-notifications';
 LogBox.ignoreLogs(['Non-serializable values were found in the navigation state', "`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method", 'Setting a timer for a long period of time, i.e. multiple minutes', '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` metho'])
 
 
-
 export default function App() {
+
 
   const [
     local,
@@ -45,7 +47,7 @@ export default function App() {
   ] = awsconfig.oauth.redirectSignIn.split(",");
 
 
-  const url = local
+  const url = expo
 
 
   Amplify.configure({
@@ -77,13 +79,25 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(null);
 
 
-  async function startDatastore() {
+  async function start() {
 
     DataStore.start()
 
+    const info = await Auth.currentUserInfo()
+    if (info) {
+      const { email,
+        nickname,
+        sub
+      } = info.attributes
+
+      Bugsnag.setUser(sub, email, nickname)
+
+    }
   }
 
   useEffect(() => {
+    Bugsnag.start()
+
     checkOnboarding()
 
     // DataStore.clear()
@@ -94,7 +108,7 @@ export default function App() {
       .then(user => {
         setLoading(false)
         if (user.authenticated) {
-          startDatastore()
+          start(user)
           setAuthenticated(true)
         }
       }).catch(err => {
@@ -109,7 +123,7 @@ export default function App() {
       switch (event) {
         case "signIn":
           setCargandoModelos(true)
-          startDatastore()
+          start()
           setLoading(false)
           setAuthenticated(true)
           break;
@@ -117,7 +131,7 @@ export default function App() {
 
           // Cancelar todas las notificaciones al celular
           cancelAllScheduledNotificationsAsync()
-
+          Bugsnag.setUser("", "", "")
           setLoading(false)
           setAuthenticated(false)
           break;
@@ -131,8 +145,6 @@ export default function App() {
     // Crear listener para cuando se acaben de obtener los modelos de datastore
     const listener = Hub.listen("datastore", async hubData => {
       const { event, data } = hubData.payload;
-
-      // console.log(data)
 
       if (event === "modelSynced" && data?.model === Aventura) {
         aventuraLoaded.current = true
@@ -202,6 +214,7 @@ export default function App() {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff', }}>
 
+
         <StatusBar hidden={true}></StatusBar>
         <LoginStack />
       </View>
@@ -222,8 +235,10 @@ export default function App() {
     <View style={{
       flex: 1, backgroundColor: colorFondo,
     }}>
+
       <StatusBar hidden={true} />
       <Router />
+
     </View>
   );
 

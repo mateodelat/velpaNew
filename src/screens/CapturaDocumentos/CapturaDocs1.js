@@ -136,23 +136,33 @@ export default ({ navigation }) => {
         // Si ya tenemos las fotos de adelante y atras y aun no tienen id
         if (!!datos.ID[0] && !!datos.ID[1] && !datos.ID[0]?.key) {
             setIdentificacionUploading(true)
-            setDatos({
-                ...datos,
-                ID: await Promise.all(datos.ID.map(async image => {
-                    // Subir la imagen al servidor de stripe
-                    const key = await uploadImageToStripe(image.uri)
-                    return {
-                        uri: image.uri,
-                        key
-                    }
-                })
-                )
-                    // Cuando acabe de subirse hacer el uploading false
-                    .then(r => {
-                        setIdentificacionUploading(false)
-                        return r
+            try {
+
+                setDatos({
+                    ...datos,
+                    ID: await Promise.all(datos.ID.map(async image => {
+                        // Subir la imagen al servidor de stripe
+                        const key = await uploadImageToStripe(image.uri)
+                        return {
+                            uri: image.uri,
+                            key
+                        }
                     })
-            })
+                    )
+                        // Cuando acabe de subirse hacer el uploading false
+                        .then(r => {
+                            setIdentificacionUploading(false)
+                            return r
+                        })
+
+                })
+            } catch (error) {
+                console.log(error)
+                setIdentificacionUploading(null)
+                Alert.alert("Error", "Error subiendo imagenes")
+
+            }
+
         }
 
 

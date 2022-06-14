@@ -219,6 +219,8 @@ export default function ({ route, navigation }) {
                     sort: e => e.amount("DESCENDING")
                 })
                 .then(async com => {
+                    console.log(com)
+
                     let newComisiones = []
 
                     // Si debe comisiones, entonces ponerla como editing true
@@ -458,6 +460,7 @@ export default function ({ route, navigation }) {
                         DataStore.save(new Comision({
                             reservaID,
                             amount: precioTotal * comision,
+                            startEditingAt: null,
                             editing: false,
                             payed: false,
 
@@ -470,10 +473,11 @@ export default function ({ route, navigation }) {
                                 .then(async com => {
                                     return await DataStore.save(Comision.copyOf(com, e => {
                                         e.editing = false
+                                        e.startEditingAt = null
                                     }))
 
                                 }).then(r => {
-                                    console.log("Comision de ", r.amount, " puesta como pagada")
+                                    console.log("Comision de ", r.amount, " puesta como no editada")
                                 })
                         }))
 

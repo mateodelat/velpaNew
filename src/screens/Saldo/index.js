@@ -22,7 +22,7 @@ import DetalleReserva from '../DetalleFecha/DetalleReserva';
 
 import PaymentRow from './components/PaymentRow';
 import { Comision } from '../../models';
-import { STRIPE_KEY } from '../../../assets/constants/keys';
+import { STRIPE_BALANCE_KEY } from '@env'
 
 
 moment.locale('es')
@@ -74,8 +74,6 @@ export default function ({ navigation, route }) {
         let i = new Date()
         return fetch("https://api.stripe.com/v1/balance_transactions?"
             + "limit=100"
-            // + "&&fields=[source]"
-            // + "&&type=payout"
             + "&&expand[]=data.source.source_transfer.source_transaction"
             + "&&expand[]=data.source.charge"
             , {
@@ -83,7 +81,7 @@ export default function ({ navigation, route }) {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + STRIPE_KEY,
+                    "Authorization": "Bearer " + STRIPE_BALANCE_KEY,
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())
@@ -386,7 +384,7 @@ export default function ({ navigation, route }) {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json",
-                    "Authorization": "Bearer " + STRIPE_KEY,
+                    "Authorization": "Bearer " + STRIPE_BALANCE_KEY,
                     "Stripe-Account": user.stripeID,
                 },
             }).then(r => r.json())

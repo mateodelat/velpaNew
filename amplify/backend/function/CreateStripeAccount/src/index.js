@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51J7OwUFIERW56TAEe1Ih8TU1SRyeoyLvP17jicv86HOaEJCjEakiYqMqMJ5ZdsCf3OdXV5Km1qwEN7QYvwEgjv4J00XeAeyKE1');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 // Funcion crear cuenta de stripe a partir de datos 
 /*

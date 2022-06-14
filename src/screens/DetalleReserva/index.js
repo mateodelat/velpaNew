@@ -236,7 +236,6 @@ export default ({ navigation, route }) => {
                 /////////////////////////////////////////////////////////
                 // Obtener info del pago
                 const {
-                    otherFees,
                     transferID,
                     fee,
                 } = await fetchAsociatedStripeIds(pagoID)
@@ -251,6 +250,8 @@ export default ({ navigation, route }) => {
                         }
                     })
                 )
+
+
                 // Devolver solo la comision asociada con la reserva
                 promises.push(cancelAppFee(fee.id, reserva.comision)
                     .then(e => {
@@ -263,6 +264,7 @@ export default ({ navigation, route }) => {
                 // Cancelar transferencia
                 promises.push(cancelTransfer(transferID)
                     .then(e => {
+                        console.log(e)
                         const { error } = e
                         if (error) {
                             throw error
@@ -272,17 +274,6 @@ export default ({ navigation, route }) => {
 
                 // Esperar a que se cancelen los pagos
                 await Promise.all(promises)
-
-                // Si hay comisiones asociadas al pago simplemente habilitarlas con payed = false en datastore
-                // otherFees.map(o => {
-                //     DataStore.query(Comision, o.id)
-                //         .then(c => {
-                //             DataStore.save(Comision.copyOf(c, com => {
-                //                 com.payed = false
-                //                 com.editing = false
-                //             }))
-                //         })
-                // })
             }
 
             const sub = await getUserSub()

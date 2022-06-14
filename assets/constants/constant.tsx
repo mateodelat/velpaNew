@@ -9,7 +9,6 @@ import { Alert } from "react-native";
 
 import { Notificacion, TipoPago } from "../../src/models";
 import { TipoNotificacion } from "../../src/models";
-import { STRIPE_KEY } from "./keys";
 
 const msInHour = 3600000;
 const msInDay = 86400000;

@@ -144,30 +144,30 @@ export default () => {
 
     const handlePressItem = async (item, index) => {
 
-        // const not = await getAllScheduledNotificationsAsync()
-        //     .then(r => {
-        //         return r.map(no => {
-        //             const id = no.identifier
-        //             const {
-        //                 body, title,
-        //                 data: {
-        //                     tipo,
-        //                     createdAt
-        //                 }
-        //             } = no.content
+        const not = await getAllScheduledNotificationsAsync()
+            .then(r => {
+                return r.map(no => {
+                    const id = no.identifier
+                    const {
+                        body, title,
+                        data: {
+                            tipo,
+                            createdAt
+                        }
+                    } = no.content
 
-        //             const { seconds } = no.trigger
+                    const { seconds } = no.trigger
 
-        //             const showAt = moment((seconds + createdAt) * 1000).fromNow()
+                    const showAt = moment((seconds + createdAt) * 1000).fromNow()
 
-        //             return {
-        //                 showAt
-        //             }
-        //         })
-        //     })
+                    return {
+                        showAt
+                    }
+                })
+            })
 
-        // console.log(not)
-        // return
+        console.log(not)
+        return
 
         handleVerNotificacion(index)
 

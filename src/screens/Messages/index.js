@@ -37,7 +37,7 @@ export default ({ navigation }) => {
         const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuarios)
 
         )
-            .filter(e => e.usuario.id === sub)
+            .filter(e => e.usuario.id === sub && e.chatroom)
             .sort((a, b) => a.chatroom.updatedAt < b.chatroom.updatedAt)
             .map(async e => {
 
@@ -51,7 +51,7 @@ export default ({ navigation }) => {
                     ...e,
                     chatRoomUsuario,
                     newMessages,
-                    picture: await getImageUrl(e.picture),
+                    picture: await getImageUrl(e?.picture),
                     lastMessage: e.chatRoomLastMessageId ? await DataStore.query(Mensaje, e.chatRoomLastMessageId) : null
                 }
 

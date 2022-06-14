@@ -9,7 +9,6 @@ import { AsyncAlert, moradoOscuro, shadowMedia } from '../../../assets/constants
 import { DataStore } from 'aws-amplify';
 import { ChatRoomUsuarios, Usuario } from '../../models';
 import { tipoUrl, urlRequest } from '../../../assets/constants/constant';
-import { STRIPE_KEY } from '../../../assets/constants/keys';
 import { Fecha } from '../../models';
 import { Reserva } from '../../models';
 import { ChatRoom } from '../../models';
@@ -20,12 +19,16 @@ import { AventuraUsuarios } from '../../models';
 import { Mensaje } from '../../models';
 import { Notificacion } from '../../models';
 
+import { STRIPE_DELETE_ACCOUNT } from '@env';
 
 export default ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     async function handleDeleteUserInfo() {
         try {
             await AsyncAlert("Experimental", "Alerta boton sensible seguro que quieres borrar:\n\n_Desilgar cuentas de stripe de los guias\n_Reservas y fechas\n_Chatrooms\n_Comisiones\n_Permisos de experiencia usuarios\n_Notificaciones")
+
+            Alert.alert("No se puede borrar", "No se pueden borrar las cuentas de stripe del usuario, no hay llave publica")
+            return
 
             setLoading(true)
             let promises = []
@@ -38,10 +41,12 @@ export default ({ navigation }) => {
                     u.map(u => {
 
                         // Borrar cuenta de stripe asociada
+
+
                         promises.push(urlRequest(
                             "https://api.stripe.com/v1/accounts/" + u.stripeID,
                             tipoUrl.delete,
-                            STRIPE_KEY)
+                            STRIPE_DELETE_ACCOUNT)
                             .then(r => {
                                 r = JSON.parse(r)
                                 if (r.error) {

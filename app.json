@@ -54,6 +54,19 @@
       },
       "package": "com.velpa.adventures",
       "versionCode": 5
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "@bugsnag/expo/hooks/post-publish.js",
+          "config": {}
+        }
+      ]
+    },
+    "extra": {
+      "bugsnag": {
+        "apiKey": "6adc1a407ef1adec3c9d9ad7b94a5b03"
+      }
     }
   }
 }

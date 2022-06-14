@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-// import { RNHole, RNHoleView, ERNHoleViewTimingFunction, IRNHoleViewAnimation } from "react-native-hole-view";
 
 
 
@@ -8,14 +7,6 @@ export default function ({
     doneViewing
 }) {
     const [step, setStep] = useState(0)
-
-    const firstHole = { x: 150, y: 390, width: 120, height: 120, borderRadius: 60 };
-    const secondHole = { x: 150, y: 40, width: 120, height: 120, borderRadius: 60 };
-
-    const holes = [
-        firstHole,
-        secondHole
-    ]
 
     return (
 

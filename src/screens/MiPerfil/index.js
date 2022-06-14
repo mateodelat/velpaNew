@@ -1,14 +1,15 @@
 import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView, RefreshControl } from 'react-native'
-import { colorFondo, getImageUrl, userEsGuia } from '../../../assets/constants'
+import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView, RefreshControl, Linking } from 'react-native'
+import { AsyncAlert, colorFondo, getImageUrl, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 import Elemento from './components/Elemento'
 import { DataStore } from '@aws-amplify/datastore';
@@ -49,6 +50,23 @@ export default ({ route, navigation }) => {
 
     function handleFechas() {
         navigation.navigate("MisFechas")
+    }
+
+    async function handleAyuda() {
+        Alert.alert("Abrir link?", "Se te dirigira a un link externo en whatsapp con el desarrollador de la app", [
+            {
+                text: "CANCELAR",
+            },
+            {
+                text: "OK",
+                onPress: () => Linking.openURL('whatsapp://send?text=Hola, tengo un problema con Velpa: &phone=5213324963705')
+                    .catch(e => {
+                        Alert.alert("Error", "Asegurate que tienes whatsapp instalado en tu dispositivo")
+                    })
+            },
+        ])
+
+
     }
 
 
@@ -299,6 +317,14 @@ export default ({ route, navigation }) => {
                             }
                         />
                     }
+
+                    <Elemento
+                        texto={"Ayuda"}
+                        onPress={handleAyuda}
+                        icono={<Entypo name="help-with-circle" size={30} color="black" />
+                        }
+                    />
+
 
                     {/* <Elemento
                         texto={"Configuracion"}

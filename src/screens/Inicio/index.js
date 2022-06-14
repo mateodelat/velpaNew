@@ -548,7 +548,6 @@ export default ({ navigation }) => {
                                         />
                                     </View>
                                 }
-
                                 <Text style={{ flex: 1, }}>@{usr.nickname}</Text>
                                 {usr.calificacion && <View style={{
                                     flexDirection: 'row',
