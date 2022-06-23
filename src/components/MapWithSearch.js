@@ -20,7 +20,7 @@ import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons
 
 
 
-import { defaultLocation, googleMapsSearchPlace, mapsAPIKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../assets/constants';
+import { defaultLocation, googleMapsSearchPlace, mapPlacesKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../assets/constants';
 
 import { getLastKnownPositionAsync, reverseGeocodeAsync } from 'expo-location';
 
@@ -198,7 +198,7 @@ export default ({
         const base = "https://maps.googleapis.com/maps/api/place/autocomplete/json"
         const input = `?input=${text}`
         const location = `&location=${latitude}%2C${longitude}`
-        const key = `&key=${mapsAPIKey}`
+        const key = `&key=${mapPlacesKey}`
         const radius = "&radius=1000"
         const language = "&language=es"
 

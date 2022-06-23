@@ -69,6 +69,7 @@
     "unimodules-permissions-interface": "^6.1.0"
   },
   "resolutions": {
+    "@types/react": "^17",
     "promise": "^8.0.3"
   },
   "devDependencies": {

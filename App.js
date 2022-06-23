@@ -47,7 +47,7 @@ export default function App() {
   ] = awsconfig.oauth.redirectSignIn.split(",");
 
 
-  const url = expo
+  const url = standAlone
 
 
   Amplify.configure({

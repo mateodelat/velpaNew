@@ -1437,7 +1437,7 @@ export function calculateExpPerPerson(precio) {
 }
 
 export async function getPlaceElevation(latitude, longitude) {
-  const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapsAPIKey}`
+  const url = `https://maps.googleapis.com/maps/api/elevation/json?&locations=${latitude}%2C${longitude}&key=${mapPlacesKey}`
   return Math.round(await fetch(url)
     .then(r => {
       return r.json()
@@ -1496,7 +1496,7 @@ export const defaultLocation = {
 
 // Buscar un lugar por su place id o por su geometria
 export async function googleMapsSearchPlace(place_id) {
-  let url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url,name&placeid=${place_id}&key=${mapsAPIKey}`
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url,name&placeid=${place_id}&key=${mapPlacesKey}`
 
 
   return await fetch(url)
@@ -1763,7 +1763,7 @@ export const verificarUbicacion = async () => {
 
 }
 
-export const mapsAPIKey = "AIzaSyCaRZjZvo3u_3tLCK7cOGigyfFEF6kR4Hw"
+export const mapPlacesKey = "AIzaSyAMO0bWIDnoKqunvXjCJ65qgZdb5FBtf_s"
 
 
 export const shadowMedia = {

@@ -16,16 +16,13 @@ import {
 import MapView from "react-native-maps";
 
 
-import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
 
 
 
-import { colorFondo, container, defaultLocation, googleMapsSearchPlace, mapsAPIKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../assets/constants';
+import { colorFondo, moradoOscuro, verificarUbicacion } from '../../assets/constants';
 
-import { getLastKnownPositionAsync, reverseGeocodeAsync } from 'expo-location';
 
 import { Loading } from './Loading';
-import Boton from './Boton';
 
 import { Marker } from 'react-native-maps';
 import HeaderModal from '../screens/AgregarFecha/components/HeaderModal';

@@ -20,7 +20,7 @@ import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons
 
 
 import Boton from '../../components/Boton';
-import { defaultLocation, getPlaceElevation, mapsAPIKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
+import { defaultLocation, getPlaceElevation, mapPlacesKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
 
 import QueLlevar from './components/QueLlevar';
 import HeaderConImagen from '../../components/HeaderConImagen';
@@ -145,7 +145,7 @@ export default ({ navigation, route }) => {
         const base = "https://maps.googleapis.com/maps/api/place/autocomplete/json"
         const input = `?input=${text}`
         const location = `&location=${latitude}%2C${longitude}`
-        const key = `&key=${mapsAPIKey}`
+        const key = `&key=${mapPlacesKey}`
         const radius = "&radius=1000"
         const language = "&language=es"
 
@@ -183,7 +183,7 @@ export default ({ navigation, route }) => {
     const handlePressSuggested = async (e) => {
         const { place_id } = e
         clearSugested()
-        const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url&placeid=${place_id}&key=${mapsAPIKey}`
+        const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=geometry,url&placeid=${place_id}&key=${mapPlacesKey}`
         let ubicacionLink
 
         const region = await fetch(url)

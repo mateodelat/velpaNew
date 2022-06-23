@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1014404247137",
+    "project_id": "velpa-320519",
+    "storage_bucket": "velpa-320519.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014404247137:android:5031dae91ff47ea2084420",
+        "android_client_info": {
+          "package_name": "com.adventures.velpa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014404247137-rqlf1lpacf2uahbk4iauufhdg725k4uv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq37BATwMrPu2WWeGPBx8tZsTE90lDVxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014404247137-rqlf1lpacf2uahbk4iauufhdg725k4uv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,7 +20,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DoubleClick from '../../../components/DoubleClick.js';
 import { openImagePickerAsync, colorFondo, moradoOscuro, getBlob } from '../../../../assets/constants/index.js';
 import Storage from '@aws-amplify/storage';
-import ModalTipoImagen from '../../../components/ModalTipoImagen.js';
+import ModalTipoImagen from '../../../components/ModalTipoImagen';
 
 
 

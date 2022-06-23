@@ -2,9 +2,9 @@
   "expo": {
     "name": "Velpa",
     "slug": "Velpa",
-    "version": "1.0.4",
+    "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon512.png",
     "scheme": "velpa",
     "splash": {
       "image": "./assets/splash.png",
@@ -28,10 +28,11 @@
       },
       "buildNumber": "0.0.0",
       "config": {
-        "googleMapsApiKey": "AIzaSyD6Rcc9UBWW5tsACf9mur9dLmMZJN7LxSI"
+        "googleMapsApiKey": "AIzaSyDce3_ZI_6A4tOwKjJFnlvv7WLLUUls7bw"
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -49,11 +50,11 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyC_jHT1RiD8ExSZRX7XGdKhi8PTC9JzI4w"
+          "apiKey": "AIzaSyDiyuMnwhdN15eAwUJjBBbUses8hWS3kO8"
         }
       },
-      "package": "com.velpa.adventures",
-      "versionCode": 5
+      "package": "com.adventures.velpa",
+      "versionCode": 3
     },
     "hooks": {
       "postPublish": [
