@@ -3,17 +3,19 @@
 
 
 Velpa is a mobile application that I developped from just the idea of connecting people who want to go hikking with local guides
-I had to learn everything from scratch like [react native](https://reactnative.dev/) and how to manage the backend side that is done with [amazon web sevices](https://aws.amazon.com/es/). It was a hard process, sometimes wanted to give up but my resiliency didn't let me do it and after a year of investigating and faillures I had my nice product
-
+I had to learn everything from scratch like [react native](https://reactnative.dev/) and how to manage the backend side that is done with [amazon web sevices](https://aws.amazon.com/es/).
 
 
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
 
 # Screenshots
 ![Screenshot_1665038990](https://user-images.githubusercontent.com/24461382/194241284-d7e51c98-310f-4faf-a98f-e7e0cfc4e361.png)
-![Screenshot_1665039164](https://user-images.githubusercontent.com/24461382/194241291-b74f1c8d-8da2-4fcd-b515-74e9ea0dbc07.png)
 ![Screenshot_1665039541](https://user-images.githubusercontent.com/24461382/194241298-7c254b32-521f-4bd9-b017-801206286686.png)
+![Screenshot_1665038860](https://user-images.githubusercontent.com/24461382/194241967-fc46a3bc-f9d4-4471-8597-27ac9cf5e9f3.png)
 ![Screenshot_1665039063](https://user-images.githubusercontent.com/24461382/194241300-bc514bc3-c27e-42d2-aca7-f9a54c524999.png)
+
+#Videos
+[First 2 pages](https://user-images.githubusercontent.com/24461382/194230345-ffec53ae-0864-41e7-968b-feafc4041a5e.mp4)
 
 
 # Functionalities
@@ -94,4 +96,3 @@ Here guides can create a new event and it request all that is necesary for users
 * Meeting point
 * Other details
 
-[First 2 pages](https://user-images.githubusercontent.com/24461382/194230345-ffec53ae-0864-41e7-968b-feafc4041a5e.mp4)
