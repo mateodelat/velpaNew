@@ -44,7 +44,11 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
   * See available dates by the guide
 
 * Guides: Get all guides info
-![Home screen](https://user-images.githubusercontent.com/24461382/194242983-1101598c-8115-473e-b456-ff6989c4e4c8.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24461382/194242983-1101598c-8115-473e-b456-ff6989c4e4c8.png" alt="Home screen"/>
+</p>
+
 
 ### Payments
 Velpa uses a really secure payment integration with [stripe](https://stripe.com/) for handling electronic or in cash payments.
@@ -54,8 +58,10 @@ Velpa uses a really secure payment integration with [stripe](https://stripe.com/
 * Application fees
 * Recurring subscriptions
 * Tax reporting
-![Pagar screen](https://user-images.githubusercontent.com/24461382/194242984-d2bb93fe-2ec7-4499-a225-e61e7c25eda5.png)
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24461382/194242984-d2bb93fe-2ec7-4499-a225-e61e7c25eda5.png" alt="Payments"/>
+</p>
 
 
 
@@ -64,7 +70,11 @@ Velpa uses a really secure payment integration with [stripe](https://stripe.com/
 * Look by name
 * Animation on slide and onPress on marker
 
-![Map screen](https://user-images.githubusercontent.com/24461382/194242979-9115db67-5568-415e-91b1-b1e56cd39867.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24461382/194242979-9115db67-5568-415e-91b1-b1e56cd39867.png" alt="Map screen"/>
+</p>
+
 
 
 ### Notifications/messages
@@ -75,7 +85,11 @@ Also there is a messaging center that is useful for comunication between all per
 * Chat groups in app
 * Notification on new message and on buisness logic
 * Phone notifications
-![Notifications screen](https://user-images.githubusercontent.com/24461382/194242975-48a6530e-6ddd-4a44-b824-54559a01ae3a.png)
+
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24461382/194242975-48a6530e-6ddd-4a44-b824-54559a01ae3a.png" alt="Map screen"/>
+</p>
 
 
 ### Profile
@@ -86,7 +100,11 @@ Also there is a messaging center that is useful for comunication between all per
 * Levels for app guides
 * Allowed to bring a certain number of persons
 
-![Profile screen](https://user-images.githubusercontent.com/24461382/194242971-b2431747-c7c1-440f-8078-dcb308882336.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/24461382/194242971-b2431747-c7c1-440f-8078-dcb308882336.png" alt="Profile screen"/>
+</p>
+
 
 ## Get guide data:
 This is the flow for validating a guide with admins.
