@@ -14,7 +14,7 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 
 ##Auth:
 
-![Sign in](https://user-images.githubusercontent.com/24461382/194223886-f70db00e-1de3-4562-9692-00661e395671.mp4 "Sign in to the app")
+[Sign in](https://user-images.githubusercontent.com/24461382/194223886-f70db00e-1de3-4562-9692-00661e395671.mp4)
 
 When a user join the app, it is mandatory to sign in for continuing.
 For this integration, I have used [amazon cognito](https://aws.amazon.com/es/cognito/) for handling users and identities and have integrated it with [google OAuth](https://docs.amplify.aws/lib/auth/social/q/platform/js/#configure-auth-category)
