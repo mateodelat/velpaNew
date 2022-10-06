@@ -9,13 +9,16 @@ I had to learn everything from scratch like [react native](https://reactnative.d
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
 
 # Screenshots
-![Screenshot_1665038990](https://user-images.githubusercontent.com/24461382/194241284-d7e51c98-310f-4faf-a98f-e7e0cfc4e361.png)
-![Screenshot_1665039541](https://user-images.githubusercontent.com/24461382/194241298-7c254b32-521f-4bd9-b017-801206286686.png)
-![Screenshot_1665038860](https://user-images.githubusercontent.com/24461382/194241967-fc46a3bc-f9d4-4471-8597-27ac9cf5e9f3.png)
-![Screenshot_1665039063](https://user-images.githubusercontent.com/24461382/194241300-bc514bc3-c27e-42d2-aca7-f9a54c524999.png)
+![Screenshot_1665039063](https://user-images.githubusercontent.com/24461382/194242971-b2431747-c7c1-440f-8078-dcb308882336.png)
+![Screenshot_1665039032](https://user-images.githubusercontent.com/24461382/194242975-48a6530e-6ddd-4a44-b824-54559a01ae3a.png)
+![Screenshot_1665038990](https://user-images.githubusercontent.com/24461382/194242979-9115db67-5568-415e-91b1-b1e56cd39867.png)
+![Screenshot_1665039164](https://user-images.githubusercontent.com/24461382/194242980-5ad6bb21-a8b4-4d58-a307-74ddcb309364.png)
+![Screenshot_1665038860](https://user-images.githubusercontent.com/24461382/194242983-1101598c-8115-473e-b456-ff6989c4e4c8.png)
+![Screenshot_1665039541](https://user-images.githubusercontent.com/24461382/194242984-d2bb93fe-2ec7-4499-a225-e61e7c25eda5.png)
 
 #Videos
 [First 2 pages](https://user-images.githubusercontent.com/24461382/194230345-ffec53ae-0864-41e7-968b-feafc4041a5e.mp4)
+[![Velpa promo video]([https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg](https://www.youtube.com/watch?v=Wyr_c_Jb4wY&ab_channel=Al%C3%A1ndeLimelette))]([https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE](https://www.youtube.com/watch?v=Wyr_c_Jb4wY&ab_channel=Al%C3%A1ndeLimelette))
 
 
 # Functionalities
@@ -23,15 +26,9 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 ## Auth:
 When a user join the app, it is mandatory to sign in for continuing.
 For this integration, I have used [amazon cognito](https://aws.amazon.com/es/cognito/) for handling users and identities and have integrated it with [google OAuth](https://docs.amplify.aws/lib/auth/social/q/platform/js/#configure-auth-category)
-
-I managed to normalize cognito accounts and google accounts with a cloud function
-
-[Sign in](https://user-images.githubusercontent.com/24461382/194223886-f70db00e-1de3-4562-9692-00661e395671.mp4, "Users sign in")
-
-
-
-[Sign in](https://www.youtube.com/watch?v=BYUy1yvjHxE&t=2s&ab_channel=LifeatGoogle, "Users sign in")
-
+* Email verification code
+* Reset password
+* 
 
 ## Client pages:
 In the main page there are some adventures created by the guides in the app.
