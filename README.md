@@ -20,10 +20,7 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 
 
 
-### Home
 https://user-images.githubusercontent.com/24461382/194245155-5ed5b5ff-0057-412c-a7a7-5db37ad8076d.mp4
-
-### Add date
 https://user-images.githubusercontent.com/24461382/194246395-1b6d4b78-ee74-4fa1-b90c-355fbd4f6c61.mp4
 
 
