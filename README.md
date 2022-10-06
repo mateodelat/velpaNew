@@ -20,9 +20,14 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 
 
 
+Home
+https://user-images.githubusercontent.com/24461382/194245155-5ed5b5ff-0057-412c-a7a7-5db37ad8076d.mp4
 
-![First 2 pages](https://user-images.githubusercontent.com/24461382/194244849-6bc8b636-3284-4c18-8376-86bb699f8ea5.mp4)
-![Velpa promo video](https://www.youtube.com/watch?v=Wyr_c_Jb4wY&ab_channel=Al%C3%A1ndeLimelette)
+Add date
+https://user-images.githubusercontent.com/24461382/194246395-1b6d4b78-ee74-4fa1-b90c-355fbd4f6c61.mp4
+
+
+
 
 
 # Functionalities
@@ -32,7 +37,7 @@ When a user join the app, it is mandatory to sign in for continuing.
 For this integration, I have used [amazon cognito](https://aws.amazon.com/es/cognito/) for handling users and identities and have integrated it with [google OAuth](https://docs.amplify.aws/lib/auth/social/q/platform/js/#configure-auth-category)
 * Email verification code
 * Reset password
-* 
+* Google sign in
 
 ## Client pages:
 In the main page there are some adventures created by the guides in the app.
