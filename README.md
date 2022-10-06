@@ -1,4 +1,3 @@
-![velpa](https://github.com/mateodelat/velpaNew/blob/master/assets/icon.png "velpa")
 
 # velpa
 
