@@ -28,45 +28,45 @@ Using [react navigation](https://reactnavigation.org/) for handling user interfa
 There are 4 main sections to handle buisness logic (home, map looking, notifications/messages and profile)
 
 ### Home
-*Adertising: Section with advertizing for partners with animation
-*Adventures: Fetch all adventures that has not passed certain date and make sure it is sorted by relevancy using user location as a parameter.
-  *Book into an adventure
-  *See booked persons
-  *Card payments or cash for a reservation
+* Adertising: Section with advertizing for partners with animation
+* Adventures: Fetch all adventures that has not passed certain date and make sure it is sorted by relevancy using user location as a parameter.
+  * Book into an adventure
+  * See booked persons
+  * Card payments or cash for a reservation
   ![Payments](https://user-images.githubusercontent.com/24461382/194235499-4afa0787-460d-4c17-8c65-48d5a9852e4d.png)
-    *Stripe integration
-    *Payments directly to the guide
-    *Taking app fee
+    * Stripe integration
+    * Payments directly to the guide
+    * Taking app fee
 
-  *See available dates by the guide
+  * See available dates by the guide
   ![Dates ](https://user-images.githubusercontent.com/24461382/194235237-9f40d806-9eb9-4cbe-b692-4c12b26c43f7.png)
 
-*Guides: Get all guides info
+* Guides: Get all guides info
 ![Home screen](https://user-images.githubusercontent.com/24461382/194233257-dcff4d91-9043-4925-ac29-ae9c04603f49.png)
 
 
 ### Adventures by map
-*Google maps API credentials and integration in react native
-*Look by name
-*Animation on slide and onPress on marker
-![Map screen](https://user-images.githubusercontent.com/24461382/194233564-e3902108-b4cb-47fa-b8e1-85086ad842e0.png)
+* Google maps API credentials and integration in react native
+* Look by name
+* Animation on slide and onPress on marker
+![Map screen](https://user-images.githubusercontent.com/24461382/194236484-9a8a497d-8e7e-434e-b7a3-8688cfd34c9f.png)
 
 
 ### Notifications/messages
-*Chat groups in app
-*Notification on new message and on buisness logic
-*Phone notifications
+* Chat groups in app
+* Notification on new message and on buisness logic
+* Phone notifications
 ![Notifications screen](https://user-images.githubusercontent.com/24461382/194233674-4e716f01-9d95-45f4-93b3-1dce8ed0634e.png)
 ![Chats](https://user-images.githubusercontent.com/24461382/194233800-1bbe4aa1-34a6-47eb-8d87-ada378a749a6.png)
 
 
 ### Profile
 
-*Ratings system
-*See my next trips
-*Payments info
-*Levels for app guides
-*Allowed to bring a certain number of persons
+* Ratings system
+* See my next trips
+* Payments info
+* Levels for app guides
+* Allowed to bring a certain number of persons
 ![Profile screen](https://user-images.githubusercontent.com/24461382/194233757-b2fcea6d-6ba2-4008-b61a-46398a2de2eb.png)
 
 
@@ -76,29 +76,22 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
 ## Get guide data:
 This is the flow for validating a guide with admins.
 
-*Get user ID
-*Selfie
-*Bank information
-*Await for a verifications with app verificators and if authorized be able to create a new date
+* Get user ID
+* Selfie
+* Bank information
+* Await for a verifications with app verificators and if authorized be able to create a new date
 
 
 
 ## Create a date in a mountain:
 Here guides can create a new event and it request all that is necesary for users to make a booking in a mountain
 
-*Date
-*Select mountain
-  *Guide can only add a date in mountains that he is allowed to
-*Price
-*Meeting point
-*Other details
+* Date
+* Select mountain
+  * Guide can only add a date in mountains that he is allowed to
+* Price
+* Meeting point
+* Other details
 
 ![Select mountain](https://user-images.githubusercontent.com/24461382/194234137-ce5dd7aa-60c3-457e-8f21-25940a6a48e3.png)
 ![Dates](https://user-images.githubusercontent.com/24461382/194234343-77e1b59a-ad54-40af-acd1-7955d1dae34f.png)
-
-
-
-
-
-
-
