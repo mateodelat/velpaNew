@@ -1,26 +1,22 @@
 
-# velpa
+# Velpa
 
-![Video app](https://github.com/quantopian/pyfolio/raw/master/docs/simple_tear_0.png "Example tear sheet created from a Zipline algo")
+Velpa is a mobile application that I developped from just the idea of connecting people who want to go hikking with local guides
+
+
+![Video app](https://github.com/mateodelat/mateodelat/blob/main/Velpa%20video%20desde%20play%20store_Trim.mp4)
 
 
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
 
+
+# Utilities
+
+##Auth:
 When a user join the app, it is mandatory to sign in for continuing:
 
 ![Video app](https://github.com/quantopian/pyfolio/raw/master/docs/simple_tear_0.png "Example tear sheet created from a Zipline algo")
 
-
-Also see [slides of a talk about
-pyfolio](https://nbviewer.jupyter.org/format/slides/github/quantopian/pyfolio/blob/master/pyfolio/examples/pyfolio_talk_slides.ipynb#/).
-
-## Installation
-
-To install pyfolio, run:
-
-```bash
-pip install pyfolio
-```
 
 #### Development
 
