@@ -2,9 +2,9 @@
 # Velpa
 
 Velpa is a mobile application that I developped from just the idea of connecting people who want to go hikking with local guides
+I had to learn everything from scratch like [react native](https://reactnative.dev/) and how to manage the backend side that is done with [amazon web sevices](https://aws.amazon.com/es/)
 
 
-![Video app](https://github.com/mateodelat/mateodelat/blob/main/Velpa%20video%20desde%20play%20store_Trim.mp4)
 
 
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
@@ -13,17 +13,16 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 # Utilities
 
 ##Auth:
-When a user join the app, it is mandatory to sign in for continuing:
 
-![Video app](https://github.com/quantopian/pyfolio/raw/master/docs/simple_tear_0.png "Example tear sheet created from a Zipline algo")
+![Sign in](https://user-images.githubusercontent.com/24461382/194223886-f70db00e-1de3-4562-9692-00661e395671.mp4 "Sign in to the app")
+
+When a user join the app, it is mandatory to sign in for continuing.
+For this integration, I have used [amazon cognito](https://aws.amazon.com/es/cognito/) for handling users and identities and have integrated it with [google OAuth](https://docs.amplify.aws/lib/auth/social/q/platform/js/#configure-auth-category)
 
 
 #### Development
 
 For development, you may want to use a [virtual environment](https://docs.python-guide.org/en/latest/dev/virtualenvs/) to avoid dependency conflicts between pyfolio and other Python projects you have. To get set up with a virtual env, run:
-```bash
-mkvirtualenv pyfolio
-```
 
 Next, clone this git repository and run `python setup.py develop`
 and edit the library files directly.
