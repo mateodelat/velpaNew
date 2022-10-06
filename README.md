@@ -49,6 +49,7 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
 * Google maps API credentials and integration in react native
 * Look by name
 * Animation on slide and onPress on marker
+
 ![Map screen](https://user-images.githubusercontent.com/24461382/194236484-9a8a497d-8e7e-434e-b7a3-8688cfd34c9f.png)
 
 
