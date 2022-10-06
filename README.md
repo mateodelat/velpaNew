@@ -21,6 +21,10 @@ I managed to normalize cognito accounts and google accounts with a cloud functio
 [Sign in](https://user-images.githubusercontent.com/24461382/194223886-f70db00e-1de3-4562-9692-00661e395671.mp4, "Users sign in")
 
 
+
+[Sign in](https://www.youtube.com/watch?v=BYUy1yvjHxE&t=2s&ab_channel=LifeatGoogle, "Users sign in")
+
+
 ## Client pages:
 In the main page there are some adventures created by the guides in the app.
 Using [react navigation](https://reactnavigation.org/) for handling user interface
