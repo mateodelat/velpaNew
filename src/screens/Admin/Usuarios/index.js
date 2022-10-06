@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { API, Auth, DataStore } from 'aws-amplify';
 import { Usuario } from '../../../models';
 import Search from './components/Search';
-import { Loading } from '../../../components/Loading';
+
 import { colorFondo, getImageUrl, moradoClaro, moradoOscuro } from '../../../../assets/constants';
 import { useNavigation } from '@react-navigation/native';
 import SelectorInput from '../../../components/SelectorInput';
@@ -212,7 +212,11 @@ export default () => {
                                     <View >
                                         {e.foto?.uri ?
                                             <Image source={{ uri: e.foto?.uri }} style={styles.image} /> :
-                                            <Feather name="user" size={24} color="black" />}
+                                            <View style={styles.image}
+                                            >
+                                                <Feather
+                                                    name="user" size={40} color="black" />
+                                            </View>}
                                     </View>
                                     <View style={styles.headerText}>
                                         <Text numberOfLines={1} style={styles.title}
@@ -419,6 +423,8 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         resizeMode: 'cover',
         marginRight: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     headerText: {

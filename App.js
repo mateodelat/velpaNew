@@ -58,11 +58,6 @@ export default function App() {
       redirectSignOut: url,
 
     },
-
-    DataStore: {
-      authModeStrategyType: AuthModeStrategyType.MULTI_AUTH
-    }
-
   });
 
 

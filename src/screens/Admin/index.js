@@ -27,9 +27,6 @@ export default ({ navigation }) => {
         try {
             await AsyncAlert("Experimental", "Alerta boton sensible seguro que quieres borrar:\n\n_Desilgar cuentas de stripe de los guias\n_Reservas y fechas\n_Chatrooms\n_Comisiones\n_Permisos de experiencia usuarios\n_Notificaciones")
 
-            Alert.alert("No se puede borrar", "No se pueden borrar las cuentas de stripe del usuario, no hay llave publica")
-            return
-
             setLoading(true)
             let promises = []
 

@@ -11,7 +11,6 @@ import {
 import ImageViewer from "react-native-image-zoom-viewer";
 
 import { Entypo } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Funcion para ver las imagenes en pantalla completa
