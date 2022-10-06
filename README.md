@@ -1,4 +1,3 @@
-
 # ![icon](https://user-images.githubusercontent.com/24461382/194229402-62f6b297-8761-46e0-b39a-cb6c58f683fb.png) Velpa 
 
 
@@ -8,12 +7,6 @@ I had to learn everything from scratch like [react native](https://reactnative.d
 
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
 
-# Screenshots
-![Home screen](https://user-images.githubusercontent.com/24461382/194242983-1101598c-8115-473e-b456-ff6989c4e4c8.png)
-![Screenshot_1665038990](https://user-images.githubusercontent.com/24461382/194242979-9115db67-5568-415e-91b1-b1e56cd39867.png)
-![Screenshot_1665039032](https://user-images.githubusercontent.com/24461382/194242975-48a6530e-6ddd-4a44-b824-54559a01ae3a.png)
-![Profile screen](https://user-images.githubusercontent.com/24461382/194242971-b2431747-c7c1-440f-8078-dcb308882336.png)
-![Screenshot_1665039541](https://user-images.githubusercontent.com/24461382/194242984-d2bb93fe-2ec7-4499-a225-e61e7c25eda5.png)
 
 # Videos
 
@@ -48,14 +41,22 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
 * Adventures: Fetch all adventures that has not passed certain date and make sure it is sorted by relevancy using user location as a parameter.
   * Book into an adventure
   * See booked persons
-  * Card payments or cash for a reservation
-    * Stripe integration
-    * Payments directly to the guide
-    * Taking app fee
-
   * See available dates by the guide
 
 * Guides: Get all guides info
+![Home screen](https://user-images.githubusercontent.com/24461382/194242983-1101598c-8115-473e-b456-ff6989c4e4c8.png)
+
+### Payments
+Velpa uses a really secure payment integration with [stripe](https://stripe.com/) for handling electronic or in cash payments.
+
+* Refunds
+* Send monney to guides
+* Application fees
+* Recurring subscriptions
+* Tax reporting
+![Pagar screen](https://user-images.githubusercontent.com/24461382/194242984-d2bb93fe-2ec7-4499-a225-e61e7c25eda5.png)
+
+
 
 
 ### Adventures by map
@@ -63,12 +64,18 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
 * Look by name
 * Animation on slide and onPress on marker
 
+![Map screen](https://user-images.githubusercontent.com/24461382/194242979-9115db67-5568-415e-91b1-b1e56cd39867.png)
 
 
 ### Notifications/messages
+In this section is the hub for all events that occur in the aplication. When a user books in your dates, you get a notification of new reservation. When you are authorized to add dates into a mountain, its another notice etc...
+
+Also there is a messaging center that is useful for comunication between all persons in a booking for any doubts about the mountain or the itinerary. The chat send notifications but once the adventure happened, no more messages are allowed to be sent
+
 * Chat groups in app
 * Notification on new message and on buisness logic
 * Phone notifications
+![Notifications screen](https://user-images.githubusercontent.com/24461382/194242975-48a6530e-6ddd-4a44-b824-54559a01ae3a.png)
 
 
 ### Profile
@@ -79,6 +86,7 @@ There are 4 main sections to handle buisness logic (home, map looking, notificat
 * Levels for app guides
 * Allowed to bring a certain number of persons
 
+![Profile screen](https://user-images.githubusercontent.com/24461382/194242971-b2431747-c7c1-440f-8078-dcb308882336.png)
 
 ## Get guide data:
 This is the flow for validating a guide with admins.
@@ -99,4 +107,5 @@ Here guides can create a new event and it request all that is necesary for users
 * Price
 * Meeting point
 * Other details
+
 
