@@ -1,5 +1,5 @@
 
-# Velpa ![icon](https://user-images.githubusercontent.com/24461382/194229402-62f6b297-8761-46e0-b39a-cb6c58f683fb.png)
+# ![icon](https://user-images.githubusercontent.com/24461382/194229402-62f6b297-8761-46e0-b39a-cb6c58f683fb.png) Velpa 
 
 
 Velpa is a mobile application that I developped from just the idea of connecting people who want to go hikking with local guides
@@ -8,6 +8,12 @@ I had to learn everything from scratch like [react native](https://reactnative.d
 
 
 Velpa is a mobile aplication for connecting people who wants to go into an adventure and local guides who know the route.
+
+# Screenshots
+![Screenshot_1665038990](https://user-images.githubusercontent.com/24461382/194241284-d7e51c98-310f-4faf-a98f-e7e0cfc4e361.png)
+![Screenshot_1665039164](https://user-images.githubusercontent.com/24461382/194241291-b74f1c8d-8da2-4fcd-b515-74e9ea0dbc07.png)
+![Screenshot_1665039541](https://user-images.githubusercontent.com/24461382/194241298-7c254b32-521f-4bd9-b017-801206286686.png)
+![Screenshot_1665039063](https://user-images.githubusercontent.com/24461382/194241300-bc514bc3-c27e-42d2-aca7-f9a54c524999.png)
 
 
 # Functionalities
