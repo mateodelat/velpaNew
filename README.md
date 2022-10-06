@@ -17,7 +17,11 @@ Velpa is a mobile aplication for connecting people who wants to go into an adven
 
 # Videos
 
-![First 2 pages](https://user-images.githubusercontent.com/24461382/194230345-ffec53ae-0864-41e7-968b-feafc4041a5e.mp4)
+
+
+
+
+![First 2 pages](https://user-images.githubusercontent.com/24461382/194244849-6bc8b636-3284-4c18-8376-86bb699f8ea5.mp4)
 ![Velpa promo video](https://www.youtube.com/watch?v=Wyr_c_Jb4wY&ab_channel=Al%C3%A1ndeLimelette)
 
 
