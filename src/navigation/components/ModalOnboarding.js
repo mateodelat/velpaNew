@@ -26,7 +26,7 @@ export default function ModalOnboarding({
                             blurRadius={7}
 
                             style={styles.image}
-                            source={require("../../../assets/IMG/onboarding/2.png")} />,
+                            source={{ uri: "https://static.wixstatic.com/media/419deb_dc19b503d1fb4b179bfcfc64f9286f26~mv2.png" }} />,
                         title: 'Descubre lugares increibles',
                         subtitle: 'Encuentra las mejores experiencias al aire libre cerca de ti',
                     },
@@ -36,7 +36,7 @@ export default function ModalOnboarding({
                             blurRadius={7}
 
                             style={styles.image}
-                            source={require("../../../assets/IMG/onboarding/1.png")} />,
+                            source={{ uri: "https://static.wixstatic.com/media/419deb_f02626a8e5d54b7a942fdcb834ded747~mv2.png" }} />,
                         title: 'Se guia de Velpa',
                         subtitle: 'Disfruta de hacer lo que mas disfrutas mientras ganas dinero',
                     },
@@ -47,7 +47,7 @@ export default function ModalOnboarding({
 
 
                             style={styles.image}
-                            source={require("../../../assets/IMG/onboarding/3.png")} />,
+                            source={{ uri: "https://static.wixstatic.com/media/419deb_e391df79dfad4120b7951d8de9b25c8e~mv2.png" }} />,
                         title: 'Te escuchamos',
                         subtitle: 'Escoge la experiencia que mas se adapte a tus necesidades y a tu presupuesto',
                     }
@@ -56,12 +56,12 @@ export default function ModalOnboarding({
                 skipLabel={"Saltar"}
 
                 showDone={true}
-                DoneButtonComponent={({ isLight, onPress }) => <Entypo
-                    onPress={onPress}
-                    style={{ marginRight: 10, }}
+                DoneButtonComponent={() => <Entypo
+                    onPress={doneViewing}
+                    style={{ paddingRight: 20, padding: 15 }}
                     name="check"
                     size={30}
-                    color={isLight ? "black" : "white"}
+                    color={"#fff"}
                 />}
 
                 onSkip={doneViewing}

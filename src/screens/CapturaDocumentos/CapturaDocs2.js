@@ -44,7 +44,7 @@ export default ({ navigation, route }) => {
 
 
 
-    const [direccion, setDireccion] = useState(route.params.direccion);
+    const [direccion, setDireccion] = useState(route.params.direccion ? route.params.direccion : {});
     const [errorDireccion, setErrorDireccion] = useState({});
 
     // Variables comunes
@@ -188,7 +188,7 @@ export default ({ navigation, route }) => {
             return
         }
 
-        if (!agencia && !DOB.dia) {
+        if (!agencia && !DOB.dia || !DOB.mes || !DOB.año) {
             setErrorDOB(true)
             Alert.alert("Error", "Agrega la fecha de nacimiento")
             return
@@ -197,7 +197,7 @@ export default ({ navigation, route }) => {
 
 
         // Verificar direccion
-        if (!direccion.line1) {
+        if (!direccion?.line1) {
             setErrorDireccion({ ...errorDireccion, line1: true })
             Alert.alert("Error", "Por favor agrega la direccion")
             return
@@ -245,7 +245,7 @@ export default ({ navigation, route }) => {
         setDOBVisible(false)
 
         const dia = date.getUTCDate()
-        const mes = date.getUTCMonth()
+        const mes = date.getUTCMonth() + 1
         const año = date.getUTCFullYear()
 
         setDefaultDate(date)
@@ -420,7 +420,7 @@ export default ({ navigation, route }) => {
                             <View style={styles.lineVertical} />
 
                             {/* Mes */}
-                            <Text style={styles.diaContainer}>{DOB.mes ? meses[DOB.mes] : "MM"}</Text>
+                            <Text style={styles.diaContainer}>{DOB.mes ? meses[DOB.mes - 1] : "MM"}</Text>
 
                             <View style={styles.lineVertical} />
 
@@ -468,7 +468,7 @@ export default ({ navigation, route }) => {
                             <TextInput
                                 style={{ flex: 1, }}
                                 onTouchStart={() => setErrorDireccion({ ...errorDireccion, line1: false })}
-                                value={direccion.line1}
+                                value={direccion?.line1}
 
                                 textContentType="fullStreetAddress"
                                 autoCompleteType="street-address"
@@ -476,7 +476,7 @@ export default ({ navigation, route }) => {
                                 onChangeText={(r) => setDireccion({ ...direccion, line1: r })}
                             />
 
-                            {!!(direccion.line1) && <Feather
+                            {!!(direccion?.line1) && <Feather
                                 style={styles.cancelInput}
                                 name="x"
                                 size={24}

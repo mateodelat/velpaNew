@@ -2,9 +2,11 @@
     API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
     API_VELPAAPI_GRAPHQLAPIIDOUTPUT
     API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+    AUTH_VELPAAUTH_USERPOOLID
     ENV
     REGION
 Amplify Params - DO NOT EDIT */
+
 
 const AWS = require('aws-sdk')
 const cognito = new AWS.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' })
@@ -22,6 +24,11 @@ const crearUsr = `
       ) {
         createUsuario(input: $input) {
           id
+          nombre
+          apellido
+          foto
+          nickname
+          email
         }
       }
     `
@@ -30,21 +37,54 @@ const crearNotificacion = `
         $input: CreateNotificacionInput!
       ) {
         createNotificacion(input: $input) {
-          id
+            id
+            tipo
+            titulo
+            descripcion
+            usuarioID
         }
       }
     `;
 
+function generateProfilePicture(nombre) {
+    const listaColores = [
+        "f34856",
+        "273440",
+        "000000",
+        "f01829",
+        "ffbf5e",
+        "577590",
+        "F4F6F8",
+        "cccccc",
+    ];
+    const randomColor = Math.round(Math.random() * (listaColores.length - 1))
+    const randomLenght = Math.round(Math.random()) + 1
+    let bgc = listaColores[randomColor];
+
+
+    let color = randomColor > 3 ? "000" : "fff";
+
+    // Si no hay color de fondo seleccionar blanco y negro
+    if (!bgc || !color) {
+        bgc = "fff"
+        color = "000"
+    }
+
+
+    return `https://ui-avatars.com/api/?name=${nombre}&bold=true&background=${bgc}&color=${color}&length=${randomLenght}`;
+}
 
 function crearUsuario(attributes, sub) {
+
     const input = {
         nombre: attributes.name ? attributes.name : attributes.nickname,
         apellido: attributes.family_name ? attributes.family_name : null,
         id: sub,
-        foto: attributes.picture ? attributes.picture : null,
+        foto: attributes.picture ? attributes.picture : generateProfilePicture(attributes.name ? attributes.name : attributes.nickname),
         nickname: attributes.nickname,
         email: attributes.email
     }
+
     console.log("Atributos recibidos en crear usuario: ", input)
 
     if (input.id) {

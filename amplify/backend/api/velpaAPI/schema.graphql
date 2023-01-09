@@ -67,9 +67,6 @@ type Reserva
   fechaID: ID @index(name: "byFecha")
   usuarioID: ID @index(name: "byUsuario")
 
-  fecha: Fecha @belongsTo
-  usuario: Usuario @belongsTo
-
   guiaID: ID
 
   tipoPago: tipoPago
@@ -121,10 +118,9 @@ type Fecha
   dateModified: Boolean
 
   aventuraID: ID! @index(name: "byAventura")
-  usuarioID: ID! @index(name: "byUsuario")
+  aventuraFechasId: ID
 
-  aventura: Aventura @belongsTo
-  usuario: Usuario @belongsTo
+  usuarioID: ID! @index(name: "byUsuario")
 
   dificultad: Int
 
@@ -220,13 +216,11 @@ type Comision
   pagadoEnReservaID: ID
 
   reservaID: ID
-  reserva: Reserva @belongsTo
 
   # Si fue una cancelacion de fecha
   fechaID: ID
 
   usuarioID: ID @index(name: "byUsuario")
-  usuario: Usuario @belongsTo
 }
 
 type ChatRoom
@@ -397,9 +391,6 @@ type ChatRoomUsuarios
   chatRoomParticipantesId: ID! @index(name: "byChatRoom")
   usuarioChatRoomsId: ID! @index(name: "byUsuario")
   newMessages: Int
-
-  chatroom: ChatRoom @belongsTo
-  usuario: Usuario @belongsTo
 }
 
 ########################################################

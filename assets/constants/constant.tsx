@@ -227,7 +227,7 @@ export async function notificacionesRecordatorio({
     const descripcion1Hora = cliente
       ? "Tu experiencia en " +
         tituloAventura +
-        " es en menos de 1 hora, procura estar en el punto de reunion 15 minutos antes par que no te dejen!!" +
+        " es en menos de 1 hora, procura estar en el punto de reunion 15 minutos antes para que no te dejen!!" +
         (tipoPago === TipoPago.EFECTIVO
           ? "\nRecuerda llevar el pago de $" +
             precioTotal +

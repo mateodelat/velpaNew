@@ -6,6 +6,7 @@ email
 rfc
 first_name
 last_name
+
 phone
 address:{
     city,
@@ -275,10 +276,11 @@ exports.handler = async (event) => {
         }
     } catch (error) {
         console.log(error)
+        const msg = error.code ? error.code : error.message ? error.message : error
 
         return {
             errors: true,
-            id: error.code
+            id: msg
         }
 
     }

@@ -166,8 +166,6 @@ export default () => {
                 })
             })
 
-        console.log(not)
-        return
 
         handleVerNotificacion(index)
 

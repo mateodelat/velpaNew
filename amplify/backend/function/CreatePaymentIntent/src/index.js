@@ -1,6 +1,7 @@
 const stripe = require("stripe")(process.env.STRIPE_KEY)
 
 exports.handler = async (event) => {
+
     try {
         const { arguments } = event
 

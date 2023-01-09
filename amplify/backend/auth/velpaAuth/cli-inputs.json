@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "velpafd44966a_identitypool_fd44966a",
+    "identityPoolName": "velpa9e7912e0_identitypool_9e7912e0",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "velpafd44966a",
-    "userPoolName": "velpafd44966a_userpool_fd44966a",
+    "resourceNameTruncated": "velpa9e7912e0",
+    "userPoolName": "velpa9e7912e0_userpool_9e7912e0",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,28 +31,19 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "velpaAfd44966a_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "velpaA9e7912e0_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "fd44966a",
+    "sharedId": "9e7912e0",
     "resourceName": "velpaAuth",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
-    "thirdPartyAuth": true,
-    "authProviders": [
-      "accounts.google.com"
-    ],
     "usernameAttributes": [
       "email"
     ],
     "userPoolGroups": false,
     "adminQueries": true,
     "triggers": {},
-    "hostedUI": true,
-    "hostedUIDomainName": "velpaauth",
-    "authProvidersUserPool": [
-      "Google"
-    ],
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "hostedUI": false,
     "userPoolGroupList": [],
     "adminQueryGroup": "Admin",
     "serviceName": "Cognito",
@@ -72,12 +63,13 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "googleClientId": "538568781128-elpj4aa2tn74sb4to78hersqhlft32n2.apps.googleusercontent.com",
-    "oAuthSecretsPathAmplifyAppId": "d22ws0aq3y06vn",
     "parentStack": {
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"velpa://\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"exp://exp.host/@mateodelat/Velpa/\",\"velpa://\"]}"
+    "authProviders": [
+      "accounts.google.com"
+    ],
+    "thirdPartyAuth": true
   }
 }

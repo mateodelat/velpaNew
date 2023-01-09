@@ -4,7 +4,7 @@
     "slug": "Velpa",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon512.png",
+    "icon": "./assets/icon.png",
     "scheme": "velpa",
     "splash": {
       "image": "./assets/splash.png",
@@ -22,15 +22,17 @@
     "ios": {
       "supportsTablet": false,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription ": "Velpa utiliza tu ubicacion para buscar experiencias cerca de ti"
+        "NSLocationWhenInUseUsageDescription ": "$(PRODUCT_NAME) utiliza tu ubicacion para buscar experiencias cerca de ti. ",
+        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) accede a tus fotos para subir imagenes de tu galeria por ejemplo cuando quieres cambiar la foto de perfil o cuando agregas una imagen de evento.",
+        "NSPhotoLibraryAddUsageDescription": "$(PRODUCT_NAME) necesita permiso para poder guardar la foto del boleto en tu galeria",
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) necesita permiso de camara para escanear boletos o subir imagenes que tomes a tu foto de perfil."
       },
       "buildNumber": "0.0.0",
       "config": {
-        "googleMapsApiKey": "AIzaSyDce3_ZI_6A4tOwKjJFnlvv7WLLUUls7bw"
+        "googleMapsApiKey": "AIzaSyASRPj50_15Bf4VUPgrR33DZ5ywiKDYZqg"
       }
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -48,9 +50,10 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDiyuMnwhdN15eAwUJjBBbUses8hWS3kO8"
+          "apiKey": "AIzaSyASRPj50_15Bf4VUPgrR33DZ5ywiKDYZqg"
         }
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.adventures.velpa",
       "versionCode": 3
     },

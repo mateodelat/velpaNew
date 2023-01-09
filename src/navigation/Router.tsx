@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -68,41 +68,48 @@ export default () => {
   // });
 
   async function registerForPushNotificationsAsync() {
-    let token: Notifications.ExpoPushToken["data"];
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync())?.data;
+    try {
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: moradoOscuro,
+        });
+      }
 
-    if (token) {
-      // Subir a datastore el token
-      const usuario = await DataStore.query(Usuario, await getUserSub());
-      usuario &&
-        (await DataStore.save(
-          Usuario.copyOf(usuario, (usr) => {
-            usr.notificationToken = token;
-          })
-        ));
-    }
+      let token: Notifications.ExpoPushToken["data"];
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      token = (await Notifications.getExpoPushTokenAsync())?.data;
 
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: moradoOscuro,
-      });
-    }
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
 
-    return token;
+      if (token) {
+        // Subir a datastore el token
+        const usuario = await DataStore.query(Usuario, await getUserSub());
+        // Si es el mismo, no hacer nada
+
+        if (usuario.notificationToken === token) return;
+        console.log("Token de notificaciones actualizado a " + token);
+
+        usuario &&
+          (await DataStore.save(
+            Usuario.copyOf(usuario, (usr) => {
+              usr.notificationToken = token;
+            })
+          ));
+      }
+
+      return token;
+    } catch (error) {
+      console.log("Error subiendo token del usuario");
+      console.log(error);
+    }
   }
 
   useEffect(() => {

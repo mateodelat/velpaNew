@@ -1,7 +1,7 @@
 {
   "resourceName": "storage",
-  "policyUUID": "9bf4dfc7",
-  "bucketName": "velpabucket",
+  "policyUUID": "deffe0aa",
+  "bucketName": "velpa42e685acc3e9434897218e4adda8cb97",
   "storageAccess": "auth",
   "guestAccess": [],
   "authAccess": [

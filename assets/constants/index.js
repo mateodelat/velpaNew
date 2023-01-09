@@ -1734,7 +1734,7 @@ export const moradoClaro = '#1ed095'
 export const tinto = '#ba1b50'
 export const moradoOscuro = '#1BBA85'
 export const verdeTurquesa = '#1BBA85'
-export const salmon = '#FF8E72'
+// export const salmon = '#FF8E72'
 
 export const shadowMarcada = {
   shadowColor: "#000",
@@ -1763,7 +1763,7 @@ export const verificarUbicacion = async () => {
 
 }
 
-export const mapPlacesKey = "AIzaSyAMO0bWIDnoKqunvXjCJ65qgZdb5FBtf_s"
+export const mapPlacesKey = "AIzaSyASRPj50_15Bf4VUPgrR33DZ5ywiKDYZqg"
 
 
 export const shadowMedia = {

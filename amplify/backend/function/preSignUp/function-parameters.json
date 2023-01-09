@@ -1,6 +1,10 @@
 {
-  "lambdaLayers": [],
   "permissions": {
+    "api": {
+      "velpaAPI": [
+        "Mutation"
+      ]
+    },
     "auth": {
       "velpaAuth": [
         "create",
@@ -8,11 +12,7 @@
         "update",
         "delete"
       ]
-    },
-    "api": {
-      "velpaAPI": [
-        "Mutation"
-      ]
     }
-  }
+  },
+  "lambdaLayers": []
 }
