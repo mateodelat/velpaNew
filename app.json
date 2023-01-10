@@ -18,7 +18,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "infoPlist": {
@@ -30,7 +32,8 @@
       "buildNumber": "0.0.0",
       "config": {
         "googleMapsApiKey": "AIzaSyASRPj50_15Bf4VUPgrR33DZ5ywiKDYZqg"
-      }
+      },
+      "bundleIdentifier": "com.adventures.velpa"
     },
     "android": {
       "permissions": [
@@ -68,6 +71,9 @@
     "extra": {
       "bugsnag": {
         "apiKey": "6adc1a407ef1adec3c9d9ad7b94a5b03"
+      },
+      "eas": {
+        "projectId": "26e2342c-91e2-431c-9b73-5d823892fe5d"
       }
     }
   }

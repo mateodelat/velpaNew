@@ -120,7 +120,7 @@ export default function ({
 const styles = StyleSheet.create({
     headerContainer: {
         position: 'absolute',
-        top: 20,
+        top: 15,
         left: 20,
         right: 20,
 

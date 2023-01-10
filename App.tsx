@@ -64,12 +64,12 @@ export default function App() {
     if (info) {
       const { email, nickname, sub } = info.attributes;
 
-      // Bugsnag.setUser(sub, email, nickname);
+      Bugsnag.setUser(sub, email, nickname);
     }
   }
 
   useEffect(() => {
-    // Bugsnag.pauseSession();
+    Bugsnag.start();
 
     checkOnboarding();
 
