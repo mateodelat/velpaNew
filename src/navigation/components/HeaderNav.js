@@ -5,14 +5,18 @@ import { Feather } from '@expo/vector-icons';
 
 import { useNavigation } from '@react-navigation/native';
 import { moradoOscuro } from '../../../assets/constants';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default ({ title }) => {
 
     const navigation = useNavigation()
 
+    const { top } = useSafeAreaInsets()
     return (
-        <SafeAreaView style={styles.header}>
+        <SafeAreaView style={{
+            ...styles.header,
+            height: top + 60,
+        }}>
 
             <View style={{
                 marginTop: 10,

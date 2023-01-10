@@ -37,8 +37,7 @@ export default ({ navigation }) => {
         const chatRooms = await Promise.all((await DataStore.query(ChatRoomUsuarios)
 
         )
-            .filter(e => e.usuario.id === sub && e.chatroom)
-            .sort((a, b) => a.chatroom.updatedAt < b.chatroom.updatedAt)
+            .filter(e => e.usuarioID === sub && e.chatroom)
             .map(async e => {
 
                 // Mensajes nuevos en la relacion de usuario chat

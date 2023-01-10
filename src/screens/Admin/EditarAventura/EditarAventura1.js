@@ -127,8 +127,15 @@ export default ({ navigation, route }) => {
             duracion: aventura.duracion,
 
             // Parametros que dependen de la categoria para enviarse
-            distanciaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? distanciaRecorrida : null,
-            altimetriaRecorrida: (categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO) ? altimetriaRecorrida : null,
+            distanciaRecorrida: (
+                categoria === Categorias.ALPINISMO
+                || categoria === Categorias.CICLISMO
+                || categoria === Categorias.MOTO
+                || categoria === Categorias.SKI) ? distanciaRecorrida : null,
+            altimetriaRecorrida: (
+                categoria === Categorias.ALPINISMO
+                || categoria === Categorias.CICLISMO
+                || categoria === Categorias.SKI) ? altimetriaRecorrida : null,
 
             categoria,
             titulo: aventura.titulo,
@@ -226,8 +233,9 @@ export default ({ navigation, route }) => {
             ubicacionNombre,
         } = ubi
         const altitud =
-            aventura.categoria === Categorias.APLINISMO ||
-                aventura.categoria === Categorias.CICLISMO ? await getPlaceElevation(latitude, longitude) : null
+            aventura.categoria === Categorias.ALPINISMO ||
+                aventura.categoria === Categorias.CICLISMO
+                || aventura.categoria === Categorias.SKI ? await getPlaceElevation(latitude, longitude) : null
 
         const coordenadas = {
             latitude,
@@ -532,9 +540,12 @@ export default ({ navigation, route }) => {
                             </View>
 
                             {/* Distancia */}
-                            {categoria === Categorias.APLINISMO || categoria === Categorias.CICLISMO ? <View style={{
-                                flex: 1,
-                            }}>
+                            {categoria === Categorias.ALPINISMO ||
+                                categoria === Categorias.CICLISMO ||
+                                categoria === Categorias.MOTO ||
+                                categoria === Categorias.SKI ? <View style={{
+                                    flex: 1,
+                                }}>
                                 <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Distancia inicio a fin</Text>
 
                                 <View style={{
@@ -583,39 +594,41 @@ export default ({ navigation, route }) => {
                         }}>
 
                             {/* Ascenso recorrido */}
-                            {(categoria === Categorias.CICLISMO || categoria === Categorias.APLINISMO) && <View>
-                                <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Desnivel recorrido</Text>
-                                <View style={styles.row}>
-                                    <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', marginRight: 8, }}>
-                                        <Image source={require("../../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
-                                    </View>
-                                    <TextInput
-                                        value={String(Number(aventura.altimetriaRecorrida))}
-                                        maxLength={4}
-                                        placeholderTextColor={"#00000040"}
-                                        placeholder="750"
-                                        keyboardType={"numeric"}
-                                        onChangeText={(e) => {
-                                            setAventura({
-                                                ...aventura,
-                                                altimetriaRecorrida: Number(e)
-                                            })
-                                        }}
-                                        style={[styles.textInput, {
-                                            flex: 0,
-                                            width: 60,
-                                            textAlign: 'center',
+                            {(categoria === Categorias.CICLISMO ||
+                                categoria === Categorias.ALPINISMO ||
+                                categoria === Categorias.SKI) && <View>
+                                    <Text style={[styles.captionTxt, { textAlign: 'right', }]}>Desnivel recorrido</Text>
+                                    <View style={styles.row}>
+                                        <View style={{ width: 35, height: 27, justifyContent: 'center', alignItems: 'center', marginRight: 8, }}>
+                                            <Image source={require("../../../../assets/icons/elevation.png")} style={{ height: 28, width: 25, }} />
+                                        </View>
+                                        <TextInput
+                                            value={String(Number(aventura.altimetriaRecorrida))}
+                                            maxLength={4}
+                                            placeholderTextColor={"#00000040"}
+                                            placeholder="750"
+                                            keyboardType={"numeric"}
+                                            onChangeText={(e) => {
+                                                setAventura({
+                                                    ...aventura,
+                                                    altimetriaRecorrida: Number(e)
+                                                })
+                                            }}
+                                            style={[styles.textInput, {
+                                                flex: 0,
+                                                width: 60,
+                                                textAlign: 'center',
 
-                                        }]}
-                                    />
-                                    <Text style={{
-                                        color: 'gray',
-                                        fontSize: 15,
-                                        width: 30,
-                                        textAlign: 'center',
-                                    }}>  m</Text>
-                                </View>
-                            </View>}
+                                            }]}
+                                        />
+                                        <Text style={{
+                                            color: 'gray',
+                                            fontSize: 15,
+                                            width: 30,
+                                            textAlign: 'center',
+                                        }}>  m</Text>
+                                    </View>
+                                </View>}
                         </View>}
                     </View>
 

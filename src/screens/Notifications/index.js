@@ -1,7 +1,7 @@
 import { DataStore } from '@aws-amplify/datastore'
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { cancelAppFee, colorFondo, container, getUserSub, moradoOscuro, msInDay, msInHour, msInMinute, wait } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 import { Notificacion } from '../../models'
@@ -265,7 +265,7 @@ export default () => {
                     padding: 10,
                 }}
             >
-                <Pressable
+                <TouchableOpacity
                     onPress={deleteAll}
                     style={{
                         backgroundColor: '#fff',
@@ -288,7 +288,7 @@ export default () => {
                     }
 
 
-                </Pressable>
+                </TouchableOpacity>
             </View>}
             refreshControl={
                 <RefreshControl

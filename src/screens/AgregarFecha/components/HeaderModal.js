@@ -27,10 +27,9 @@ export default function ({
                 backgroundColor: colorFondo,
             }}>
 
-            <View style={[styles.container, style, {
-                marginTop: insets.top,
-                height: insets.top ? 53 : 63
-            }]}>
+            <View style={[styles.container, {
+                height: insets.top ? 53 + insets.top : 63
+            }, style]}>
                 <Text
                     numberOfLines={1}
                     style={{
@@ -47,7 +46,6 @@ export default function ({
                     onPress={handleCerrar}
                     style={{
                         ...styles.iconLeft,
-                        height: insets.top ? 53 : 63,
 
                     }}>
 
@@ -66,7 +64,6 @@ export default function ({
                             buttonLoading ?
                                 <View style={{
                                     ...styles.iconRight,
-                                    height: insets.top ? 53 : 63,
 
                                 }}>
                                     <ActivityIndicator color={"#fff"} />
@@ -75,7 +72,6 @@ export default function ({
                                 :
                                 <View style={{
                                     ...styles.iconRight,
-                                    height: insets.top ? 53 : 63,
 
                                 }}>
 
@@ -90,7 +86,6 @@ export default function ({
                             :
                             <View style={{
                                 ...styles.iconRight,
-                                height: insets.top ? 53 : 63,
 
                             }}>
                                 <Feather
@@ -113,7 +108,8 @@ export default function ({
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-end',
+        paddingBottom: 20,
         backgroundColor: colorFondo,
         height: 63,
     },

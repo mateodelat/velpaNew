@@ -240,6 +240,16 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -346,6 +356,16 @@ export const schema = {
                                     "read",
                                     "update",
                                     "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -600,7 +620,7 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
-                            "usuarioChatRoomsId"
+                            "usuario"
                         ]
                     }
                 },
@@ -736,6 +756,16 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -827,6 +857,16 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -843,15 +883,45 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "chatRoomParticipantesId": {
-                    "name": "chatRoomParticipantesId",
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                "chatroom": {
+                    "name": "chatroom",
+                    "isArray": false,
+                    "type": {
+                        "model": "ChatRoom"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "chatroomID"
+                        ]
+                    }
+                },
+                "chatroomID": {
+                    "name": "chatroomID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
                 },
-                "usuarioChatRoomsId": {
-                    "name": "usuarioChatRoomsId",
+                "usuarioID": {
+                    "name": "usuarioID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
@@ -893,7 +963,7 @@ export const schema = {
                     "properties": {
                         "name": "byChatRoom",
                         "fields": [
-                            "chatRoomParticipantesId"
+                            "chatroomID"
                         ]
                     }
                 },
@@ -902,7 +972,163 @@ export const schema = {
                     "properties": {
                         "name": "byUsuario",
                         "fields": [
-                            "usuarioChatRoomsId"
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update",
+                                    "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "ChatRoom": {
+            "name": "ChatRoom",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "picture": {
+                    "name": "picture",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lastMessage": {
+                    "name": "lastMessage",
+                    "isArray": false,
+                    "type": {
+                        "model": "Mensaje"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "chatRoomLastMessageId"
+                        ]
+                    }
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "guiaID": {
+                    "name": "guiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Mensajes": {
+                    "name": "Mensajes",
+                    "isArray": true,
+                    "type": {
+                        "model": "Mensaje"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "chatroomID"
+                        ]
+                    }
+                },
+                "Participantes": {
+                    "name": "Participantes",
+                    "isArray": true,
+                    "type": {
+                        "model": "ChatRoomUsuarios"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "chatroom"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "chatRoomLastMessageId": {
+                    "name": "chatRoomLastMessageId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "ChatRooms",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byFecha",
+                        "fields": [
+                            "fechaID"
                         ]
                     }
                 },
@@ -1143,6 +1369,16 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -1259,6 +1495,16 @@ export const schema = {
                                     "read",
                                     "update",
                                     "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -1558,151 +1804,15 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "ChatRoom": {
-            "name": "ChatRoom",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "picture": {
-                    "name": "picture",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "lastMessage": {
-                    "name": "lastMessage",
-                    "isArray": false,
-                    "type": {
-                        "model": "Mensaje"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": [
-                            "id"
-                        ],
-                        "targetNames": [
-                            "chatRoomLastMessageId"
-                        ]
-                    }
-                },
-                "fechaID": {
-                    "name": "fechaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "guiaID": {
-                    "name": "guiaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "Mensajes": {
-                    "name": "Mensajes",
-                    "isArray": true,
-                    "type": {
-                        "model": "Mensaje"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "chatroomID"
-                        ]
-                    }
-                },
-                "Participantes": {
-                    "name": "Participantes",
-                    "isArray": true,
-                    "type": {
-                        "model": "ChatRoomUsuarios"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "chatRoomParticipantesId"
-                        ]
-                    }
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "chatRoomLastMessageId": {
-                    "name": "chatRoomLastMessageId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            },
-            "syncable": true,
-            "pluralName": "ChatRooms",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byFecha",
-                        "fields": [
-                            "fechaID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
+                            },
                             {
                                 "allow": "public",
+                                "provider": "iam",
                                 "operations": [
                                     "create",
-                                    "read",
                                     "update",
-                                    "delete"
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -1851,6 +1961,16 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -1939,6 +2059,16 @@ export const schema = {
                                     "read",
                                     "update",
                                     "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -2042,6 +2172,16 @@ export const schema = {
                                     "read",
                                     "update",
                                     "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -2265,8 +2405,11 @@ export const schema = {
         "Categorias": {
             "name": "Categorias",
             "values": [
-                "APLINISMO",
+                "ALPINISMO",
                 "CICLISMO",
+                "MOTO",
+                "SKI",
+                "SURF",
                 "OTROS"
             ]
         },
@@ -2377,5 +2520,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.4",
-    "version": "8425c2f2474290f21a3265bb6e519270"
+    "version": "12219d8174e09fbf905be961b19f0feb"
 };

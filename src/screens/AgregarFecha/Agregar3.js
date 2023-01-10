@@ -214,7 +214,10 @@ export default function ({ navigation, route }) {
                     // Agregar guia al chat
                     await DataStore.save(new ChatRoomUsuarios({
                         chatroom: chatRoom,
-                        usuario: usuario
+                        usuario: usuario,
+
+                        usuarioID: usuario.id,
+                        chatroomID: chatRoom.id
                     }))
 
                     // Crear notificacion
@@ -384,6 +387,7 @@ export default function ({ navigation, route }) {
             />
 
             <Modal
+                statusBarTranslucent
                 animationType="slide"
                 visible={modalVisible}
                 onRequestClose={() => {

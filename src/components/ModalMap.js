@@ -34,6 +34,7 @@ const { height } = Dimensions.get("screen")
 
 export default ({
     selectedPlace,
+    disableInsets,
 
     modalVisible,
     setModalVisible
@@ -71,6 +72,7 @@ export default ({
 
     return (
         <Modal
+            statusBarTranslucent
             animationType="slide"
             transparent={false}
             visible={modalVisible}

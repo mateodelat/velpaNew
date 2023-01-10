@@ -1,9 +1,10 @@
 import React, { ReactChild } from "react";
-import { View, Text, SafeAreaView, StyleSheet } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Alert } from "react-native";
 import Boton from "../../components/Boton";
 
 import { Ionicons } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
+import Bugsnag from "@bugsnag/expo";
 
 class ErrorRouter extends React.Component {
   state = {
@@ -16,7 +17,8 @@ class ErrorRouter extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.log(error);
-    // Bugsnag.notify(error)
+    Alert.alert(error);
+    Bugsnag.notify(error);
   }
 
   render() {

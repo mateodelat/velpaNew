@@ -23,7 +23,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Line from '../../components/Line';
 import ModalMap from '../../components/ModalMap';
 import { DataStore } from '@aws-amplify/datastore';
-import { ChatRoom, Fecha, TipoNotificacion, Usuario } from '../../models';
+import { Aventura, ChatRoom, Fecha, TipoNotificacion, Usuario } from '../../models';
 import API from '@aws-amplify/api';
 import { Reserva } from '../../models';
 import ModalItinerario from '../../components/ModalItinerario';
@@ -108,18 +108,18 @@ export default ({ navigation, route }) => {
                         e = (await Promise.all(e.map(async av => {
 
                             // Si no es del usuario se cancela
-                            if (av.usuario.id !== guiaID) {
+                            if (av.usuarioId !== guiaID) {
                                 return false
                             }
 
-                            av = av.aventura
+                            const ave = await DataStore.query(Aventura, av.aventuraId)
 
-                            const imagenFondo = await getImageUrl(av.imagenDetalle[av.imagenFondoIdx])
+                            const imagenFondo = await getImageUrl(ave.imagenDetalle[ave.imagenFondoIdx])
 
-                            const titulo = mayusFirstLetter(av.titulo)
+                            const titulo = mayusFirstLetter(ave.titulo)
                             // Obtener la imagen de fondo
                             return {
-                                ...av,
+                                ...ave,
                                 imagenFondo,
                                 titulo
                             }
@@ -348,7 +348,7 @@ export default ({ navigation, route }) => {
                     DataStore.query(ChatRoomUsuarios)
                         // Mapear las relaciones chatUsuario y borrar la que coincida con el usuario id
                         .then(r => {
-                            r = r.find(rel => (rel.usuario.id === reserva.usuarioID && rel.chatroom.id === chat.id))
+                            r = r.find(rel => (rel.usuarioId === reserva.usuarioID && rel.chatroomID === chat.id))
                             if (!r) {
                                 console.log("No hay chat asociado")
                                 return

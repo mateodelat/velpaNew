@@ -7,6 +7,7 @@ import { colorFondo, getUserSub, moradoOscuro } from '../../assets/constants';
 import { DataStore, OpType } from '@aws-amplify/datastore';
 import { Notificacion } from '../models';
 import { Usuario } from '../models';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -93,6 +94,7 @@ export default function () {
         }
 
     }
+    const { top } = useSafeAreaInsets()
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: moradoOscuro, }}>
@@ -123,8 +125,9 @@ export default function () {
                         tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold', },
                         tabBarStyle: {
                             backgroundColor: moradoOscuro,
-                            height: 60,
-                            justifyContent: 'center',
+                            height: 60 + top,
+                            justifyContent: 'flex-end',
+                            paddingBottom: 5,
                         },
                     }}
 

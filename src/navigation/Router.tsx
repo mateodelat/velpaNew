@@ -36,15 +36,10 @@ import DetalleReserva from "../screens/DetalleReserva";
 import DetalleFecha from "../screens/DetalleFecha";
 import { DataStore } from "@aws-amplify/datastore";
 import { Usuario } from "../models";
-import {
-  getUserSub,
-  moradoOscuro,
-  msInDay,
-  msInHour,
-} from "../../assets/constants";
+import { getUserSub, moradoOscuro } from "../../assets/constants";
 
 import * as Notifications from "expo-notifications";
-import { Alert, Button, Platform, Pressable, Route, View } from "react-native";
+import { Platform, Pressable, Route, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import QRCode from "../screens/QRScan/QRCode";
 import Ayuda from "../screens/Ayuda";

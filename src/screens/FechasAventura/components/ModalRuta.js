@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, ScrollView, Alert, Image, Pressable } from 'rea
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { colorFondo, moradoClaro, moradoOscuro, openImagePickerAsync } from '../../../../assets/constants';
 import ImageViewer from 'react-native-image-zoom-viewer'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -37,11 +38,16 @@ export default ({
         Alert.alert("Exito", "Imagen de ruta guardada con exito!!")
     }
 
+    const { top } = useSafeAreaInsets()
+
     return (
         <View style={styles.container}>
 
             {/* Header */}
-            <View style={styles.header}>
+            <View style={{
+                ...styles.header,
+                paddingTop: top ? top : 20
+            }}>
                 <Text style={{
                     flex: 1,
                     fontSize: 20,
@@ -54,14 +60,14 @@ export default ({
                     name={"cross"}
                     size={35}
                     color={moradoClaro}
-                    style={{ position: 'absolute', left: 20, }}
+                    style={{ position: 'absolute', left: 20, top: top ? top - 5 : 0 }}
                 />
                 {modify && <MaterialIcons
                     onPress={handleGuardarImagen}
                     name={"check"}
                     size={35}
                     color={moradoClaro}
-                    style={{ position: 'absolute', right: 20, }}
+                    style={{ position: 'absolute', right: 20, top: top ? top - 5 : 0 }}
                 />}
             </View>
             {

@@ -8,7 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import { categorias, defaultLocation, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
+import { categorias, defaultLocation, moradoOscuro, obtenerAventurasParaMapa, renderCategoIcon, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
@@ -134,26 +134,7 @@ export default function ({ navigation }) {
                                 }}>
 
                                     {/* Render iconos dependiendo de la categoria    */}
-                                    {/* {e.categoria === Categorias.APLINISMO ? */}
-                                    <FontAwesome5
-                                        name="mountain"
-                                        size={15}
-                                        color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-                                    />
-                                    {/* :
-                                        e.categoria === Categorias.CICLISMO ?
-                                            <MaterialIcons
-                                                name="directions-bike"
-                                                size={24}
-                                                color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-                                            /> :
-                                            <Entypo
-                                                name="dots-three-horizontal"
-                                                size={15}
-                                                color={selectedMarkerIdx === i ? "#fff" : moradoOscuro}
-
-                                            />
-                                    } */}
+                                    {renderCategoIcon(e.categoria, 24, selectedMarkerIdx === i ? "#fff" : moradoOscuro)}
                                 </View>
                             </Marker>
                         })
@@ -211,8 +192,9 @@ const styles = StyleSheet.create({
     iconContainer: {
         backgroundColor: '#fff',
         alignItems: 'center', justifyContent: 'center',
-        padding: 10,
         borderRadius: 200,
+        width: 40,
+        height: 40,
     },
 
 

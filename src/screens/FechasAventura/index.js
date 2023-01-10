@@ -180,7 +180,6 @@ export default ({ route, navigation }) => {
                 setFechas(r)
                 setLoading(false)
                 const f = new Date()
-                console.log("Tiempo de carga:", (f - i), "ms")
                 return r
             })
     }
@@ -244,7 +243,7 @@ export default ({ route, navigation }) => {
                 {
                     !fechas ? <Loading indicator /> :
                         fechas?.length === 0 ?
-                            <Text style={styles.noHayTxt}>No hay fechas disponibles</Text>
+                            <Text style={styles.noHayTxt}>No hay fechas abiertas</Text>
                             :
                             loading ?
                                 <View style={{

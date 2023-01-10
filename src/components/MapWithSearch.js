@@ -20,7 +20,7 @@ import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons
 
 
 
-import { defaultLocation, googleMapsSearchPlace, mapPlacesKey, moradoClaro, moradoOscuro, verificarUbicacion } from '../../assets/constants';
+import { defaultLocation, enumToArray, googleMapsSearchPlace, mapPlacesKey, moradoClaro, moradoOscuro, renderCategoIcon, verificarUbicacion } from '../../assets/constants';
 
 import { getLastKnownPositionAsync, reverseGeocodeAsync } from 'expo-location';
 
@@ -381,24 +381,8 @@ export default ({
                         <View style={styles.markerContainer}>
 
                             {/* Render iconos dependiendo de la categoria    */}
-                            {e.categoria === Categorias.APLINISMO ?
-                                <FontAwesome5
-                                    name="mountain"
-                                    size={15}
-                                    color={moradoOscuro}
-                                /> :
-                                e.categoria === Categorias.CICLISMO ?
-                                    <MaterialIcons
-                                        name="directions-bike"
-                                        size={24}
-                                        color={moradoOscuro}
-                                    /> :
-                                    <Entypo
-                                        name="dots-three-horizontal"
-                                        size={15}
-                                        color={moradoOscuro}
-
-                                    />
+                            {
+                                renderCategoIcon(e.categoria, 15, moradoOscuro)
                             }
                         </View>
 

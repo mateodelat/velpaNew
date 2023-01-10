@@ -24,7 +24,7 @@ import { AntDesign } from '@expo/vector-icons';
 import ImageModal from './components/ImageModal';
 import CameraModal from './components/CameraModal';
 import Certificaciones from './components/Certificaciones';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import { DataStore } from '@aws-amplify/datastore';
 import { Usuario } from '../../models';
 import { vibrar, VibrationType } from '../../../assets/constants/constant';

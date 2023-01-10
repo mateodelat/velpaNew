@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { height, width } = Dimensions.get("window")
 
@@ -108,8 +109,13 @@ export default function ({ cerrar, handleScanned }) {
 
     const { width } = Dimensions.get("window")
 
+    const { top } = useSafeAreaInsets()
+
     return (
-        <View style={styles.container}>
+        <View style={{
+            ...styles.container,
+            paddingTop: top
+        }}>
             {/* Cabecera */}
             <View style={styles.header}>
                 <Entypo
@@ -117,6 +123,7 @@ export default function ({ cerrar, handleScanned }) {
 
                     style={{
                         width: 40,
+                        top
                     }}
 
                     name="cross" size={40} color="white" />
@@ -132,7 +139,7 @@ export default function ({ cerrar, handleScanned }) {
                     // useCamera2Api
                     style={StyleSheet.absoluteFill}
                     type={Camera.Constants.Type.back} />
-                <MaterialCommunityIcons style={{ position: 'absolute', }} name="scan-helper" size={width - 80} color="white" />
+                <MaterialCommunityIcons style={{ position: 'absolute', top }} name="scan-helper" size={width - 80} color="white" />
 
             </View>
             <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center', padding: 20, }}>

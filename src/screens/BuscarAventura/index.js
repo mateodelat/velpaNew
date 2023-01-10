@@ -19,7 +19,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { categorias, colorFondo, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
+import { categorias, catFilter, colorFondo, enumToArray, listAventurasAutorizadas, moradoOscuro } from '../../../assets/constants';
 
 
 import CuadradoImagen from '../../components/CuadradoImagen';
@@ -33,8 +33,7 @@ export default ({ navigation, onPress, handleBack }) => {
 
     const [buscar, setBuscar] = useState("");
 
-    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, true, true]);
-    const [dificultad, setDificultad] = useState([true, true, true]);
+    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(enumToArray(Categorias).map(_ => true));
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
     const [aventuras, setAventuras] = useState(null);
@@ -82,15 +81,7 @@ export default ({ navigation, onPress, handleBack }) => {
                     e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
 
-                (// ALPINISMO
-                    (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (newCategoriasSelect[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
-                )
+                catFilter(newCategoriasSelect, e.categoria)
             )
         })
         setAventurasAMostrar(nuevasAve)
@@ -114,16 +105,7 @@ export default ({ navigation, onPress, handleBack }) => {
 
     const filtroSinBusqueda = () => {
         return aventuras.filter(e => {
-            return (
-                (// ALPINISMO
-                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // MOUNTAIN BIKE
-                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // OTROS
-                    (categorias[2] && e.categoria === Categorias.OTROS)
-                ))
+            return catFilter(categorias, e.categoria)
         })
     }
 
@@ -137,15 +119,8 @@ export default ({ navigation, onPress, handleBack }) => {
                     // Es igual a la descripcion
                     e.descripcion?.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
                 &&
-                (// ALPINISMO
-                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (categorias[2] && e.categoria === Categorias.OTROS)
-                ))
+                catFilter(categorias, e.categoria)
+            )
         })
     }
     const insets = useSafeAreaInsets()
@@ -253,11 +228,14 @@ export default ({ navigation, onPress, handleBack }) => {
                                         fontWeight: 'bold',
                                     }}>Categorias</Text>
 
-                                    <View style={{
-                                        marginTop: 20,
-                                        flexDirection: 'row',
-                                        justifyContent: "space-evenly"
-                                    }}>
+                                    <ScrollView
+                                        showsHorizontalScrollIndicator={false}
+                                        horizontal
+                                        style={{
+                                            marginTop: 20,
+                                            paddingBottom: 5,
+                                        }}
+                                    >
                                         {categorias.map((item, index) => (
                                             <Pressable
                                                 onPress={() => handleSelectCategoria(index)}
@@ -287,7 +265,7 @@ export default ({ navigation, onPress, handleBack }) => {
                                                 >{item.titulo}</Text>
                                             </Pressable>
                                         ))}
-                                    </View>
+                                    </ScrollView>
                                 </View>
                             </View> : null
                         }

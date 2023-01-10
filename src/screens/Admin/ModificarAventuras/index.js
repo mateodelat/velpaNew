@@ -20,8 +20,7 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-import { categorias, colorFondo, getImageUrl, isVideo, moradoClaro, moradoOscuro, verdeTurquesa } from '../../../../assets/constants';
-import BotonDificultad from './components/BotonDificultad';
+import { categorias, catFilter, colorFondo, enumToArray, getImageUrl, isVideo, moradoClaro, moradoOscuro, verdeTurquesa } from '../../../../assets/constants';
 
 import CuadradoImagen from './components/CuadradoImagen';
 import { useNavigation } from '@react-navigation/native';
@@ -33,6 +32,7 @@ import Boton from '../../../components/Boton';
 import { EstadoAventura } from '../../../models';
 import { vibrar } from '../../../../assets/constants/constant';
 import { AventuraUsuarios } from '../../../models';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -110,8 +110,7 @@ export default ({
     const [buscar, setBuscar] = useState("");
 
     // Variables del filtro
-    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([true, true, true]);
-    const [dificultad, setDificultad] = useState([true, true, true]);
+    const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(enumToArray(Categorias).map(_ => true));
     const [filtrarAbierto, setFiltrarAbierto] = useState(false);
 
     // UI boton
@@ -119,8 +118,6 @@ export default ({
     const [refreshing, setRefreshing] = useState(false);
 
     const [selectedItems, setSelectedItems] = useState(null)
-    // [0,1,idAve]
-    // [1,1,idAve]
 
 
 
@@ -329,6 +326,8 @@ export default ({
     }
 
 
+
+
     // Funciones del filtro
     const handleSelectCategoria = (index) => {
         resetSelectedItems()
@@ -348,16 +347,7 @@ export default ({
                     // Es igual a la descripcion
                     e.descripcion?.toLowerCase().includes(buscar.toLowerCase()))
                 &&
-
-                (// ALPINISMO
-                    (newCategoriasSelect[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (newCategoriasSelect[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (newCategoriasSelect[2] && e.categoria === Categorias.OTROS)
-                )
+                catFilter(newCategoriasSelect, e.categoria)
             )
         })
         setAventurasAMostrar(nuevasAve)
@@ -384,16 +374,7 @@ export default ({
         resetSelectedItems()
 
         return aventuras.filter(e => {
-            return (
-                (// ALPINISMO
-                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // MOUNTAIN BIKE
-                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // OTROS
-                    (categorias[2] && e.categoria === Categorias.OTROS)
-                ))
+            return catFilter(categorias, e.categoria)
         })
     }
 
@@ -408,16 +389,6 @@ export default ({
 
                     // Es igual a la descripcion
                     e.descripcion?.toLowerCase().includes(newText ? newText.toLowerCase() : buscar.toLowerCase()))
-                &&
-                (// ALPINISMO
-                    (categorias[0] && e.categoria === Categorias.APLINISMO) ||
-
-                    // Dificultad media
-                    (categorias[1] && e.categoria === Categorias.CICLISMO) ||
-
-                    // Dificultad dificil
-                    (categorias[2] && e.categoria === Categorias.OTROS)
-                )
             )
         })
     }
@@ -446,9 +417,15 @@ export default ({
 
     }
 
+
+    const { top } = useSafeAreaInsets()
+
     return (
         <View
-            style={styles.container}>
+            style={{
+                ...styles.container,
+                paddingTop: top + 20
+            }}>
 
             {/* Header */}
             <View style={styles.headerContainer}>
@@ -585,11 +562,14 @@ export default ({
                                         fontWeight: 'bold',
                                     }}>Categorias</Text>
 
-                                    <View style={{
-                                        marginTop: 20,
-                                        flexDirection: 'row',
-                                        justifyContent: "space-evenly"
-                                    }}>
+                                    <ScrollView
+                                        showsHorizontalScrollIndicator={false}
+                                        horizontal
+                                        style={{
+                                            marginTop: 20,
+                                            paddingBottom: 5,
+                                        }}
+                                    >
                                         {categorias.map((item, index) => (
                                             <Pressable
                                                 onPress={() => handleSelectCategoria(index)}
@@ -597,6 +577,7 @@ export default ({
                                                 style={{
                                                     alignItems: 'center',
                                                     width: 70,
+                                                    marginVertical: 10
                                                 }}>
                                                 <View
                                                     style={{
@@ -619,7 +600,7 @@ export default ({
                                                 >{item.titulo}</Text>
                                             </Pressable>
                                         ))}
-                                    </View>
+                                    </ScrollView>
                                 </View>
                             </View> : null
                         }

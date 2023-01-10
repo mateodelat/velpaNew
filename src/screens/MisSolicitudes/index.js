@@ -180,7 +180,13 @@ export default function ({ navigation, route }) {
                                                 <Text>{formatDateWithHour(e.createdAt)}</Text>
                                             </View>
 
-                                            {/* Mensaje de estado aventura */}
+                                            {e.mensaje && <Text style={{
+                                                color: "#999",
+                                                marginTop: 5,
+                                            }}>{e.mensaje}</Text>
+                                            }
+
+                                            {/* Mensaje de estado solicitud */}
                                             <View style={styles.messageBox}>
                                                 {
                                                     status === StatusSolicitud.PENDIENTE ?

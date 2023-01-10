@@ -322,7 +322,7 @@ export default function ({ route, navigation }) {
         const { error, paymentOption } = await presentPaymentSheet({
             confirmPayment: false,
 
-        });
+        })
 
 
         if (error) {
@@ -384,10 +384,6 @@ export default function ({ route, navigation }) {
 
             try {
                 setButtonLoading(true)
-                // Poner temporizador de 10 segundos
-                t = setTimeout(() => {
-                    throw new Error("Error tiempo de pago expirado")
-                }, 10000);
 
 
 
@@ -503,12 +499,15 @@ export default function ({ route, navigation }) {
                     // Si encuentra el chat crear la relacion
                     if (chatroom) {
                         // Verificar que el usuario no este agregado ya al chatroom
-                        const relacion = (await DataStore.query(ChatRoomUsuarios)).find(rel => (rel.usuario.id === usuario.id && rel.chatroom.id === chatroom.id))
+                        const relacion = (await DataStore.query(ChatRoomUsuarios, e => e.chatroomID("eq", usuario.id).chatroomID("eq", chatroom.id)))
                         if (!relacion) {
                             // Si no esta el usuario se agrega
                             DataStore.save(new ChatRoomUsuarios({
-                                usuario,
-                                chatroom
+                                chatroomID: chatroom.id,
+                                usuarioID: usuario.id,
+
+                                chatroom,
+                                usuario: usuario,
                             }))
                         }
                     } else {

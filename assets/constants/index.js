@@ -8,6 +8,7 @@ import { DataStore, Predicates } from '@aws-amplify/datastore';
 import React from "react";
 
 import { Foundation, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Usuario } from "../../src/models";
 import { Categorias } from "../../src/models";
@@ -278,7 +279,7 @@ export const meses = [
 ]
 
 export const mayusFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 }
 
 
@@ -480,74 +481,6 @@ export const getBlob = async (uri) => {
       return e
     })
 }
-
-export const createAventura = /* GraphQL */ `
-  mutation CreateAventura(
-    $input: CreateAventuraInput!
-  ) {
-    createAventura(input: $input) {
-      id
-    }
-  }
-`;
-
-
-export const updateCategoria = /* GraphQL */ `
-  mutation UpdateCategoria(
-    $input: UpdateCategoriaInput!
-  ) {
-    updateCategoria(input: $input) {
-      id
-    }
-  }
-`;
-
-export const createCategoria = /* GraphQL */ `
-  mutation CreateCategoria(
-    $input: CreateCategoriaInput!
-    $condition: ModelCategoriaConditionInput
-  ) {
-    createCategoria(input: $input, condition: $condition) {
-      id
-    }
-  }
-`;
-
-export const deleteCategoria = /* GraphQL */ `
-  mutation DeleteCategoria(
-    $input: DeleteCategoriaInput!
-    $condition: ModelCategoriaConditionInput
-  ) {
-    deleteCategoria(input: $input, condition: $condition) {
-      id
-    }
-  }
-`;
-
-
-
-
-export const updateAventura = /* GraphQL */ `
-  mutation UpdateAventura(
-    $input: UpdateAventuraInput!
-    $condition: ModelAventuraConditionInput
-  ) {
-    updateAventura(input: $input, condition: $condition) {
-      id
-    }
-  }
-`;
-
-export const deleteAventura = /* GraphQL */ `
-  mutation DeleteAventura(
-    $input: DeleteAventuraInput!
-    $condition: ModelAventuraConditionInput
-  ) {
-    deleteAventura(input: $input, condition: $condition) {
-      id
-    }
-  }
-`;
 
 
 export function isUrl(str) {
@@ -1675,43 +1608,122 @@ export const categorias = [...Object.keys(Categorias)].map(e => {
   let titulo
 
   switch (e) {
-    case Categorias.APLINISMO:
-      icono = (color, size) => < Foundation
-        name="mountains"
-        size={!size ? 25 : size}
-        color={color}
-      />
+    case Categorias.ALPINISMO:
       titulo = "Alpinismo"
       break;
 
     case Categorias.CICLISMO:
-      icono = (color, size) => <MaterialIcons
-        name="directions-bike"
-        size={!size ? 25 : size}
-        color={color}
-
-      />
       titulo = "Ciclismo"
+      break;
 
+    case Categorias.MOTO:
+      titulo = "Moto"
+      break;
+
+    case Categorias.SKI:
+      titulo = "Ski"
+      break;
+
+    case Categorias.SURF:
+      titulo = "Surf"
       break;
 
     default:
-      icono = (color, size) => <Entypo
-        name="dots-three-horizontal"
-        size={!size ? 25 : size}
-        color={color}
-
-      />
       titulo = "Otros"
-
       break;
   }
+  icono = (color, size) => renderCategoIcon(e, size, color)
   return {
     titulo,
     icono
   }
 
 })
+
+
+
+export function renderCategoIcon(categoria, size, color) {
+  switch (categoria) {
+    case Categorias.ALPINISMO:
+      return < Foundation
+        name="mountains"
+        size={!size ? 25 : size}
+        color={color}
+      />
+
+    case Categorias.CICLISMO:
+      return <MaterialIcons
+        name="directions-bike"
+        size={!size ? 25 : size}
+        color={color}
+
+      />
+
+    case Categorias.MOTO:
+      return <MaterialIcons
+        name="sports-motorsports"
+        size={!size ? 25 : size}
+        color={color}
+
+      />
+
+    case Categorias.SKI:
+      return <MaterialCommunityIcons
+        name="ski"
+        size={!size ? 25 : size}
+        color={color}
+
+      />
+
+    case Categorias.SURF:
+      return <MaterialCommunityIcons
+        name="surfing"
+        size={!size ? 25 : size}
+        color={color}
+
+      />
+
+    default:
+      return <Entypo
+        name="dots-three-horizontal"
+        size={!size ? 25 : size}
+        color={color}
+
+      />
+  }
+}
+/***
+ * Funcion que devuelve si una categoria esta seleccionada y el elemento es de esa
+ *  @param newCategoriasSelect Lista de booleanos ([true,false,true]) de categoria en el orden que se requiere
+ *  @param categoria Categoria actual del elemento a comparar si mostrarlo
+ */
+
+export const catFilter = (newCategoriasSelect, categoria) => (
+  // ALPINISMO
+  (newCategoriasSelect[0] && categoria === Categorias.ALPINISMO) ||
+
+  // CICLISMO
+  (newCategoriasSelect[1] && categoria === Categorias.CICLISMO) ||
+
+  // MOTO
+  (newCategoriasSelect[2] && categoria === Categorias.MOTO) ||
+
+  // SKI
+  (newCategoriasSelect[3] && categoria === Categorias.SKI) ||
+
+  // SURF
+  (newCategoriasSelect[4] && categoria === Categorias.SURF) ||
+
+  // OTROS
+  (newCategoriasSelect[5] && categoria === Categorias.OTROS)
+)
+
+
+export function enumToArray(enumme) {
+  return Object.keys(enumme).map(
+    (name) => enumme[name]
+  );
+}
 
 
 export const abrirStripeAccount = async (stripeID) => {
@@ -1887,12 +1899,13 @@ export const openImagePickerAsync = async (denyVideos, aspect, quality) => {
 
     return (pickerResult)
   }
-
 }
 
 export const getUserSub = async () => {
   return await Auth.currentAuthenticatedUser()
-    .then(user => user.attributes.sub)
+    .then(user => {
+      return user.attributes.sub
+    })
     .catch(e => console.log(e))
 }
 

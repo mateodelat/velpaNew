@@ -147,7 +147,7 @@ export default ({ navigation }) => {
                     <Text style={styles.texto}>No hay aventuras</Text> :
                     aventuras.map((ave, idxAve) => (
                         <View
-                            key={"Solcii", idxAve}
+                            key={"Solcii" + idxAve}
                             style={styles.aventuraContainer}>
                             <View style={styles.bodyContainer}>
                                 <Pressable

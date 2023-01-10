@@ -538,6 +538,7 @@ export default function ({ navigation, route }) {
             />
 
             <Modal
+                statusBarTranslucent
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}

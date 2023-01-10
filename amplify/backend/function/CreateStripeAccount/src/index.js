@@ -1,4 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+/* Amplify Params - DO NOT EDIT
+	API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT
+	API_VELPAAPI_GRAPHQLAPIIDOUTPUT
+	API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
+	ENV
+	REGION
+Amplify Params - DO NOT EDIT */const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 // Funcion crear cuenta de stripe a partir de datos 
 /*

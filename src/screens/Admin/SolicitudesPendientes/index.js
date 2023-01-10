@@ -86,8 +86,8 @@ export default ({ navigation }) => {
             // Agregar al guia a aventuras verificadas
             await Promise.all(solicitud.Aventuras.map(async ave => {
                 DataStore.save(new AventuraUsuarios({
-                    aventura: ave,
-                    usuario
+                    aventuraId: ave.id,
+                    usuarioId: usuario.id
                 }))
             }))
 

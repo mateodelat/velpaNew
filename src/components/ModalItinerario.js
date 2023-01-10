@@ -107,6 +107,7 @@ const ModalItinerario = ({
 
     return (
         <Modal
+            statusBarTranslucent
             animationType="slide"
             transparent={false}
             visible={modalVisible}

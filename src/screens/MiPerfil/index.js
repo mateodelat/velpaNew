@@ -2,7 +2,7 @@ import { API, Auth } from 'aws-amplify'
 import { openBrowserAsync } from 'expo-web-browser'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Alert, ActivityIndicator, ScrollView, RefreshControl, Linking } from 'react-native'
-import { AsyncAlert, colorFondo, getImageUrl, userEsGuia } from '../../../assets/constants'
+import { AsyncAlert, colorFondo, getImageUrl, getUserSub, userEsGuia } from '../../../assets/constants'
 import { Loading } from '../../components/Loading'
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -19,7 +19,7 @@ import UserLevel from '../../components/UserLevel'
 
 import InfoNivelesModal from '../../components/InfoNivelesModal'
 import { Usuario } from '../../models'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 
 
@@ -85,41 +85,42 @@ export default ({ route, navigation }) => {
     }
 
     async function setCurrentUserData() {
+        try {
+            const sub = await getUserSub()
 
-        // Verificar si el usuario es admin para mostrar adminUI
-        const user = await Auth.currentAuthenticatedUser().catch(e => console.log(e))
-        if (!!user.signInUserSession.accessToken.payload['cognito:groups']?.find(e => e === "Admin")) {
-            setAdmin(true)
-            console.log("Usuario es admin")
+            const usuario = await DataStore.query(Usuario, sub)
+
+
+            // Verificar si el usuario es admin para mostrar adminUI
+            setAdmin(usuario.admin)
+
+
+
+            // Evaluar si el usuario es guia
+            setGuia(usuario.guia)
+
+
+            if (usuario) {
+                setData({
+                    ...usuario,
+                    foto: {
+                        uri: await getImageUrl(usuario.foto),
+                        key: usuario.foto
+                    },
+                    imagenFondo: {
+                        uri: await getImageUrl(usuario.imagenFondo),
+                        key: usuario.imagenFondo
+                    },
+                })
+
+            }
+            setLoaded(true)
         }
+        catch (e) {
+            console.log("Error fetcheando el usuario", e)
+            Alert.alert("Error", "Error obteniendo el usuario")
 
-        // Evaluar si el usuario es guia
-        setGuia(await userEsGuia())
-
-
-        fetchUsuario(user)
-            .then(async (r) => {
-                if (r) {
-                    setData({
-                        ...r,
-                        foto: {
-                            uri: await getImageUrl(r.foto),
-                            key: r.foto
-                        },
-                        imagenFondo: {
-                            uri: await getImageUrl(r.imagenFondo),
-                            key: r.imagenFondo
-                        },
-                    })
-
-                }
-                setLoaded(true)
-            })
-            .catch(e => {
-                console.log("Error fetcheando el usuario", e)
-                Alert.alert("Error", "Error obteniendo el usuario")
-
-            })
+        }
     }
 
 
@@ -127,11 +128,6 @@ export default ({ route, navigation }) => {
     //PROCESO: Si el usuario actual no esta en la base de datos lo creamos
     //SALIDAS: Set data al usuario actual obtenido de la base de datos
 
-    async function fetchUsuario(user) {
-        // Pedir el usuario
-        const sub = user.attributes.sub
-        return await DataStore.query(Usuario, sub)
-    }
 
     function handleAdmin() {
         navigation.navigate("Admin")
@@ -173,15 +169,20 @@ export default ({ route, navigation }) => {
 
     }
 
+    const { top } = useSafeAreaInsets()
+
     return (
-        <SafeAreaView style={{
+        <View style={{
             flex: 1,
             backgroundColor: colorFondo,
         }}>
 
             <ScrollView
                 key={route.params ? route.params.key : 12}
-                style={styles.container}
+                style={{
+                    ...styles.container,
+                    paddingTop: top
+                }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
@@ -359,7 +360,7 @@ export default ({ route, navigation }) => {
             />
 
 
-        </SafeAreaView >
+        </View >
 
     )
 }

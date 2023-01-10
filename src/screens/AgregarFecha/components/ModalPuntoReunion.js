@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Dimensions, StyleSheet, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colorFondo, container, moradoClaro } from '../../../../assets/constants'
 import MapWithSearch from '../../../components/MapWithSearch'
 import HeaderModal from './HeaderModal'
@@ -20,14 +21,13 @@ export default function ({ setModalVisible,
 
     return (
         <View style={{
-            flex: 1, position: 'absolute',
-            width,
-            height,
+            flex: 1,
         }}>
             <HeaderModal
                 style={{
                     backgroundColor: moradoClaro,
-                }}
+                }
+                }
                 handleCerrar={handleCerrar}
                 titulo={"Punto de reunion"}
                 color={"#fff"}

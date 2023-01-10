@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
-    Animated,
     Dimensions,
     StyleSheet,
     Text,
@@ -16,15 +15,13 @@ import {
 import MapView from "react-native-map-clustering";
 
 
-import { Entypo, FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 
 
 import Boton from '../../components/Boton';
-import { defaultLocation, getPlaceElevation, mapPlacesKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, verificarUbicacion } from '../../../assets/constants';
+import { defaultLocation, enumToArray, getPlaceElevation, mapPlacesKey, moradoClaro, moradoOscuro, obtenerAventurasParaMapa, renderCategoIcon, verificarUbicacion } from '../../../assets/constants';
 
-import QueLlevar from './components/QueLlevar';
-import HeaderConImagen from '../../components/HeaderConImagen';
-import { getCurrentPositionAsync, getLastKnownPositionAsync } from 'expo-location';
+import { getLastKnownPositionAsync } from 'expo-location';
 import { Loading } from '../../components/Loading';
 import { Marker } from 'react-native-maps';
 import { Categorias } from '../../models';
@@ -99,8 +96,8 @@ export default ({ navigation, route }) => {
 
         let altitud = null
 
-        // Obtener la elevacion si es alpinismo
-        if (aventura.categoria === Categorias.APLINISMO) {
+        // Obtener la elevacion si es alpinismo o ski
+        if (aventura.categoria === Categorias.ALPINISMO || aventura.categoria === Categorias.SKI) {
             setButtonLoading(true)
             altitud = await getPlaceElevation(latitude, longitude)
         }
@@ -372,25 +369,10 @@ export default ({ navigation, route }) => {
                     >
                         <View style={styles.markerContainer}>
 
-                            {/* Render iconos dependiendo de la categoria    */}
-                            {e.categoria === Categorias.APLINISMO ?
-                                <FontAwesome5
-                                    name="mountain"
-                                    size={15}
-                                    color={moradoOscuro}
-                                /> :
-                                e.categoria === Categorias.CICLISMO ?
-                                    <MaterialIcons
-                                        name="directions-bike"
-                                        size={24}
-                                        color={moradoOscuro}
-                                    /> :
-                                    <Entypo
-                                        name="dots-three-horizontal"
-                                        size={15}
-                                        color={moradoOscuro}
-
-                                    />
+                            {/* Render iconos de categoria    */}
+                            {enumToArray(Categorias).map(cat => {
+                                return renderCategoIcon(cat, 15, moradoOscuro)
+                            })
                             }
                         </View>
 

@@ -325,6 +325,7 @@ export default function ({ fecha,
                         puntoReunion={puntoReunion}
                     /> :
                     <Modal
+                        statusBarTranslucent
                         animationType="slide"
                         transparent={true}
                         visible={modalVisible}

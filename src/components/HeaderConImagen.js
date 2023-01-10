@@ -24,11 +24,13 @@ export default ({
         0,
         125,
     ]
-    const insets = useSafeAreaInsets()
+
+    const { top } = useSafeAreaInsets()
+
 
     const heightHeader = scrollY.interpolate({
         inputRange: inputRangeHeader,
-        outputRange: [maxHeight, 75.6 + insets.top]
+        outputRange: [maxHeight, 75.6 + top]
     })
 
 
@@ -43,7 +45,7 @@ export default ({
             height: heightHeader,
             width: '100%',
             position: 'absolute',
-            minHeight: 75.6 + insets.top
+            minHeight: 75.6 + top - 15
         }}>
             <ImageBackground
                 source={imagen}
@@ -87,8 +89,7 @@ export default ({
                 {/* Controles*/}
                 <View style={{
                     justifyContent: 'space-between',
-                    padding: 20,
-                    paddingTop: insets.top + 20,
+                    paddingTop: top ? top : 20,
                     flexDirection: 'row',
                 }}>
                     <MaterialIcons
@@ -96,19 +97,15 @@ export default ({
                         name={"keyboard-arrow-left"}
                         size={32}
                         color={"#fff"}
-                        style={{
-                            // backgroundColor: 'red',
-                            position: 'absolute',
-                            left: 10,
-                            top: 10,
-                            padding: 10,
-                        }}
+                        style={{ padding: 10, }}
                     />
 
                     {showFilter && <AntDesign
                         onPress={() => Alert.alert("Mostrar filtros", "Filtros por rango fecha, personas, duracion, precio")}
                         name="filter"
                         size={30}
+                        style={{ padding: 10, }}
+
                         color="white" />}
                 </View>
 

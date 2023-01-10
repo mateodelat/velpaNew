@@ -415,6 +415,8 @@ export default ({ navigation, route }) => {
             {
                 tipoModal === "map" ?
                     (aventura ? <ModalMap
+                        disableInsets={true}
+
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
 

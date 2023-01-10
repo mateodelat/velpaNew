@@ -45,7 +45,7 @@
         "VIBRATE"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon512.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#fff"
       },
       "config": {

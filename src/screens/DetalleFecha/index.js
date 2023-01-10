@@ -1978,6 +1978,7 @@ export default ({ navigation, route }) => {
 
 
                         <Modal
+                            statusBarTranslucent
                             animationType="slide"
                             transparent={false}
                             visible={modalVisible}

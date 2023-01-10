@@ -897,8 +897,8 @@ export const getUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1391,8 +1391,8 @@ export const getChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -2134,8 +2134,111 @@ export const getChatRoomUsuarios = /* GraphQL */ `
   query GetChatRoomUsuarios($id: ID!) {
     getChatRoomUsuarios(id: $id) {
       id
-      chatRoomParticipantesId
-      usuarioChatRoomsId
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      chatroom {
+        id
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        chatRoomLastMessageId
+      }
+      chatroomID
+      usuarioID
       newMessages
       createdAt
       updatedAt
@@ -2158,8 +2261,56 @@ export const listChatRoomUsuarios = /* GraphQL */ `
     ) {
       items {
         id
-        chatRoomParticipantesId
-        usuarioChatRoomsId
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        chatroomID
+        usuarioID
         newMessages
         createdAt
         updatedAt
@@ -2187,8 +2338,56 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
     ) {
       items {
         id
-        chatRoomParticipantesId
-        usuarioChatRoomsId
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        chatroomID
+        usuarioID
         newMessages
         createdAt
         updatedAt
@@ -2201,16 +2400,16 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
     }
   }
 `;
-export const chatRoomUsuariosByChatRoomParticipantesId = /* GraphQL */ `
-  query ChatRoomUsuariosByChatRoomParticipantesId(
-    $chatRoomParticipantesId: ID!
+export const chatRoomUsuariosByChatroomID = /* GraphQL */ `
+  query ChatRoomUsuariosByChatroomID(
+    $chatroomID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelChatRoomUsuariosFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    chatRoomUsuariosByChatRoomParticipantesId(
-      chatRoomParticipantesId: $chatRoomParticipantesId
+    chatRoomUsuariosByChatroomID(
+      chatroomID: $chatroomID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -2218,8 +2417,56 @@ export const chatRoomUsuariosByChatRoomParticipantesId = /* GraphQL */ `
     ) {
       items {
         id
-        chatRoomParticipantesId
-        usuarioChatRoomsId
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        chatroomID
+        usuarioID
         newMessages
         createdAt
         updatedAt
@@ -2232,16 +2479,16 @@ export const chatRoomUsuariosByChatRoomParticipantesId = /* GraphQL */ `
     }
   }
 `;
-export const chatRoomUsuariosByUsuarioChatRoomsId = /* GraphQL */ `
-  query ChatRoomUsuariosByUsuarioChatRoomsId(
-    $usuarioChatRoomsId: ID!
+export const chatRoomUsuariosByUsuarioID = /* GraphQL */ `
+  query ChatRoomUsuariosByUsuarioID(
+    $usuarioID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelChatRoomUsuariosFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    chatRoomUsuariosByUsuarioChatRoomsId(
-      usuarioChatRoomsId: $usuarioChatRoomsId
+    chatRoomUsuariosByUsuarioID(
+      usuarioID: $usuarioID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -2249,8 +2496,56 @@ export const chatRoomUsuariosByUsuarioChatRoomsId = /* GraphQL */ `
     ) {
       items {
         id
-        chatRoomParticipantesId
-        usuarioChatRoomsId
+        usuario {
+          id
+          tipo
+          guia
+          email
+          calificacion
+          numResenas
+          nombre
+          apellido
+          foto
+          imagenFondo
+          nickname
+          experience
+          stripeID
+          admin
+          selfie
+          ID
+          certificaciones
+          telefono
+          sitioWeb
+          CuentaBancaria
+          fechaNacimiento
+          direccion
+          rfcIndividual
+          rfcCompania
+          capacidadMaxima
+          comentariosAdicionales
+          notificationToken
+          newMessages
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        chatroom {
+          id
+          name
+          picture
+          fechaID
+          guiaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          chatRoomLastMessageId
+        }
+        chatroomID
+        usuarioID
         newMessages
         createdAt
         updatedAt

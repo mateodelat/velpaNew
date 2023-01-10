@@ -1,7 +1,10 @@
 type Aventura
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -44,7 +47,10 @@ type Aventura
 type Reserva
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -80,7 +86,10 @@ type Reserva
 type Fecha
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -131,7 +140,10 @@ type Fecha
 type Usuario
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -203,7 +215,10 @@ type Usuario
 type Comision
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -246,7 +261,10 @@ type ChatRoom
 type Mensaje
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -258,7 +276,10 @@ type Mensaje
 type SolicitudGuia
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -272,7 +293,10 @@ type SolicitudGuia
 type Notificacion
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -296,7 +320,10 @@ type Notificacion
 type Comentario
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -310,7 +337,10 @@ type Comentario
 type Publicidad
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
 
@@ -363,8 +393,11 @@ enum TipoPublicidad {
 }
 
 enum Categorias {
-  APLINISMO
+  ALPINISMO
   CICLISMO
+  MOTO
+  SKI
+  SURF
   OTROS
 }
 
@@ -384,12 +417,17 @@ enum TipoUsuario {
 type ChatRoomUsuarios
   @model
   @auth(
-    rules: [{ allow: public, operations: [create, read, update, delete] }]
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
   ) {
   id: ID!
+  usuario: Usuario @belongsTo(fields: ["usuarioID"])
+  chatroom: ChatRoom @belongsTo(fields: ["chatroomID"])
 
-  chatRoomParticipantesId: ID! @index(name: "byChatRoom")
-  usuarioChatRoomsId: ID! @index(name: "byUsuario")
+  chatroomID: ID! @index(name: "byChatRoom")
+  usuarioID: ID! @index(name: "byUsuario")
   newMessages: Int
 }
 

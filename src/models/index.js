@@ -14,8 +14,11 @@ const EstadoAventura = {
 };
 
 const Categorias = {
-  "APLINISMO": "APLINISMO",
+  "ALPINISMO": "ALPINISMO",
   "CICLISMO": "CICLISMO",
+  "MOTO": "MOTO",
+  "SKI": "SKI",
+  "SURF": "SURF",
   "OTROS": "OTROS"
 };
 
@@ -65,7 +68,7 @@ const TipoPublicidad = {
   "ACTUALIZACION": "ACTUALIZACION"
 };
 
-const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoomUsuarios, Reserva, Comision, Fecha, ChatRoom, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
+const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoomUsuarios, ChatRoom, Reserva, Comision, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
   Aventura,
@@ -73,10 +76,10 @@ export {
   Usuario,
   Mensaje,
   ChatRoomUsuarios,
+  ChatRoom,
   Reserva,
   Comision,
   Fecha,
-  ChatRoom,
   Notificacion,
   Comentario,
   Publicidad,

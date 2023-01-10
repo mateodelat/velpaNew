@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Admin'
 import SolicitudesPendientes from '../screens/Admin/SolicitudesPendientes';
 
-import FechasYReservas from '../screens/Admin/FechasYReservas';
 
 import Header from '../components/header';
 import VerSolicitudes from '../screens/Admin/VerSolicitudes';
@@ -63,15 +62,6 @@ export default function AdminStack() {
                 }}
             />
 
-
-            <Stack.Screen
-                name={"FechasYReservas"}
-                component={FechasYReservas}
-                options={{
-                    headerShown: true,
-                    headerTitle: "Fechas y reservas"
-                }}
-            />
 
             <Stack.Screen
                 name={"VerSolicitudes"}

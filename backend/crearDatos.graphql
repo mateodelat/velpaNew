@@ -1,55 +1,13 @@
 mutation MyMutation {
   #############################################################################
-  ###################################USUARIOS##################################
-  #############################################################################
-  usr1: createUsuario(
-    input: {
-      ID: [
-        "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-IDFrente.jpg"
-        "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-IDAtras.jpg"
-      ]
-      CuentaBancaria: "012320015149702582"
-      admin: true
-      apellido: "delat"
-      calificacion: null
-      certificaciones: null
-      capacidadMaxima: 10
-      comentariosAdicionales: null
-      direccion: "{\"country\":\"MX\",\"city\":\"Jzbdb que\",\"state\":\"Sbdbs\",\"postal_code\":\"64949\",\"line1\":\"Jzbdb\"}"
-      experience: 3
-      fechaNacimiento: "{\"month\":4,\"year\":2009,\"day\":28}"
-      foto: "https://lh3.googleusercontent.com/a/AATXAJyPur3pemWzbDpmahJ2fAoNY47KgG3K1ZxyViM2=s96-c"
-      guia: true
-      id: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
-      imagenFondo: null
-      newMessages: null
-      nickname: "mateo delat"
-      nombre: "mateo"
-      notificationToken: "ExponentPushToken[ZzPRLzCzWN-H0VX6j1n0A9]"
-      numResenas: null
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
-      rfcCompania: null
-      rfcIndividual: null
-      selfie: "usr-f49d4056-b03e-4a80-aa39-6a95a7feb5ef-Selfie.jpg"
-      sitioWeb: null
-      stripeID: "acct_1L3A1u2VePn1HSRf"
-      telefono: "+523324963705"
-      tipo: GUIAINDIVIDUAL
-    }
-  ) {
-    id
-    nickname
-  }
-
-  #############################################################################
   ##################################AVENTURAS##################################
   #############################################################################
   ave1: createAventura(
     input: {
       altimetriaRecorrida: 706
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      usuarioID: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 4282
-      categoria: APLINISMO
+      categoria: ALPINISMO
       coordenadas: "{\"latitude\":19.1085652,\"longitude\":-99.75476909999999}"
       descripcion: "El nevado de toluca es un cerro muy grande con mucha vegetacion y vasta variedad ecologica. Es uno de los picos mas grandes de Mexico y es el inicio perfecto para princpiantes que se quieren adentrar en el mundo del hikking. Aqui vas a poder contemplar en un dia despejado unas vistas increibles hacia el volcan de colima asi como tambien de todos los cerros aldeaños y en epocas frias un revestimiento de nieve."
       dificultad: 2
@@ -72,15 +30,39 @@ mutation MyMutation {
       ubicacionNombre: "Nevado de Toluca"
     }
   ) {
+    updatedAt
+    _version
+    _lastChangedAt
+    createdAt
+    altimetriaRecorrida
+    usuarioID
     altitud
+    categoria
+    coordenadas
+    descripcion
+    dificultad
+    distanciaRecorrida
+    duracion
+    estadoAventura
+    id
+    imagenDetalle
+    imagenFondoIdx
+    incluidoDefault
+    materialDefault
+    precioMax
+    precioMin
+    titulo
+    ubicacionId
+    ubicacionLink
+    ubicacionNombre
   }
 
   ave2: createAventura(
     input: {
       altimetriaRecorrida: 1301
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      usuarioID: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 5208
-      categoria: APLINISMO
+      categoria: ALPINISMO
       coordenadas: "{\"latitude\":19.1783392,\"longitude\":-98.64272799999999}"
       descripcion: "Aqui el Izta esta grandecito y si se ve potente varios se han muerto pero tambien es una montaña grande que tiene unas vistas increibles. No se sabe cuando empezaron las escursiones para alla solo que se no se nada.Sobre aristoteles hay mucho que decir este carnalito hizo demasiados aporte a la filosofia por cierto ser o no ser es la cuestion."
       dificultad: 5
@@ -102,14 +84,38 @@ mutation MyMutation {
       ubicacionNombre: "Iztaccihuatl"
     }
   ) {
+    updatedAt
+    _version
+    _lastChangedAt
+    createdAt
+    altimetriaRecorrida
+    usuarioID
     altitud
+    categoria
+    coordenadas
+    descripcion
+    dificultad
+    distanciaRecorrida
+    duracion
+    estadoAventura
+    id
+    imagenDetalle
+    imagenFondoIdx
+    incluidoDefault
+    materialDefault
+    precioMax
+    precioMin
+    titulo
+    ubicacionId
+    ubicacionLink
+    ubicacionNombre
   }
   ave3: createAventura(
     input: {
       altimetriaRecorrida: 795
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      usuarioID: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 4218
-      categoria: APLINISMO
+      categoria: ALPINISMO
       coordenadas: "{\"latitude\":19.5633333,\"longitude\":-103.6083333}"
       descripcion: "Prepárate para tener una aventura en contacto con la naturaleza y en algunas épocas del año cubierto de nieve. nnEsta experiencia es ideal para principiantes en el hikking teniendo una altura no tan elevada para afectar la condición."
       dificultad: null
@@ -136,14 +142,38 @@ mutation MyMutation {
       ubicacionNombre: "Nevado de Colima"
     }
   ) {
+    updatedAt
+    _version
+    _lastChangedAt
+    createdAt
+    altimetriaRecorrida
+    usuarioID
     altitud
+    categoria
+    coordenadas
+    descripcion
+    dificultad
+    distanciaRecorrida
+    duracion
+    estadoAventura
+    id
+    imagenDetalle
+    imagenFondoIdx
+    incluidoDefault
+    materialDefault
+    precioMax
+    precioMin
+    titulo
+    ubicacionId
+    ubicacionLink
+    ubicacionNombre
   }
   ave4: createAventura(
     input: {
       altimetriaRecorrida: 740
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      usuarioID: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 1537
-      categoria: APLINISMO
+      categoria: ALPINISMO
       coordenadas: "{\"latitude\":20.72441849273122,\"longitude\":-103.29245958477259}"
       descripcion: "Experimenta la imponente barranca de Huentitan trazada por el río SantiagonnAquí es un excelente lugar para ejercitarse y prepararse a montañas más difíciles. Es un parque natural dentro de la ciudad. Puedes ir a visitar el puente de arsediano o si lo prefieres adentrarte en el misterioso pueblo fantasma"
       dificultad: null
@@ -168,14 +198,38 @@ mutation MyMutation {
       ubicacionNombre: "Tour por la barranca"
     }
   ) {
+    updatedAt
+    _version
+    _lastChangedAt
+    createdAt
+    altimetriaRecorrida
+    usuarioID
     altitud
+    categoria
+    coordenadas
+    descripcion
+    dificultad
+    distanciaRecorrida
+    duracion
+    estadoAventura
+    id
+    imagenDetalle
+    imagenFondoIdx
+    incluidoDefault
+    materialDefault
+    precioMax
+    precioMin
+    titulo
+    ubicacionId
+    ubicacionLink
+    ubicacionNombre
   }
   ave5: createAventura(
     input: {
       altimetriaRecorrida: 768
-      owner: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
+      usuarioID: "f49d4056-b03e-4a80-aa39-6a95a7feb5ef"
       altitud: 2347
-      categoria: APLINISMO
+      categoria: ALPINISMO
       coordenadas: "{\"latitude\":20.3257625,\"longitude\":-103.2758335}"
       descripcion: "Disfruta de sus asombrosas cascadas en épocas de lluvias o si decides ir a dormir en la cima podrás contemplar un amanecer espectacular con una vista al lago.nnLa chupinaya es la sierra que se encuentra a un costado del Lago de Chapala por lo que tiene una vegetación muy verde y clima húmedo."
       dificultad: null
@@ -199,6 +253,30 @@ mutation MyMutation {
       ubicacionNombre: "La Chupinaya"
     }
   ) {
+    updatedAt
+    _version
+    _lastChangedAt
+    createdAt
+    altimetriaRecorrida
+    usuarioID
     altitud
+    categoria
+    coordenadas
+    descripcion
+    dificultad
+    distanciaRecorrida
+    duracion
+    estadoAventura
+    id
+    imagenDetalle
+    imagenFondoIdx
+    incluidoDefault
+    materialDefault
+    precioMax
+    precioMin
+    titulo
+    ubicacionId
+    ubicacionLink
+    ubicacionNombre
   }
 }

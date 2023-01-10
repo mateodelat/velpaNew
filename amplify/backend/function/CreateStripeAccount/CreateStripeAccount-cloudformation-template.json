@@ -16,6 +16,18 @@
     "s3Key": {
       "Type": "String"
     },
+    "apivelpaAPIGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apivelpaAPIGraphQLAPIIdOutput"
+    },
+    "apivelpaAPIGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apivelpaAPIGraphQLAPIEndpointOutput"
+    },
+    "apivelpaAPIGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apivelpaAPIGraphQLAPIKeyOutput"
+    },
     "stripeKey": {
       "Type": "String"
     }
@@ -72,6 +84,15 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "API_VELPAAPI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apivelpaAPIGraphQLAPIIdOutput"
+            },
+            "API_VELPAAPI_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apivelpaAPIGraphQLAPIEndpointOutput"
+            },
+            "API_VELPAAPI_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apivelpaAPIGraphQLAPIKeyOutput"
             },
             "STRIPE_KEY": {
               "Ref": "stripeKey"
@@ -166,6 +187,53 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:GraphQL"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apivelpaAPIGraphQLAPIIdOutput"
+                      },
+                      "/types/Mutation/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

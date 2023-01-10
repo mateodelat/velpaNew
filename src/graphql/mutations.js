@@ -884,8 +884,8 @@ export const createUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1117,8 +1117,8 @@ export const updateUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1350,8 +1350,8 @@ export const deleteUsuario = /* GraphQL */ `
       ChatRooms {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1626,8 +1626,8 @@ export const createChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1687,8 +1687,8 @@ export const updateChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -1748,8 +1748,8 @@ export const deleteChatRoom = /* GraphQL */ `
       Participantes {
         items {
           id
-          chatRoomParticipantesId
-          usuarioChatRoomsId
+          chatroomID
+          usuarioID
           newMessages
           createdAt
           updatedAt
@@ -2133,8 +2133,111 @@ export const createChatRoomUsuarios = /* GraphQL */ `
   ) {
     createChatRoomUsuarios(input: $input, condition: $condition) {
       id
-      chatRoomParticipantesId
-      usuarioChatRoomsId
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      chatroom {
+        id
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        chatRoomLastMessageId
+      }
+      chatroomID
+      usuarioID
       newMessages
       createdAt
       updatedAt
@@ -2151,8 +2254,111 @@ export const updateChatRoomUsuarios = /* GraphQL */ `
   ) {
     updateChatRoomUsuarios(input: $input, condition: $condition) {
       id
-      chatRoomParticipantesId
-      usuarioChatRoomsId
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      chatroom {
+        id
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        chatRoomLastMessageId
+      }
+      chatroomID
+      usuarioID
       newMessages
       createdAt
       updatedAt
@@ -2169,8 +2375,111 @@ export const deleteChatRoomUsuarios = /* GraphQL */ `
   ) {
     deleteChatRoomUsuarios(input: $input, condition: $condition) {
       id
-      chatRoomParticipantesId
-      usuarioChatRoomsId
+      usuario {
+        id
+        tipo
+        guia
+        email
+        calificacion
+        numResenas
+        nombre
+        apellido
+        foto
+        imagenFondo
+        nickname
+        experience
+        stripeID
+        admin
+        selfie
+        ID
+        certificaciones
+        telefono
+        sitioWeb
+        CuentaBancaria
+        fechaNacimiento
+        direccion
+        rfcIndividual
+        rfcCompania
+        capacidadMaxima
+        comentariosAdicionales
+        notificationToken
+        newMessages
+        AventurasAutorizadas {
+          nextToken
+          startedAt
+        }
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        ChatRooms {
+          nextToken
+          startedAt
+        }
+        Reservas {
+          nextToken
+          startedAt
+        }
+        Fechas {
+          nextToken
+          startedAt
+        }
+        Notificaciones {
+          nextToken
+          startedAt
+        }
+        SolicitudesCreadas {
+          nextToken
+          startedAt
+        }
+        Comentarios {
+          nextToken
+          startedAt
+        }
+        Comisiones {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      chatroom {
+        id
+        name
+        picture
+        lastMessage {
+          id
+          content
+          usuarioID
+          chatroomID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        fechaID
+        guiaID
+        Mensajes {
+          nextToken
+          startedAt
+        }
+        Participantes {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        chatRoomLastMessageId
+      }
+      chatroomID
+      usuarioID
       newMessages
       createdAt
       updatedAt

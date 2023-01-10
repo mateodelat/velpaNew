@@ -1,10 +1,8 @@
 import { PureComponent } from "react"
 import React from 'react'
 import { ActivityIndicator, Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { moradoOscuro, shadowMedia } from "../../../../assets/constants"
+import { mayusFirstLetter, moradoOscuro, shadowMedia } from "../../../../assets/constants"
 import { MaterialIcons } from '@expo/vector-icons';
-import { Categorias } from "../../../models";
-import { Loading } from "../../../components/Loading";
 
 
 export default class AdventureItem extends PureComponent {
@@ -13,6 +11,7 @@ export default class AdventureItem extends PureComponent {
         this.dimensions = Dimensions.get("screen")
         this.state = { loading: true };
     }
+
 
     render() {
         return (
@@ -55,11 +54,7 @@ export default class AdventureItem extends PureComponent {
                             <Text style={styles.titleTxt}>{this.props.item.titulo}</Text>
 
                             {/* Categoria */}
-                            <Text style={styles.categoriaTxt}>{
-                                this.props.item.categoria === Categorias.APLINISMO ? "Alpinismo" :
-                                    this.props.item.categoria === Categorias.CICLISMO ? "Ciclismo" :
-                                        "Otros"
-                            }</Text>
+                            <Text style={styles.categoriaTxt}>{mayusFirstLetter(this.props.item.categoria)}</Text>
                         </View>
                         <MaterialIcons
                             name={"keyboard-arrow-right"}
