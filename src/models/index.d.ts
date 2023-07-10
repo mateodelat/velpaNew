@@ -2,45 +2,10 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
 
-export enum AccountType {
-  INDIVIDUAL = "INDIVIDUAL",
-  COMPANY = "COMPANY"
-}
-
 export enum EstadoAventura {
   AUTORIZADO = "AUTORIZADO",
   PENDIENTE = "PENDIENTE",
   RECHAZADO = "RECHAZADO"
-}
-
-export enum Categorias {
-  ALPINISMO = "ALPINISMO",
-  CICLISMO = "CICLISMO",
-  MOTO = "MOTO",
-  SKI = "SKI",
-  SURF = "SURF",
-  OTROS = "OTROS"
-}
-
-export enum StatusSolicitud {
-  APROVADA = "APROVADA",
-  PENDIENTE = "PENDIENTE",
-  RECHAZADA = "RECHAZADA"
-}
-
-export enum TipoUsuario {
-  AGENCIA = "AGENCIA",
-  GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
-}
-
-export enum ReservaCancelReason {
-  FECHACERRADA = "FECHACERRADA",
-  CANCELADOPORCLIENTE = "CANCELADOPORCLIENTE"
-}
-
-export enum TipoPago {
-  EFECTIVO = "EFECTIVO",
-  TARJETA = "TARJETA"
 }
 
 export enum TipoNotificacion {
@@ -66,6 +31,41 @@ export enum TipoPublicidad {
   AVENTURA = "AVENTURA",
   ANUNCIO = "ANUNCIO",
   ACTUALIZACION = "ACTUALIZACION"
+}
+
+export enum Categorias {
+  ALPINISMO = "ALPINISMO",
+  CICLISMO = "CICLISMO",
+  MOTO = "MOTO",
+  SKI = "SKI",
+  SURF = "SURF",
+  OTROS = "OTROS"
+}
+
+export enum StatusSolicitud {
+  APROVADA = "APROVADA",
+  PENDIENTE = "PENDIENTE",
+  RECHAZADA = "RECHAZADA"
+}
+
+export enum TipoUsuario {
+  AGENCIA = "AGENCIA",
+  GUIAINDIVIDUAL = "GUIAINDIVIDUAL"
+}
+
+export enum AccountType {
+  INDIVIDUAL = "INDIVIDUAL",
+  COMPANY = "COMPANY"
+}
+
+export enum TipoPago {
+  EFECTIVO = "EFECTIVO",
+  TARJETA = "TARJETA"
+}
+
+export enum ReservaCancelReason {
+  FECHACERRADA = "FECHACERRADA",
+  CANCELADOPORCLIENTE = "CANCELADOPORCLIENTE"
 }
 
 type EagerPaymentIntent = {
@@ -170,40 +170,156 @@ export declare const Aventura: (new (init: ModelInit<Aventura>) => Aventura) & {
   copyOf(source: Aventura, mutator: (draft: MutableModel<Aventura>) => MutableModel<Aventura> | void): Aventura;
 }
 
-type EagerSolicitudGuia = {
+type EagerReserva = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<SolicitudGuia, 'id'>;
+    identifier: ManagedIdentifier<Reserva, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
-  readonly evaluadorID?: string | null;
+  readonly total: number;
+  readonly comision: number;
+  readonly pagadoAlGuia: number;
+  readonly tercera: number;
+  readonly ninos: number;
+  readonly adultos: number;
+  readonly pagoID?: string | null;
+  readonly ingreso?: boolean | null;
+  readonly horaIngreso?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
+  readonly cancelReason?: ReservaCancelReason | keyof typeof ReservaCancelReason | null;
+  readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
-  readonly mensaje?: string | null;
-  readonly Aventuras?: (AventuraSolicitudGuias | null)[] | null;
+  readonly guiaID?: string | null;
+  readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
+  readonly materialChecked?: string | null;
+  readonly comisionID?: string | null;
+  readonly comisionAsociada?: Comision | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  readonly reservaComisionAsociadaId?: string | null;
+}
+
+type LazyReserva = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Reserva, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly total: number;
+  readonly comision: number;
+  readonly pagadoAlGuia: number;
+  readonly tercera: number;
+  readonly ninos: number;
+  readonly adultos: number;
+  readonly pagoID?: string | null;
+  readonly ingreso?: boolean | null;
+  readonly horaIngreso?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
+  readonly cancelReason?: ReservaCancelReason | keyof typeof ReservaCancelReason | null;
+  readonly fechaID?: string | null;
+  readonly usuarioID?: string | null;
+  readonly guiaID?: string | null;
+  readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
+  readonly materialChecked?: string | null;
+  readonly comisionID?: string | null;
+  readonly comisionAsociada: AsyncItem<Comision | undefined>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  readonly reservaComisionAsociadaId?: string | null;
+}
+
+export declare type Reserva = LazyLoading extends LazyLoadingDisabled ? EagerReserva : LazyReserva
+
+export declare const Reserva: (new (init: ModelInit<Reserva>) => Reserva) & {
+  copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva>) => MutableModel<Reserva> | void): Reserva;
+}
+
+type EagerFecha = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Fecha, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly personasTotales: number;
+  readonly fechaInicial: number;
+  readonly fechaFinal: number;
+  readonly precio: number;
+  readonly comision: number;
+  readonly experienciaPorPersona?: number | null;
+  readonly itinerario: string;
+  readonly puntoReunionNombre: string;
+  readonly puntoReunionId?: string | null;
+  readonly puntoReunionLink?: string | null;
+  readonly puntoReunionCoords?: string | null;
+  readonly allowTercera: boolean;
+  readonly allowNinos: boolean;
+  readonly efectivo: boolean;
+  readonly material?: string | null;
+  readonly incluido: string;
+  readonly titulo?: string | null;
+  readonly descripcion?: string | null;
+  readonly imagenRuta?: string | null;
+  readonly imagenFondo?: string | null;
+  readonly tituloAventura?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
+  readonly dateModified?: boolean | null;
+  readonly aventuraID: string;
+  readonly aventuraFechasId?: string | null;
+  readonly usuarioID: string;
+  readonly dificultad?: number | null;
+  readonly Reservas?: (Reserva | null)[] | null;
+  readonly ChatRoom?: (ChatRoom | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazySolicitudGuia = {
+type LazyFecha = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<SolicitudGuia, 'id'>;
+    identifier: ManagedIdentifier<Fecha, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
-  readonly evaluadorID?: string | null;
-  readonly usuarioID?: string | null;
-  readonly mensaje?: string | null;
-  readonly Aventuras: AsyncCollection<AventuraSolicitudGuias>;
+  readonly personasTotales: number;
+  readonly fechaInicial: number;
+  readonly fechaFinal: number;
+  readonly precio: number;
+  readonly comision: number;
+  readonly experienciaPorPersona?: number | null;
+  readonly itinerario: string;
+  readonly puntoReunionNombre: string;
+  readonly puntoReunionId?: string | null;
+  readonly puntoReunionLink?: string | null;
+  readonly puntoReunionCoords?: string | null;
+  readonly allowTercera: boolean;
+  readonly allowNinos: boolean;
+  readonly efectivo: boolean;
+  readonly material?: string | null;
+  readonly incluido: string;
+  readonly titulo?: string | null;
+  readonly descripcion?: string | null;
+  readonly imagenRuta?: string | null;
+  readonly imagenFondo?: string | null;
+  readonly tituloAventura?: string | null;
+  readonly cancelado?: boolean | null;
+  readonly canceledAt?: string | null;
+  readonly dateModified?: boolean | null;
+  readonly aventuraID: string;
+  readonly aventuraFechasId?: string | null;
+  readonly usuarioID: string;
+  readonly dificultad?: number | null;
+  readonly Reservas: AsyncCollection<Reserva>;
+  readonly ChatRoom: AsyncCollection<ChatRoom>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type SolicitudGuia = LazyLoading extends LazyLoadingDisabled ? EagerSolicitudGuia : LazySolicitudGuia
+export declare type Fecha = LazyLoading extends LazyLoadingDisabled ? EagerFecha : LazyFecha
 
-export declare const SolicitudGuia: (new (init: ModelInit<SolicitudGuia>) => SolicitudGuia) & {
-  copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia>) => MutableModel<SolicitudGuia> | void): SolicitudGuia;
+export declare const Fecha: (new (init: ModelInit<Fecha>) => Fecha) & {
+  copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha>) => MutableModel<Fecha> | void): Fecha;
 }
 
 type EagerUsuario = {
@@ -304,72 +420,46 @@ export declare const Usuario: (new (init: ModelInit<Usuario>) => Usuario) & {
   copyOf(source: Usuario, mutator: (draft: MutableModel<Usuario>) => MutableModel<Usuario> | void): Usuario;
 }
 
-type EagerMensaje = {
+type EagerComision = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Mensaje, 'id'>;
+    identifier: ManagedIdentifier<Comision, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly content: string;
+  readonly amount: number;
+  readonly editing?: boolean | null;
+  readonly startEditingAt?: number | null;
+  readonly payed?: boolean | null;
+  readonly pagadoEnReservaID?: string | null;
+  readonly reservaID?: string | null;
+  readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
-  readonly chatroomID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyMensaje = {
+type LazyComision = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Mensaje, 'id'>;
+    identifier: ManagedIdentifier<Comision, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly content: string;
+  readonly amount: number;
+  readonly editing?: boolean | null;
+  readonly startEditingAt?: number | null;
+  readonly payed?: boolean | null;
+  readonly pagadoEnReservaID?: string | null;
+  readonly reservaID?: string | null;
+  readonly fechaID?: string | null;
   readonly usuarioID?: string | null;
-  readonly chatroomID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type Mensaje = LazyLoading extends LazyLoadingDisabled ? EagerMensaje : LazyMensaje
+export declare type Comision = LazyLoading extends LazyLoadingDisabled ? EagerComision : LazyComision
 
-export declare const Mensaje: (new (init: ModelInit<Mensaje>) => Mensaje) & {
-  copyOf(source: Mensaje, mutator: (draft: MutableModel<Mensaje>) => MutableModel<Mensaje> | void): Mensaje;
-}
-
-type EagerChatRoomUsuarios = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<ChatRoomUsuarios, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly usuario?: Usuario | null;
-  readonly chatroom?: ChatRoom | null;
-  readonly chatroomID: string;
-  readonly usuarioID: string;
-  readonly newMessages?: number | null;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyChatRoomUsuarios = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<ChatRoomUsuarios, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly usuario: AsyncItem<Usuario | undefined>;
-  readonly chatroom: AsyncItem<ChatRoom | undefined>;
-  readonly chatroomID: string;
-  readonly usuarioID: string;
-  readonly newMessages?: number | null;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type ChatRoomUsuarios = LazyLoading extends LazyLoadingDisabled ? EagerChatRoomUsuarios : LazyChatRoomUsuarios
-
-export declare const ChatRoomUsuarios: (new (init: ModelInit<ChatRoomUsuarios>) => ChatRoomUsuarios) & {
-  copyOf(source: ChatRoomUsuarios, mutator: (draft: MutableModel<ChatRoomUsuarios>) => MutableModel<ChatRoomUsuarios> | void): ChatRoomUsuarios;
+export declare const Comision: (new (init: ModelInit<Comision>) => Comision) & {
+  copyOf(source: Comision, mutator: (draft: MutableModel<Comision>) => MutableModel<Comision> | void): Comision;
 }
 
 type EagerChatRoom = {
@@ -414,198 +504,72 @@ export declare const ChatRoom: (new (init: ModelInit<ChatRoom>) => ChatRoom) & {
   copyOf(source: ChatRoom, mutator: (draft: MutableModel<ChatRoom>) => MutableModel<ChatRoom> | void): ChatRoom;
 }
 
-type EagerReserva = {
+type EagerMensaje = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Reserva, 'id'>;
+    identifier: ManagedIdentifier<Mensaje, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly total: number;
-  readonly comision: number;
-  readonly pagadoAlGuia: number;
-  readonly tercera: number;
-  readonly ninos: number;
-  readonly adultos: number;
-  readonly pagoID?: string | null;
-  readonly ingreso?: boolean | null;
-  readonly horaIngreso?: string | null;
-  readonly cancelado?: boolean | null;
-  readonly canceledAt?: string | null;
-  readonly cancelReason?: ReservaCancelReason | keyof typeof ReservaCancelReason | null;
-  readonly fechaID?: string | null;
+  readonly content: string;
   readonly usuarioID?: string | null;
-  readonly guiaID?: string | null;
-  readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
-  readonly materialChecked?: string | null;
-  readonly comisionID?: string | null;
-  readonly comisionAsociada?: Comision | null;
+  readonly chatroomID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly reservaComisionAsociadaId?: string | null;
 }
 
-type LazyReserva = {
+type LazyMensaje = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Reserva, 'id'>;
+    identifier: ManagedIdentifier<Mensaje, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly total: number;
-  readonly comision: number;
-  readonly pagadoAlGuia: number;
-  readonly tercera: number;
-  readonly ninos: number;
-  readonly adultos: number;
-  readonly pagoID?: string | null;
-  readonly ingreso?: boolean | null;
-  readonly horaIngreso?: string | null;
-  readonly cancelado?: boolean | null;
-  readonly canceledAt?: string | null;
-  readonly cancelReason?: ReservaCancelReason | keyof typeof ReservaCancelReason | null;
-  readonly fechaID?: string | null;
+  readonly content: string;
   readonly usuarioID?: string | null;
-  readonly guiaID?: string | null;
-  readonly tipoPago?: TipoPago | keyof typeof TipoPago | null;
-  readonly materialChecked?: string | null;
-  readonly comisionID?: string | null;
-  readonly comisionAsociada: AsyncItem<Comision | undefined>;
+  readonly chatroomID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly reservaComisionAsociadaId?: string | null;
 }
 
-export declare type Reserva = LazyLoading extends LazyLoadingDisabled ? EagerReserva : LazyReserva
+export declare type Mensaje = LazyLoading extends LazyLoadingDisabled ? EagerMensaje : LazyMensaje
 
-export declare const Reserva: (new (init: ModelInit<Reserva>) => Reserva) & {
-  copyOf(source: Reserva, mutator: (draft: MutableModel<Reserva>) => MutableModel<Reserva> | void): Reserva;
+export declare const Mensaje: (new (init: ModelInit<Mensaje>) => Mensaje) & {
+  copyOf(source: Mensaje, mutator: (draft: MutableModel<Mensaje>) => MutableModel<Mensaje> | void): Mensaje;
 }
 
-type EagerComision = {
+type EagerSolicitudGuia = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Comision, 'id'>;
+    identifier: ManagedIdentifier<SolicitudGuia, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly amount: number;
-  readonly editing?: boolean | null;
-  readonly startEditingAt?: number | null;
-  readonly payed?: boolean | null;
-  readonly pagadoEnReservaID?: string | null;
-  readonly reservaID?: string | null;
-  readonly fechaID?: string | null;
+  readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
+  readonly evaluadorID?: string | null;
   readonly usuarioID?: string | null;
+  readonly mensaje?: string | null;
+  readonly Aventuras?: (AventuraSolicitudGuias | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyComision = {
+type LazySolicitudGuia = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Comision, 'id'>;
+    identifier: ManagedIdentifier<SolicitudGuia, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly amount: number;
-  readonly editing?: boolean | null;
-  readonly startEditingAt?: number | null;
-  readonly payed?: boolean | null;
-  readonly pagadoEnReservaID?: string | null;
-  readonly reservaID?: string | null;
-  readonly fechaID?: string | null;
+  readonly status: StatusSolicitud | keyof typeof StatusSolicitud;
+  readonly evaluadorID?: string | null;
   readonly usuarioID?: string | null;
+  readonly mensaje?: string | null;
+  readonly Aventuras: AsyncCollection<AventuraSolicitudGuias>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type Comision = LazyLoading extends LazyLoadingDisabled ? EagerComision : LazyComision
+export declare type SolicitudGuia = LazyLoading extends LazyLoadingDisabled ? EagerSolicitudGuia : LazySolicitudGuia
 
-export declare const Comision: (new (init: ModelInit<Comision>) => Comision) & {
-  copyOf(source: Comision, mutator: (draft: MutableModel<Comision>) => MutableModel<Comision> | void): Comision;
-}
-
-type EagerFecha = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Fecha, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly personasTotales: number;
-  readonly fechaInicial: number;
-  readonly fechaFinal: number;
-  readonly precio: number;
-  readonly comision: number;
-  readonly experienciaPorPersona?: number | null;
-  readonly itinerario: string;
-  readonly puntoReunionNombre: string;
-  readonly puntoReunionId?: string | null;
-  readonly puntoReunionLink?: string | null;
-  readonly puntoReunionCoords?: string | null;
-  readonly allowTercera: boolean;
-  readonly allowNinos: boolean;
-  readonly efectivo: boolean;
-  readonly material?: string | null;
-  readonly incluido: string;
-  readonly titulo?: string | null;
-  readonly descripcion?: string | null;
-  readonly imagenRuta?: string | null;
-  readonly imagenFondo?: string | null;
-  readonly tituloAventura?: string | null;
-  readonly cancelado?: boolean | null;
-  readonly canceledAt?: string | null;
-  readonly dateModified?: boolean | null;
-  readonly aventuraID: string;
-  readonly aventuraFechasId?: string | null;
-  readonly usuarioID: string;
-  readonly dificultad?: number | null;
-  readonly Reservas?: (Reserva | null)[] | null;
-  readonly ChatRoom?: (ChatRoom | null)[] | null;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyFecha = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Fecha, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly personasTotales: number;
-  readonly fechaInicial: number;
-  readonly fechaFinal: number;
-  readonly precio: number;
-  readonly comision: number;
-  readonly experienciaPorPersona?: number | null;
-  readonly itinerario: string;
-  readonly puntoReunionNombre: string;
-  readonly puntoReunionId?: string | null;
-  readonly puntoReunionLink?: string | null;
-  readonly puntoReunionCoords?: string | null;
-  readonly allowTercera: boolean;
-  readonly allowNinos: boolean;
-  readonly efectivo: boolean;
-  readonly material?: string | null;
-  readonly incluido: string;
-  readonly titulo?: string | null;
-  readonly descripcion?: string | null;
-  readonly imagenRuta?: string | null;
-  readonly imagenFondo?: string | null;
-  readonly tituloAventura?: string | null;
-  readonly cancelado?: boolean | null;
-  readonly canceledAt?: string | null;
-  readonly dateModified?: boolean | null;
-  readonly aventuraID: string;
-  readonly aventuraFechasId?: string | null;
-  readonly usuarioID: string;
-  readonly dificultad?: number | null;
-  readonly Reservas: AsyncCollection<Reserva>;
-  readonly ChatRoom: AsyncCollection<ChatRoom>;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type Fecha = LazyLoading extends LazyLoadingDisabled ? EagerFecha : LazyFecha
-
-export declare const Fecha: (new (init: ModelInit<Fecha>) => Fecha) & {
-  copyOf(source: Fecha, mutator: (draft: MutableModel<Fecha>) => MutableModel<Fecha> | void): Fecha;
+export declare const SolicitudGuia: (new (init: ModelInit<SolicitudGuia>) => SolicitudGuia) & {
+  copyOf(source: SolicitudGuia, mutator: (draft: MutableModel<SolicitudGuia>) => MutableModel<SolicitudGuia> | void): SolicitudGuia;
 }
 
 type EagerNotificacion = {
@@ -730,6 +694,42 @@ export declare type Publicidad = LazyLoading extends LazyLoadingDisabled ? Eager
 
 export declare const Publicidad: (new (init: ModelInit<Publicidad>) => Publicidad) & {
   copyOf(source: Publicidad, mutator: (draft: MutableModel<Publicidad>) => MutableModel<Publicidad> | void): Publicidad;
+}
+
+type EagerChatRoomUsuarios = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ChatRoomUsuarios, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly usuario?: Usuario | null;
+  readonly chatroom?: ChatRoom | null;
+  readonly chatroomID: string;
+  readonly usuarioID: string;
+  readonly newMessages?: number | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyChatRoomUsuarios = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ChatRoomUsuarios, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly usuario: AsyncItem<Usuario | undefined>;
+  readonly chatroom: AsyncItem<ChatRoom | undefined>;
+  readonly chatroomID: string;
+  readonly usuarioID: string;
+  readonly newMessages?: number | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type ChatRoomUsuarios = LazyLoading extends LazyLoadingDisabled ? EagerChatRoomUsuarios : LazyChatRoomUsuarios
+
+export declare const ChatRoomUsuarios: (new (init: ModelInit<ChatRoomUsuarios>) => ChatRoomUsuarios) & {
+  copyOf(source: ChatRoomUsuarios, mutator: (draft: MutableModel<ChatRoomUsuarios>) => MutableModel<ChatRoomUsuarios> | void): ChatRoomUsuarios;
 }
 
 type EagerAventuraSolicitudGuias = {

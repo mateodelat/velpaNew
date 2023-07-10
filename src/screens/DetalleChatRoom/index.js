@@ -17,11 +17,6 @@ import HeaderDetalleAventura from '../../navigation/components/HeaderDetalleAven
 export default function ({ route }) {
     const { image, titulo } = route?.params
 
-    // const { image, titulo } = {
-    //     image: require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg"),
-    //     titulo: "Nevado de colima 15 ago",
-    // }
-
 
     const { width, height } = Dimensions.get("screen")
 

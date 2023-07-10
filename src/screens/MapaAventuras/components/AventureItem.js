@@ -1,72 +1,75 @@
-import { PureComponent } from "react"
-import React from 'react'
-import { ActivityIndicator, Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { mayusFirstLetter, moradoOscuro, shadowMedia } from "../../../../assets/constants"
+import React, { useState } from 'react';
+import {
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    Pressable,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native';
+
+import {
+    mayusFirstLetter,
+    moradoOscuro,
+    shadowMedia
+} from '../../../../assets/constants';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+const dimensions = Dimensions.get('screen');
 
 
-export default class AdventureItem extends PureComponent {
-    constructor(props) {
-        super(props)
-        this.dimensions = Dimensions.get("screen")
-        this.state = { loading: true };
-    }
+export default function ({ item }) {
+    // const [loading, setLoading] = useState(true);
 
+    // const navigation = useNavigation()
 
-    render() {
-        return (
-            <View style={{
-                width: this.dimensions.width,
-            }}>
-                <Pressable
-                    onPress={() => this.props.navigation.navigate("DetalleAventura", { id: this.props.item.id })}
-                    style={styles.elementContainer}>
-                    {/* Imagen de aventura */}
-                    <View style={{
-                        flex: 1,
-                    }}>
-                        {this.state.loading && <View style={{
+    // const handlePress = () => {
+    //     navigation.navigate('DetalleAventura', { id: item.id });
+    // };
+
+    // const handleImageLoadEnd = () => {
+    //     setLoading(false);
+    // };
+
+    return <View style={{ backgroundColor: 'red', width: 100, height: 100, }}></View >
+
+    return <View style={{ width: dimensions.width }}>
+        <Pressable onPress={handlePress} style={styles.elementContainer}>
+            <View style={{ flex: 1 }}>
+                {!!loading && (
+                    <View
+                        style={{
                             aspectRatio: 1,
                             position: 'absolute',
                             width: '100%',
-                            alignItems: 'center', justifyContent: 'center',
-                        }}>
-                            <ActivityIndicator
-                                color={moradoOscuro}
-                                size={"large"}
-                            />
-                        </View>}
-                        <Image
-                            source={{ uri: this.props.item.imagenDetalle[this.props.item.imagenFondoIdx] }}
-                            style={styles.imagenLista}
-                            onLoadEnd={() => {
-                                this.setState({ loading: false })
-                            }}
-                        />
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        <ActivityIndicator color={moradoOscuro} size="large" />
                     </View>
+                )}
+                <Image
+                    source={{ uri: item.imagenDetalle[item.imagenFondoIdx] }}
+                    style={styles.imagenLista}
+                    onLoadEnd={handleImageLoadEnd}
+                />
+            </View>
 
-                    {/* Texto de descripcion */}
-                    <View
-                        style={styles.textoDescrpicion}>
-                        <View style={{ flex: 1, }}>
-
-                            {/* Titulo */}
-                            <Text style={styles.titleTxt}>{this.props.item.titulo}</Text>
-
-                            {/* Categoria */}
-                            <Text style={styles.categoriaTxt}>{mayusFirstLetter(this.props.item.categoria)}</Text>
-                        </View>
-                        <MaterialIcons
-                            name={"keyboard-arrow-right"}
-                            size={35}
-                            color={"gray"}
-                        />
-
-                    </View>
-                </Pressable>
-            </View>)
-    }
-}
+            <View style={styles.textoDescrpicion}>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.titleTxt}>{String(item.titulo)}</Text>
+                    <Text style={styles.categoriaTxt}>
+                        {mayusFirstLetter(item.categoria)}
+                    </Text>
+                </View>
+                <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
+            </View>
+        </Pressable>
+    </View>
+};
 
 const styles = StyleSheet.create({
     elementContainer: {
@@ -78,37 +81,32 @@ const styles = StyleSheet.create({
         padding: 15,
         ...shadowMedia
     },
-
     imagenLista: {
         aspectRatio: 1,
-        borderRadius: 10,
+        borderRadius: 10
     },
-
     textoDescrpicion: {
         flex: 4,
         marginLeft: 15,
         alignItems: 'center',
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
-
     row: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
-
     categoriaTxt: {
         fontSize: 16,
-        color: '#00000080',
+        color: '#00000080'
     },
-
     titleTxt: {
         fontSize: 18,
         fontWeight: 'bold',
-        textAlignVertical: 'center',
+        textAlignVertical: 'center'
     },
-
     precio: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     }
-})
+});
+

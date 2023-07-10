@@ -256,8 +256,8 @@ export const schema = {
                 }
             ]
         },
-        "SolicitudGuia": {
-            "name": "SolicitudGuia",
+        "Reserva": {
+            "name": "Reserva",
             "fields": {
                 "id": {
                     "name": "id",
@@ -266,17 +266,94 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "status": {
-                    "name": "status",
+                "total": {
+                    "name": "total",
                     "isArray": false,
-                    "type": {
-                        "enum": "StatusSolicitud"
-                    },
+                    "type": "Float",
                     "isRequired": true,
                     "attributes": []
                 },
-                "evaluadorID": {
-                    "name": "evaluadorID",
+                "comision": {
+                    "name": "comision",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pagadoAlGuia": {
+                    "name": "pagadoAlGuia",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tercera": {
+                    "name": "tercera",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "ninos": {
+                    "name": "ninos",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "adultos": {
+                    "name": "adultos",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "pagoID": {
+                    "name": "pagoID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ingreso": {
+                    "name": "ingreso",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "horaIngreso": {
+                    "name": "horaIngreso",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cancelado": {
+                    "name": "cancelado",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "canceledAt": {
+                    "name": "canceledAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cancelReason": {
+                    "name": "cancelReason",
+                    "isArray": false,
+                    "type": {
+                        "enum": "ReservaCancelReason"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaID": {
+                    "name": "fechaID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -289,18 +366,342 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "mensaje": {
-                    "name": "mensaje",
+                "guiaID": {
+                    "name": "guiaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tipoPago": {
+                    "name": "tipoPago",
+                    "isArray": false,
+                    "type": {
+                        "enum": "TipoPago"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "materialChecked": {
+                    "name": "materialChecked",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "Aventuras": {
-                    "name": "Aventuras",
+                "comisionID": {
+                    "name": "comisionID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comisionAsociada": {
+                    "name": "comisionAsociada",
+                    "isArray": false,
+                    "type": {
+                        "model": "Comision"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "reservaComisionAsociadaId"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "reservaComisionAsociadaId": {
+                    "name": "reservaComisionAsociadaId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Reservas",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byFecha",
+                        "fields": [
+                            "fechaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update",
+                                    "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Fecha": {
+            "name": "Fecha",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "personasTotales": {
+                    "name": "personasTotales",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fechaInicial": {
+                    "name": "fechaInicial",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fechaFinal": {
+                    "name": "fechaFinal",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "precio": {
+                    "name": "precio",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "comision": {
+                    "name": "comision",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "experienciaPorPersona": {
+                    "name": "experienciaPorPersona",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "itinerario": {
+                    "name": "itinerario",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "puntoReunionNombre": {
+                    "name": "puntoReunionNombre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "puntoReunionId": {
+                    "name": "puntoReunionId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "puntoReunionLink": {
+                    "name": "puntoReunionLink",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "puntoReunionCoords": {
+                    "name": "puntoReunionCoords",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "allowTercera": {
+                    "name": "allowTercera",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "allowNinos": {
+                    "name": "allowNinos",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "efectivo": {
+                    "name": "efectivo",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "material": {
+                    "name": "material",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "incluido": {
+                    "name": "incluido",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "titulo": {
+                    "name": "titulo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "imagenRuta": {
+                    "name": "imagenRuta",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "imagenFondo": {
+                    "name": "imagenFondo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tituloAventura": {
+                    "name": "tituloAventura",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cancelado": {
+                    "name": "cancelado",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "canceledAt": {
+                    "name": "canceledAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dateModified": {
+                    "name": "dateModified",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "aventuraID": {
+                    "name": "aventuraID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "aventuraFechasId": {
+                    "name": "aventuraFechasId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "dificultad": {
+                    "name": "dificultad",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Reservas": {
+                    "name": "Reservas",
                     "isArray": true,
                     "type": {
-                        "model": "AventuraSolicitudGuias"
+                        "model": "Reserva"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -308,7 +709,23 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
-                            "solicitudGuia"
+                            "fechaID"
+                        ]
+                    }
+                },
+                "ChatRoom": {
+                    "name": "ChatRoom",
+                    "isArray": true,
+                    "type": {
+                        "model": "ChatRoom"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "fechaID"
                         ]
                     }
                 },
@@ -330,11 +747,20 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "SolicitudGuias",
+            "pluralName": "Fechas",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAventura",
+                        "fields": [
+                            "aventuraID"
+                        ]
+                    }
                 },
                 {
                     "type": "key",
@@ -772,8 +1198,8 @@ export const schema = {
                 }
             ]
         },
-        "Mensaje": {
-            "name": "Mensaje",
+        "Comision": {
+            "name": "Comision",
             "fields": {
                 "id": {
                     "name": "id",
@@ -782,155 +1208,59 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "content": {
-                    "name": "content",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "usuarioID": {
-                    "name": "usuarioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "chatroomID": {
-                    "name": "chatroomID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Mensajes",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byUsuario",
-                        "fields": [
-                            "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byChatRoom",
-                        "fields": [
-                            "chatroomID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "read",
-                                    "update",
-                                    "delete"
-                                ]
-                            },
-                            {
-                                "allow": "public",
-                                "provider": "iam",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "ChatRoomUsuarios": {
-            "name": "ChatRoomUsuarios",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "usuario": {
-                    "name": "usuario",
-                    "isArray": false,
-                    "type": {
-                        "model": "Usuario"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "usuarioID"
-                        ]
-                    }
-                },
-                "chatroom": {
-                    "name": "chatroom",
-                    "isArray": false,
-                    "type": {
-                        "model": "ChatRoom"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "chatroomID"
-                        ]
-                    }
-                },
-                "chatroomID": {
-                    "name": "chatroomID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "usuarioID": {
-                    "name": "usuarioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "newMessages": {
-                    "name": "newMessages",
+                "amount": {
+                    "name": "amount",
                     "isArray": false,
                     "type": "Int",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "editing": {
+                    "name": "editing",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "startEditingAt": {
+                    "name": "startEditingAt",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "payed": {
+                    "name": "payed",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "pagadoEnReservaID": {
+                    "name": "pagadoEnReservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "reservaID": {
+                    "name": "reservaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaID": {
+                    "name": "fechaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -952,20 +1282,11 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "ChatRoomUsuarios",
+            "pluralName": "Comisions",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byChatRoom",
-                        "fields": [
-                            "chatroomID"
-                        ]
-                    }
                 },
                 {
                     "type": "key",
@@ -1150,8 +1471,8 @@ export const schema = {
                 }
             ]
         },
-        "Reserva": {
-            "name": "Reserva",
+        "Mensaje": {
+            "name": "Mensaje",
             "fields": {
                 "id": {
                     "name": "id",
@@ -1160,97 +1481,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "total": {
-                    "name": "total",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "comision": {
-                    "name": "comision",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "pagadoAlGuia": {
-                    "name": "pagadoAlGuia",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "tercera": {
-                    "name": "tercera",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "ninos": {
-                    "name": "ninos",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "adultos": {
-                    "name": "adultos",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "pagoID": {
-                    "name": "pagoID",
+                "content": {
+                    "name": "content",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "ingreso": {
-                    "name": "ingreso",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "horaIngreso": {
-                    "name": "horaIngreso",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "cancelado": {
-                    "name": "cancelado",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "canceledAt": {
-                    "name": "canceledAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "cancelReason": {
-                    "name": "cancelReason",
-                    "isArray": false,
-                    "type": {
-                        "enum": "ReservaCancelReason"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "fechaID": {
-                    "name": "fechaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "usuarioID": {
@@ -1260,53 +1495,12 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "guiaID": {
-                    "name": "guiaID",
+                "chatroomID": {
+                    "name": "chatroomID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
-                },
-                "tipoPago": {
-                    "name": "tipoPago",
-                    "isArray": false,
-                    "type": {
-                        "enum": "TipoPago"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "materialChecked": {
-                    "name": "materialChecked",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "comisionID": {
-                    "name": "comisionID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "comisionAsociada": {
-                    "name": "comisionAsociada",
-                    "isArray": false,
-                    "type": {
-                        "model": "Comision"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": [
-                            "id"
-                        ],
-                        "targetNames": [
-                            "reservaComisionAsociadaId"
-                        ]
-                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1323,17 +1517,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "reservaComisionAsociadaId": {
-                    "name": "reservaComisionAsociadaId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
-            "pluralName": "Reservas",
+            "pluralName": "Mensajes",
             "attributes": [
                 {
                     "type": "model",
@@ -1342,18 +1529,18 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byFecha",
+                        "name": "byUsuario",
                         "fields": [
-                            "fechaID"
+                            "usuarioID"
                         ]
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byUsuario",
+                        "name": "byChatRoom",
                         "fields": [
-                            "usuarioID"
+                            "chatroomID"
                         ]
                     }
                 },
@@ -1385,8 +1572,8 @@ export const schema = {
                 }
             ]
         },
-        "Comision": {
-            "name": "Comision",
+        "SolicitudGuia": {
+            "name": "SolicitudGuia",
             "fields": {
                 "id": {
                     "name": "id",
@@ -1395,50 +1582,17 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "amount": {
-                    "name": "amount",
+                "status": {
+                    "name": "status",
                     "isArray": false,
-                    "type": "Int",
+                    "type": {
+                        "enum": "StatusSolicitud"
+                    },
                     "isRequired": true,
                     "attributes": []
                 },
-                "editing": {
-                    "name": "editing",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "startEditingAt": {
-                    "name": "startEditingAt",
-                    "isArray": false,
-                    "type": "AWSTimestamp",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "payed": {
-                    "name": "payed",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "pagadoEnReservaID": {
-                    "name": "pagadoEnReservaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "reservaID": {
-                    "name": "reservaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "fechaID": {
-                    "name": "fechaID",
+                "evaluadorID": {
+                    "name": "evaluadorID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -1451,278 +1605,18 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Comisions",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byUsuario",
-                        "fields": [
-                            "usuarioID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "read",
-                                    "update",
-                                    "delete"
-                                ]
-                            },
-                            {
-                                "allow": "public",
-                                "provider": "iam",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Fecha": {
-            "name": "Fecha",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "personasTotales": {
-                    "name": "personasTotales",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "fechaInicial": {
-                    "name": "fechaInicial",
-                    "isArray": false,
-                    "type": "AWSTimestamp",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "fechaFinal": {
-                    "name": "fechaFinal",
-                    "isArray": false,
-                    "type": "AWSTimestamp",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "precio": {
-                    "name": "precio",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "comision": {
-                    "name": "comision",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "experienciaPorPersona": {
-                    "name": "experienciaPorPersona",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "itinerario": {
-                    "name": "itinerario",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "puntoReunionNombre": {
-                    "name": "puntoReunionNombre",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "puntoReunionId": {
-                    "name": "puntoReunionId",
+                "mensaje": {
+                    "name": "mensaje",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "puntoReunionLink": {
-                    "name": "puntoReunionLink",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "puntoReunionCoords": {
-                    "name": "puntoReunionCoords",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "allowTercera": {
-                    "name": "allowTercera",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "allowNinos": {
-                    "name": "allowNinos",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "efectivo": {
-                    "name": "efectivo",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "material": {
-                    "name": "material",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "incluido": {
-                    "name": "incluido",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "titulo": {
-                    "name": "titulo",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "descripcion": {
-                    "name": "descripcion",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "imagenRuta": {
-                    "name": "imagenRuta",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "imagenFondo": {
-                    "name": "imagenFondo",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "tituloAventura": {
-                    "name": "tituloAventura",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "cancelado": {
-                    "name": "cancelado",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "canceledAt": {
-                    "name": "canceledAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "dateModified": {
-                    "name": "dateModified",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "aventuraID": {
-                    "name": "aventuraID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "aventuraFechasId": {
-                    "name": "aventuraFechasId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "usuarioID": {
-                    "name": "usuarioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "dificultad": {
-                    "name": "dificultad",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "Reservas": {
-                    "name": "Reservas",
+                "Aventuras": {
+                    "name": "Aventuras",
                     "isArray": true,
                     "type": {
-                        "model": "Reserva"
+                        "model": "AventuraSolicitudGuias"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -1730,23 +1624,7 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
-                            "fechaID"
-                        ]
-                    }
-                },
-                "ChatRoom": {
-                    "name": "ChatRoom",
-                    "isArray": true,
-                    "type": {
-                        "model": "ChatRoom"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "fechaID"
+                            "solicitudGuia"
                         ]
                     }
                 },
@@ -1768,20 +1646,11 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Fechas",
+            "pluralName": "SolicitudGuias",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAventura",
-                        "fields": [
-                            "aventuraID"
-                        ]
-                    }
                 },
                 {
                     "type": "key",
@@ -2189,6 +2058,137 @@ export const schema = {
                 }
             ]
         },
+        "ChatRoomUsuarios": {
+            "name": "ChatRoomUsuarios",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": {
+                        "model": "Usuario"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                "chatroom": {
+                    "name": "chatroom",
+                    "isArray": false,
+                    "type": {
+                        "model": "ChatRoom"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "chatroomID"
+                        ]
+                    }
+                },
+                "chatroomID": {
+                    "name": "chatroomID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usuarioID": {
+                    "name": "usuarioID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "newMessages": {
+                    "name": "newMessages",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "ChatRoomUsuarios",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byChatRoom",
+                        "fields": [
+                            "chatroomID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUsuario",
+                        "fields": [
+                            "usuarioID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "read",
+                                    "update",
+                                    "delete"
+                                ]
+                            },
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "AventuraSolicitudGuias": {
             "name": "AventuraSolicitudGuias",
             "fields": {
@@ -2387,59 +2387,12 @@ export const schema = {
         }
     },
     "enums": {
-        "AccountType": {
-            "name": "AccountType",
-            "values": [
-                "INDIVIDUAL",
-                "COMPANY"
-            ]
-        },
         "EstadoAventura": {
             "name": "EstadoAventura",
             "values": [
                 "AUTORIZADO",
                 "PENDIENTE",
                 "RECHAZADO"
-            ]
-        },
-        "Categorias": {
-            "name": "Categorias",
-            "values": [
-                "ALPINISMO",
-                "CICLISMO",
-                "MOTO",
-                "SKI",
-                "SURF",
-                "OTROS"
-            ]
-        },
-        "StatusSolicitud": {
-            "name": "StatusSolicitud",
-            "values": [
-                "APROVADA",
-                "PENDIENTE",
-                "RECHAZADA"
-            ]
-        },
-        "TipoUsuario": {
-            "name": "TipoUsuario",
-            "values": [
-                "AGENCIA",
-                "GUIAINDIVIDUAL"
-            ]
-        },
-        "ReservaCancelReason": {
-            "name": "ReservaCancelReason",
-            "values": [
-                "FECHACERRADA",
-                "CANCELADOPORCLIENTE"
-            ]
-        },
-        "TipoPago": {
-            "name": "TipoPago",
-            "values": [
-                "EFECTIVO",
-                "TARJETA"
             ]
         },
         "TipoNotificacion": {
@@ -2469,6 +2422,53 @@ export const schema = {
                 "AVENTURA",
                 "ANUNCIO",
                 "ACTUALIZACION"
+            ]
+        },
+        "Categorias": {
+            "name": "Categorias",
+            "values": [
+                "ALPINISMO",
+                "CICLISMO",
+                "MOTO",
+                "SKI",
+                "SURF",
+                "OTROS"
+            ]
+        },
+        "StatusSolicitud": {
+            "name": "StatusSolicitud",
+            "values": [
+                "APROVADA",
+                "PENDIENTE",
+                "RECHAZADA"
+            ]
+        },
+        "TipoUsuario": {
+            "name": "TipoUsuario",
+            "values": [
+                "AGENCIA",
+                "GUIAINDIVIDUAL"
+            ]
+        },
+        "AccountType": {
+            "name": "AccountType",
+            "values": [
+                "INDIVIDUAL",
+                "COMPANY"
+            ]
+        },
+        "TipoPago": {
+            "name": "TipoPago",
+            "values": [
+                "EFECTIVO",
+                "TARJETA"
+            ]
+        },
+        "ReservaCancelReason": {
+            "name": "ReservaCancelReason",
+            "values": [
+                "FECHACERRADA",
+                "CANCELADOPORCLIENTE"
             ]
         }
     },
@@ -2519,6 +2519,6 @@ export const schema = {
             }
         }
     },
-    "codegenVersion": "3.3.4",
+    "codegenVersion": "3.4.4",
     "version": "12219d8174e09fbf905be961b19f0feb"
 };

@@ -1,4 +1,5 @@
 import Bugsnag from "@bugsnag/expo";
+import "@azure/core-asynciterator-polyfill";
 
 import React, { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -34,17 +35,17 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
-  const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
+  // const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
 
-  const url = standAlone;
+  // const url = standAlone;
 
   Amplify.configure({
     ...awsconfig,
-    oauth: {
-      ...awsconfig.oauth,
-      redirectSignIn: url,
-      redirectSignOut: url,
-    },
+    //   oauth: {
+    //     ...awsconfig.oauth,
+    //     redirectSignIn: url,
+    //     redirectSignOut: url,
+    //   },
   });
 
   const publicidadLoaded = useRef<boolean>();
@@ -64,20 +65,18 @@ export default function App() {
     if (info) {
       const { email, nickname, sub } = info.attributes;
 
-      Bugsnag.setUser(sub, email, nickname);
+      // Bugsnag.setUser(sub, email, nickname);
     }
   }
 
   useEffect(() => {
-    Bugsnag.start();
+    // Bugsnag.start();
 
     checkOnboarding();
-
-    // DataStore.clear()
-
+    
     // Ver si el usuario esta autenticado
     Auth.currentUserCredentials()
-      .then((user) => {
+    .then((user) => {
         setLoading(false);
         if (user.authenticated) {
           start();
@@ -103,7 +102,7 @@ export default function App() {
         case "signOut":
           // Cancelar todas las notificaciones al celular
           cancelAllScheduledNotificationsAsync();
-          Bugsnag.setUser("", "", "");
+          // Bugsnag.setUser("", "", "");
           setLoading(false);
           setAuthenticated(false);
           break;

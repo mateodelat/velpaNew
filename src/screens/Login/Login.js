@@ -41,9 +41,12 @@ export default function Register({ navigation, route }) {
             return
         }
 
+        console.log("Logging in ")
+
         setLoading(true)
         Auth.signIn(email, password)
             .then(() => {
+                console.log("Loggin")
                 setError("")
                 setErrorEmail()
                 setErrorPassword()

@@ -445,7 +445,9 @@ export default ({ route }) => {
         source={
           user?.imagenFondo?.uri
             ? { uri: user?.imagenFondo?.uri }
-            : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")
+            : {
+                uri: "https://static.wixstatic.com/media/419deb_d2a4172c3ceb460dbe292c455dd6514f~mv2.jpg",
+              }
         }
         style={{
           ...styles.imagenFondo,
@@ -461,10 +463,10 @@ export default ({ route }) => {
             ? () => handleChangePic(false)
             : () =>
                 openImage(
-                  user?.imagenFondo?.uri,
                   user?.imagenFondo?.uri
-                    ? false
-                    : require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")
+                    ? user.imagenFondo.uri
+                    : "https://static.wixstatic.com/media/419deb_d2a4172c3ceb460dbe292c455dd6514f~mv2.jpg",
+                  false
                 )
         }
         style={{

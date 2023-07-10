@@ -29,6 +29,10 @@ const crearUsr = `
           foto
           nickname
           email
+          _version
+          _deleted
+          _lastChangedAt
+
         }
       }
     `
@@ -42,6 +46,10 @@ const crearNotificacion = `
             titulo
             descripcion
             usuarioID
+            _version
+            _deleted
+            _lastChangedAt
+
         }
       }
     `;
@@ -73,6 +81,8 @@ function generateProfilePicture(nombre) {
 
     return `https://ui-avatars.com/api/?name=${nombre}&bold=true&background=${bgc}&color=${color}&length=${randomLenght}`;
 }
+
+//funcion llamada automaticamente por cognito
 
 function crearUsuario(attributes, sub) {
 

@@ -1,30 +1,26 @@
-import React, { ReactChild } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Alert } from "react-native";
-import Boton from "../../components/Boton";
+import React from "react";
+import { View, Text,  StyleSheet, Alert } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
 import Bugsnag from "@bugsnag/expo";
+import Boton from "../../components/Boton";
 
 class ErrorRouter extends React.Component {
   state = {
     error: false,
   };
 
-  static getDerivedStateFromError(error) {
-    return { error: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error) {
     console.log(error);
-    Alert.alert(error);
-    Bugsnag.notify(error);
+    Alert.alert("Ocurrio un error", error.message);
+     Bugsnag.notify(error);
   }
 
   render() {
     if (this.state.error) {
       return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <View style={styles.content}>
               <Ionicons name="ios-information-circle" size={60} />
@@ -40,7 +36,7 @@ class ErrorRouter extends React.Component {
               >
                 La aplicacion tuvo un problema que no la dejo continuar,
                 presiona el boton de abajo para volver a cargar la app. Por
-                favor contactanos si el problema persiste
+                favor contactanos si el problema persiste:
               </Text>
             </View>
           </View>
@@ -53,17 +49,15 @@ class ErrorRouter extends React.Component {
               margin: 20,
             }}
           />
-        </SafeAreaView>
+        </View>
       );
     } else {
-      return this.props.children;
+      return (this.props as any).children;
     }
   }
 }
 
-export default function ({ children }) {
-  return <ErrorRouter>{children}</ErrorRouter>;
-}
+export default ErrorRouter;
 
 const styles = StyleSheet.create({
   container: {
@@ -76,9 +70,5 @@ const styles = StyleSheet.create({
   content: {
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  safeAreaView: {
-    flex: 1,
   },
 });

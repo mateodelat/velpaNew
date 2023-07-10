@@ -4,7 +4,9 @@
 	API_VELPAAPI_GRAPHQLAPIKEYOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */const stripe = require("stripe")(process.env.STRIPE_KEY)
+Amplify Params - DO NOT EDIT */
+const stripe = require("stripe")(process.env.STRIPE_KEY)
+
 
 exports.handler = async (event) => {
 

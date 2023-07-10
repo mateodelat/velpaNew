@@ -91,12 +91,24 @@ export default ({ route }) => {
 
         // Obtener relaciones con usuario
         let aventurasAutorizadasAlUsr = (
-          await DataStore.query(AventuraUsuarios).catch((e) => {
-            Alert.alert("Error", "Error obteniendo aventuras autorizadas");
-          })
+          await DataStore.query(AventuraUsuarios)
+            .then(r => {
+              return r.filter(e => {
+
+
+                if (e.usuario.id === sub) return true
+                return false
+
+              })
+            })
+
+
+            .catch((e) => {
+              Alert.alert("Error", "Error obteniendo aventuras autorizadas");
+            })
         )
-          .filter((c) => c.usuarioId === sub)
-          .map((c) => c.aventuraId);
+          .map((c) => c.aventura.id);
+
 
         r = r.map((ave, idx) => {
           return {

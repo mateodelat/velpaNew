@@ -2,45 +2,10 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
-const AccountType = {
-  "INDIVIDUAL": "INDIVIDUAL",
-  "COMPANY": "COMPANY"
-};
-
 const EstadoAventura = {
   "AUTORIZADO": "AUTORIZADO",
   "PENDIENTE": "PENDIENTE",
   "RECHAZADO": "RECHAZADO"
-};
-
-const Categorias = {
-  "ALPINISMO": "ALPINISMO",
-  "CICLISMO": "CICLISMO",
-  "MOTO": "MOTO",
-  "SKI": "SKI",
-  "SURF": "SURF",
-  "OTROS": "OTROS"
-};
-
-const StatusSolicitud = {
-  "APROVADA": "APROVADA",
-  "PENDIENTE": "PENDIENTE",
-  "RECHAZADA": "RECHAZADA"
-};
-
-const TipoUsuario = {
-  "AGENCIA": "AGENCIA",
-  "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
-};
-
-const ReservaCancelReason = {
-  "FECHACERRADA": "FECHACERRADA",
-  "CANCELADOPORCLIENTE": "CANCELADOPORCLIENTE"
-};
-
-const TipoPago = {
-  "EFECTIVO": "EFECTIVO",
-  "TARJETA": "TARJETA"
 };
 
 const TipoNotificacion = {
@@ -68,32 +33,67 @@ const TipoPublicidad = {
   "ACTUALIZACION": "ACTUALIZACION"
 };
 
-const { Aventura, SolicitudGuia, Usuario, Mensaje, ChatRoomUsuarios, ChatRoom, Reserva, Comision, Fecha, Notificacion, Comentario, Publicidad, AventuraSolicitudGuias, AventuraUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
+const Categorias = {
+  "ALPINISMO": "ALPINISMO",
+  "CICLISMO": "CICLISMO",
+  "MOTO": "MOTO",
+  "SKI": "SKI",
+  "SURF": "SURF",
+  "OTROS": "OTROS"
+};
+
+const StatusSolicitud = {
+  "APROVADA": "APROVADA",
+  "PENDIENTE": "PENDIENTE",
+  "RECHAZADA": "RECHAZADA"
+};
+
+const TipoUsuario = {
+  "AGENCIA": "AGENCIA",
+  "GUIAINDIVIDUAL": "GUIAINDIVIDUAL"
+};
+
+const AccountType = {
+  "INDIVIDUAL": "INDIVIDUAL",
+  "COMPANY": "COMPANY"
+};
+
+const TipoPago = {
+  "EFECTIVO": "EFECTIVO",
+  "TARJETA": "TARJETA"
+};
+
+const ReservaCancelReason = {
+  "FECHACERRADA": "FECHACERRADA",
+  "CANCELADOPORCLIENTE": "CANCELADOPORCLIENTE"
+};
+
+const { Aventura, Reserva, Fecha, Usuario, Comision, ChatRoom, Mensaje, SolicitudGuia, Notificacion, Comentario, Publicidad, ChatRoomUsuarios, AventuraSolicitudGuias, AventuraUsuarios, PaymentIntent, CreateAcountResponse } = initSchema(schema);
 
 export {
   Aventura,
-  SolicitudGuia,
-  Usuario,
-  Mensaje,
-  ChatRoomUsuarios,
-  ChatRoom,
   Reserva,
-  Comision,
   Fecha,
+  Usuario,
+  Comision,
+  ChatRoom,
+  Mensaje,
+  SolicitudGuia,
   Notificacion,
   Comentario,
   Publicidad,
+  ChatRoomUsuarios,
   AventuraSolicitudGuias,
   AventuraUsuarios,
-  AccountType,
   EstadoAventura,
+  TipoNotificacion,
+  TipoPublicidad,
   Categorias,
   StatusSolicitud,
   TipoUsuario,
-  ReservaCancelReason,
+  AccountType,
   TipoPago,
-  TipoNotificacion,
-  TipoPublicidad,
+  ReservaCancelReason,
   PaymentIntent,
   CreateAcountResponse
 };

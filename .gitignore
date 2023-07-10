@@ -10,11 +10,15 @@ npm-debug.*
 *.orig.*
 web-build/
 
+..UI
+
 # macOS
 .DS_Store
 
 .env
 amplify/team-provider-info.json
+
+googleServiceAccount.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
@@ -37,4 +41,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-googleServiceAccount.json

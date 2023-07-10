@@ -389,7 +389,7 @@ export default function ({ navigation,
 
             <HeaderConImagen
                 titulo={tituloAventura + " " + formatDia(fechaInicial)}
-                imagen={require("../../../assets/IMG/cagatay-orhan-PYh4QCX_fmE-unsplash.jpg")}
+                imagen={{ uri: "https://static.wixstatic.com/media/419deb_d2a4172c3ceb460dbe292c455dd6514f~mv2.jpg" }}
                 scrollY={scrollY}
                 maxHeight={height * 0.24}
             />

@@ -4,16 +4,11 @@ import { Marker } from 'react-native-maps';
 
 import MapView from "react-native-map-clustering";
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-
-import { categorias, defaultLocation, moradoOscuro, obtenerAventurasParaMapa, renderCategoIcon, verificarUbicacion } from '../../../assets/constants';
+import { defaultLocation, moradoOscuro, obtenerAventurasParaMapa, renderCategoIcon, verificarUbicacion } from '../../../assets/constants';
 
 import AdventureItem from './components/AventureItem';
 import Header from './components/Header';
 
-import { Aventura, Categorias } from '../../models';
 import { Loading } from '../../components/Loading';
 import { getLastKnownPositionAsync } from 'expo-location';
 
@@ -22,8 +17,6 @@ import { getLastKnownPositionAsync } from 'expo-location';
 
 export default function ({ navigation }) {
     const [region, setRegion] = useState(null);
-
-    const [locationPermision, setLocationPermision] = useState(null);
 
 
     useEffect(() => {
@@ -133,7 +126,6 @@ export default function ({ navigation }) {
                                     backgroundColor: selectedMarkerIdx === i ? moradoOscuro : "#fff",
                                 }}>
 
-                                    {/* Render iconos dependiendo de la categoria    */}
                                     {renderCategoIcon(e.categoria, 24, selectedMarkerIdx === i ? "#fff" : moradoOscuro)}
                                 </View>
                             </Marker>
@@ -166,7 +158,6 @@ export default function ({ navigation }) {
                 renderItem={({ item, index }) => {
                     return <AdventureItem
                         item={item}
-                        navigation={navigation}
                     />
                 }}
             />

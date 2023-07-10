@@ -400,6 +400,7 @@ export default ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        zIndex: 20
     },
     textInput: {
         fontSize: 17,

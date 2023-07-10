@@ -29,7 +29,7 @@ let { width, height } = Dimensions.get('window');
 
 export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
     const [condicionesInfo, setCondicionesInfo] = useState(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"]);
-    const [imagenEjemplo, setImagenEjemplo] = useState(require("../../../../assets/IMG/INE-Frente.png"));
+    const [imagenEjemplo, setImagenEjemplo] = useState({ uri: "https://static.wixstatic.com/media/419deb_c168e8db4b324acbb5a04dbd412aca3f~mv2.png" });
     const [mensajeDetalleCamara, setMensajeDetalleCamara] = useState("");
     const [mensajeTituloCamara, setMensajeTituloCamara] = useState("");
 
@@ -134,7 +134,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
                         setMensajeTituloCamara("Identificacion frente")
                         setCondicionesInfo(["Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
                         setMensajeDetalleCamara("Asegurate que tu identificacion encaje en el marco")
-                        setImagenEjemplo(require("../../../../assets/IMG/INE-Frente.png"))
+                        setImagenEjemplo({ uri: "https://static.wixstatic.com/media/419deb_c168e8db4b324acbb5a04dbd412aca3f~mv2.png" })
                         break;
 
                     default:
