@@ -36,6 +36,7 @@ import { DataStore } from '@aws-amplify/datastore';
 import { Aventura } from '../../../models';
 import { Loading } from '../../../components/Loading';
 import Carrousel from '../../AgregarAventura/components/Carrousel';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 const { height } = Dimensions.get("screen")
@@ -274,11 +275,14 @@ export default ({ navigation, route }) => {
         })
 
     }
-
+    const { top } = useSafeAreaInsets()
     return (
         <View style={{ flex: 1, }}>
             {/* Header */}
-            <View style={styles.headerContainer}>
+            <View style={{
+                ...styles.headerContainer,
+                height: top+60,
+            }}>
                 <MaterialIcons name="keyboard-arrow-left" size={35} color="white" style={styles.backButton} onPress={() => navigation.pop()} />
                 <Text style={styles.tituloHeader}>{mayusFirstLetter(aventura.titulo)}</Text>
                 {buttonLoading ?
@@ -796,7 +800,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: '100%',
         height: 60,
-        alignItems: 'center', justifyContent: 'center',
+        justifyContent: 'center',
         backgroundColor: moradoOscuro,
     },
 

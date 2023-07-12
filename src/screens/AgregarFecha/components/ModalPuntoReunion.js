@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     },
 
     sugestionsContainer: {
-        left: 0,
         top: 48,
     }
 

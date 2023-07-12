@@ -21,19 +21,18 @@ const dimensions = Dimensions.get('screen');
 
 
 export default function ({ item }) {
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
-    // const navigation = useNavigation()
+    const navigation = useNavigation()
 
-    // const handlePress = () => {
-    //     navigation.navigate('DetalleAventura', { id: item.id });
-    // };
+    const handlePress = () => {
+        navigation.navigate('DetalleAventura', { id: item.id });
+    };
 
-    // const handleImageLoadEnd = () => {
-    //     setLoading(false);
-    // };
+    const handleImageLoadEnd = () => {
+        setLoading(false);
+    };
 
-    return <View style={{ backgroundColor: 'red', width: 100, height: 100, }}></View >
 
     return <View style={{ width: dimensions.width }}>
         <Pressable onPress={handlePress} style={styles.elementContainer}>

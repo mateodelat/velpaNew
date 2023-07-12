@@ -35,9 +35,11 @@ export const getAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       UsuariosAutorizados {
         items {
@@ -49,9 +51,11 @@ export const getAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -89,15 +93,18 @@ export const getAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -133,23 +140,28 @@ export const listAventuras = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -191,23 +203,28 @@ export const syncAventuras = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -248,6 +265,7 @@ export const getReserva = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -255,6 +273,7 @@ export const getReserva = /* GraphQL */ `
       _deleted
       _lastChangedAt
       reservaComisionAsociadaId
+      __typename
     }
   }
 `;
@@ -300,6 +319,7 @@ export const listReservas = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -307,9 +327,11 @@ export const listReservas = /* GraphQL */ `
         _deleted
         _lastChangedAt
         reservaComisionAsociadaId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -361,6 +383,7 @@ export const syncReservas = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -368,9 +391,11 @@ export const syncReservas = /* GraphQL */ `
         _deleted
         _lastChangedAt
         reservaComisionAsociadaId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -424,6 +449,7 @@ export const reservasByFechaID = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -431,9 +457,11 @@ export const reservasByFechaID = /* GraphQL */ `
         _deleted
         _lastChangedAt
         reservaComisionAsociadaId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -487,6 +515,7 @@ export const reservasByUsuarioID = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -494,9 +523,11 @@ export const reservasByUsuarioID = /* GraphQL */ `
         _deleted
         _lastChangedAt
         reservaComisionAsociadaId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -559,9 +590,11 @@ export const getFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRoom {
         items {
@@ -576,15 +609,18 @@ export const getFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -628,19 +664,23 @@ export const listFechas = /* GraphQL */ `
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         ChatRoom {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -690,19 +730,23 @@ export const syncFechas = /* GraphQL */ `
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         ChatRoom {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -754,19 +798,23 @@ export const fechasByAventuraID = /* GraphQL */ `
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         ChatRoom {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -818,19 +866,23 @@ export const fechasByUsuarioID = /* GraphQL */ `
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         ChatRoom {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -875,9 +927,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Mensajes {
         items {
@@ -890,9 +944,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRooms {
         items {
@@ -905,9 +961,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Reservas {
         items {
@@ -936,9 +994,11 @@ export const getUsuario = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -976,9 +1036,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Notificaciones {
         items {
@@ -1000,9 +1062,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       SolicitudesCreadas {
         items {
@@ -1016,9 +1080,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comentarios {
         items {
@@ -1032,9 +1098,11 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comisiones {
         items {
@@ -1052,15 +1120,18 @@ export const getUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1103,47 +1174,58 @@ export const listUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1192,47 +1274,58 @@ export const syncUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1253,6 +1346,7 @@ export const getComision = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1278,9 +1372,11 @@ export const listComisions = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1312,9 +1408,11 @@ export const syncComisions = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1348,9 +1446,11 @@ export const comisionsByUsuarioID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1370,6 +1470,7 @@ export const getChatRoom = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       fechaID
       guiaID
@@ -1384,9 +1485,11 @@ export const getChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Participantes {
         items {
@@ -1399,9 +1502,11 @@ export const getChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -1409,6 +1514,7 @@ export const getChatRoom = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomLastMessageId
+      __typename
     }
   }
 `;
@@ -1433,16 +1539,19 @@ export const listChatRooms = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -1450,9 +1559,11 @@ export const listChatRooms = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1483,16 +1594,19 @@ export const syncChatRooms = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -1500,9 +1614,11 @@ export const syncChatRooms = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1535,16 +1651,19 @@ export const chatRoomsByFechaID = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -1552,9 +1671,11 @@ export const chatRoomsByFechaID = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1570,6 +1691,7 @@ export const getMensaje = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1590,9 +1712,11 @@ export const listMensajes = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1619,9 +1743,11 @@ export const syncMensajes = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1650,9 +1776,11 @@ export const mensajesByUsuarioID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1681,9 +1809,11 @@ export const mensajesByChatroomID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1705,15 +1835,18 @@ export const getSolicitudGuia = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1733,15 +1866,18 @@ export const listSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1767,15 +1903,18 @@ export const syncSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1803,15 +1942,18 @@ export const solicitudGuiasByUsuarioID = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1836,6 +1978,7 @@ export const getNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1865,9 +2008,11 @@ export const listNotificacions = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1903,9 +2048,11 @@ export const syncNotificacions = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1943,9 +2090,11 @@ export const notificacionsByUsuarioID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -1962,6 +2111,7 @@ export const getComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1983,9 +2133,11 @@ export const listComentarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2013,9 +2165,11 @@ export const syncComentarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2045,9 +2199,11 @@ export const comentariosByUsuarioCalificadoID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2067,6 +2223,7 @@ export const getPublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2091,9 +2248,11 @@ export const listPublicidads = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2124,9 +2283,11 @@ export const syncPublicidads = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2166,44 +2327,54 @@ export const getChatRoomUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       chatroom {
         id
@@ -2219,16 +2390,19 @@ export const getChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -2236,6 +2410,7 @@ export const getChatRoomUsuarios = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       chatroomID
       usuarioID
@@ -2245,6 +2420,7 @@ export const getChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2295,6 +2471,7 @@ export const listChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         chatroom {
           id
@@ -2308,6 +2485,7 @@ export const listChatRoomUsuarios = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         chatroomID
         usuarioID
@@ -2317,9 +2495,11 @@ export const listChatRoomUsuarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2372,6 +2552,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         chatroom {
           id
@@ -2385,6 +2566,7 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         chatroomID
         usuarioID
@@ -2394,9 +2576,11 @@ export const syncChatRoomUsuarios = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2451,6 +2635,7 @@ export const chatRoomUsuariosByChatroomID = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         chatroom {
           id
@@ -2464,6 +2649,7 @@ export const chatRoomUsuariosByChatroomID = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         chatroomID
         usuarioID
@@ -2473,9 +2659,11 @@ export const chatRoomUsuariosByChatroomID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2530,6 +2718,7 @@ export const chatRoomUsuariosByUsuarioID = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         chatroom {
           id
@@ -2543,6 +2732,7 @@ export const chatRoomUsuariosByUsuarioID = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         chatroomID
         usuarioID
@@ -2552,9 +2742,11 @@ export const chatRoomUsuariosByUsuarioID = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2589,20 +2781,24 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       solicitudGuia {
         id
@@ -2613,18 +2809,21 @@ export const getAventuraSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2670,6 +2869,7 @@ export const listAventuraSolicitudGuias = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         solicitudGuia {
           id
@@ -2682,15 +2882,18 @@ export const listAventuraSolicitudGuias = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2738,6 +2941,7 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         solicitudGuia {
           id
@@ -2750,15 +2954,18 @@ export const syncAventuraSolicitudGuias = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2808,6 +3015,7 @@ export const aventuraSolicitudGuiasByAventuraId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         solicitudGuia {
           id
@@ -2820,15 +3028,18 @@ export const aventuraSolicitudGuiasByAventuraId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2878,6 +3089,7 @@ export const aventuraSolicitudGuiasBySolicitudGuiaId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         solicitudGuia {
           id
@@ -2890,15 +3102,18 @@ export const aventuraSolicitudGuiasBySolicitudGuiaId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -2933,20 +3148,24 @@ export const getAventuraUsuarios = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       usuario {
         id
@@ -2980,50 +3199,61 @@ export const getAventuraUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -3069,6 +3299,7 @@ export const listAventuraUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         usuario {
           id
@@ -3104,15 +3335,18 @@ export const listAventuraUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -3160,6 +3394,7 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         usuario {
           id
@@ -3195,15 +3430,18 @@ export const syncAventuraUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -3253,6 +3491,7 @@ export const aventuraUsuariosByAventuraId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         usuario {
           id
@@ -3288,15 +3527,18 @@ export const aventuraUsuariosByAventuraId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;
@@ -3346,6 +3588,7 @@ export const aventuraUsuariosByUsuarioId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         usuario {
           id
@@ -3381,15 +3624,18 @@ export const aventuraUsuariosByUsuarioId = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       nextToken
       startedAt
+      __typename
     }
   }
 `;

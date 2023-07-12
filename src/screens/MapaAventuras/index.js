@@ -72,7 +72,8 @@ export default function ({ navigation }) {
             latitudeDelta: 0.8,
             longitudeDelta: 0.8,
         }
-        flatlist.current.scrollToIndex({ index: idx })
+        
+        // flatlist?.current?.scrollToIndex({ index: idx })
         map?.current?.animateToRegion(region);
 
 

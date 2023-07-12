@@ -252,6 +252,7 @@ export default ({
             <View style={{
                 padding: 10,
                 paddingBottom: 5,
+                zIndex: 1,
             }}>
 
                 <View style={{
@@ -452,7 +453,7 @@ const styles = StyleSheet.create({
     sugestionsContainer: {
         position: 'absolute',
         backgroundColor: "#f4f6f6",
-        left: 20,
+        left: 10, 
         top: 68,
         zIndex: 1,
         width: '100%',

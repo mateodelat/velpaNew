@@ -229,10 +229,10 @@ export default function Register({ navigation }) {
 
 
                 {/* Boton de google */}
-                <Pressable onPress={handleGoogle} style={styles.boton}>
+                {/* <Pressable onPress={handleGoogle} style={styles.boton}>
                     <Image source={require('../../../assets/GoogleIcon.png')} style={{ width: 25, height: 25, }} />
                     <Text style={{ color: '#fff', fontSize: 18, }}>   Registrarse con Google</Text>
-                </Pressable>
+                </Pressable> */}
 
 
                 <View style={{ justifyContent: 'flex-end', }}>

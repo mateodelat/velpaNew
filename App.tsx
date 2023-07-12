@@ -35,17 +35,17 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
-  // const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
+  const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
 
-  // const url = standAlone;
+  const url = local;
 
   Amplify.configure({
     ...awsconfig,
-    //   oauth: {
-    //     ...awsconfig.oauth,
-    //     redirectSignIn: url,
-    //     redirectSignOut: url,
-    //   },
+      oauth: {
+        ...awsconfig.oauth,
+        redirectSignIn: url,
+        redirectSignOut: url,
+      },
   });
 
   const publicidadLoaded = useRef<boolean>();

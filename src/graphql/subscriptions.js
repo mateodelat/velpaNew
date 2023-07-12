@@ -35,9 +35,11 @@ export const onCreateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       UsuariosAutorizados {
         items {
@@ -49,9 +51,11 @@ export const onCreateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -89,15 +93,18 @@ export const onCreateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -135,9 +142,11 @@ export const onUpdateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       UsuariosAutorizados {
         items {
@@ -149,9 +158,11 @@ export const onUpdateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -189,15 +200,18 @@ export const onUpdateAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -235,9 +249,11 @@ export const onDeleteAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       UsuariosAutorizados {
         items {
@@ -249,9 +265,11 @@ export const onDeleteAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -289,15 +307,18 @@ export const onDeleteAventura = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -338,6 +359,7 @@ export const onCreateReserva = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -345,6 +367,7 @@ export const onCreateReserva = /* GraphQL */ `
       _deleted
       _lastChangedAt
       reservaComisionAsociadaId
+      __typename
     }
   }
 `;
@@ -385,6 +408,7 @@ export const onUpdateReserva = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -392,6 +416,7 @@ export const onUpdateReserva = /* GraphQL */ `
       _deleted
       _lastChangedAt
       reservaComisionAsociadaId
+      __typename
     }
   }
 `;
@@ -432,6 +457,7 @@ export const onDeleteReserva = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -439,6 +465,7 @@ export const onDeleteReserva = /* GraphQL */ `
       _deleted
       _lastChangedAt
       reservaComisionAsociadaId
+      __typename
     }
   }
 `;
@@ -501,9 +528,11 @@ export const onCreateFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRoom {
         items {
@@ -518,15 +547,18 @@ export const onCreateFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -589,9 +621,11 @@ export const onUpdateFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRoom {
         items {
@@ -606,15 +640,18 @@ export const onUpdateFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -677,9 +714,11 @@ export const onDeleteFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRoom {
         items {
@@ -694,15 +733,18 @@ export const onDeleteFecha = /* GraphQL */ `
           _deleted
           _lastChangedAt
           chatRoomLastMessageId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -747,9 +789,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Mensajes {
         items {
@@ -762,9 +806,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRooms {
         items {
@@ -777,9 +823,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Reservas {
         items {
@@ -808,9 +856,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -848,9 +898,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Notificaciones {
         items {
@@ -872,9 +924,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       SolicitudesCreadas {
         items {
@@ -888,9 +942,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comentarios {
         items {
@@ -904,9 +960,11 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comisiones {
         items {
@@ -924,15 +982,18 @@ export const onCreateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -977,9 +1038,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Mensajes {
         items {
@@ -992,9 +1055,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRooms {
         items {
@@ -1007,9 +1072,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Reservas {
         items {
@@ -1038,9 +1105,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -1078,9 +1147,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Notificaciones {
         items {
@@ -1102,9 +1173,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       SolicitudesCreadas {
         items {
@@ -1118,9 +1191,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comentarios {
         items {
@@ -1134,9 +1209,11 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comisiones {
         items {
@@ -1154,15 +1231,18 @@ export const onUpdateUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1207,9 +1287,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Mensajes {
         items {
@@ -1222,9 +1304,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       ChatRooms {
         items {
@@ -1237,9 +1321,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Reservas {
         items {
@@ -1268,9 +1354,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _deleted
           _lastChangedAt
           reservaComisionAsociadaId
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Fechas {
         items {
@@ -1308,9 +1396,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Notificaciones {
         items {
@@ -1332,9 +1422,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       SolicitudesCreadas {
         items {
@@ -1348,9 +1440,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comentarios {
         items {
@@ -1364,9 +1458,11 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Comisiones {
         items {
@@ -1384,15 +1480,18 @@ export const onDeleteUsuario = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1413,6 +1512,7 @@ export const onCreateComision = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1433,6 +1533,7 @@ export const onUpdateComision = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1453,6 +1554,7 @@ export const onDeleteComision = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1472,6 +1574,7 @@ export const onCreateChatRoom = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       fechaID
       guiaID
@@ -1486,9 +1589,11 @@ export const onCreateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Participantes {
         items {
@@ -1501,9 +1606,11 @@ export const onCreateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -1511,6 +1618,7 @@ export const onCreateChatRoom = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomLastMessageId
+      __typename
     }
   }
 `;
@@ -1530,6 +1638,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       fechaID
       guiaID
@@ -1544,9 +1653,11 @@ export const onUpdateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Participantes {
         items {
@@ -1559,9 +1670,11 @@ export const onUpdateChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -1569,6 +1682,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomLastMessageId
+      __typename
     }
   }
 `;
@@ -1588,6 +1702,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       fechaID
       guiaID
@@ -1602,9 +1717,11 @@ export const onDeleteChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       Participantes {
         items {
@@ -1617,9 +1734,11 @@ export const onDeleteChatRoom = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
@@ -1627,6 +1746,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
       _deleted
       _lastChangedAt
       chatRoomLastMessageId
+      __typename
     }
   }
 `;
@@ -1642,6 +1762,7 @@ export const onCreateMensaje = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1657,6 +1778,7 @@ export const onUpdateMensaje = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1672,6 +1794,7 @@ export const onDeleteMensaje = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1695,15 +1818,18 @@ export const onCreateSolicitudGuia = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1727,15 +1853,18 @@ export const onUpdateSolicitudGuia = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1759,15 +1888,18 @@ export const onDeleteSolicitudGuia = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         nextToken
         startedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1794,6 +1926,7 @@ export const onCreateNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1820,6 +1953,7 @@ export const onUpdateNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1846,6 +1980,7 @@ export const onDeleteNotificacion = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1864,6 +1999,7 @@ export const onCreateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1882,6 +2018,7 @@ export const onUpdateComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1900,6 +2037,7 @@ export const onDeleteComentario = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1921,6 +2059,7 @@ export const onCreatePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1942,6 +2081,7 @@ export const onUpdatePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -1963,6 +2103,7 @@ export const onDeletePublicidad = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2004,44 +2145,54 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       chatroom {
         id
@@ -2057,16 +2208,19 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -2074,6 +2228,7 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       chatroomID
       usuarioID
@@ -2083,6 +2238,7 @@ export const onCreateChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2124,44 +2280,54 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       chatroom {
         id
@@ -2177,16 +2343,19 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -2194,6 +2363,7 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       chatroomID
       usuarioID
@@ -2203,6 +2373,7 @@ export const onUpdateChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2244,44 +2415,54 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       chatroom {
         id
@@ -2297,16 +2478,19 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
           _version
           _deleted
           _lastChangedAt
+          __typename
         }
         fechaID
         guiaID
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         Participantes {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
@@ -2314,6 +2498,7 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
         _deleted
         _lastChangedAt
         chatRoomLastMessageId
+        __typename
       }
       chatroomID
       usuarioID
@@ -2323,6 +2508,7 @@ export const onDeleteChatRoomUsuarios = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2359,20 +2545,24 @@ export const onCreateAventuraSolicitudGuias = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       solicitudGuia {
         id
@@ -2383,18 +2573,21 @@ export const onCreateAventuraSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2431,20 +2624,24 @@ export const onUpdateAventuraSolicitudGuias = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       solicitudGuia {
         id
@@ -2455,18 +2652,21 @@ export const onUpdateAventuraSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2503,20 +2703,24 @@ export const onDeleteAventuraSolicitudGuias = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       solicitudGuia {
         id
@@ -2527,18 +2731,21 @@ export const onDeleteAventuraSolicitudGuias = /* GraphQL */ `
         Aventuras {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2575,20 +2782,24 @@ export const onCreateAventuraUsuarios = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       usuario {
         id
@@ -2622,50 +2833,61 @@ export const onCreateAventuraUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2702,20 +2924,24 @@ export const onUpdateAventuraUsuarios = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       usuario {
         id
@@ -2749,50 +2975,61 @@ export const onUpdateAventuraUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
@@ -2829,20 +3066,24 @@ export const onDeleteAventuraUsuarios = /* GraphQL */ `
         SolicitudGuias {
           nextToken
           startedAt
+          __typename
         }
         UsuariosAutorizados {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       usuario {
         id
@@ -2876,50 +3117,61 @@ export const onDeleteAventuraUsuarios = /* GraphQL */ `
         AventurasAutorizadas {
           nextToken
           startedAt
+          __typename
         }
         Mensajes {
           nextToken
           startedAt
+          __typename
         }
         ChatRooms {
           nextToken
           startedAt
+          __typename
         }
         Reservas {
           nextToken
           startedAt
+          __typename
         }
         Fechas {
           nextToken
           startedAt
+          __typename
         }
         Notificaciones {
           nextToken
           startedAt
+          __typename
         }
         SolicitudesCreadas {
           nextToken
           startedAt
+          __typename
         }
         Comentarios {
           nextToken
           startedAt
+          __typename
         }
         Comisiones {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
         _version
         _deleted
         _lastChangedAt
+        __typename
       }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      __typename
     }
   }
 `;
