@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text,  StyleSheet, Alert } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-// import Bugsnag from "@bugsnag/expo";
+import Bugsnag from "@bugsnag/expo";
 import Boton from "../../components/Boton";
 
 class ErrorRouter extends React.Component {
@@ -13,7 +13,7 @@ class ErrorRouter extends React.Component {
   componentDidCatch(error: Error) {
     console.log(error);
     Alert.alert("Ocurrio un error", error.message);
-    //  Bugsnag.notify(error);
+    Bugsnag.notify(error);
   }
 
   render() {

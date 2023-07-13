@@ -1,4 +1,5 @@
-// import Bugsnag from "@bugsnag/expo";
+import Bugsnag from "@bugsnag/expo";
+
 import "@azure/core-asynciterator-polyfill";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -35,6 +36,8 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  Bugsnag.start()
+
   const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
 
   const url = local;
@@ -65,13 +68,11 @@ export default function App() {
     if (info) {
       const { email, nickname, sub } = info.attributes;
 
-      // Bugsnag.setUser(sub, email, nickname);
+      Bugsnag.setUser(sub, email, nickname);
     }
   }
 
   useEffect(() => {
-    // Bugsnag.start();
-
     checkOnboarding();
     
     // Ver si el usuario esta autenticado
@@ -102,7 +103,6 @@ export default function App() {
         case "signOut":
           // Cancelar todas las notificaciones al celular
           cancelAllScheduledNotificationsAsync();
-          // Bugsnag.setUser("", "", "");
           setLoading(false);
           setAuthenticated(false);
           break;
