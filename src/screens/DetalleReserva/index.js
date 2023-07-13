@@ -152,7 +152,7 @@ export default ({ navigation, route }) => {
     }
 
     async function navigateChat() {
-        const chat = (await DataStore.query(ChatRoom, e => e.fechaID("eq", fecha.id)))[0]
+        const chat = (await DataStore.query(ChatRoom, e => e.fechaID.eq( fecha.id)))[0]
         navigation.navigate("ChatRoom", { id: chat.id, titulo: chat.name, image: chat.picture })
 
     }
@@ -280,14 +280,17 @@ export default ({ navigation, route }) => {
 
             // Borrar notificaciones de recordatorio asociadas
             DataStore.query(Notificacion, not => not
-                .reservaID("eq", reserva.id)
-                .usuarioID("eq", sub)
-                .or(
+                .and(e=>[
+
+                e.reservaID.eq( reserva.id),
+                e.usuarioID.eq( sub),
+                e.or(
                     r => r
-                        .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
-                        .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
-                )
-                .fechaID("eq", fecha.id)
+                        .tipo.eq( TipoNotificacion.RECORDATORIOFECHA)
+                        .tipo.eq( TipoNotificacion.CALIFICAUSUARIO)
+                ),
+                e.fechaID.eq( fecha.id),
+            ])
             ).then(r => {
                 console.log("Notificaciones borrando: ", r.length)
                 r.map(not => {
@@ -342,7 +345,7 @@ export default ({ navigation, route }) => {
             })
 
             // Quitar relacion de usuario chatroom
-            DataStore.query(ChatRoom, c => c.fechaID("eq", reserva.fechaID))
+            DataStore.query(ChatRoom, c => c.fechaID.eq( reserva.fechaID))
                 .then(chat => {
                     chat = chat[0]
                     DataStore.query(ChatRoomUsuarios)

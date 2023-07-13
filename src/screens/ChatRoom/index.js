@@ -100,7 +100,7 @@ export default ({ route }) => {
 
     useEffect(() => {
         fectchData()
-        const subscription = DataStore.observe(Mensaje, msg => msg.chatroomID("eq", chatroomID))
+        const subscription = DataStore.observe(Mensaje, msg => msg.chatroomID.eq( chatroomID))
             .subscribe((msg) => {
                 // Subir solo si es la primera solicitud
                 if (msg.opType === OpType.INSERT) {
@@ -117,7 +117,7 @@ export default ({ route }) => {
     const fectchData = async () => {
         const sub = await getUserSub()
         setUsuarioID(sub)
-        const mensajes = await DataStore.query(Mensaje, me => me.chatroomID("eq", chatroomID),
+        const mensajes = await DataStore.query(Mensaje, me => me.chatroomID.eq( chatroomID),
             {
                 sort: e => e.createdAt("DESCENDING")
             })

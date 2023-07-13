@@ -124,7 +124,7 @@ export default ({ navigation, route }) => {
 
         // Suscribirse a reservas en la fecha
         subscription = DataStore.observe(Reserva, res => {
-            res.fechaID("eq", fechaID ? fechaID : fechaGotten?.id)
+            res.fechaID.eq(fechaID ? fechaID : fechaGotten?.id)
         })
             .subscribe((msg) => {
 
@@ -159,8 +159,11 @@ export default ({ navigation, route }) => {
 
         const now = new Date()
         const reservas = await DataStore.query(Reserva, res => res
-            .fechaID("eq", fechaID)
-            .cancelado("ne", true)
+            .and(c => [
+                c.fechaID.eq(fechaID),
+                c.cancelado.ne( true),
+
+            ])
         )
         let personasReservadas = []
 
@@ -249,7 +252,7 @@ export default ({ navigation, route }) => {
 
 
     async function navigateChat() {
-        const chat = (await DataStore.query(ChatRoom, e => e.fechaID("eq", fecha.id)))[0]
+        const chat = (await DataStore.query(ChatRoom, e => e.fechaID.eq(fecha.id)))[0]
         navigation.navigate("ChatRoom", { id: chat.id, titulo: chat.name, image: chat.picture })
 
     }
@@ -306,14 +309,15 @@ export default ({ navigation, route }) => {
         // Funcion para borrar todas las notificaciones asociadas a la fecha
         function borrarNotificaciones() {
             DataStore.query(Notificacion, n => n
-                .fechaID("eq", fecha.id)
-
-                // Seleccionar solo las de tipo calificar usuario o recordatorio
-                .or(t => {
-                    t
-                        .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
-                        .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
-                })
+                .and(n => [
+                    n.fechaID.eq(fecha.id),
+                    // Seleccionar solo las de tipo calificar usuario o recordatorio
+                    n.or(t => t.and([
+                        t.tipo.eq(TipoNotificacion.RECORDATORIOFECHA),
+                        t.tipo.eq(TipoNotificacion.CALIFICAUSUARIO)
+                    ])
+                    )
+                ])
             )
                 .then(not => {
                     console.log("Borrando ", not.length, " notificaciones en la fecha...")
@@ -343,8 +347,10 @@ export default ({ navigation, route }) => {
 
             // Ver si hay personas reservadas que no hayan cancelado
             const reservas = await DataStore.query(Reserva, r => r
-                .fechaID("eq", fecha.id)
-                .cancelado("ne", true)
+                .and(r => [
+                    r.fechaID.eq(fecha.id),
+                    r.cancelado.ne( true),
+                ])
             )
 
             // Si tenemos reservas avisar de la comision y cancelar todos los pagos de los clientes
@@ -495,7 +501,7 @@ export default ({ navigation, route }) => {
             }
 
             // Borrar el chatroom
-            DataStore.query(ChatRoom, c => c.fechaID("eq", fecha.id))
+            DataStore.query(ChatRoom, c => c.fechaID.eq(fecha.id))
                 .then(r => {
                     r = r[0]
                     DataStore.delete(r)
@@ -772,7 +778,7 @@ export default ({ navigation, route }) => {
 
                 // Si se cambia fecha inicial, cambiar el nombre del chatroom
                 if (fechaInicial !== fechaInicialOrig) {
-                    DataStore.query(ChatRoom, c => c.fechaID("eq", id))
+                    DataStore.query(ChatRoom, c => c.fechaID.eq(id))
                         .then(r => {
                             r = r[0]
                             DataStore.save(ChatRoom.copyOf(r, n => {
@@ -885,8 +891,11 @@ export default ({ navigation, route }) => {
                 setLoading(true)
                 // Primero ver si hay usuarios reservados en la fecha que no hayan cancelado
                 const reservas = await DataStore.query(Reserva, r => r
-                    .fechaID("eq", id)
-                    .cancelado("ne", true)
+                    .and(r => [
+                        r.fechaID.eq(id),
+                        r.cancelado.ne( true),
+
+                    ])
                 )
                 const tituloAventura = fecha.tituloAventura
 
@@ -904,21 +913,22 @@ export default ({ navigation, route }) => {
                             await Promise.all(reservas.map(async u => {
                                 // Borrar notificaciones viejas en base de datos
                                 DataStore.query(Notificacion, r => r
-                                    .fechaID("eq", id)
+                                    .and(r => [
+                                        r.fechaID.eq(id),
 
-                                    // Selccionar las que sean de tipo calfica usuario
-                                    .or(t => {
-                                        t
-                                            .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
-                                            .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
-                                    })
+                                        // Selccionar las que sean de tipo calfica usuario
+                                        r.or(t => [
+                                            t.tipo.eq(TipoNotificacion.RECORDATORIOFECHA),
+                                            t.tipo.eq(TipoNotificacion.CALIFICAUSUARIO)
+                                        ]),
 
-                                    // Seleccionar si es igual al usuario del cliente o el guia
-                                    .or(t => {
-                                        t
-                                            .usuarioID("eq", guiaFecha.id)
-                                            .usuarioID("eq", u.usuarioID)
-                                    })
+                                        // Seleccionar si es igual al usuario del cliente o el guia
+                                        r.or(t => [
+                                            t.usuarioID.eq(guiaFecha.id),
+                                            t.usuarioID.eq(u.usuarioID)
+                                        ])
+
+                                    ])
 
                                 )
                                     .then(not => {
@@ -984,17 +994,19 @@ export default ({ navigation, route }) => {
                             await Promise.all(reservas.map(async u => {
                                 // Borrar notificaciones viejas en base de datos
                                 DataStore.query(Notificacion, r => r
-                                    .fechaID("eq", id)
+                                    .and(r => [
 
-                                    // Solo los recordatorios en la fecha
-                                    .tipo("eq", TipoNotificacion.RECORDATORIOFECHA)
+                                        r.fechaID.eq(id),
 
-                                    // Seleccionar si es igual al usuario del cliente o el guia
-                                    .or(t => {
-                                        t
-                                            .usuarioID("eq", guiaFecha.id)
-                                            .usuarioID("eq", u.usuarioID)
-                                    })
+                                        // Solo los recordatorios en la fecha
+                                        r.tipo.eq(TipoNotificacion.RECORDATORIOFECHA),
+
+                                        // Seleccionar si es igual al usuario del cliente o el guia
+                                        r.or(t => [
+                                            t.usuarioID.eq(guiaFecha.id),
+                                            t.usuarioID.eq(u.usuarioID)
+                                        ])
+                                    ])
 
                                 )
                                     .then(not => {
@@ -1056,14 +1068,13 @@ export default ({ navigation, route }) => {
 
                                 // Borrar notificaciones viejas en base de datos
                                 DataStore.query(Notificacion, r => r
-                                    .fechaID("eq", id)
-
-                                    // Solo los recordatorios en la fecha
-                                    .tipo("eq", TipoNotificacion.CALIFICAUSUARIO)
-
-                                    // Selccionar las que sean del  usuario
-                                    .usuarioID("eq", u.usuarioID)
-
+                                    .and(r => [
+                                        r.fechaID.eq(id),
+                                        // Solo los recordatorios en la fecha
+                                        r.tipo.eq(TipoNotificacion.CALIFICAUSUARIO),
+                                        // Selccionar las que sean del  usuario
+                                        r.usuarioID.eq(u.usuarioID),
+                                    ])
 
                                 )
                                     .then(not => {
@@ -1180,10 +1191,11 @@ export default ({ navigation, route }) => {
                 else {
                     // Borrar notificaciones viejas del guia en base de datos
                     DataStore.query(Notificacion, r => r
-                        .fechaID("eq", id)
-
-                        // Selccionar las que sean del  usuario
-                        .usuarioID("eq", guiaFecha.id)
+                        .and(r => [
+                            r.fechaID.eq( id),
+                            // Selccionar las que sean del  usuario
+                            r.usuarioID.eq( guiaFecha.id)
+                        ])
 
 
                     )
@@ -2111,12 +2123,6 @@ const styles = StyleSheet.create({
     },
 
 
-    captionTxt: {
-        fontSize: 15,
-        marginBottom: 15,
-        marginLeft: 5,
-
-    },
 
     textInput: {
         // flex: 1,

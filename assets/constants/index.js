@@ -567,7 +567,7 @@ export function formatCuentaCLABE(input) {
 
 export const obtenerAventurasParaMapa = async () => {
   return await DataStore.query(Aventura,
-    ave => ave.estadoAventura("eq", 'AUTORIZADO')
+    ave => ave.estadoAventura.eq('AUTORIZADO')
   )
     .then(async r => {
 
@@ -650,7 +650,7 @@ export const listSolicitudes = /* GraphQL */ `
 export const listAventurasAutorizadas = async (maxItems, page) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
-    c => c.estadoAventura("eq", "AUTORIZADO"),
+    c => c.estadoAventura.eq("AUTORIZADO"),
     {
       limit: maxItems,
       page,
@@ -700,9 +700,12 @@ export const distancia2Puntos = function (lat1, lon1, lat2, lon2) {
 export const listAventurasSugeridas = async (id, maxItems, aventuraBase) => {
   const ave = await DataStore.query(Aventura,
     // Pedir solo las aventuras ya verificadas
-    c => c
-      .estadoAventura("eq", "AUTORIZADO")
-      .id("ne", id),
+    c => c.and(
+      c => [
+        c.estadoAventura.eq("AUTORIZADO"),
+        c.id.ne(id),
+      ]
+    )
   )
     .then(async r => {
       const { coordenadas: { latitude: latBase, longitude: longBase } } = aventuraBase
@@ -1225,7 +1228,7 @@ export async function sendAdminNotification({
   descripcion,
   usuarioID
 }) {
-  const admins = await DataStore.query(Usuario, usr => usr.admin("eq", true))
+  const admins = await DataStore.query(Usuario, usr => usr.admin.eq(true))
 
   const sender = await DataStore.query(Usuario, usuarioID)
 

@@ -133,10 +133,13 @@ export default ({
 
         const sub = await getUserSub()
         DataStore.query(Fecha, e => e
-            .usuarioID("eq", sub)
-            .fechaInicial("gt", new Date().getTime())
-            .id("ne", fechaID)
-            .cancelado("ne", true)
+            .and(e => [
+                e.usuarioID.eq( sub),
+                e.fechaInicial.gt( new Date().getTime()),
+                e.id.ne( fechaID),
+                e.cancelado.ne( true),
+            ])
+
         )
             .then(r => {
 

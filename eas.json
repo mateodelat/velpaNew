@@ -1,9 +1,12 @@
 {
   "cli": {
-    "version": ">= 0.43.0"
+    "version": ">= 0.53.1"
   },
   "build": {
     "development": {
+      "ios": {
+        "resourceClass": "m-medium"
+      },
       "developmentClient": true,
       "distribution": "internal"
     },
@@ -11,6 +14,9 @@
       "distribution": "internal"
     },
     "production": {
+      "ios": {
+        "resourceClass": "m-medium"
+      },
       "autoIncrement": true,
       "channel": "production"
     }

@@ -179,15 +179,21 @@ export default ({ route }) => {
 
         // Pedir todas las fechas futuras que no han sido canceladas
         const fechas = await DataStore.query(Fecha, fe =>
-            fe.fechaInicial("gt", new Date())
-                .cancelado("ne", true)
+            fe.
+            and(e=>[
+                e.fechaInicial.gt( new Date()),
+                e.cancelado.ne( true)
+            ])
         )
 
         // Pedir las reservas que no han sido canceladas
         const reservas = await DataStore.query(Reserva, res =>
-            res
-                .cancelado("ne", true)
-                .usuarioID("eq", sub)
+            res.and(c=>
+                [
+                    c.cancelado.ne( true),
+                    c.usuarioID.eq( sub),
+                ]
+                )
         )
 
         // // Si hay reservas revisar si fue la primera
@@ -412,9 +418,12 @@ export default ({ route }) => {
 
             verNuevasNotificaciones(sub)
             subscripcionNotificaciones = DataStore.observe(Notificacion, e => e
-                .usuarioID("eq", sub)
-                .leido("ne", true)
-                .showAt("lt", new Date())
+                .and(c=>[
+                    c.usuarioID.eq( sub),
+                    c.leido.ne( true),
+                    c.showAt.lt( new Date()),
+
+                ])
             )
                 .subscribe(msg => {
 
@@ -427,7 +436,7 @@ export default ({ route }) => {
 
             verNuevosMensajes(sub)
             subscripcionMensajes = DataStore.observe(Usuario,
-                e => e.id("eq", sub))
+                e => e.id.eq( sub))
                 .subscribe(msg => {
                     // Si hay nuevos mensajes en el usuario
                     if (!!msg.element.newMessages) {
@@ -448,9 +457,11 @@ export default ({ route }) => {
 
         // Obtener todas las notificaciones no vistas
         const unread = await DataStore.query(Notificacion, e => e
-            .usuarioID("eq", sub)
-            .leido("ne", true)
-            .showAt("lt", new Date())
+            .and(c=>[
+                c.usuarioID.eq( sub),
+                c.leido.ne( true),
+                c.showAt.lt( new Date()),
+            ])
         )
         // console.log("Nuevas notificaciones:", unread.length)
 
@@ -464,7 +475,7 @@ export default ({ route }) => {
 
     const verNuevosMensajes = async (sub) => {
         // Obtener todas las notificaciones no vistas
-        const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
+        const usr = (await DataStore.query(Usuario, e => e.id.eq( sub)))[0]
 
         // console.log("Mensajes nuevos:", usr.newMessages)
 

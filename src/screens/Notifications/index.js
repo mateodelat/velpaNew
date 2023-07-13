@@ -110,10 +110,10 @@ export default () => {
     const fetchNotificaciones = async () => {
         const sub = await getUserSub()
         const notifications = await DataStore.query(Notificacion, (e) => e
-            .usuarioID("eq", sub)
+            .usuarioID.eq( sub)
 
             // Mostrar notificaciones que no tienen showAt o que el show at es anterior a la fecha actual
-            .showAt("lt", new Date())
+            .showAt.lt( new Date())
 
             , {
                 sort: e => e

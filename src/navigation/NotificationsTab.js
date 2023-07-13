@@ -44,9 +44,11 @@ export default function () {
 
             verNuevasNotificaciones(sub)
             subscripcionNotificaciones = DataStore.observe(Notificacion, e => e
-                .usuarioID("eq", sub)
-                .leido("ne", true)
-                .showAt("gt", new Date())
+                .and(c=>[
+                    c.usuarioID.eq( sub),
+                    c.leido.ne( true),
+                    c.showAt.gt( new Date()),
+                ])
             )
                 .subscribe(msg => {
                     if (msg.opType !== OpType.DELETE) {
@@ -57,7 +59,7 @@ export default function () {
 
             verNuevosMensajes(sub)
             subscripcionMensajes = DataStore.observe(Usuario,
-                e => e.id("eq", sub))
+                e => e.id.eq( sub))
                 .subscribe(msg => {
                     // Si hay nuevos mensajes en el usuario
                     if (!!msg.element.newMessages) {
@@ -75,9 +77,12 @@ export default function () {
     const verNuevasNotificaciones = async (sub) => {
         // Obtener todas las notificaciones no vistas
         const unread = await DataStore.query(Notificacion, e => e
-            .usuarioID("eq", sub)
-            .leido("ne", true)
-            .showAt("lt", new Date())
+            .and(c=>[
+                c.usuarioID.eq( sub),
+                c.leido.ne( true),
+                c.showAt.lt( new Date()),
+    
+            ])
         )
 
         if (unread.length !== 0) {

@@ -99,7 +99,7 @@ export default ({ route }) => {
   async function fetchComments() {
     DataStore.query(
       Comentario,
-      (c) => c.usuarioCalificadoID("eq", id ? id : user.id),
+      (c) => c.usuarioCalificadoID.eq( id ? id : user.id),
       {
         sort: (r) => r.createdAt("DESCENDING"),
       }
@@ -161,7 +161,11 @@ export default ({ route }) => {
       if (!route.params?.user) {
         DataStore.query(Usuario, id).then(async (r) => {
           const fechasUsuario = await DataStore.query(Fecha, (f) =>
-            f.cancelado("ne", true).usuarioID("eq", r.id)
+            f.
+            and(e=>[
+              e.cancelado.ne( true),
+              e.usuarioID.eq( r.id)
+            ])
           );
 
           setUser({
@@ -190,7 +194,10 @@ export default ({ route }) => {
         const usr = route.params.user;
 
         const fechasUsuario = await DataStore.query(Fecha, (f) =>
-          f.cancelado("ne", true).usuarioID("eq", usr.id)
+          f.and(e=>[
+            e.cancelado.ne( true),
+            e.usuarioID.eq( usr.id)
+          ])
         );
 
         setNombre(usr.nombre);

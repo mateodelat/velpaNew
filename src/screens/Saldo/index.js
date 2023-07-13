@@ -276,7 +276,7 @@ export default function ({ navigation, route }) {
                     const fe = await DataStore.query(Fecha, fechaID)
 
                     // Obtener la reserva
-                    const res = await DataStore.query(Reserva, r => r.fechaID("eq", fechaID), {
+                    const res = await DataStore.query(Reserva, r => r.fechaID.eq( fechaID), {
                         sort: e => e.createdAt("DESCENDING")
                     })
                         .then(async r => {

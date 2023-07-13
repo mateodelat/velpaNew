@@ -202,19 +202,23 @@ export default function ({ route, navigation }) {
 
             // Pedir el usuario para ver si debe comisiones
             const coms = await DataStore.query(Comision, r => r
-                // Id coincidente
-                .usuarioID("eq", guiaID)
+                .and(r => [
 
-                // Que no haya sido procesada
-                .payed("ne", true)
+                    // Id coincidente
+                    r.usuarioID.eq(guiaID),
 
-                // Que no lo este editando alguien mas o que haya pasado mas de 10 minutos de cuando se empezo a editar
-                .or(e => e
-                    // Que no lo este viendo alguien mas
-                    .editing("ne", true)
-                    // Que haya pasado mas de 10 minutos de la ultima edicion
-                    .startEditingAt("gt", (new Date().getTime()) - (msInMinute * 10))
-                )
+                    // Que no haya sido procesada
+                    r.payed.ne( true),
+
+                    // Que no lo este editando alguien mas o que haya pasado mas de 10 minutos de cuando se empezo a editar
+                    r.or(e => e
+                        // Que no lo este viendo alguien mas
+                        .editing.ne( true)
+                        // Que haya pasado mas de 10 minutos de la ultima edicion
+                        .startEditingAt.gt( (new Date().getTime()) - (msInMinute * 10))
+                    )
+                ])
+
                 , {
                     sort: e => e.amount("DESCENDING")
                 })
@@ -361,464 +365,466 @@ export default function ({ route, navigation }) {
 
     const isFechaFull = async (fecha) => {
         const reservas = await DataStore.query(Reserva, r => r
-            .cancelado("ne", true)
-            .fechaID("eq", fechaID))
-        let personasReservadas = 0
+            .and(e => [
+                e.cancelado.ne( true),
+                e.fechaID.eq( fechaID)
+            ]))
+    let personasReservadas = 0
 
-        reservas.map(res => {
-            const personas = res.tercera + res.adultos + res.ninos
-            personasReservadas += personas
-        })
+    reservas.map(res => {
+        const personas = res.tercera + res.adultos + res.ninos
+        personasReservadas += personas
+    })
 
-        return (personasReservadas + personasTotales > fecha?.personasTotales)
-    }
-
-
-
-    const handleConfirm = async () => {
-
-        if (tipoPago === null) {
-            Alert.alert("Error", "Selecciona un tipo de pago")
-        } else {
-            let t
-
-            try {
-                setButtonLoading(true)
+    return (personasReservadas + personasTotales > fecha?.personasTotales)
+}
 
 
 
-                // Revisar que no se haya llenado la fecha
-                if (await isFechaFull(fecha)) {
-                    setButtonLoading(false)
-                    clearTimeout(t)
-                    Alert.alert("Atencion",
-                        "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
-                        [
-                            {
-                                text: "Ver",
-                            },
-                        ],
-                        { cancelable: false }
-                    )
-                } else {
-                    let guia = await DataStore.query(Usuario, guiaID)
-                    // Pago con tarjeta
-                    if (tipoPago === "TARJETA") {
+const handleConfirm = async () => {
 
-                        // Verificar pago
-                        if (!paymentOption?.label || !paymentOption?.image) {
-                            Alert.alert("Error", "Agrega una tarjeta o paga en efectivo")
-                            clearTimeout(t)
-                            setButtonLoading(false)
-                            return
-                        }
+    if (tipoPago === null) {
+        Alert.alert("Error", "Selecciona un tipo de pago")
+    } else {
+        let t
 
-                        const { error } = await confirmPaymentSheetPayment()
-
-                            // Si el pago se confirma con exito, se eliminan las comisiones que se debian del usuario
-                            .then((r) => {
-                                if (!r.error) {
-                                    console.log("Eliminando comisiones del estado y actualizando en datastore a pagadas...")
-                                    comisiones.current?.map(com => {
-                                        DataStore.query(Comision, com.id)
-                                            .then(com => {
-                                                DataStore.save(Comision.copyOf(com, ne => {
-                                                    ne.editing = false;
-                                                    ne.startEditingAt = null;
-
-                                                    ne.payed = true;
-                                                    ne.pagadoEnReservaID = reservaID;
-                                                })).then(r => console.log("Comision de ", r.amount, " puesta como pagada"))
-                                            })
-                                    })
-                                    setPayed(true)
-                                    comisiones.current = null
-                                }
-                                return r
-                            })
-                            .catch(e => {
-                                Alert.alert("Error", "Error realizando el pago")
-                                console.log(e)
-                            })
-                        // Si hubo un error con la tarjeta, se sale de la funcion
-                        if (error) {
-                            setButtonLoading(false)
-                            Alert.alert(`Error code: ${error.code}`, error.message);
-                            return
-                        }
+        try {
+            setButtonLoading(true)
 
 
 
-                    }
-
-                    // Si fue pago en efectivo, se agrega la comision al usuario
-                    else {
-                        DataStore.save(new Comision({
-                            reservaID,
-                            amount: precioTotal * comision,
-                            startEditingAt: null,
-                            editing: false,
-                            payed: false,
-
-                            usuarioID: guiaID
-                        }))
-
-                        // Actualizar estado de las comisiones viejas a dejando de editar
-                        Promise.all(comisiones.current.map(async com => {
-                            return DataStore.query(Comision, com.id)
-                                .then(async com => {
-                                    return await DataStore.save(Comision.copyOf(com, e => {
-                                        e.editing = false
-                                        e.startEditingAt = null
-                                    }))
-
-                                }).then(r => {
-                                    console.log("Comision de ", r.amount, " puesta como no editada")
-                                })
-                        }))
-
-                        comisiones.current = null
-
-                    }
-                    clearTimeout(t)
-
-
-
-
-                    const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
-
-                    //////////////////////////////////////////////////////////////////////////////
-                    ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
-                    //////////////////////////////////////////////////////////////////////////////
-                    // Obtener id del chatroom correspondiente a la aventura
-                    const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID("eq", fechaID)))[0]
-
-                    // Obtener el usuario logeado
-                    const usuario = await DataStore.query(Usuario, sub)
-
-                    // Si encuentra el chat crear la relacion
-                    if (chatroom) {
-                        // Verificar que el usuario no este agregado ya al chatroom
-                        const relacion = (await DataStore.query(ChatRoomUsuarios, e => e.chatroomID("eq", usuario.id).chatroomID("eq", chatroom.id)))
-                        if (!relacion) {
-                            // Si no esta el usuario se agrega
-                            DataStore.save(new ChatRoomUsuarios({
-                                chatroomID: chatroom.id,
-                                usuarioID: usuario.id,
-
-                                chatroom,
-                                usuario: usuario,
-                            }))
-                        }
-                    } else {
-                        console.log("Error agregando al usuario al grupo, no existe el chat")
-                    }
-
-                    const datosReserva = {
-                        id: reservaID,
-                        total: precioTotal,
-                        comision: precioTotal * comision,
-                        pagadoAlGuia: precioTotal - (precioTotal * comision),
-
-                        adultos, ninos, tercera,
-
-                        // Si fue con tarjeta se agrega la referencia al pago
-                        pagoID: tipoPago === "TARJETA" ? idPago : null,
-
-                        tipoPago,
-
-                        fechaID,
-                        guiaID,
-                        usuarioID: sub,
-                    }
-
-
-                    // Crear la reservacion en API para pasar ID
-                    await API.graphql({ query: createReserva, variables: { input: datosReserva } })
-
-                    //////////////////////////////////////////////////////////////////////////////
-                    //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
-                    //////////////////////////////////////////////////////////////////////////////
-
-                    // Notificacion a el guia en telefono
-                    const { notificationToken, experience } = guia
-
-                    // Agregar la experiencia al usuario
-                    let newExp = (experience ? experience : 0) + experienciaGanada
-                    DataStore.save(Usuario.copyOf(guia, n => {
-                        n.experience = newExp
-                    }))
-
-                    if (notificationToken) {
-                        sendPushNotification({
-                            title: "Nueva reserva",
-                            descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
-                            token: notificationToken
-                        })
-                    }
-
-
-                    // Notificacion al guia IN-APP
-                    DataStore.save(new Notificacion({
-                        tipo: TipoNotificacion.RESERVAENFECHA,
-
-                        titulo: "Nueva reserva",
-                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
-
-                        showAt: new Date().getTime(),
-
-                        // Autorizar al guia a ver la misma
-                        usuarioID: fecha?.usuarioID,
-
-                        fechaID: fecha?.id,
-                        reservaID
-                    }))
-
-
-                    // Notificacion a el usuario
-                    DataStore.save(new Notificacion({
-                        tipo: TipoNotificacion.RESERVACREADA,
-
-                        titulo: "Reserva exitosa!!",
-                        descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal) + " a las " + formatAMPM(fechaInicial),
-
-                        showAt: new Date().getTime(),
-
-                        usuarioID: sub,
-
-                        fechaID: fecha?.id,
-                        reservaID
-                    }))
-
-                    notificacionesRecordatorio({
-                        scheduled: true,
-                        // Datos del cliente para la notificacion de calificar
-                        cliente: {
-                            calificaClienteImage: imagenFondo.key,
-                            tipoPago,
-                            precioTotal,
-                            nickname: (usuario.nombre ? mayusFirstLetter(usuario.nombre) : usuario.nickname),
-                        },
-
-                        // Datos del guia para la notificacion de calificar
-                        guia: {
-                            guiaID,
-                            nickname: nicknameGuia,
-                        },
-
-                        // Datos otras notificaciones
-                        fechaInicial: fecha.fechaInicial,
-                        fechaFinal: fecha.fechaFinal,
-                        sub,
-                        tituloAventura,
-
-                        aventuraID: fecha.aventuraID,
-                        reservaID,
-                        fechaID,
-                    })
-
-                    navigation.popToTop()
-                    navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
-                    setButtonLoading(false)
-                }
-            } catch (error) {
+            // Revisar que no se haya llenado la fecha
+            if (await isFechaFull(fecha)) {
+                setButtonLoading(false)
                 clearTimeout(t)
-                if (error !== "Cancelada") {
-                    Alert.alert("Error", "Error creando la reservacion")
-                    console.log(error)
+                Alert.alert("Atencion",
+                    "Lo sentimos, la fecha ya esta llena pero puedes ver mas opciones",
+                    [
+                        {
+                            text: "Ver",
+                        },
+                    ],
+                    { cancelable: false }
+                )
+            } else {
+                let guia = await DataStore.query(Usuario, guiaID)
+                // Pago con tarjeta
+                if (tipoPago === "TARJETA") {
+
+                    // Verificar pago
+                    if (!paymentOption?.label || !paymentOption?.image) {
+                        Alert.alert("Error", "Agrega una tarjeta o paga en efectivo")
+                        clearTimeout(t)
+                        setButtonLoading(false)
+                        return
+                    }
+
+                    const { error } = await confirmPaymentSheetPayment()
+
+                        // Si el pago se confirma con exito, se eliminan las comisiones que se debian del usuario
+                        .then((r) => {
+                            if (!r.error) {
+                                console.log("Eliminando comisiones del estado y actualizando en datastore a pagadas...")
+                                comisiones.current?.map(com => {
+                                    DataStore.query(Comision, com.id)
+                                        .then(com => {
+                                            DataStore.save(Comision.copyOf(com, ne => {
+                                                ne.editing = false;
+                                                ne.startEditingAt = null;
+
+                                                ne.payed = true;
+                                                ne.pagadoEnReservaID = reservaID;
+                                            })).then(r => console.log("Comision de ", r.amount, " puesta como pagada"))
+                                        })
+                                })
+                                setPayed(true)
+                                comisiones.current = null
+                            }
+                            return r
+                        })
+                        .catch(e => {
+                            Alert.alert("Error", "Error realizando el pago")
+                            console.log(e)
+                        })
+                    // Si hubo un error con la tarjeta, se sale de la funcion
+                    if (error) {
+                        setButtonLoading(false)
+                        Alert.alert(`Error code: ${error.code}`, error.message);
+                        return
+                    }
+
+
+
                 }
+
+                // Si fue pago en efectivo, se agrega la comision al usuario
+                else {
+                    DataStore.save(new Comision({
+                        reservaID,
+                        amount: precioTotal * comision,
+                        startEditingAt: null,
+                        editing: false,
+                        payed: false,
+
+                        usuarioID: guiaID
+                    }))
+
+                    // Actualizar estado de las comisiones viejas a dejando de editar
+                    Promise.all(comisiones.current.map(async com => {
+                        return DataStore.query(Comision, com.id)
+                            .then(async com => {
+                                return await DataStore.save(Comision.copyOf(com, e => {
+                                    e.editing = false
+                                    e.startEditingAt = null
+                                }))
+
+                            }).then(r => {
+                                console.log("Comision de ", r.amount, " puesta como no editada")
+                            })
+                    }))
+
+                    comisiones.current = null
+
+                }
+                clearTimeout(t)
+
+
+
+
+                const experienciaGanada = (fecha.experienciaPorPersona) * personasTotales
+
+                //////////////////////////////////////////////////////////////////////////////
+                ////////////////////VERIFICAR QUE EL USUARIO NO ESTE EN EL CHAT///////////////
+                //////////////////////////////////////////////////////////////////////////////
+                // Obtener id del chatroom correspondiente a la aventura
+                const chatroom = (await DataStore.query(ChatRoom, chat => chat.fechaID.eq( fechaID)))[0]
+
+                // Obtener el usuario logeado
+                const usuario = await DataStore.query(Usuario, sub)
+
+                // Si encuentra el chat crear la relacion
+                if (chatroom) {
+                    // Verificar que el usuario no este agregado ya al chatroom
+                    const relacion = (await DataStore.query(ChatRoomUsuarios, e => e.chatroomID.eq( chatroom.id)))
+                    if (!relacion) {
+                        // Si no esta el usuario se agrega
+                        DataStore.save(new ChatRoomUsuarios({
+                            chatroomID: chatroom.id,
+                            usuarioID: usuario.id,
+
+                            chatroom,
+                            usuario: usuario,
+                        }))
+                    }
+                } else {
+                    console.log("Error agregando al usuario al grupo, no existe el chat")
+                }
+
+                const datosReserva = {
+                    id: reservaID,
+                    total: precioTotal,
+                    comision: precioTotal * comision,
+                    pagadoAlGuia: precioTotal - (precioTotal * comision),
+
+                    adultos, ninos, tercera,
+
+                    // Si fue con tarjeta se agrega la referencia al pago
+                    pagoID: tipoPago === "TARJETA" ? idPago : null,
+
+                    tipoPago,
+
+                    fechaID,
+                    guiaID,
+                    usuarioID: sub,
+                }
+
+
+                // Crear la reservacion en API para pasar ID
+                await API.graphql({ query: createReserva, variables: { input: datosReserva } })
+
+                //////////////////////////////////////////////////////////////////////////////
+                //////////////////////////MANDAR LAS NOTIFICACIONES///////////////////////////
+                //////////////////////////////////////////////////////////////////////////////
+
+                // Notificacion a el guia en telefono
+                const { notificationToken, experience } = guia
+
+                // Agregar la experiencia al usuario
+                let newExp = (experience ? experience : 0) + experienciaGanada
+                DataStore.save(Usuario.copyOf(guia, n => {
+                    n.experience = newExp
+                }))
+
+                if (notificationToken) {
+                    sendPushNotification({
+                        title: "Nueva reserva",
+                        descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
+                        token: notificationToken
+                    })
+                }
+
+
+                // Notificacion al guia IN-APP
+                DataStore.save(new Notificacion({
+                    tipo: TipoNotificacion.RESERVAENFECHA,
+
+                    titulo: "Nueva reserva",
+                    descripcion: "Tienes una nueva reserva en " + tituloAventura + " " + formatDia(fecha.fechaInicial) + " +" + experienciaGanada + " exp",
+
+                    showAt: new Date().getTime(),
+
+                    // Autorizar al guia a ver la misma
+                    usuarioID: fecha?.usuarioID,
+
+                    fechaID: fecha?.id,
+                    reservaID
+                }))
+
+
+                // Notificacion a el usuario
+                DataStore.save(new Notificacion({
+                    tipo: TipoNotificacion.RESERVACREADA,
+
+                    titulo: "Reserva exitosa!!",
+                    descripcion: "Se ha creado una reserva exitosamente en " + tituloAventura + " para el " + formatDateShort(fechaInicial, fechaFinal) + " a las " + formatAMPM(fechaInicial),
+
+                    showAt: new Date().getTime(),
+
+                    usuarioID: sub,
+
+                    fechaID: fecha?.id,
+                    reservaID
+                }))
+
+                notificacionesRecordatorio({
+                    scheduled: true,
+                    // Datos del cliente para la notificacion de calificar
+                    cliente: {
+                        calificaClienteImage: imagenFondo.key,
+                        tipoPago,
+                        precioTotal,
+                        nickname: (usuario.nombre ? mayusFirstLetter(usuario.nombre) : usuario.nickname),
+                    },
+
+                    // Datos del guia para la notificacion de calificar
+                    guia: {
+                        guiaID,
+                        nickname: nicknameGuia,
+                    },
+
+                    // Datos otras notificaciones
+                    fechaInicial: fecha.fechaInicial,
+                    fechaFinal: fecha.fechaFinal,
+                    sub,
+                    tituloAventura,
+
+                    aventuraID: fecha.aventuraID,
+                    reservaID,
+                    fechaID,
+                })
+
+                navigation.popToTop()
+                navigation.navigate("ExitoScreen", { descripcion: ("Reservacion en " + tituloAventura + " creada con exito!!") })
                 setButtonLoading(false)
             }
+        } catch (error) {
+            clearTimeout(t)
+            if (error !== "Cancelada") {
+                Alert.alert("Error", "Error creando la reservacion")
+                console.log(error)
+            }
+            setButtonLoading(false)
         }
-
     }
 
-    return (
+}
 
-        <View style={styles.container}>
-            <ScrollView
-                showsHorizontalScrollIndicator={false}
-                style={{
-                    padding: 20,
-                }}
-            >
-                {/* Mostrar la aventura a pagar */}
-                <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
-                    <Image
-                        source={{ uri: imagenFondo.uri }}
-                        style={styles.imgAventura}
-                    />
+return (
 
-                    <View style={styles.adventureTextContainer}>
+    <View style={styles.container}>
+        <ScrollView
+            showsHorizontalScrollIndicator={false}
+            style={{
+                padding: 20,
+            }}
+        >
+            {/* Mostrar la aventura a pagar */}
+            <View style={[styles.innerContainer, { flexDirection: 'row', }]}>
+                <Image
+                    source={{ uri: imagenFondo.uri }}
+                    style={styles.imgAventura}
+                />
+
+                <View style={styles.adventureTextContainer}>
 
 
-                        <View style={[styles.row, { marginTop: 0, }]}>
-                            {/* Titulo de la aventura */}
-                            <Text style={{
-                                fontSize: 16,
-                                flex: 1,
-                            }}>{tituloAventura}</Text>
-                        </View>
-
+                    <View style={[styles.row, { marginTop: 0, }]}>
+                        {/* Titulo de la aventura */}
                         <Text style={{
-                            color: moradoClaro,
-                            fontSize: 12,
-                            marginBottom: 5,
+                            fontSize: 16,
+                            flex: 1,
+                        }}>{tituloAventura}</Text>
+                    </View>
 
-                        }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
+                    <Text style={{
+                        color: moradoClaro,
+                        fontSize: 12,
+                        marginBottom: 5,
+
+                    }}>{formatDateShort(fechaInicial, fechaFinal)}</Text>
 
 
 
-                        <View style={styles.row}>
+                    <View style={styles.row}>
 
-                            {/* Guia */}
-                            <View style={{ flexDirection: 'row', }}>
-                                <Image
-                                    source={require("../../../assets/icons/guia.png")}
-                                    style={styles.guiaIcon}
+                        {/* Guia */}
+                        <View style={{ flexDirection: 'row', }}>
+                            <Image
+                                source={require("../../../assets/icons/guia.png")}
+                                style={styles.guiaIcon}
 
-                                />
-                                <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
-                            </View>
-
-                            {/* Calificacion guia */}
-                            {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
-                                <Entypo name="star" size={11} color="#F5BE18" />
-                                <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
-                            </View>}
+                            />
+                            <Text style={{ color: "#0000009E", }}>@{nicknameGuia}</Text>
                         </View>
 
-                        {/* Descripcion fecha */}
-                        {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
-                    </View>
-                </View>
-
-
-
-
-                <View style={[styles.innerContainer, { padding: 15, }]}>
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Tercera edad"}
-
-                        cantidad={tercera}
-                    />
-
-                    <View style={styles.line} />
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Adultos"}
-
-                        cantidad={adultos}
-                    />
-
-                    <View style={styles.line} />
-
-                    <ElementoPersonas
-                        precio={precioIndividualConComision}
-                        titulo={"Niños"}
-
-                        cantidad={ninos}
-                    />
-
-                    <View style={styles.line} />
-
-                    {/* Precio */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-                        <Text
-                            style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
-                        <Text
-                            style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
-
+                        {/* Calificacion guia */}
+                        {!!calificacionGuia && <View style={{ ...styles.row, marginTop: 0, }}>
+                            <Entypo name="star" size={11} color="#F5BE18" />
+                            <Text style={{ fontSize: 11, }}>{calificacionGuia}</Text>
+                        </View>}
                     </View>
 
+                    {/* Descripcion fecha */}
+                    {descripcion && <Text style={{ fontSize: 10, marginTop: 10, }}>{descripcion}</Text>}
+                </View>
+            </View>
+
+
+
+
+            <View style={[styles.innerContainer, { padding: 15, }]}>
+
+                <ElementoPersonas
+                    precio={precioIndividualConComision}
+                    titulo={"Tercera edad"}
+
+                    cantidad={tercera}
+                />
+
+                <View style={styles.line} />
+
+                <ElementoPersonas
+                    precio={precioIndividualConComision}
+                    titulo={"Adultos"}
+
+                    cantidad={adultos}
+                />
+
+                <View style={styles.line} />
+
+                <ElementoPersonas
+                    precio={precioIndividualConComision}
+                    titulo={"Niños"}
+
+                    cantidad={ninos}
+                />
+
+                <View style={styles.line} />
+
+                {/* Precio */}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                    <Text
+                        style={{ ...styles.titulo, fontWeight: 'bold', }}>Total</Text>
+                    <Text
+                        style={styles.precioTotal}>$ {Math.round(precioTotal)}</Text>
+
                 </View>
 
+            </View>
 
-                {/* Metodos de pago */}
-                <View style={styles.paymentContainer}>
-                    {/* 
+
+            {/* Metodos de pago */}
+            <View style={styles.paymentContainer}>
+                {/* 
                         // Si no se tiene el ultimo numero y la imagen, se muestra agregar
                         // (!paymentOption?.label && !paymentOption?.image) ? 
                         */}
 
+                <Pressable
+                    onPress={() => {
+                        paymentLoaded && setTipoPago("TARJETA")
+
+                        // Si esta seleccionado por tarjeta 
+                        handleAddPaymentMethod()
+                    }}
+                    style={styles.metodoDePago}>
+
+                    <View style={{
+                        ...styles.iconoIzquierda,
+                        alignItems: 'center',
+
+                    }}>
+                        <AntDesign name="creditcard" size={30} color="black" />
+
+                    </View>
+
+                    <Text style={{
+                        ...styles.titulo,
+                        color: tipoPago === "TARJETA" ? "#000" : "#aaa"
+                    }}>TARJETA</Text>
+
+                    <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
+                        {paymentLoaded ?
+                            paymentOption?.label ?
+                                tipoPago === "TARJETA" && <Entypo name="check" size={30} color={moradoClaro} />
+                                :
+                                <Entypo name="plus" size={30} color={"#aaa"} />
+                            : <ActivityIndicator size={25} color={"gray"} />}
+
+                    </View>
+                </Pressable>
+                {efectivo && <><View style={{
+                    borderColor: '#aaa',
+                    borderBottomWidth: 1,
+                    marginHorizontal: 30,
+                }} />
+
                     <Pressable
                         onPress={() => {
-                            paymentLoaded && setTipoPago("TARJETA")
-
-                            // Si esta seleccionado por tarjeta 
-                            handleAddPaymentMethod()
+                            setTipoPago("EFECTIVO")
                         }}
                         style={styles.metodoDePago}>
 
-                        <View style={{
-                            ...styles.iconoIzquierda,
-                            alignItems: 'center',
-
-                        }}>
-                            <AntDesign name="creditcard" size={30} color="black" />
-
-                        </View>
+                        <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
 
                         <Text style={{
                             ...styles.titulo,
-                            color: tipoPago === "TARJETA" ? "#000" : "#aaa"
-                        }}>TARJETA</Text>
-
+                            color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
+                        }}>EFECTIVO</Text>
                         <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
-                            {paymentLoaded ?
-                                paymentOption?.label ?
-                                    tipoPago === "TARJETA" && <Entypo name="check" size={30} color={moradoClaro} />
-                                    :
-                                    <Entypo name="plus" size={30} color={"#aaa"} />
-                                : <ActivityIndicator size={25} color={"gray"} />}
-
+                            {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
                         </View>
                     </Pressable>
-                    {efectivo && <><View style={{
-                        borderColor: '#aaa',
-                        borderBottomWidth: 1,
-                        marginHorizontal: 30,
-                    }} />
+                </>}
 
-                        <Pressable
-                            onPress={() => {
-                                setTipoPago("EFECTIVO")
-                            }}
-                            style={styles.metodoDePago}>
-
-                            <FontAwesome5 style={styles.iconoIzquierda} name="money-bill-wave-alt" size={24} color={moradoOscuro} />
-
-                            <Text style={{
-                                ...styles.titulo,
-                                color: tipoPago === "EFECTIVO" ? "#000" : "#aaa"
-                            }}>EFECTIVO</Text>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 30, height: 30, }}>
-                                {tipoPago === "EFECTIVO" && <Entypo name="check" size={30} color={moradoClaro} />}
-                            </View>
-                        </Pressable>
-                    </>}
-
-                </View>
-                <View style={{ height: 40, }} />
-
-            </ScrollView>
-            <View style={{ flex: 1, }} />
-            <View style={{
-                padding: 20,
-            }}>
-
-                <Boton
-                    red
-                    loading={buttonLoading}
-                    titulo={"Confirmar"}
-                    onPress={handleConfirm}
-                />
             </View>
+            <View style={{ height: 40, }} />
+
+        </ScrollView>
+        <View style={{ flex: 1, }} />
+        <View style={{
+            padding: 20,
+        }}>
+
+            <Boton
+                red
+                loading={buttonLoading}
+                titulo={"Confirmar"}
+                onPress={handleConfirm}
+            />
         </View>
-    )
+    </View>
+)
 }
 
 const styles = StyleSheet.create({

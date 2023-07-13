@@ -131,7 +131,7 @@ export default ({ navigation }) => {
         try {
             setGuias(await DataStore.query(Usuario,
                 usr => usr
-                    .guia("eq", true)
+                    .guia.eq( true)
                 ,
                 {
                     sort: e => e

@@ -2,8 +2,7 @@ import React from "react";
 import { View, Text,  StyleSheet, Alert } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import * as Updates from "expo-updates";
-import Bugsnag from "@bugsnag/expo";
+// import Bugsnag from "@bugsnag/expo";
 import Boton from "../../components/Boton";
 
 class ErrorRouter extends React.Component {
@@ -14,7 +13,7 @@ class ErrorRouter extends React.Component {
   componentDidCatch(error: Error) {
     console.log(error);
     Alert.alert("Ocurrio un error", error.message);
-     Bugsnag.notify(error);
+    //  Bugsnag.notify(error);
   }
 
   render() {
@@ -40,15 +39,6 @@ class ErrorRouter extends React.Component {
               </Text>
             </View>
           </View>
-          <Boton
-            titulo={"Volver a cargar"}
-            onPress={() => {
-              Updates.reloadAsync();
-            }}
-            style={{
-              margin: 20,
-            }}
-          />
         </View>
       );
     } else {

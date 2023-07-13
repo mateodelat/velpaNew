@@ -1,4 +1,4 @@
-import Bugsnag from "@bugsnag/expo";
+// import Bugsnag from "@bugsnag/expo";
 import "@azure/core-asynciterator-polyfill";
 
 import React, { useState, useEffect, useRef } from "react";

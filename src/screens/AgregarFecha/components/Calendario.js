@@ -42,9 +42,12 @@ export default ({
     const pedirFechasDelGuia = async () => {
         const sub = await getUserSub()
         DataStore.query(Fecha, e => e
-            .usuarioID("eq", sub)
-            .fechaInicial("gt", new Date().getTime())
-            .cancelado("ne", true)
+            .and(c=>[
+                c.usuarioID.eq( sub),
+                c.fechaInicial.gt( new Date().getTime()),
+                c.cancelado.ne( true),
+
+            ])
         )
             .then(r => {
                 let diasMarcados = {}

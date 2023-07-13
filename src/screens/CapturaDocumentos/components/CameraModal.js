@@ -95,7 +95,7 @@ export default ({ modalVisible, setModalVisible, tipo, fotos, setFotos }) => {
                 )
                 setCondicionesInfo(["Identificacion reverso", "Debe ser a color", "Con fondo claro y buena iluminacion", "Todos los datos deben ser legibles", "No puede ser fotografia de la copia"])
                 setMensajeTituloCamara("Identificacion oficial reverso")
-                setImagenEjemplo(require("../../../../assets/IMG/INE-Reverso.png"))
+                setImagenEjemplo(require("../../../../assets/IMG/Licencia-Reverso.png"))
                 setModalInfoVisible(true)
 
                 setTipoLocal("IDReverso")

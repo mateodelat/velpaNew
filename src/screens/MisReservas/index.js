@@ -129,7 +129,7 @@ export default function ({ route, navigation }) {
         const sub = await getUserSub()
 
         // Obtener reservas y fechas para cada una canceladas y no canceladas
-        const reservas = await DataStore.query(Reserva, r => r.usuarioID("eq", sub), {
+        const reservas = await DataStore.query(Reserva, r => r.usuarioID.eq( sub), {
             sort: e => e.createdAt("DESCENDING"),
         })
             .then(async r => {

@@ -97,7 +97,7 @@ export default function ({ navigation, route }) {
 
         // Obtener aventuras creadas por el usuario usuario no autorizadas y pendientes
         DataStore.query(Aventura, a => a
-            .usuarioID("eq", sub)
+            .usuarioID.eq( sub)
         )
             .then(async r => {
 

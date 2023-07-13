@@ -113,7 +113,7 @@ export default function ({ navigation }) {
         const sub = await getUserSub()
 
         // Obtener fechas
-        const fechas = await DataStore.query(Fecha, r => r.usuarioID("eq", sub), {
+        const fechas = await DataStore.query(Fecha, r => r.usuarioID.eq( sub), {
             sort: e => e.fechaInicial("DESCENDING")
         })
             .then(async r => {
@@ -121,8 +121,10 @@ export default function ({ navigation }) {
 
                     const now = new Date()
                     const reservas = await DataStore.query(Reserva, res => res
-                        .cancelado("ne", true)
-                        .fechaID("eq", fecha.id))
+                        .and(e=>[
+                            e.cancelado.ne( true),
+                            e.fechaID.eq( fecha.id),
+                        ]))
                     let personasReservadas = []
 
                     await Promise.all(reservas.map(async res => {

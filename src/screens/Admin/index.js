@@ -32,7 +32,7 @@ export default ({ navigation }) => {
 
             // Desligar usuarios
             promises.push(DataStore.query(Usuario, u => u
-                .stripeID("ne", null)
+                .stripeID.ne( null)
             )
                 .then(u => {
                     u.map(u => {
