@@ -44,10 +44,10 @@ export default function () {
 
             verNuevasNotificaciones(sub)
             subscripcionNotificaciones = DataStore.observe(Notificacion, e => e
-                .and(c=>[
-                    c.usuarioID.eq( sub),
-                    c.leido.ne( true),
-                    c.showAt.gt( new Date()),
+                .and(c => [
+                    c.usuarioID.eq(sub),
+                    c.leido.ne(true),
+                    c.showAt.gt(new Date()),
                 ])
             )
                 .subscribe(msg => {
@@ -59,7 +59,7 @@ export default function () {
 
             verNuevosMensajes(sub)
             subscripcionMensajes = DataStore.observe(Usuario,
-                e => e.id.eq( sub))
+                e => e.id.eq(sub))
                 .subscribe(msg => {
                     // Si hay nuevos mensajes en el usuario
                     if (!!msg.element.newMessages) {
@@ -77,11 +77,11 @@ export default function () {
     const verNuevasNotificaciones = async (sub) => {
         // Obtener todas las notificaciones no vistas
         const unread = await DataStore.query(Notificacion, e => e
-            .and(c=>[
-                c.usuarioID.eq( sub),
-                c.leido.ne( true),
-                c.showAt.lt( new Date()),
-    
+            .and(c => [
+                c.usuarioID.eq(sub),
+                c.leido.ne(true),
+                c.showAt?.lt(new Date()),
+
             ])
         )
 
@@ -92,7 +92,7 @@ export default function () {
 
     const verNuevosMensajes = async (sub) => {
         // Obtener todas las notificaciones no vistas
-        const usr = (await DataStore.query(Usuario, e => e.id("eq", sub)))[0]
+        const usr = (await DataStore.query(Usuario, e => e.id.eq(sub)))[0]
 
         if (!!usr?.newMessages) {
             setNewMessages(true)

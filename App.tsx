@@ -36,7 +36,6 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
-  Bugsnag.start()
 
   const [local, expo, standAlone] = awsconfig.oauth.redirectSignIn.split(",");
 
@@ -62,6 +61,7 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(null);
 
   async function start() {
+    Bugsnag.start()
     DataStore.start();
 
     const info = await Auth.currentUserInfo();

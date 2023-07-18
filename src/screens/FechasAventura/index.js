@@ -35,7 +35,7 @@ export default ({ route, navigation }) => {
                 // Crear las subscripciones
                 r.map((f, idx) => {
                     // Suscribirse a la fecha para ver si se ha cancelado o se modifico por el guia
-                    subscriptions.push(DataStore.observe(Fecha, fe => fe.id.eq( f.id))
+                    subscriptions.push(DataStore.observe(Fecha, fe => fe.id.eq(f.id))
                         .subscribe(async msg => {
                             if (msg.opType === OpType.UPDATE || msg.opType === OpType.DELETE) {
                                 const {
@@ -66,9 +66,9 @@ export default ({ route, navigation }) => {
                     )
 
                     subscriptions.push(DataStore.observe(Reserva, res => res
-                        .and(e=>[
-                            e.fechaID.eq( f.id),
-                            e.usuarioID("ne", sub),
+                        .and(e => [
+                            e.fechaID.eq(f.id),
+                            e.usuarioID.ne(sub),
                         ]))
                         .subscribe(async msg => {
                             if (msg.opType === OpType.INSERT) {
@@ -131,10 +131,10 @@ export default ({ route, navigation }) => {
         const i = new Date()
         // Pedir todas las fechas que tengan fecha inicial mayor a hoy y de la aventura pedida
         return await DataStore.query(Fecha, f => f
-            .and(f=>[
-                f.aventuraID.eq( aventuraID),
-                f.fechaInicial.gt( i),
-                f.cancelado("ne", true),
+            .and(f => [
+                f.aventuraID.eq(aventuraID),
+                f.fechaInicial.gt(i),
+                f.cancelado.ne(true),
             ])
             , {
                 sort: s => s.fechaInicial(SortDirection.ASCENDING)
@@ -146,9 +146,9 @@ export default ({ route, navigation }) => {
                     let totalPersonasReservadas = 0
                     // Obtener todas las reservaciones en la fecha que no hayan sido canceladas
                     const reservaciones = await DataStore.query(Reserva, res => res
-                        .and(e=>[
-                            e.cancelado("ne", true),
-                            e.fechaID("eq", fecha.id)
+                        .and(e => [
+                            e.cancelado.ne(true),
+                            e.fechaID.eq(fecha.id)
                         ]))
 
                     // Primero mapear todas las reservaciones y sacar las que esten llenas

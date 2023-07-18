@@ -30,8 +30,11 @@
         "NSPhotoLibraryAddUsageDescription": "$(PRODUCT_NAME) necesita permiso para poder guardar la foto del boleto en tu galeria",
         "NSCameraUsageDescription": "$(PRODUCT_NAME) necesita permiso de camara para escanear boletos o subir imagenes que tomes a tu foto de perfil."
       },
-      "buildNumber": "0.0.2",
-      "bundleIdentifier": "com.adventures.velpa"
+      "buildNumber": "0.0.4",
+      "bundleIdentifier": "com.adventures.velpa",
+      "config": {
+        "googleMapsApiKey": "AIzaSyA_UhJpzc1rPb9tbK597M0pJ-O46v3SjIc"
+      }
     },
     "android": {
       "permissions": [
@@ -51,7 +54,12 @@
       },
       "googleServicesFile": "./google-services.json",
       "package": "com.adventures.velpa",
-      "versionCode": 6
+      "versionCode": 7,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA_UhJpzc1rPb9tbK597M0pJ-O46v3SjIc"
+        }
+      }
     },
     "hooks": {
       "postPublish": [
